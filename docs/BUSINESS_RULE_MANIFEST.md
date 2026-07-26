@@ -1641,3 +1641,34 @@ Confirmed the browser was serving the redeployed, non-cached template via a dire
 Classification: Security fix (access-control gate correction), narrow scope -- UI-tile-visibility only. Owner Decision: **Approved** (2026-07-26). Merged to `main` same day.
 
 **Notes:** Only `legacy/HIS-WAR/src/main/webapp/views/common/dashboard-quick-links.html` changed. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. Does NOT resolve the route-level guard gap or backend authorization gap -- both remain open in `docs/DECISION_NEEDED_AccessControlPermissionMisrouting.md`, awaiting separate owner direction.
+
+## BR-099 — PrivilegeController.updatePrivilegeByRoleId silently NULLs moduleType on every Update — same class as identificationMaster/currencyMaster/hospitalAccountMaster's silent-corruption bugs, found during accessControl1's Step 3 rebuild (2026-07-26)
+
+**Confirmed live, not just from static analysis.** `PrivilegeController.updatePrivilegeByRoleId` (`legacy/Global/src/main/java/com/param/privilege/controller/PrivilegeController.java:375-411`) reads `roleId`, `organisationId`, `unitId`, and `modules` off the incoming request body, but never reads `moduleType` — despite `Constants.JSON_PROPERTY_MODULETYPE` already being defined and correctly used by the sibling `addPrivilege` endpoint (line 263: `privilege.setModuleType(reader.getInt("moduleType"))`). The resulting `Privilege` object is passed to `PrivilegeDaoImpl.updatePrivilegeByRoleId` (`legacy/Global/src/main/java/com/param/privilege/dao/PrivilegeDaoImpl.java:39-59`), which unconditionally does `privilege.setModuleType(p.getModuleType())` on the persisted entity — since `p.getModuleType()` was never set on the incoming object, this always writes `null`, overwriting whatever value the row previously had, regardless of what the client actually sent. The response is a normal `{"status":"success"}` — nothing surfaces the loss.
+
+**Live before/after, real request/response, not simulated:**
+- Seeded the (only) live `privilege.privilege` row (`privilege_id=1`, `role_id=1`, `org=1`, `unit=1`) to `module_type=1` via direct SQL.
+- Called the live, **unmodified** `PUT /privilege/role` with body `{"roleId":1,"organisationId":1,"unitId":1,"modules":[],"moduleType":1}` → response `{"status":"success"}` → row's `module_type` came back `NULL`. Bug reproduced live, on the real endpoint, with the client genuinely sending the value.
+
+**Fix applied** on `fix/privilegecontroller-updateprivilegebyroleid-moduletype-null`, mirroring `addPrivilege`'s existing, already-correct pattern exactly:
+```diff
+ Privilege privilege = new Privilege();
+ privilege.setRoleId(reader.getInt(Constants.JSON_PROPERTY_ROLEID));
+ privilege.setOrganisationId(reader.getInt(Constants.JSON_PROPERTY_ORG_ID));
+ privilege.setUnitId(reader.getInt(Constants.JSON_PROPERTY_UNIT_ID));
++privilege.setModuleType(reader.getInt(Constants.JSON_PROPERTY_MODULETYPE));
+
+ privilege.setModules(modules);
+ PrivilegeService.updatePrivilegeByRoleId(privilege);
+```
+One line, additive, reuses an existing constant already defined for this exact purpose. No other method touched.
+
+**Verified live, before AND after, on the actually-deployed code** (compiled `Global` module via `mvn -pl Global -am package -DskipTests`, replaced the deployed jar in the running local Tomcat, restarted, re-ran the identical test):
+- Seeded `module_type=1` again. Called the **fixed** endpoint with `moduleType=2` (a real change, not a no-op) → row's `module_type` came back `2` — genuinely reflects what the client sent, not just "didn't go null."
+- Regression check: re-ran the same call with a real `modules` payload (`[{"moduleId":5,"actions":["view"]}]`) alongside `moduleType:1` — both fields updated correctly together; `GET /privilege/1/1` reflected both. No other field's behavior changed.
+- The live DB's one real privilege row was restored to its exact original state afterward (`module_type` back to `NULL`, `modules` restored byte-for-byte from a pre-test snapshot, confirmed via `length()` match) — this test made no lasting change to the dev DB's data.
+- The pre-fix jar was backed up before deployment (`Global-0.0.1-SNAPSHOT.jar.pre-fix-backup` in the session scratchpad) in case a rollback was needed.
+
+**Classification:** Same category as `identificationMaster`/`currencyMaster`/`hospitalAccountMaster`'s prior silent-corruption bugs this session — a real column silently wiped on every Update, with a success response masking the loss. Per the owner's explicit instruction, this is treated with real priority given it affects a permissions-related field on an access-control screen specifically, rather than as a routine logged finding. Owner Decision: **Approved** (2026-07-26). Merged to `main` same day.
+
+**Notes:** Only `legacy/Global/src/main/java/com/param/privilege/controller/PrivilegeController.java` changed (+1 line). No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. Unlike this session's schema-drift fixes (additive SQL only, no redeploy needed), this is a Java code change — verifying it live required a real compile + jar swap + Tomcat restart of the local dev server, disclosed here since it's a different category of action than the earlier additive-DDL fixes.
