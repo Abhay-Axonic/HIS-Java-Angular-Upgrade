@@ -78,10 +78,21 @@ import io.swagger.annotations.ApiModelProperty;
 				+ " WHERE wrapperExpiryMaster.status='A'  "
 				+ " AND wrapperExpiryMaster.organizationId=:organizationId "
 				+ " AND wrapperExpiryMaster.unitId=:unitId "
-				+ " AND lower(wrapperExpiryMaster.name) LIKE :code ")
+				+ " AND lower(wrapperExpiryMaster.name) LIKE :code "),
 
-		
-		
+		@NamedQuery(name = "GET_WRAPPER_EXPIRY_BY_NAME_OR_CODE", query = "SELECT wrapperExpiryMaster.id as id "
+				+ "FROM WrapperExpiryMaster as wrapperExpiryMaster "
+				+ "WHERE (LOWER(wrapperExpiryMaster.name)=:name OR LOWER(wrapperExpiryMaster.code)=:code) "
+				+ "AND wrapperExpiryMaster.organizationId=:organizationId "
+				+ "AND wrapperExpiryMaster.unitId=:unitId "),
+
+		@NamedQuery(name = "GET_WRAPPER_EXPIRY_BY_NAME_OR_CODE_NOT_ID", query = "SELECT wrapperExpiryMaster.id as id "
+				+ "FROM WrapperExpiryMaster as wrapperExpiryMaster "
+				+ "WHERE (LOWER(wrapperExpiryMaster.name)=:name OR LOWER(wrapperExpiryMaster.code)=:code) "
+				+ "AND wrapperExpiryMaster.organizationId=:organizationId "
+				+ "AND wrapperExpiryMaster.unitId=:unitId "
+				+ "AND wrapperExpiryMaster.id!=:id ")
+
 })
 
 @Entity
