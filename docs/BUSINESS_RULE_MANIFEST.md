@@ -1618,3 +1618,26 @@ FROM m_store WHERE organization_id=1 AND unit_id=1 AND is_active=true;
 Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope, matching every other `BR-local-dev-db-drift-*` precedent) — resolved same-session.
 
 **Notes:** No `legacy/` or `new/` file changed. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). Worth flagging for future sessions: this same gap will resurface for any other not-yet-tested screen that calls `$rootScope.storePopup()` on first visit, until `m_user_store_mapper` has broader real seed coverage.
+
+## BR-096 — accessControl Dashboard Quick Links tile checked the wrong permission id (677 instead of 676), letting users without the correct grant reach a broken but real Role-Permissions controller — found during batch 20 Step 1 audit, fast-tracked at owner request (2026-07-26)
+
+**Confirmed live, not just from static analysis.** The "Access Control" quick-link tile (`legacy/HIS-WAR/src/main/webapp/views/common/dashboard-quick-links.html:8481,8484`, linking to `#/accessControl`) checked `checkAccess(677)` — permission 677 actually belongs to a different screen (`newAccessControl`), not this one. A separate, correctly-677-gated "Access Control" tile linking to `#/newAccessControl` exists elsewhere in the same file and was left untouched. Full severity assessment (including the broader, still-open findings this does NOT fix — the route's missing permission `resolve` and the backend `PrivilegeController`'s lack of server-side authorization) is documented in `docs/DECISION_NEEDED_AccessControlPermissionMisrouting.md`.
+
+**Fixed via a single, additive template change** on `fix/accesscontrol-quicklink-permission-id`:
+```diff
+-<fieldset ng-if="checkAccess(677)">
++<fieldset ng-if="checkAccess(676)">
+   <legend> Access Control</legend>
+   <div class="row ...">
+-    <div class="col-lg-4 ... ql-card" ng-if="checkAccess(677)">
++    <div class="col-lg-4 ... ql-card" ng-if="checkAccess(676)">
+```
+
+**Verified live, both directions, via synthetic `localStorage.permissions` sets** (the seed admin account holds both 676 and 677, so a real split-permission account wasn't available):
+- 677-only, no 676: before the fix, `checkAccess(677)` (what the tile checked) returned `true` -- tile reachable. After the fix, the tile now evaluates `checkAccess(676)`, which returns `false` for this set -- tile correctly hidden.
+- 676-only, no 677: `checkAccess(676)` returns `true` -- a legitimate holder of the correct permission still sees the tile after the fix.
+Confirmed the browser was serving the redeployed, non-cached template via a direct fetch of the served HTML. Real permissions restored via a session backup afterward.
+
+Classification: Security fix (access-control gate correction), narrow scope -- UI-tile-visibility only. Owner Decision: **Approved** (2026-07-26). Merged to `main` same day.
+
+**Notes:** Only `legacy/HIS-WAR/src/main/webapp/views/common/dashboard-quick-links.html` changed. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. Does NOT resolve the route-level guard gap or backend authorization gap -- both remain open in `docs/DECISION_NEEDED_AccessControlPermissionMisrouting.md`, awaiting separate owner direction.
