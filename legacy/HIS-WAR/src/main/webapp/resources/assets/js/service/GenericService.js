@@ -35,6 +35,14 @@ angular.module('myApp').service('GenericService', [ '$http','$rootScope','$cooki
 										{
 											title : ERROR_MSG
 										});
+			                } else {
+			                	$rootScope.stopLoader();
+			                	growl
+								.error(
+										(error.data && (error.data.message || error.data.summary)) || NETWORK_ERROR_MSG,
+										{
+											title : ERROR_MSG
+										});
 			                }
 			                return Promise.reject(error);
 			            }
@@ -205,6 +213,14 @@ angular.module('myApp').service('GenericService', [ '$http','$rootScope','$cooki
 												{
 													title : ERROR_MSG
 												});
+					                } else {
+					                	$rootScope.stopLoader();
+					                	growl
+									.error(
+											(error.data && (error.data.message || error.data.summary)) || NETWORK_ERROR_MSG,
+											{
+												title : ERROR_MSG
+											});
 					                }
 					                return Promise.reject(error);
 					            });
