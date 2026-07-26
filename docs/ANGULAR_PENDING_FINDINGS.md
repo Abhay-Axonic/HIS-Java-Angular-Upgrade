@@ -3582,3 +3582,38 @@ Also found: duplicate-check is exact-match only (org+unit+age+gender), not a ran
 **Action taken:** built `new/src/app/features/incident-master/` on `rebuild/phase4-batch20` faithfully against findings 1-5 above, with matching in-code comments referencing this entry. `tsc --noEmit` and `ng build` both clean. Not merged, not pushed beyond this branch's existing backup state.
 
 ---
+
+
+## PENDING-accesscontrol1-rolechanged-duplicate-guard-fixed-in-rebuild. `accessControl1` ("Role Permissions") -- a real, previously-uncataloged dead-guard bug, FIXED in the rebuild per explicit owner instruction, not faithfully reproduced
+
+**Scope note:** `accessControl1` (`/accessControl1`, title "Role Permissions") is the real, working role-to-module-privilege assignment screen, distinct from the decorative `/accessControl` mockup (never built -- see that state's own controller-registration-collision finding elsewhere in this doc/session notes) and from the already-built `newAccessControl` (menu/action-master builder, zero overlap). Built this session on `rebuild/phase4-batch20` against the real controller/template pair: `resources/assets/js/controller/access-control/access-control.js` (373 lines) + `views/access-control.html`.
+
+**The bug:** `roleChanged()` (access-control.js:258-273) is supposed to block Save when the selected role already has a permissions row for the currently-active tab's `moduleType`, setting `ui.duplicateRole = true` and disabling the Save button (`ng-disabled` includes `ui.duplicateRole`, view:108/124). The guard is dead code as written:
+
+```js
+var arr = $scope.permissionList.filter(function(item) {
+    return item.roleId == $scope.accessFormObj.roleId;
+})
+if (arr.length <= 0) {
+    $scope.ui.duplicateRole = false
+} else {
+    if (arr.moduleType == $scope.accessFormObj.moduleType) {   // <-- arr is an ARRAY; .moduleType is always undefined
+        $scope.ui.duplicateRole = true
+        growl.error("Permissions already assigned to this role.");
+    } else {
+        $scope.ui.duplicateRole = false
+    }
+}
+```
+
+`Array.prototype.filter` returns an array; `.moduleType` read directly off that array is always `undefined`, so `arr.moduleType == $scope.accessFormObj.moduleType` is always `undefined == x`, always `false`. `ui.duplicateRole` can therefore never become `true` via this path -- Save is never actually blocked by this specific guard, in legacy, ever (today, live, unmodified). A second, compounding issue: even with the array-indexing bug fixed, `$scope.accessFormObj.moduleType` is only ever assigned INSIDE `savePermissions()` itself (ctrl:41) -- never proactively when the role dropdown changes -- so at the time `roleChanged()` actually runs, it would almost always be comparing against a stale/blank value left over from a previous interaction, not the tab the user is currently looking at.
+
+**Fix applied in the rebuild** (`new/src/app/features/access-control1/access-control1.ts`, `evaluateDuplicateGuard()`): a real `.some()` scan over a correctly-typed `PrivilegeRecord[]` list for an existing `(roleId, moduleType)` match, using the CURRENTLY ACTIVE TAB (`activeTab()`, 1=HIS/2=BI) as the moduleType -- the only value available at role-change time that actually corresponds to what a Save from that tab would submit. Guard is skipped while `editMode()` is true, matching legacy's own `ng-disabled="ui.edit"` on the role `<select>` (the role can't be changed during Edit anyway, so there's nothing to guard).
+
+**A necessary, disclosed side-fix to make the above possible at all:** legacy's `getRoles()` (ctrl:276-289) and `getPermissions()` (ctrl:192-200) both assign into the SAME `$scope.permissionList` variable (one with `$scope.ui.roles`, the other with `response.data.privileges`), and both fire unchained alongside `getModules()`/`getBiModules()` on init (ctrl:368-371) -- whichever response lands last silently determines the shape of `permissionList` for the rest of the page's life, including whatever `roleChanged()` reads. The rebuild keeps `roles()` (dropdown options) and `permissionList()` (real `Privilege` rows, used by both the table and the fixed duplicate-guard) as two independent signals populated from their own dedicated endpoints -- there is no shared variable left for a race to corrupt. This doesn't change what the screen is capable of; it removes an accidental timing bug directly adjacent to, and a blocking prerequisite for, the assigned fix.
+
+**Classification:** this is a client-side-only Angular/AngularJS logic correction (an array-vs-property-access mistake and an unchained-fetch race, both entirely within the frontend controller), not a backend contract change, calculation, threshold, or rounding-rule change -- no `docs/BUSINESS_RULE_MANIFEST.md` entry applies. Explicitly authorized as a "fix, don't reproduce" instruction this session, unlike this project's general default (reproduce legacy bugs faithfully, log them here, don't silently fix).
+
+**Separately confirmed, NOT fixed (backend, out of scope for this Angular-only task):** `PrivilegeController.addPrivilege`'s server-side uniqueness pre-check (`legacy/Global/src/main/java/com/param/privilege/controller/PrivilegeController.java:249`) is scoped only to `(organizationId, unitId, roleId)`, ignoring `moduleType` entirely -- in tension with the two-tab (HIS/BI) UI design, since the server will reject a second privilege row for a role no matter which tab it's for. The client-side fix above cannot fully control what the server independently accepts/rejects; noted in a code comment in `access-control1.ts`, not attempted here. Also noted there but not fixed: `PrivilegeController.updatePrivilegeByRoleId` never reads `moduleType` off the update request body, so `PrivilegeDaoImpl.updatePrivilegeByRoleId` silently NULLs the row's `moduleType` column on every Update, regardless of what the client sends -- a pre-existing legacy backend defect, unrelated to the client-side fix above.
+
+---
