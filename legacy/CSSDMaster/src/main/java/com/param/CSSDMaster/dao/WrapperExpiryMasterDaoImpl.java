@@ -214,11 +214,17 @@ public class WrapperExpiryMasterDaoImpl extends GenericDao<WrapperExpiryMaster, 
 	@Override
 	public Response getWrapperExpiryByNameOrCode(WrapperExpiryMasterDto masterDto) {
 		try {
+			// Fix, fix/wrapperexpirymaster-duplicate-check -- setMaxResults(1) before
+			// uniqueResult() so this tolerates 2+ pre-existing rows sharing a name/code
+			// (e.g. duplicate data that predates this duplicate-check existing at all)
+			// instead of throwing "query did not return a unique result". The caller
+			// only needs to know whether ANY match exists, not which specific one.
 			Integer id = (Integer) sessionFactory.getCurrentSession().getNamedQuery("GET_WRAPPER_EXPIRY_BY_NAME_OR_CODE")
 					.setParameter("name", masterDto.getName().toLowerCase())
 					.setParameter("code", masterDto.getCode().toLowerCase())
 					.setParameter("organizationId", masterDto.getOrganizationId())
 					.setParameter("unitId", masterDto.getUnitId())
+					.setMaxResults(1)
 					.uniqueResult();
 			return new Response(SUCCESS, null, null, null, id);
 		} catch (HibernateException he) {
@@ -233,12 +239,15 @@ public class WrapperExpiryMasterDaoImpl extends GenericDao<WrapperExpiryMaster, 
 	@Override
 	public Response getWrapperExpiryByNameOrCodeNotById(WrapperExpiryMasterDto masterDto) {
 		try {
+			// Fix, fix/wrapperexpirymaster-duplicate-check -- same setMaxResults(1)
+			// robustness fix as getWrapperExpiryByNameOrCode above, for the update path.
 			Integer id = (Integer) sessionFactory.getCurrentSession().getNamedQuery("GET_WRAPPER_EXPIRY_BY_NAME_OR_CODE_NOT_ID")
 					.setParameter("name", masterDto.getName().toLowerCase())
 					.setParameter("code", masterDto.getCode().toLowerCase())
 					.setParameter("organizationId", masterDto.getOrganizationId())
 					.setParameter("unitId", masterDto.getUnitId())
 					.setParameter("id", masterDto.getId())
+					.setMaxResults(1)
 					.uniqueResult();
 			return new Response(SUCCESS, null, null, null, id);
 		} catch (HibernateException he) {
