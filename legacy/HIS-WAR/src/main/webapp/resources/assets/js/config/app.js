@@ -1,6 +1,52 @@
 'use strict';
 
 angular.module('myApp',['ui.router','ngAnimate','ngStorage','ngCookies','angular-growl','ui.bootstrap','ui.mask','datatables','ngSanitize','ui.mask','ui.bootstrap','angularjs-dropdown-multiselect','angularjs-dropdown-multiselect-day','checklist-model','chart.js', 'angular.filter', 'barcode', 'checklist-model','katex','webcam','kendo.directives','ui.tree','angularjs-datetime-picker', 'ivh.treeview','katex','pubnub.angular.service','infinite-scroll'])
+/**
+ * Fix, fix/session-token-validation-instability -- cookieObjectAppConfig/cookieObjectAppConfigSecond
+ * are pure client-side UI config (dozens of fields, never read server-side) that were being stored as
+ * real HTTP cookies and round-tripped on every single request. Once their combined size with
+ * cookieObject (which holds the real auth token/userId/unitId) crossed the browser's per-domain cookie
+ * budget, the browser silently evicted cookieObject to make room -- confirmed live: the request Cookie
+ * header dropped from ~4950 bytes to 4 bytes between two consecutive requests, wiping the auth cookie
+ * and causing a random mid-session logout, misreported to the user as "Token Expired!".
+ * This decorator transparently redirects storage for these two specific cookie names to sessionStorage
+ * (same-origin, no HTTP round-trip, much larger quota) -- every existing $cookies.getObject/putObject
+ * call site for these two names (251+ read sites across the app) keeps working completely unmodified.
+ */
+.config(['$provide', function($provide) {
+	$provide.decorator('$cookies', ['$delegate', function($delegate) {
+		var REDIRECTED_KEYS = ['cookieObjectAppConfig', 'cookieObjectAppConfigSecond'];
+		var originalGetObject = $delegate.getObject;
+		var originalPutObject = $delegate.putObject;
+		var originalRemove = $delegate.remove;
+
+		$delegate.getObject = function(key) {
+			if (REDIRECTED_KEYS.indexOf(key) !== -1) {
+				var raw = sessionStorage.getItem(key);
+				return raw ? JSON.parse(raw) : undefined;
+			}
+			return originalGetObject.apply($delegate, arguments);
+		};
+
+		$delegate.putObject = function(key, value) {
+			if (REDIRECTED_KEYS.indexOf(key) !== -1) {
+				sessionStorage.setItem(key, JSON.stringify(value));
+				return;
+			}
+			return originalPutObject.apply($delegate, arguments);
+		};
+
+		$delegate.remove = function(key) {
+			if (REDIRECTED_KEYS.indexOf(key) !== -1) {
+				sessionStorage.removeItem(key);
+				return;
+			}
+			return originalRemove.apply($delegate, arguments);
+		};
+
+		return $delegate;
+	}]);
+}])
 .run(['$rootScope','$cookies','$state','$window','GenericService','growl','$localStorage','$interval','$location','GenericServiceParamHeader','BillingGenericService','$timeout', '$compile', '$cacheFactory',function ($rootScope,$cookies,$state,$window,GenericService,growl,$localStorage,$interval,$location,GenericServiceParamHeader,BillingGenericService,$timeout,$compile,$cacheFactory) {
 	$rootScope.loginpage= false;
 	$rootScope.DoctorReferralShareMasterRevenueWise=1;
@@ -2060,7 +2106,15 @@ $rootScope.incidentReportingMenuOpen = false
 								{
 										if (response.data.status == "success") {
 											
-											$cookies.remove("cookieObject");
+											// Fix, fix/session-token-validation-instability -- removed erroneous
+											// $cookies.remove("cookieObject") that used to be here. This callback
+											// only archives THIS device's own already-closed-out prior login
+											// records (CHECK_OTHER_LOGIN filters on this device's own macAddress
+											// plus isLogin='N'/isLogout='Y'/status='C', i.e. sessions already
+											// logged out) as routine housekeeping every 90s -- clearing the
+											// CURRENT session's cookie here silently logged out the active
+											// session as a side effect of unrelated archival cleanup, misreported
+											// to the user as "Token Expired!".
 											
 //											$rootScope.stopLoader();
 								}else if (response.data.status == "error") 
