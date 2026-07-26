@@ -3680,3 +3680,33 @@ No global `$httpProvider` interceptor exists anywhere in the app (only hit is `w
 **Not fixed, not yet triaged.** Same posture as the schema-drift sweep: this is a raw, empirically-spot-checked inventory, not a fix. 3 call sites were confirmed live via curl (real 400/500s reproduced, DB left clean afterward) and 2 were confirmed fully live via authenticated in-browser execution against the real running app; the remaining ~13,852 sites rest on the AST static classification, which is precise about *shape* (handler present/absent/visible) but was not individually live-triggered.
 
 **Action taken:** investigation only, per explicit owner instruction. Flagged as severity-1/cross-cutting immediately upon Phase 1 completing, not batched -- same discipline as the schema-drift sweep and the dietUnitMater SQL injection escalation. Owner decision needed on fix scope and priority (a single fix to `GenericService.js`'s shared wrappers would address the *architecture*, but 863 call sites in the (b) "handler exists but silent" bucket would need their own review since the bug isn't purely in the shared code there).
+
+## PENDING-datetime-corruption-sweep-phase1. Date/timezone corruption sweep, Phase 1 complete -- two distinct sub-bugs, both confirmed systemic and worse/different than initially scoped (2026-07-26)
+
+Investigation only, nothing fixed, no files modified. Cross-checked by two independent methods (Python AST-style census + independent manual re-read) converging on identical numbers for sub-bug (a); 4 parallel investigators for sub-bug (b)'s 47-entity triage.
+
+### Sub-bug (a): `GlobalCommonDateUtils`'s swapped `HH:ss:mm` pattern
+
+**263 confirmed broken call sites** (of 3,011 total call sites across 7 sibling pattern-taking methods), 72 distinct files -- far broader than the 2 screens (`bloodBagType`, `OTIMSroleCreation`) already confirmed live. By module: BloodBank 137, AssetManagement 38, Global 36, OTIMS 35, ADT 6, Billing 6, LIS 3, Pharmacy 2. 246 of 263 are in DAO write paths (`setCreatedDate`/`setUpdatedDate` immediately before persist); 17 in Service-layer DTO staging; zero in Controllers. 99% (259/263) use the exact literal `"dd-M-yyyy HH:ss:mm"`.
+
+**Two further, previously-unknown related typos found and kept separate (not counted in the 263):**
+1. `"yyyy-M-dd HH:mm:yyyy"` (seconds token literally replaced by the string `yyyy`, not swapped) -- 4 sites, `RequestDiscountDaoImpl.java` (Billing, 3 live) and `UHIDMergeRequestDaoImpl.java` (Global, dead/commented).
+2. `"dd-M-yyyy HH:mm:ssss"` (correctly ordered, but an extra `s`) -- 12 sites, all `AbdmCredentialDaoImpl.java`. Not classified as the same bug (order is correct) but flagged as its own likely typo.
+
+### Sub-bug (b): `InstantConverter` UTC-write/systemDefault-read asymmetry
+
+**Correction to this session's own earlier framing:** I had told the owner this environment's server timezone is BST (UTC+1) and that's the source of the corruption. Live-verified raw-DB before/after readings this sweep show a consistent **-5:30 (5.5 hour) shift**, not -1:00, across all 3 entities tested. The OS and JVM `user.timezone` do report Europe/London/BST -- the extra magnitude is unexplained; the sweep's working theory is a second, compounding timezone conversion in the JDBC driver's `java.sql.Time` handling (`Time.toLocalTime()`/`PreparedStatement.setTime()` are known to silently apply the JVM default calendar on top), possibly interacting with an IST-shaped (+5:30) origin somewhere in the stack, but this is unresolved and called out as its own open question, not asserted as fact.
+
+**17 of 47 known Instant-bearing entities carry the corruption pattern in real, reachable code** (ShiftMaster, already known, plus 16 newly found): WeekendMaster, AccountPayableMaster, StaffScheduling, CorrectiveMaintenance, CorrectiveMaintenanceWorklist, UnitApplicationBillingConfiguration, BloodBagCollection, EquipmentScheduling, OtCompletionEquipment, OtScheduling, OTTransferRequest, ProcedureOrderMaster, FrequencyDetail, plus 3 with no live UI caller found (DrugAdministrationDetail, IncidentReportingMapper, IntakeOutputChartMaster -- orphaned endpoints, latent not active).
+
+**Live-verified via raw Postgres read-back (bypassing the entity layer) this sweep:** WeekendMaster, AccountPayableMaster, StaffScheduling -- all 3 showed the identical -5:30 shift after their real status-toggle/update endpoint was called via the real API with a real JWT. `UnitApplicationBillingConfiguration` was attempted but blocked by an unrelated HTTP 500 on seeding -- inconclusive, no orphan data left. The remaining 12 of the 16 new entities are structurally identical (load-mutate-save via GenericDao) to the 3 verified, but were NOT individually live-tested -- reasoned from code pattern only, flagged as such rather than asserted proven.
+
+**1 false positive found and excluded:** `PreventiveMaintenance`'s Instant fields/`@Convert` annotations are entirely commented out -- not a live bug, grep matched a comment.
+
+**1 entity confirmed safe by a different mechanism:** `AppointmentVitalMapper.postFactoTime` uses a separate, symmetric converter (`InstantConverterAppoVital` -- plain `Timestamp.from()`/`.toInstant()`, no zone split) despite matching the initial grep for the buggy one.
+
+**29 of 47 do not reproduce** -- bulk HQL/native `executeUpdate()` writes that never load a managed entity, create-only paths, or (in ServiceSchedule's case) no DAO exists for the entity at all. Full per-entity breakdown retained by the investigating agent, available on request.
+
+**Cleanup confirmed:** all seeded test rows deleted, tables restored (`m_weekend_master`, `m_account_payable_master`, `t_staff_scheduling` all back to their prior row counts).
+
+**Action taken:** investigation only. Flagged as severity-1/cross-cutting immediately upon completion, not batched. Two owner decisions needed: (1) fix scope/priority for both sub-bugs, given they're now confirmed far broader than the originally-known 3 screens; (2) whether to authorize a follow-up investigation into the unexplained -5:30 vs. expected -1:00 discrepancy before any fix is designed, since a fix aimed at the wrong root cause could leave the real corruption mechanism in place.
