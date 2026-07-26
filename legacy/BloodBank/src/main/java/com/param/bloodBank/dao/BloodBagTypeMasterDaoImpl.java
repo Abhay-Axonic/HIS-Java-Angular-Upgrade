@@ -51,9 +51,9 @@ public class BloodBagTypeMasterDaoImpl extends GenericDao<BloodBagTypeMaster, In
 			bloodBagTypeMaster.setUnitId(bloodBagTypeMasterDto.getUnitId());
 			bloodBagTypeMaster.setStatus(bloodBagTypeMasterDto.getStatus());
 			bloodBagTypeMaster.setCreatedBy(bloodBagTypeMasterDto.getCreatedBy());
-			bloodBagTypeMaster.setCreatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
+			bloodBagTypeMaster.setCreatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getCreatedDate(), "dd-M-yyyy HH:mm:ss"));
 			bloodBagTypeMaster.setUpdatedBy(bloodBagTypeMasterDto.getUpdatedBy());
-			bloodBagTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+			bloodBagTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			
 			save(bloodBagTypeMaster);
 		
@@ -82,7 +82,7 @@ public class BloodBagTypeMasterDaoImpl extends GenericDao<BloodBagTypeMaster, In
 			bloodBagTypeMaster.setOrganizationId(bloodBagTypeMasterDto.getOrganizationId());
 			bloodBagTypeMaster.setUnitId(bloodBagTypeMasterDto.getUnitId());
 			bloodBagTypeMaster.setUpdatedBy(bloodBagTypeMasterDto.getUpdatedBy());
-			bloodBagTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+			bloodBagTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 
 
 			update(bloodBagTypeMaster);
@@ -104,7 +104,7 @@ public class BloodBagTypeMasterDaoImpl extends GenericDao<BloodBagTypeMaster, In
 			BloodBagTypeMaster bloodBagTypeMaster=findById(bloodBagTypeMasterDto.getBloodBagTypeId());
 			bloodBagTypeMaster.setStatus(bloodBagTypeMasterDto.getStatus());
 			bloodBagTypeMaster.setUpdatedBy(bloodBagTypeMasterDto.getUpdatedBy());
-			bloodBagTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+			bloodBagTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodBagTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 
 			update(bloodBagTypeMaster);
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null);
