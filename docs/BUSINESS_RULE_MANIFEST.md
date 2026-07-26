@@ -1601,3 +1601,20 @@ Classification: Behavioral Change (a genuinely broken write path on real legacy 
 Classification: Behavioral Change (crash → clean rejection), but a within-branch robustness fix to not-yet-merged code rather than a correction to previously-live behavior — same disclosure standard applied regardless. Owner Decision: **Approved** (2026-07-26). Merged to `main` same day.
 
 **Notes:** Only `legacy/CSSDMaster/src/main/java/com/param/CSSDMaster/dao/WrapperExpiryMasterDaoImpl.java` changed. No local `try/catch` altered (fix is inside the existing try block, doesn't touch the catch). No business term outside `docs/GLOSSARY.json` introduced. No DB schema change.
+
+## BR-local-dev-db-drift-userstoremapper-empty — Local dev DB (`his_local`)'s `m_user_store_mapper` table was completely empty (0 rows), blocking the app-wide "select your store" popup that gates any screen calling `$rootScope.storePopup()` on first visit per session — found during batch 20 Step 2 live verification of `assetPMSScheduler` (2026-07-26)
+
+**Not a business rule — a local-dev-environment gap, same class as every other `BR-local-dev-db-drift-*` entry.** `preventiveMaintenanceController.js`'s `init()` unconditionally opens the `#pharmacyPopupBeforLeftexpand` modal ("Pharmacy" / "Store" dropdown) whenever `sessionStorage.selectedTopStore` is unset for the session, then calls `GET_STORE_LIST_BY_ID` (`legacy/Entity/.../model/UserStoreMapper.java:21-25`) to populate it. That query's driving table is `m_user_store_mapper` (`INNER JOIN storeMapper.store`) — with 0 rows in that table, the query returns empty regardless of `m_store` having valid active rows, so the dropdown renders with no options and the modal (forced open by the controller regardless of the API result) blocks the screen with no way to proceed. This is app-wide, not specific to `assetPMSScheduler` -- any screen that calls `storePopup()` before a store is chosen this session hits the same gap.
+
+**Fixed via a single, additive insert** mapping the seed admin user (`user_id=1`) to the dev DB's one real active store (`m_store.store_id=1`, "Test Main Store", org=1/unit=1):
+```sql
+INSERT INTO m_user_store_mapper (organization_id, unit_id, user_id, store_id, is_active, is_deleted, added_by, added_date, updated_by, updated_date)
+SELECT 1, 1, 1, store_id, true, false, 1, now(), 1, now()
+FROM m_store WHERE organization_id=1 AND unit_id=1 AND is_active=true;
+```
+
+**Verified live:** before the fix, navigating to `#/assetPMSScheduler` opened the Pharmacy/Store modal with an empty dropdown and no way to dismiss it via a real selection. After the insert, a fresh navigation auto-selected the single mapped store (`stores.length==1` branch) into `sessionStorage.selectedTopStore`, and a subsequent reload skipped the modal entirely, loading the screen's real search/list UI cleanly.
+
+Classification: Neither (pre-existing local-dev-DB gap / environment drift, no `legacy/` or `new/` application code touched). Owner Decision: N/A (local-dev-only, no sign-off required per this manifest's own scope, matching every other `BR-local-dev-db-drift-*` precedent) — resolved same-session.
+
+**Notes:** No `legacy/` or `new/` file changed. No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. No tracked migration file added (local-dev-only scope). Worth flagging for future sessions: this same gap will resurface for any other not-yet-tested screen that calls `$rootScope.storePopup()` on first visit, until `m_user_store_mapper` has broader real seed coverage.
