@@ -3381,3 +3381,76 @@ When Spring's interceptor tries to commit/flush on return, the session is alread
 **Action taken:** 4 candidates disqualified, logged here rather than silently dropped or silently replaced. Replacement candidates for these 4 slots to be sourced and verified under this same standard (content reading AND reachability), tracked separately once proposed.
 
 ---
+
+## PENDING-batch20-21-step1-audit-findings. Step 1 full-checklist audit results for all 10 finalized batch 20/21 candidates (2026-07-26) -- 2 further disqualifications, 1 major scope correction, multiple real bugs found across nearly every screen
+
+**Context:** with `fix/wrapperexpirymaster-duplicate-check` merged (BR-095), Step 1 audits (route/reachability/controller/backend/full sharpened checklist) were run in parallel for all 10 finalized batch 20/21 screens: assetPMSScheduler, linenReturn, call, accessControl, incidentMaster (batch 20); Qmslogo, floorMapMaster, occupancyUnitMaster, wrapperExpiryMaster, dietTypeMaster (batch 21). Full per-screen reports (file paths, line numbers, code excerpts) exist in this session's transcript; this entry preserves the durable summary and every owner decision made in response.
+
+### Qmslogo (batch 21) -- DISQUALIFIED (stale roster entry, already completed)
+
+This screen was already fully audited, rebuilt, tested, and merged/pushed to `origin/main` in an earlier session (batch 12, 2026-07-22 per `docs/SESSION_LOG.md`). `new/src/app/features/qmslogo/` already exists and is wired into `app.routes.ts`/`shell-nav.data.ts`. The only open item from that batch is `docs/DECISION_NEEDED_QmslogoAnonymousWriteAccess.md` (an unauthenticated write endpoint, `/applicationConfiguration/screen-images`, still awaiting owner sign-off -- unrelated to this cycle). **Owner decision (2026-07-26): drop the slot, propose a replacement candidate.** Not re-verified or reworked.
+
+### floorMapMaster (batch 21) -- DISQUALIFIED (no real legacy behavior exists)
+
+Both ends are an empty shell: the frontend (`floor-map-master.html`) has zero AngularJS wiring (hardcoded `&lt;option&gt;` lists, one permanently-empty static table row, no `ng-model`/`ng-click`/`ng-repeat` anywhere), and the backend has a real DB table (`adt.m_floor_map_master`) plus a bare JPA entity/DTO but **no DAO, Service, Controller, or endpoint exists anywhere** -- confirmed via exhaustive grep. Reachable only via Dashboard Quick Links (module 538); the sidebar entry is deliberately commented out. Secondary finding: the ui-router state has no `resolve` permission guard, unlike every sibling master state (low-impact today since the screen does nothing). **Owner decision (2026-07-26): disqualify, propose a replacement candidate.**
+
+### accessControl (batch 20) -- SCOPE CORRECTED, not disqualified
+
+The screen reachable via Dashboard Quick Links is non-functional glue between two unrelated legacy artifacts, not a coherent feature:
+- The `accessControl` ui-router state has **no permission resolve of its own**. The only live gate (`dashboard-quick-links.html:8481`, `checkAccess(677)`) uses an ID that actually belongs to a sibling state (`newAccessControl`). A different ID, 676, is live and gates an unrelated screen (`userAuthentication`, `app.js:17175`). The commented-out sidebar remnant (`new-side-bar.html:3255-3267`) uses yet a third/fourth combination (677 child / 908 parent).
+- **Two files register `.controller("accessControlController", ...)`** on the same Angular module: a decorative `angular-ui-tree` demo stub (`resources/assets/accessControl/controller/accessControlController.js`) and the real 373-line Role-Permissions controller (`resources/assets/js/controller/access-control/access-control.js`). Script load order in `index.html` (line 1786 after 1778) makes the real one silently win registration -- so `/accessControl` actually runs Role-Permissions logic (4 API calls fire on load: roles, HIS modules, BI modules, permission list) against a template (`views/common/access-control.html`) that displays none of that data, and whose own buttons (`expandAll`/`addMenu`/etc.) call functions that don't exist on that controller.
+- The visible template's Save button is wired to `data-target="#confirmLogout"` (the global logout-confirmation modal), not any save action -- non-functional regardless of the controller collision.
+- A genuinely working version of the intended feature already exists at a sibling route: `accessControl1` ("Role Permissions", `app.js:17284`, live sidebar entry at `new-side-bar.html:4785`, correct template `views/access-control.html` paired with the same real controller). One real client-side bug there: `roleChanged()` (`access-control.js:258-273`) compares an array (`Array.prototype.filter()`'s return value) directly against `.moduleType`, which is always `undefined` -- the duplicate-role guard can never fire, so the Save button's `ng-disabled="...||ui.duplicateRole"` never actually blocks a duplicate save via that path. Also, `PrivilegeController.addPrivilege`'s server-side uniqueness pre-check (`(org, unit, role)`) ignores `moduleType` entirely, in tension with the UI's two-tab (HIS/BI) save design.
+
+**Owner decision (2026-07-26): rebuild targets the real, working feature** (role -> module privilege assignment, i.e. what `accessControl1` already does correctly), fixing the broken duplicate-role check and resolving the permission-ID inconsistency -- logged as corrected behavior per the established silent/invisible-bug precedent, not a silent choice. The decorative `/accessControl` mockup and its stub controller are not to be replicated.
+
+### call (batch 20) -- proceeding as-is, 2 findings for Step 3
+
+- **Miscategorization**: despite living under `views/master/UnitMaster/` with "Master" in its controller name (`QMSCallMasterController`), this is a live, real-time operational kiosk console (calls patient tokens to counters, transfers between departments, 10-second polling) -- not a CRUD master screen. Flag for Shell nav placement under an Operations/Kiosk grouping rather than bundled with master-data screens, not a blocker to rebuilding it.
+- **Silent bug**: `$scope.call()`/`$scope.nextCall()` (`QMSCallMasterController.js:270,452`) send `organisationId: $scope.unitId` to `/api/pharmacy/releaseTokenNumber` -- `$scope.unitId` is never assigned anywhere in this controller (real values are `$scope.orgId`/`$scope.orgUnitId`). The backend DAO update matches zero rows and never checks affected-row count, so it unconditionally reports success -- the "release previously-locked token" step silently no-ops on every call. Candidate for corrected-behavior fix during Step 3 (needs its own BR entry when fixed).
+- Also found: `servedRecall()` is wired in the UI but its persistence call is commented out (no-op button); the `recall()` button's markup is fully commented out (dead); the legacy `$interval` polling is never cancelled on `$scope.$destroy` (must not be replicated -- rebuild needs proper teardown).
+
+### incidentMaster (batch 20) -- proceeding as-is, needs Step 2 live verification before fix-vs-replicate decisions
+
+- **Edit may be entirely broken**: two `@NamedQuery`s (`GET_INCIDENT_REPORT_MASTER_BY_ID`, `GET_ACTIVE_INCIDENT_REPORT_MASTER_LIST`) contain a bare snake_case column reference (`incident_report_id`) inside HQL, which should throw `QuerySyntaxException`. The DAO's silent catch swallows it into a generic error, surfaced via a bare `alert(...)` rather than the screen's usual growl toast. **Must be confirmed live (Step 2) before deciding replicate-vs-fix** -- if genuinely broken, exact parity would mean the rebuild's Edit is also broken, which needs explicit owner sign-off, not a silent choice either way.
+- **Status-toggle cascade is a no-op**: `updateIncidentReportRoleMasterStatus`/`updateIncidentReportTemplateMasterStatus` both only re-save the same master row: neither touches the actual role/template mapper tables their names imply they cascade to.
+- **No uniqueness enforcement** on Code/Description at DB or reliable server level (DAO check computed-but-unused on save, fully commented out on update); only a client-side check against the current page (10 rows), not the full dataset.
+- Universal silent try/catch across Controller/Service/DAO (~15+ empty-catch instances in this one feature) -- feeds the existing sweep-plan scope (`BR-PENDING-exception-swallowing-sweep-plan`), not a new standalone fix.
+- Save creates a full role x template cross-product on every save/update (mapper tables grow unbounded, never truly overwritten in place) -- deliberate design or bug, needs owner decision before Step 3.
+- Correctly categorized (catalog/master screen feeding the separate `t_incident_reporting_mapper` clinical workflow, not itself clinical) -- no miscategorization.
+
+### occupancyUnitMaster (batch 21) -- proceeding as-is, no reachability issue
+
+- Universal empty-catch pattern across Controller/Service/DAO (two empty catches per DAO method, `HibernateException` then `Exception`) -- every failure (DB error, mapping error, real duplicate) is indistinguishable to the user; feeds the existing exception-swallowing sweep plan.
+- Copy-paste timezone bug: `addOccupancyUnitTypeMaster` calls `TimeZoneComponent.getDateByzone(occupancyUnitMasterDto.getOccupancyUnitId())` -- should use the session/facility unit ID, not the entity's own (always-zero-on-create) PK. Currently "works" only by accident (falls into the `unitId&lt;=0` default-timezone branch). Traced to a copy-paste from `BedTypeMasterDaoImpl` (which hardcodes `getDateByzone(0)`).
+- Duplicate-check is description-only, not code-based -- two rows could share a Code with different Descriptions and not be blocked.
+
+### dietTypeMaster (batch 21) -- proceeding as-is, no nutritionalMaster-style schema mismatch
+
+- Column-by-column cross-check against both the live schema dump and original DDL: clean, no drift (unlike nutritionalMaster's `is_calories` gap) -- all 3 writes should work.
+- Real bug: `getDietTypeMasterPaginationList` (row fetch) filters by `organizationId` only; `getDietTypeMasterPaginationListCount` filters by `organizationId` AND `unitId` -- in a multi-unit org, pager math will desync from actual rows returned. A `//unitId ... //Dilip` comment shows this was a deliberate-but-incomplete unit-scoping rollback.
+- Frontend fires 3 near-simultaneous, redundant list-fetch calls on every page load (a race condition -- whichever resolves last silently wins); should be simplified to one fetch in the rebuild (flagged as a timing-observable behavior change needing sign-off, not silently done).
+
+### assetPMSScheduler (batch 20) -- proceeding as-is, no reachability issue
+
+- Silent exception swallow in the shared `GlobalCommonDateUtils.getDate()` utility (`catch(ParseException e){ log; }`, no rethrow) -- malformed dates silently persist as `null`.
+- Real, currently-live date-corruption bug: `PreventiveMaintenanceDaoImpl` parses dates with a swapped `"dd-M-yyyy HH:ss:mm"` pattern (minutes/seconds swapped) on 3 of 4 write paths, while the frontend sends normal `HH:mm:ss` order for those same 3 calls -- silently swaps minutes and seconds in the persisted timestamp. (The one path that "works," Add-\>Save, does so only because the frontend deliberately also swaps its own format to match -- two bugs canceling out by accident.)
+- Backend copy-paste bug: `getActiveAssestList`'s Asset Name filter reads `getAssetCode()` instead of `getAssetName()` -- searching by Asset Name actually filters by Asset Code.
+- Frontend bug: `getActiveAssetsByCriteria`'s client-side re-filter uses strict equality against `assetSearchObj.assetCategory`; if Asset Category is left blank, every real backend result is silently filtered out (empty table, no error).
+- All 4 are silent/invisible-bug candidates for corrected-behavior fixes during Step 3, each needing its own BR entry.
+
+### wrapperExpiryMaster (batch 21) -- proceeding as-is, backend already fixed (BR-095)
+
+- Frontend silently swallows all non-401 backend errors on Save/Update (`GenericService.serviceAction` has no generic error handler) -- a real "silently swallowed exception," just client-side. Universal to every screen using plain `GenericService`, not unique here, but governs this screen's Create/Update/duplicate-check UX.
+- `getWrapperListcount` (pager count) filters by `organizationId` only; the list query filters by `organizationId` AND `unitId` -- same pagination-desync bug shape as dietTypeMaster's, in a multi-unit org.
+- Status-vocabulary drift: `is_active`/`is_deleted` booleans are set once at creation but never touched by the status-toggle endpoint (which only updates the `status` char) -- they go permanently stale after any deactivate/reactivate. All of this screen's own queries filter on `status` (internally consistent), but any other integration joining on `is_active` would see stale data.
+
+### linenReturn (batch 20) -- proceeding as rebuild (owner decision)
+
+Fully-built backend (7 real Controller/Service/DAO endpoints under `/api/linenLaundry/linen/return`) paired with a 100% static, zero-wiring frontend (no `ng-model`/`ng-click`/`ng-repeat`/`$http` anywhere in any of its 3 views) -- confirmed copy-pasted from the unrelated Inventory "Material Return" screen and never finished (leftover `Material Return` legend comment, a dead `href$="materialReturn"` active-class selector, Save button wired to the global logout modal). Real backend bug: `LinenReturnService.saveLinenReturn()` hardcodes `returnNo = "RET-001"` for every single return. **Owner decision (2026-07-26): proceed as a legitimate rebuild candidate** -- build a real Angular frontend against the existing, mostly-correct backend contract; fix the `RET-001` hardcode as a silent-bug correction (logged with its own BR entry when implemented), since no real user has ever observed or depended on the current broken behavior.
+
+### Action taken
+
+2 further disqualifications (Qmslogo, floorMapMaster) on top of the earlier 4 -- replacement-candidate discovery in progress, tracked separately once proposed. 1 major scope correction (accessControl, retargeted to the working Role-Permissions feature). The remaining 7 screens (assetPMSScheduler, linenReturn, call, incidentMaster, occupancyUnitMaster, dietTypeMaster, wrapperExpiryMaster) proceed to Step 2 with their respective findings carried forward as corrected-behavior candidates for Step 3, each requiring its own `BUSINESS_RULE_MANIFEST.md` entry and owner sign-off when actually fixed, per standing project convention. Nothing here fixed yet -- audit/documentation only.
+
+---
