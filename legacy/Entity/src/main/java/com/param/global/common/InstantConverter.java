@@ -27,7 +27,7 @@ public class InstantConverter implements AttributeConverter<Instant, Time> {
         // Convert SQL Time back to Instant
         LocalTime localTime = dbData.toLocalTime();
         return localTime.atDate(java.time.LocalDate.now()) // Use current date
-                .atZone(java.time.ZoneId.systemDefault()) // Assume the system's time zone
+                .atZone(java.time.ZoneOffset.UTC) // Match convertToDatabaseColumn's write-side zone, so load->save round-trips are idempotent
                 .toInstant();
     }
 }
