@@ -395,7 +395,8 @@ public class PrivilegeController {
 			privilege.setRoleId(reader.getInt(Constants.JSON_PROPERTY_ROLEID));
 			privilege.setOrganisationId(reader.getInt(Constants.JSON_PROPERTY_ORG_ID));
 			privilege.setUnitId(reader.getInt(Constants.JSON_PROPERTY_UNIT_ID));
-			
+			privilege.setModuleType(reader.getInt(Constants.JSON_PROPERTY_MODULETYPE));
+
 			privilege.setModules(modules);
 			PrivilegeService.updatePrivilegeByRoleId(privilege);
 			responseObject = new HashMap<>();
