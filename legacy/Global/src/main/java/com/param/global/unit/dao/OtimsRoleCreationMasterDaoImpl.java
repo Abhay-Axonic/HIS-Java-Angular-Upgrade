@@ -54,9 +54,9 @@ public class OtimsRoleCreationMasterDaoImpl extends GenericDao<OtimsRoleMaster, 
 				mstr.setOrgId(otimsRoleMasterDto.getOrgId());
 				mstr.setUnitId(otimsRoleMasterDto.getUnitId());
 				mstr.setCreatedBy(otimsRoleMasterDto.getCreatedBy());
-				mstr.setCreatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
+				mstr.setCreatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getCreatedDate(), "dd-M-yyyy HH:mm:ss"));
 				mstr.setUpdatedBy(otimsRoleMasterDto.getUpdatedBy());
-				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 				sessionFactory.getCurrentSession().save(mstr);
 				return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, mstr);
 			
@@ -110,7 +110,7 @@ public class OtimsRoleCreationMasterDaoImpl extends GenericDao<OtimsRoleMaster, 
 				mstr = findById(otimsRoleMasterDto.getRoleId());
 				mstr.setRoleName(otimsRoleMasterDto.getRoleName());
 				mstr.setUpdatedBy(otimsRoleMasterDto.getUpdatedBy());
-				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 				update(mstr);
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, mstr);
 			}
@@ -131,7 +131,7 @@ public class OtimsRoleCreationMasterDaoImpl extends GenericDao<OtimsRoleMaster, 
 				mstr = findById(otimsRoleMasterDto.getRoleId());
 				mstr.setStatus(otimsRoleMasterDto.getStatus());
 				mstr.setUpdatedBy(otimsRoleMasterDto.getUpdatedBy());
-				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(otimsRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 				update(mstr);
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, mstr);
 			
