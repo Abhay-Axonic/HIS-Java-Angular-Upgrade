@@ -1584,3 +1584,20 @@ Type/length matched to the entity's `String isCalories` field and this app's oth
 Classification: Behavioral Change (a genuinely broken write path on real legacy now works) but of the disclosed, silent-bug-correction class per `CLAUDE.md`'s precedent (`identificationMaster`/`currencyMaster`/`hospitalAccountMaster`) — the fix restores the entity's own already-declared, always-intended behavior rather than introducing new behavior. Owner Decision: **Approved** (2026-07-25, Option A). Held on `fix/nutritionalmaster-is-calories-column`, not yet merged to `main` — merge requires separate explicit approval per standing `CLAUDE.md` discipline.
 
 **Notes:** No `legacy/` or `new/` `.java` file changed (schema-only fix). No local `try/catch` touched. No business term outside `docs/GLOSSARY.json` introduced. `docs/ANGULAR_PENDING_FINDINGS.md` entry `PENDING-nutritionalmaster-create-endpoint-crash` and `docs/DECISION_NEEDED_NutritionalMasterCreateAlwaysFails.md` both updated to reflect resolution. `docs/BATCH19_STEP6_CHECKLIST.md`'s `nutritionalMaster` section updated to test the now-working Create/Update/status-toggle flow instead of the pre-fix broken state.
+
+## BR-095 — WrapperExpiryMaster's new duplicate-check (name-or-code, org+unit scoped) crashed with HTTP 500 instead of cleanly rejecting when 2+ pre-existing rows already shared a name/code — found during batch 21 Step 0 pre-rebuild readiness check (2026-07-25/26)
+
+**Introduced on the same branch as the duplicate-check itself (`fix/wrapperexpirymaster-duplicate-check`), not a regression in previously-working code.** `getWrapperExpiryByNameOrCode`/`getWrapperExpiryByNameOrCodeNotById` (`legacy/CSSDMaster/.../dao/WrapperExpiryMasterDaoImpl.java`) used Hibernate's `.uniqueResult()`, which throws `NonUniqueResultException` when a query matches more than one row. Because this duplicate-check did not previously exist, pre-existing duplicate name/code data was plausible in a real environment — confirmed live: seeded 2 rows sharing code `WRPDUP`, then a 3rd save attempt against that code crashed with HTTP 500 (`query did not return a unique result: 2`) instead of the intended clean rejection.
+
+**Fixed via a single additive `.setMaxResults(1)`** before `.uniqueResult()` in both methods — the caller only needs to know whether any match exists, not which specific one:
+```java
+.setParameter("unitId", masterDto.getUnitId())
+.setMaxResults(1)
+.uniqueResult();
+```
+
+**Verified live, before and after, against realistic pre-existing duplicate data (not just a clean single-duplicate case):** with 2 pre-existing `WRPDUP` rows seeded, a 3rd save attempt against that code returned HTTP 500 before the fix and a clean HTTP 200 after, with the duplicate correctly rejected (DB confirmed no 3rd row inserted). Tomcat logs showed zero exceptions on this code path after the fix (only the same pre-existing, unrelated `RevertAllocatedQuantity` scheduled-job error already on record from prior sessions). Test rows deleted via `psql` after verification.
+
+Classification: Behavioral Change (crash → clean rejection), but a within-branch robustness fix to not-yet-merged code rather than a correction to previously-live behavior — same disclosure standard applied regardless. Owner Decision: **Approved** (2026-07-26). Merged to `main` same day.
+
+**Notes:** Only `legacy/CSSDMaster/src/main/java/com/param/CSSDMaster/dao/WrapperExpiryMasterDaoImpl.java` changed. No local `try/catch` altered (fix is inside the existing try block, doesn't touch the catch). No business term outside `docs/GLOSSARY.json` introduced. No DB schema change.
