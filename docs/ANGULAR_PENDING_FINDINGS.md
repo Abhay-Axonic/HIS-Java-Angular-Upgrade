@@ -3836,3 +3836,23 @@ Real in-browser interaction testing against the live legacy app and real backend
 **Pagination is genuinely functional**, same real-offset-tracking shape as `bloodBagType`.
 
 **Action taken:** rebuilt on `rebuild/phase4-batch23` (commit `6ff518f4`), Shell nav under a new "Lab/LIS" heading (first LIS screen in this project). Held, not merged/pushed. Test data (`MP1`, `MP2`, one machine `Analyzer One` seeded via the sibling Machine Master screen to unblock testing) left in place on both apps, not cleaned up, per this project's established Step 5/6 practice.
+
+## PENDING-batch23-step2-storageunitmaster-goldentrace. `storageunitMaster` (batch 23) -- Step 0-5 complete, rebuilt with Shell integration. Replaces KITmasterPharmacy
+
+**Context:** replaces `KITmasterPharmacy` mid-batch -- that screen turned out to be a 2-screen, ~640-line, multi-entity inventory-item-selection workflow (kit type dropdown, item-search modal with asset/product category filters, per-item quantity validation, 5+ backend APIs) far more complex than the simple lookup-master shape this batch was selected around. Owner approved swapping it out for `storageunitMaster` (Pharmacy, module id 470), independently verified: own dedicated controller, 2 fields, no modals/nested entities, backend confirmed live.
+
+**Modern REST-style backend** (`StorageUnitController.java`, `ResponseEntity`), not the old `{status,message,listObject,object}` envelope used everywhere else in this batch -- `GetAll` returns a raw array; Create/Update return a bare `{id, message}` body with HTTP 201/201, no `status` field. Success/failure read from the HTTP status code. Live-verified via direct calls: Create → 201 `{"id":1,"message":"Storage Unit Inserted Successfully"}`; Update → 201 `{"id":1,"message":"Storage Unit Updated Successfully"}`.
+
+**One Save button handles BOTH create and update** -- unlike every other screen in this batch/project, there's no separate saveBtnFlag/updateBtnFlag-gated button and the title never changes from "Save". Confirmed via the view and live-tested on the rebuild (editing a row and clicking the still-labeled "Save" button correctly updates it).
+
+**Confirm modal fires unconditionally on every Save click** -- the Save link uses native Bootstrap `data-toggle="modal"`, not an Angular `popUpFlag`. Confirmed by reading the full controller (no such flag exists anywhere) and live-tested: the modal appears even with blank required fields (the button's "disabled" look is CSS-only), and validation only runs after confirming. This screen is structurally immune to this batch's never-rearms confirm-modal bug class -- there's no flag to get stuck.
+
+**Duplicate-check is 100% client-side** (scans the in-memory list, no server-side uniqueness query exists) -- confirmed by reading the DAO/Service and live-tested on both real legacy (via a direct authenticated call) and the rebuild: creating a second row with an already-used code was correctly rejected with "Duplicate code" on both apps.
+
+**A real referential-integrity guard, not a bug:** `StorageUnitService.update` blocks deactivating a Storage Unit still assigned to at least one Item, reverting the status server-side and returning a non-2xx response with message "Storage Unit is assigned to Items". The frontend's `ToggleStatus` specifically checks for a 406 status to revert the optimistic checkbox flip and show that message -- but does NOT revert on any other kind of error, which reads as an oversight in legacy, faithfully reproduced rather than corrected. Not independently live-reproduced this session (would require seeding an Item referencing the unit); confirmed at the source level and reproduced identically in the rebuild's error handling.
+
+**Deactivating a row clears the edit form** (`ClearFields()` called inside `ToggleStatus` when the new status is false) -- confirmed live on the rebuild: typing into the Code field then toggling a row's status to Inactive cleared the in-progress input.
+
+**Status is a real BOOLEAN** on this screen, not the 'A'/'I' character used by every other screen in this batch. Scoped by `organizationId` only -- no `unitId` anywhere in this screen's API, also unlike every sibling screen.
+
+**Action taken:** rebuilt on `rebuild/phase4-batch23` (commit `b005f9ae`), Shell nav under the existing "Pharmacy" heading. Held, not merged/pushed. Test data (`SU1`, `SU2`) left in place on both apps, not cleaned up, per this project's established Step 5/6 practice.
