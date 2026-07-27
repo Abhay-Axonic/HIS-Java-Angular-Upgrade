@@ -1399,6 +1399,41 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/operation-theatre-type/operation-theatre-type').then((m) => m.OperationTheatreType),
       },
+      // Phase 4 batch 23.
+      {
+        path: 'bloodBagType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 731, title: 'Blood Bag Type Master' },
+        loadComponent: () =>
+          import('./features/blood-bag-type-master/blood-bag-type-master').then((m) => m.BloodBagTypeMaster),
+      },
+      {
+        path: 'OTIMSroleCreation',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'OTIMS Role Creation' },
+        loadComponent: () =>
+          import('./features/otims-role-creation/otims-role-creation').then((m) => m.OtimsRoleCreation),
+      },
+      {
+        path: 'machineParameterMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 839, title: 'Machine Parameter Master' },
+        loadComponent: () =>
+          import('./features/machine-parameter-master/machine-parameter-master').then((m) => m.MachineParameterMaster),
+      },
+      {
+        path: 'storageunitMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 470, title: 'Storage Unit Master' },
+        loadComponent: () =>
+          import('./features/storage-unit-master/storage-unit-master').then((m) => m.StorageUnitMaster),
+      },
+      {
+        path: 'mealMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 512, title: 'Meal Master' },
+        loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

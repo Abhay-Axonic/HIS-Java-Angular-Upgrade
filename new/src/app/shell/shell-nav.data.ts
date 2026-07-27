@@ -168,6 +168,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/userAuthentication', title: 'User Authentication' },
       { path: '/roleCreation', title: 'Role Creation' },
       { path: '/newAccessControl', title: 'Access Control' },
+      { path: '/OTIMSroleCreation', title: 'OTIMS Role Creation' },
     ],
   },
   {
@@ -197,6 +198,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/genericMaster', title: 'Generic Master' },
       { path: '/frequencyMaster', title: 'Frequency Master' },
       { path: '/pharmacyformulationTypeMaster', title: 'Formulation Type Master' },
+      { path: '/storageunitMaster', title: 'Storage Unit Master' },
     ],
   },
   {
@@ -262,6 +264,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/bloodDonortype', title: 'Blood Donor Type Master' },
       { path: '/bloodBagCapacity', title: 'Blood Bag Capacity Master' },
       { path: '/bloodBankMaster', title: 'Blood Bank Master' },
+      { path: '/bloodBagType', title: 'Blood Bag Type Master' },
     ],
   },
   {
@@ -282,6 +285,11 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/nutritionalMaster', title: 'Nutritional Master' },
       { path: '/dietUnitMater', title: 'Diet Unit Master' },
+      { path: '/mealMaster', title: 'Meal Master' },
     ],
+  },
+  {
+    heading: 'Lab/LIS',
+    items: [{ path: '/machineParameterMaster', title: 'Machine Parameter Master' }],
   },
 ];
