@@ -1366,6 +1366,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-donor-type/blood-donor-type').then((m) => m.BloodDonorType),
       },
+      {
+        path: 'bloodBagType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 731, title: 'Blood Bag Type Master' },
+        loadComponent: () =>
+          import('./features/blood-bag-type-master/blood-bag-type-master').then((m) => m.BloodBagTypeMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

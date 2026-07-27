@@ -259,6 +259,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/bloodGroupMaster', title: 'Blood Group Master' },
       { path: '/bloodDonortype', title: 'Blood Donor Type Master' },
       { path: '/bloodBagCapacity', title: 'Blood Bag Capacity Master' },
+      { path: '/bloodBagType', title: 'Blood Bag Type Master' },
     ],
   },
   {
