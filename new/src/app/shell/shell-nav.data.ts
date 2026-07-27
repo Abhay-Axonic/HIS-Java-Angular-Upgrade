@@ -46,6 +46,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/hospitalAccountMaster', title: 'Hospital Account Master' },
       { path: '/transactionTypeMaster', title: 'Transaction Type Master' },
       { path: '/ARmaster', title: 'AR Master' },
+      { path: '/APmaster', title: 'AP Master' },
     ],
   },
   {

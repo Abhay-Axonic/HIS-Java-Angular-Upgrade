@@ -1379,6 +1379,12 @@ export const routes: Routes = [
         data: { title: 'Diet Unit Master' },
         loadComponent: () => import('./features/diet-unit-master/diet-unit-master').then((m) => m.DietUnitMaster),
       },
+      {
+        path: 'APmaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 617, title: 'AP Master' },
+        loadComponent: () => import('./features/ap-master/ap-master').then((m) => m.ApMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
