@@ -1373,6 +1373,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-bag-type-master/blood-bag-type-master').then((m) => m.BloodBagTypeMaster),
       },
+      {
+        path: 'OTIMSroleCreation',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'OTIMS Role Creation' },
+        loadComponent: () =>
+          import('./features/otims-role-creation/otims-role-creation').then((m) => m.OtimsRoleCreation),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

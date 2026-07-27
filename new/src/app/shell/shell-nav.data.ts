@@ -166,6 +166,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/userAuthentication', title: 'User Authentication' },
       { path: '/roleCreation', title: 'Role Creation' },
       { path: '/newAccessControl', title: 'Access Control' },
+      { path: '/OTIMSroleCreation', title: 'OTIMS Role Creation' },
     ],
   },
   {
