@@ -46,6 +46,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/hospitalAccountMaster', title: 'Hospital Account Master' },
       { path: '/transactionTypeMaster', title: 'Transaction Type Master' },
       { path: '/ARmaster', title: 'AR Master' },
+      { path: '/APmaster', title: 'AP Master' },
     ],
   },
   {
@@ -53,6 +54,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/inputOutputCharts', title: 'Intake Fluid Output(ml) Charts' },
       { path: '/periodicityService', title: 'Periodicity Service' },
+      { path: '/shiftMaster', title: 'Shift Master' },
     ],
   },
   {
@@ -259,6 +261,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/bloodGroupMaster', title: 'Blood Group Master' },
       { path: '/bloodDonortype', title: 'Blood Donor Type Master' },
       { path: '/bloodBagCapacity', title: 'Blood Bag Capacity Master' },
+      { path: '/bloodBankMaster', title: 'Blood Bank Master' },
     ],
   },
   {
@@ -271,10 +274,14 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/surgeryGradeMaster', title: 'Surgery Grade Master' },
       { path: '/operationTableType', title: 'Operation Table Type' },
       { path: '/anaesthesiaType', title: 'Anaesthesia Type' },
+      { path: '/operationTheatreType', title: 'Operation Theatre Type' },
     ],
   },
   {
     heading: 'Diet & Nutrition',
-    items: [{ path: '/nutritionalMaster', title: 'Nutritional Master' }],
+    items: [
+      { path: '/nutritionalMaster', title: 'Nutritional Master' },
+      { path: '/dietUnitMater', title: 'Diet Unit Master' },
+    ],
   },
 ];

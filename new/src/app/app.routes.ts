@@ -1366,6 +1366,39 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-donor-type/blood-donor-type').then((m) => m.BloodDonorType),
       },
+      // Phase 4 batch 22.
+      {
+        path: 'shiftMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 408, title: 'Shift Master' },
+        loadComponent: () => import('./features/shift-master/shift-master').then((m) => m.ShiftMaster),
+      },
+      {
+        path: 'dietUnitMater',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Diet Unit Master' },
+        loadComponent: () => import('./features/diet-unit-master/diet-unit-master').then((m) => m.DietUnitMaster),
+      },
+      {
+        path: 'APmaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 617, title: 'AP Master' },
+        loadComponent: () => import('./features/ap-master/ap-master').then((m) => m.ApMaster),
+      },
+      {
+        path: 'bloodBankMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 742, title: 'Blood Bank Master' },
+        loadComponent: () =>
+          import('./features/blood-bank-master/blood-bank-master').then((m) => m.BloodBankMaster),
+      },
+      {
+        path: 'operationTheatreType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 521, title: 'Operation Theatre Type' },
+        loadComponent: () =>
+          import('./features/operation-theatre-type/operation-theatre-type').then((m) => m.OperationTheatreType),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
