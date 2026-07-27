@@ -3796,3 +3796,23 @@ Real in-browser interaction testing against the live legacy app and real backend
 **Update has no confirm-modal gate** (legacy, reproduced as-is) -- confirmed live, Update fires immediately with no modal on both apps.
 
 **Action taken:** rebuilt on `rebuild/phase4-batch23` (commit `125564f3`), Shell nav under "Blood Bank" heading. Held, not merged/pushed. Test data (`BBT1`, `BBT3`, and a rejected `BBT2`/`BBT4` duplicate attempt) left in place on both legacy and the rebuild, not cleaned up, per this project's established Step 5/6 practice.
+
+## PENDING-batch23-step2-otimsrolecreation-goldentrace. `OTIMSroleCreation` (batch 23) -- Step 0-5 complete, rebuilt with Shell integration
+
+**Context:** second of batch 23's 5 screens. No `resolve`/moduleId block (confirmed via `app.js:20133`, matches `states_enriched.json`'s `has_resolve: false`), route registered under "User Management" heading. Legacy timestamp bug already fixed and merged this session (`fix/otimsrolecreation-timestamp-swapped-pattern`).
+
+**Risk-tag correction:** `states_enriched.json` tags this screen `clinical_risk: yes` via a keyword match on "otims" in the state name -- a false positive, confirmed by reading the entity directly. `OtimsRoleMaster` (`m_otims_role_master`) holds only `roleId`/`roleName`/`status`/`orgId`/`unitId` plus audit columns -- a pure org/unit-scoped role-label lookup for OT staff scheduling, no patient/clinical data. Admin-tier, not clinical-tier.
+
+**`roleName` is a hardcoded 4-option `<select>`** ("OT Manager", "Surgeon", "admin" -- lowercase, "Anaesthetist"), not free text -- confirmed via the legacy view, reproduced verbatim including the placeholder option's no-`value` quirk (its bound value defaults to its own text, "Select OTIMS User Role").
+
+**Zero client-side validation -- confirmed by full controller read and live-tested, faithfully reproduced.** No `growl.error` field check exists anywhere in `save()`/`update()`. Live-verified against real legacy: a Save with the dropdown left on its placeholder reaches the real save/duplicate-check endpoint with no client-side block.
+
+**Update's duplicate-check has NO self-exclusion -- a real, severe, near-total-blocking bug, confirmed at the source level and live, faithfully reproduced.** `OtimsRoleCreationMasterDaoImpl.updateOtimsRoleMaster` (dao:90-123) reuses the exact same `CHECK_FOR_UNIQUE_OTIMS_ROLE` named query as `saveOtimsRoleMaster`, with no `roleId != :roleId` exclusion. Live-verified on both real legacy and the rebuild: created `Surgeon`, then clicked Edit → Update with no changes -- both apps rejected it identically as `"Already Exists."`. Since `roleName` is this screen's only editable field, Update can only succeed by changing to a genuinely different, not-yet-used role name. Same defect class as `dietUnitMater`'s self-collision bug (batch 22); this is a server-side defect, no client-side workaround added in the rebuild.
+
+**Confirm-modal never-rearms bug -- FIXED, per owner decision 2026-07-27 extending batch 22's decision to all 5 batch 23 screens.** Same `popUpFlag` shape, live-confirmed on real legacy, fixed in the rebuild via `popupArmed` (rearms on both success and failure).
+
+**Status toggle does NOT reload the list on either branch** (confirmed by source read -- no `masterList()` call anywhere in `updateStatus()`) -- reproduced via the same optimistic-local-patch pattern as `operationTheatreType`/`cardTypeMaster` (batch 22). Live-verified via network capture: `updateOtimsRoleMasterStatus` is the last call, no follow-up list fetch.
+
+**No pagination, no search box** -- legacy's `masterList()` fetches all rows for org/unit in one call, and the view has neither control. Reproduced as a single unfiltered fetch.
+
+**Action taken:** rebuilt on `rebuild/phase4-batch23` (commit `8f2c05d7`), Shell nav under "User Management" heading. Held, not merged/pushed. Test data (`Surgeon`, `OT Manager`) left in place on both apps, not cleaned up, per this project's established Step 5/6 practice.
