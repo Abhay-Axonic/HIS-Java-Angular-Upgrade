@@ -1,0 +1,123 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="code">Code<span class="required">*</span></label>
+        <input
+          id="code"
+          type="text"
+          autocomplete="off"
+          maxlength="10"
+          [ngModel]="form().code"
+          (ngModelChange)="updateField('code', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="code"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Storage Unit Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="unitName">Storage Unit<span class="required">*</span></label>
+        <input
+          id="unitName"
+          type="text"
+          autocomplete="off"
+          maxlength="100"
+          [ngModel]="form().unitName"
+          (ngModelChange)="updateField('unitName', $event)"
+          [class.invalid]="isUnitNameInvalid()"
+          name="unitName"
+        />
+        @if (isUnitNameInvalid()) {
+          <p class="help-block">Storage Unit is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      (records)
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+
+    <button type="button" class="btn-primary" (click)="clearSearch()">Clear</button>
+
+    <button type="button" class="btn-primary icon-btn" title="Save" [class.disabled]="isSaveDisabled()" (click)="save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Storage Unit</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.id) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.unitName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" [class.disabled]="!row.status" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      @for (page of pageNumbers(); track page) {
+        <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+      }
+    </div>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

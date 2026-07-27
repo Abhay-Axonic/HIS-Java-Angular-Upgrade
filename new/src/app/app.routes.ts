@@ -1387,6 +1387,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/machine-parameter-master/machine-parameter-master').then((m) => m.MachineParameterMaster),
       },
+      {
+        path: 'storageunitMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 470, title: 'Storage Unit Master' },
+        loadComponent: () =>
+          import('./features/storage-unit-master/storage-unit-master').then((m) => m.StorageUnitMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

@@ -196,6 +196,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/genericMaster', title: 'Generic Master' },
       { path: '/frequencyMaster', title: 'Frequency Master' },
       { path: '/pharmacyformulationTypeMaster', title: 'Formulation Type Master' },
+      { path: '/storageunitMaster', title: 'Storage Unit Master' },
     ],
   },
   {
