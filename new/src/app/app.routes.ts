@@ -1373,6 +1373,12 @@ export const routes: Routes = [
         data: { moduleId: 408, title: 'Shift Master' },
         loadComponent: () => import('./features/shift-master/shift-master').then((m) => m.ShiftMaster),
       },
+      {
+        path: 'dietUnitMater',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Diet Unit Master' },
+        loadComponent: () => import('./features/diet-unit-master/diet-unit-master').then((m) => m.DietUnitMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
