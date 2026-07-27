@@ -1,0 +1,153 @@
+<section class="page">
+  <fieldset>
+    <legend>Blood Bank Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="bloodBankCode">Code<span class="required">*</span></label>
+        <input
+          id="bloodBankCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bloodBankCode"
+          (ngModelChange)="updateField('bloodBankCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="bloodBankCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="bloodBankDesc">Description<span class="required">*</span></label>
+        <input
+          id="bloodBankDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().bloodBankDesc"
+          (ngModelChange)="updateField('bloodBankDesc', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="bloodBankDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="address">Address<span class="required">*</span></label>
+        <input
+          id="address"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().address"
+          (ngModelChange)="updateField('address', $event)"
+          [class.invalid]="isAddressInvalid()"
+          name="address"
+        />
+        @if (isAddressInvalid()) {
+          <p class="help-block">Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="contactNo">Contact No<span class="required">*</span></label>
+        <input
+          id="contactNo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().contactNo"
+          (ngModelChange)="updateField('contactNo', $event)"
+          [class.invalid]="isContactNoInvalid()"
+          name="contactNo"
+        />
+        @if (isContactNoInvalid()) {
+          <p class="help-block">Contact No is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Address</th>
+        <th>Contact No</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.bloodBankId) {
+        <tr>
+          <td>{{ row.bloodBankCode }}</td>
+          <td>{{ row.bloodBankDesc }}</td>
+          <td>{{ row.address }}</td>
+          <td>{{ row.contactNo }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="6" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      @for (page of pageNumbers(); track page) {
+        <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+      }
+    </div>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

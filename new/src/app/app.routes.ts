@@ -1385,6 +1385,13 @@ export const routes: Routes = [
         data: { moduleId: 617, title: 'AP Master' },
         loadComponent: () => import('./features/ap-master/ap-master').then((m) => m.ApMaster),
       },
+      {
+        path: 'bloodBankMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 742, title: 'Blood Bank Master' },
+        loadComponent: () =>
+          import('./features/blood-bank-master/blood-bank-master').then((m) => m.BloodBankMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
