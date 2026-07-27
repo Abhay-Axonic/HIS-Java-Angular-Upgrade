@@ -1394,6 +1394,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/storage-unit-master/storage-unit-master').then((m) => m.StorageUnitMaster),
       },
+      {
+        path: 'mealMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 512, title: 'Meal Master' },
+        loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
