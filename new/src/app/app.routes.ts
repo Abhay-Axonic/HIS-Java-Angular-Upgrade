@@ -1392,6 +1392,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-bank-master/blood-bank-master').then((m) => m.BloodBankMaster),
       },
+      {
+        path: 'operationTheatreType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 521, title: 'Operation Theatre Type' },
+        loadComponent: () =>
+          import('./features/operation-theatre-type/operation-theatre-type').then((m) => m.OperationTheatreType),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

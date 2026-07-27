@@ -274,6 +274,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/surgeryGradeMaster', title: 'Surgery Grade Master' },
       { path: '/operationTableType', title: 'Operation Table Type' },
       { path: '/anaesthesiaType', title: 'Anaesthesia Type' },
+      { path: '/operationTheatreType', title: 'Operation Theatre Type' },
     ],
   },
   {
