@@ -203,6 +203,7 @@ public class OperationTheatreTypeDaoImpl extends GenericDao<OperationTheatreType
 					.setParameter("orgId", operationTheatreTypeDto.getOrgId())
 					.setParameter("unitId", operationTheatreTypeDto.getUnitId())
 					.setParameter("theatreTypeDesc", operationTheatreTypeDto.getTheatreTypeDesc().toLowerCase())
+					.setParameter("theatreTypeName", operationTheatreTypeDto.getTheatreTypeName().toLowerCase())
 					.setResultTransformer(Transformers.aliasToBean(OperationTheatreTypeDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, list, null);
 			
@@ -224,6 +225,7 @@ public class OperationTheatreTypeDaoImpl extends GenericDao<OperationTheatreType
 					.setParameter("orgId", operationTheatreTypeDto.getOrgId())
 					.setParameter("unitId", operationTheatreTypeDto.getUnitId())
 					.setParameter("theatreTypeDesc", operationTheatreTypeDto.getTheatreTypeDesc().toLowerCase())
+					.setParameter("theatreTypeName", operationTheatreTypeDto.getTheatreTypeName().toLowerCase())
 					.setResultTransformer(Transformers.aliasToBean(OperationTheatreTypeDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, list, null);
 			
