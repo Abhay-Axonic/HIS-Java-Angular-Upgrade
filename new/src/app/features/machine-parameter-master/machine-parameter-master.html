@@ -1,0 +1,131 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="code">Code<span class="required">*</span></label>
+        <input
+          id="code"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().code"
+          (ngModelChange)="updateField('code', $event)"
+          [class.invalid]="isCodeRequiredInvalid() || isCodeMaxLengthInvalid()"
+          name="code"
+        />
+        @if (isCodeRequiredInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+        @if (isCodeMaxLengthInvalid()) {
+          <p class="help-block">Maxmimum 10 character are allowed.</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="machineParameterDesc">Machine Description<span class="required">*</span></label>
+        <input
+          id="machineParameterDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().machineParameterDesc"
+          (ngModelChange)="updateField('machineParameterDesc', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="machineParameterDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="machineId">Machine<span class="required">*</span></label>
+        <select
+          id="machineId"
+          [ngModel]="form().machineId"
+          (ngModelChange)="updateField('machineId', $event)"
+          [class.invalid]="isMachineInvalid()"
+          name="machineId"
+        >
+          <option value="">Select Machine</option>
+          @for (option of machineOptions(); track option.machineId) {
+            <option [value]="option.machineId">{{ option.machineDesc }}</option>
+          }
+        </select>
+        @if (isMachineInvalid()) {
+          <p class="help-block">machine is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Machine Description</th>
+        <th>Machine</th>
+        <th class="text-center">status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.machinParameterId) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.machineParameterDesc }}</td>
+          <td>{{ row.machine }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      @for (page of pageNumbers(); track page) {
+        <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+      }
+    </div>
+  }
+</section>

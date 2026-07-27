@@ -279,4 +279,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     heading: 'Diet & Nutrition',
     items: [{ path: '/nutritionalMaster', title: 'Nutritional Master' }],
   },
+  {
+    heading: 'Lab/LIS',
+    items: [{ path: '/machineParameterMaster', title: 'Machine Parameter Master' }],
+  },
 ];

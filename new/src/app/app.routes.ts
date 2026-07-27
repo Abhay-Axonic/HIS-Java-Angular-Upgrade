@@ -1380,6 +1380,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/otims-role-creation/otims-role-creation').then((m) => m.OtimsRoleCreation),
       },
+      {
+        path: 'machineParameterMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 839, title: 'Machine Parameter Master' },
+        loadComponent: () =>
+          import('./features/machine-parameter-master/machine-parameter-master').then((m) => m.MachineParameterMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
