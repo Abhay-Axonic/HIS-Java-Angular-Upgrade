@@ -3774,3 +3774,25 @@ Real in-browser interaction testing against the live legacy app and real backend
 **`fix/operationtheatretype-name-check` merged to `main`, the "Live before/after verification pending" note in its own commit message now resolved.** Live-verified post-merge: seeded a row (`name=SAME_NAME_TEST`, `desc=DescA`), then attempted a second row with the same name but a different description -- correctly rejected (`409 Already Exists`) where it was previously wrongly accepted (confirmed live on the pre-merge build too: the same two-row sequence saved cleanly with no rejection). A genuinely different name+desc combination was still correctly accepted (no false-positive regression). The `_NOT_ID` (update-path) variant of the same fix also confirmed live -- renaming an existing row into a colliding name is now correctly blocked. Test data cleaned up.
 
 **Action taken:** `operationTheatreType`'s Step 3 will build against this corrected (post-fix) duplicate-check behavior. All 5 screens' Step 3 rebuilds will implement the confirm-modal fix rather than faithfully reproducing it.
+
+## PENDING-batch23-step2-bloodbagtype-goldentrace. `bloodBagType` (batch 23) -- Step 0-5 complete, rebuilt with Shell integration
+
+**Context:** first of batch 23's 5 screens (bloodBagType, OTIMSroleCreation, machineParameterMaster, KITmasterPharmacy, mealMaster). Module id 731 (Blood Bank), route `bloodBagType`, endpoints under `/global/bloodBank/*` (distinct from batch 22's `bloodBankMaster`, which used `/bloodBank/*`).
+
+**Legacy timestamp bug already fixed and merged this session** (`fix/bloodbagtype-timestamp-swapped-pattern`) -- no rebuild-side action needed; the frontend always sent a correctly-formatted date string, only the backend's parse pattern was wrong.
+
+**Confirm-modal never-rearms bug -- FIXED, live-verified on both apps.** Identical `popUpFlag` shape to batch 22's screens (never resets after any outcome, success or failure). Live-confirmed on real, unmodified legacy: after one confirmed Save, a second independent Save skips the modal entirely for the rest of the page session. Fixed in the rebuild via `popupArmed`, rearmed on both success and failure -- live-verified on the rebuild: two consecutive genuine creates (`BBT3`, then after a rejected duplicate attempt, confirmed the modal still arms per-attempt) both correctly showed the confirm modal.
+
+**Duplicate-check: description-only, case-insensitive, NOT org/unit-scoped, NOT code-checked -- confirmed at the source level and live, faithfully reproduced (real legacy bug, not fixed).** `BloodBagTypeMaster.java`'s `GET_BLOOD_BAG_TYPE_MASTER_BY_NAME`/`_NOT_ID` named queries have no `organizationId`/`unitId` predicate and never reference `bloodBagTypeCode`. Live-verified on both legacy and the rebuild: created `BBT1`/"Bag Type One", then a row with a DIFFERENT code but the SAME description -- correctly rejected as a duplicate on both apps (`"Already Exist"` / `"Already Exists."`). Same systemic missing-scope/code-blind defect class documented project-wide (33/38 screens sampled); the org/unit-unscoped half is not independently live-reproducible in this single-org/single-unit dev environment.
+
+**Validation message text differs by one space between Save and Update -- reproduced verbatim, not normalized.** `save()`'s Capacity Max message is `"Please Enter  Max Capacity "` (two spaces after "Enter"); `update()`'s is `"Please Enter Max Capacity "` (one space) -- confirmed via byte-level grep of the controller source, reproduced as two distinct literal strings in the rebuild.
+
+**Edit-load response is array-wrapped** (`response.data.listObject[0]`, not `.object`) -- modeled correctly, confirmed live (edit populates the form correctly from real data).
+
+**Status toggle DOES reload the list on success** -- confirmed live via network capture on the rebuild: `updateBloodBagTypeMasterStatus` is immediately followed by fresh `getBloodBagTypeMasterList`/`Count` calls.
+
+**Pagination is genuinely functional** (real offset tracking via `PagerService`/`setPage`, unlike batch 22's APmaster) -- confirmed via source read; not independently forced with >10 rows this pass (reuses the same real-pagination pattern already proven on `bloodBankMaster`).
+
+**Update has no confirm-modal gate** (legacy, reproduced as-is) -- confirmed live, Update fires immediately with no modal on both apps.
+
+**Action taken:** rebuilt on `rebuild/phase4-batch23` (commit `125564f3`), Shell nav under "Blood Bank" heading. Held, not merged/pushed. Test data (`BBT1`, `BBT3`, and a rejected `BBT2`/`BBT4` duplicate attempt) left in place on both legacy and the rebuild, not cleaned up, per this project's established Step 5/6 practice.
