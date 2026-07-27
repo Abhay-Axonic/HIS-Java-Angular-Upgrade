@@ -53,6 +53,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/inputOutputCharts', title: 'Intake Fluid Output(ml) Charts' },
       { path: '/periodicityService', title: 'Periodicity Service' },
+      { path: '/shiftMaster', title: 'Shift Master' },
     ],
   },
   {

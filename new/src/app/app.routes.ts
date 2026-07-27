@@ -1366,6 +1366,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-donor-type/blood-donor-type').then((m) => m.BloodDonorType),
       },
+      // Phase 4 batch 22.
+      {
+        path: 'shiftMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 408, title: 'Shift Master' },
+        loadComponent: () => import('./features/shift-master/shift-master').then((m) => m.ShiftMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

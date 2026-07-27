@@ -1,0 +1,146 @@
+<section class="page">
+  <fieldset>
+    <legend>Shift Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="shiftName">Shift Name<span class="required">*</span></label>
+        <input
+          id="shiftName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().shiftName"
+          (ngModelChange)="updateField('shiftName', $event)"
+          [class.invalid]="isNameInvalid()"
+          name="shiftName"
+        />
+        @if (isNameInvalid()) {
+          <p class="help-block">Shift Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="fromTime">Time(From)<span class="required">*</span></label>
+        <input
+          id="fromTime"
+          type="time"
+          [ngModel]="form().fromTime"
+          (ngModelChange)="updateField('fromTime', $event)"
+          [class.invalid]="isFromTimeInvalid()"
+          name="fromTime"
+        />
+        @if (isFromTimeInvalid()) {
+          <p class="help-block">Time(From) is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="toTime">Time(Till)<span class="required">*</span></label>
+        <input
+          id="toTime"
+          type="time"
+          [ngModel]="form().toTime"
+          (ngModelChange)="updateField('toTime', $event)"
+          [class.invalid]="isToTimeInvalid()"
+          name="toTime"
+        />
+        @if (isToTimeInvalid()) {
+          <p class="help-block">Time(Till) is required</p>
+        }
+      </div>
+
+      <div class="field field-checkbox">
+        <label for="isWeeklyOff">
+          <input
+            id="isWeeklyOff"
+            type="checkbox"
+            [ngModel]="form().isWeeklyOff === 'Y'"
+            (ngModelChange)="updateField('isWeeklyOff', $event ? 'Y' : 'N')"
+            name="isWeeklyOff"
+          />
+          Is Weekly Off
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Shift Name</th>
+        <th>Time(From)</th>
+        <th>Time(Till)</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.shiftId) {
+        <tr>
+          <td>{{ row.shiftName }}</td>
+          <td>{{ row.fromTime }}</td>
+          <td>{{ row.toTime }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      @for (page of pageNumbers(); track page) {
+        <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+      }
+    </div>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
