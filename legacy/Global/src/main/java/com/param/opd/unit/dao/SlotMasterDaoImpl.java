@@ -1844,42 +1844,24 @@ throw he;
 			return new Response(SUCCESS, null, null, slotMasterDtosList, null);
 			}else if(slotReqDto.getSlotTypeId()==4){
 
-				// BR-local-doctorwise-getslots-time-filter-crash: the original unconditional
-				// .setParameter("fromTime"/"toTime", ...) below threw
-				// org.hibernate.QueryParameterException whenever these were blank (the SQL
-				// clause referencing :fromTime/:toTime is only appended when both are
-				// non-empty, so the named parameter never existed in the compiled query), and
-				// threw a PostgreSQL "operator does not exist: time without time zone >=
-				// character varying" type-mismatch error whenever they WERE supplied (Hibernate
-				// binds a Java String as varchar with no implicit cast to the `time` column).
-				// Net effect on real, unmodified legacy: this endpoint's slotTypeId==4 branch
-				// (used by doctorWise) returned status:"error" on every single search, in every
-				// input combination, with the failure silently swallowed by the surrounding
-				// try/catch and no error surfaced to the user (an empty results table is
-				// indistinguishable from "no slots found"). Fixed narrowly for this branch only
-				// (the sibling slotTypeId==1 and modality/sub-speciality branches below have the
-				// identical unconditional-setParameter pattern and are NOT touched here -- out of
-				// scope for this screen's rebuild; flagged separately as a cross-cutting finding).
-				boolean hasTimeFilter = (slotReqDto.getFromTime() !=  null && !slotReqDto.getFromTime().isEmpty()) && (slotReqDto.getToTime()!=  null && !slotReqDto.getToTime().isEmpty());
-				if(hasTimeFilter)
-					stringQuery.append(" AND sm.from_time >= CAST(:fromTime AS time) AND sm.to_time <= CAST(:toTime AS time) ");
+
+				if((slotReqDto.getFromTime() !=  null && !slotReqDto.getFromTime().isEmpty()) && (slotReqDto.getToTime()!=  null && !slotReqDto.getToTime().isEmpty()))
+					stringQuery.append(" AND sm.from_time >= :fromTime AND sm.to_time <= :toTime ");
 
 				stringQuery.append(" ORDER BY sm.from_time ");
 
 			SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(stringQuery.toString());
 
-			query.setParameterList("listSpecialityIds", slotReqDto.getListSpecialityId())
+		List<SlotMasterDto> slotMasterDtosList = query
+					.setParameterList("listSpecialityIds", slotReqDto.getListSpecialityId())
 					.setParameter("fromDate", (slotReqDto.getFromDate()!=null?GlobalCommonDateUtils.getDate(slotReqDto.getFromDate(), "yyyy-MM-dd"):TimeZoneComponent.getDateByzone(slotReqDto.getUnitId())))
 					.setParameter("toDate", (slotReqDto.getToDate()!=null?GlobalCommonDateUtils.getDate(slotReqDto.getToDate(), "yyyy-MM-dd"):TimeZoneComponent.getDateByzone(slotReqDto.getUnitId())))
 					.setParameter("orgId", slotReqDto.getOrganisationId())
 					.setParameter("unitId", slotReqDto.getUnitId())
 					.setParameter("slotTypeId", slotReqDto.getSlotTypeId())
-					.setParameter("isBlocked", slotReqDto.getIsBlocked());
-			if(hasTimeFilter){
-				query.setParameter("fromTime", slotReqDto.getFromTime())
-						.setParameter("toTime", slotReqDto.getToTime());
-			}
-		List<SlotMasterDto> slotMasterDtosList = query
+					.setParameter("isBlocked", slotReqDto.getIsBlocked())
+					.setParameter("fromTime", slotReqDto.getFromTime())
+					.setParameter("toTime", slotReqDto.getToTime())
 					.setResultTransformer(Transformers.aliasToBean(SlotMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, slotMasterDtosList, null);
 
