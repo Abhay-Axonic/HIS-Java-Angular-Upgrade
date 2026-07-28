@@ -1160,6 +1160,8 @@ export const routes: Routes = [
       // docs/ANGULAR_PENDING_FINDINGS.md entry 143/144). Final composition: 9
       // screens. No moduleId below matches legacy's own lack of a resolve
       // block on that state, confirmed per-screen during Step 0/1 audit.
+      // (aiButtonConfiguration itself was later built in Phase 4 batch 25 --
+      // see its own route above, near `aIButtonMaster`.)
       {
         path: 'wardStoreMapper',
         canActivate: [moduleAccessGuard],
