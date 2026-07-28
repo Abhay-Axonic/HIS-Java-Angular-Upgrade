@@ -728,6 +728,15 @@ export const routes: Routes = [
           import('./features/vital-qualifier-master/vital-qualifier-master').then((m) => m.VitalQualifierMaster),
       },
       {
+        path: 'checklistEquipmentMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 526, title: 'Checklist Equipment Master' },
+        loadComponent: () =>
+          import('./features/checklist-equipment-master/checklist-equipment-master').then(
+            (m) => m.ChecklistEquipmentMaster,
+          ),
+      },
+      {
         path: 'maritalstatusMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 391, title: 'Marital Status Master' },

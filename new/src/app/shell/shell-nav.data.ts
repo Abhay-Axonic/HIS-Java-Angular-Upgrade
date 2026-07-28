@@ -249,6 +249,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/addfixedAssetMaster', title: 'Add Fixed Asset Opening Balance' },
       { path: '/assetReturn', title: 'Asset Return' },
       { path: '/generalInsuranceMaster', title: 'General Insurance Master' },
+      // Phase 4 batch 24.
+      { path: '/checklistEquipmentMaster', title: 'Checklist Equipment Master' },
     ],
   },
   {

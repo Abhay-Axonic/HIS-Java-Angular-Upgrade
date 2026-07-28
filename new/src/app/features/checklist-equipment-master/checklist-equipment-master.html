@@ -1,0 +1,72 @@
+<!--
+  See checklist-equipment-master.ts's class doc comment: one form/button/
+  function serves both Create and Update (real upsert server-side), no
+  confirm-modal, real client-side validation.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="checklistCode">Checklist Code</label>
+        <input
+          id="checklistCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().checklistCode"
+          (ngModelChange)="updateField('checklistCode', $event)"
+          name="checklistCode"
+        />
+      </div>
+
+      <div class="field">
+        <label for="checklistName">Checklist Name</label>
+        <input
+          id="checklistName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().checklistName"
+          (ngModelChange)="updateField('checklistName', $event)"
+          name="checklistName"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <input type="text" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" placeholder="Search" />
+    <button type="button" class="btn-primary icon-btn" [title]="saveMode() ? 'Save' : 'Update'" (click)="onSaveClick()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+    <button type="button" class="btn-primary" (click)="clearSearch()">Clear</button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Checklist Code</th>
+        <th>Checklist Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.checklistEquipmentMasterId) {
+        <tr>
+          <td>{{ row.checklistCode }}</td>
+          <td>{{ row.checklistName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
