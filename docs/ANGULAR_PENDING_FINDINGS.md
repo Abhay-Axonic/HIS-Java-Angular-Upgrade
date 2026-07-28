@@ -4084,3 +4084,11 @@ Independently re-confirmed live during this same investigation: the already-know
 **Scenario 2 -- real dates + Time fields left blank:** searched successfully, no crash, no HTTP 500. Confirms the conditional-`setParameter` half of the fix (the missing-named-parameter crash class).
 
 **Action taken:** both scenarios confirmed, no discrepancies found. `fix/doctorwise-getslots-time-filter-crash` (1 commit, `96981e30`) is clear for merge on the review front. Still requires the owner's separate, explicit merge approval, then separate, explicit push approval, per standing Maker-Checker discipline -- not yet granted as of this entry.
+
+## PENDING-aibuttonconfiguration-staleconfigid-step6-signoff. Owner's Step 6 confirmation of the stale-`configId` silent-overwrite fix complete -- both the legacy fix (merged) and the rebuild fix (held) verified working
+
+**Context:** owner completed the full stale-`configId` overwrite scenario manually, 2026-07-28, after two local-dev-DB gaps blocking this screen entirely (`public.button_master`/`button_master_config` missing, then the seeded `button_master` row's `combined_ai_json` template being null) were found and fixed earlier in this same session (`BR-local-dev-db-drift-buttonmaster-tableMissing`).
+
+**Scenario confirmed:** created "config A" (Doctor + Button, saved normally), then -- without editing config A -- selected a genuinely new Doctor+Button combination and saved it as "config B," without re-triggering `editButtonMaster`. **Both configs were created as separate rows; config A was left untouched by config B's save.** This directly confirms the fix: `getDoctorChange`/`getSpecialityChange`/`setButton` now clear `configId`/`editFlag` on any fresh selection, so a stale `configId` from an earlier edit can never leak into a later, unrelated save.
+
+**Action taken:** confirmed working, no discrepancies found. The legacy fix (`fix/aibuttonconfiguration-stale-configid-silent-overwrite`, merged via `c649f1e5`) and the rebuild's own independent client-side correction (on `rebuild/phase4-batch25`, held pending that batch's own Step 6 review) are both verified. This closes the 3rd of the 4 severity-1 findings tracked this session (`tariffMaster`, `doctorWise`, `aiButtonConfiguration` now confirmed/resolved; `dietTypeMaster` remains).
