@@ -27,7 +27,7 @@ import javax.persistence.Table;
 					+ " vitalQualifireMaster.vitalCategoryId AS vitalCategoryId, vitalQualifireMaster.organizationId AS organizationId, "
 					+ " vitalQualifireMaster.unitId AS unitId, vitalQualifireMaster.status AS status, vitalCategoryMaster.vitalCategoryDesc as vitalCategoryDesc "
 					+ " FROM VitalQualifireMaster vitalQualifireMaster"
-					+ " INNER JOIN vitalQualifireMaster.vitalCategoryMaster vitalCategoryMaster"
+					+ " LEFT JOIN vitalQualifireMaster.vitalCategoryMaster vitalCategoryMaster"
 					+ " WHERE  vitalQualifireMaster.organizationId= :organizationId "
 					+ " ORDER BY vitalQualifireMaster.vitalQualifireId asc"
 					),
