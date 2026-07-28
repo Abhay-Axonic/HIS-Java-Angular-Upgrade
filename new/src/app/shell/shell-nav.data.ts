@@ -303,6 +303,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/anaesthesiaType', title: 'Anaesthesia Type' },
       { path: '/operationTheatreType', title: 'Operation Theatre Type' },
       { path: '/checklistMaster', title: 'Checklist Master' },
+      // Phase 4 batch 24.
+      { path: '/checklistItem', title: 'Checklist Item' },
     ],
   },
   {

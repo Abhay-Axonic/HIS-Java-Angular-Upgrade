@@ -752,6 +752,15 @@ export const routes: Routes = [
         loadComponent: () => import('./features/autoclave-master/autoclave-master').then((m) => m.AutoclaveMaster),
       },
       {
+        // Legacy state name is 'checklistItem' (not 'checklistItemMaster'),
+        // confirmed via app.js:12511-12535 -- matched here, not guessed.
+        path: 'checklistItem',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 525, title: 'Checklist Item' },
+        loadComponent: () =>
+          import('./features/checklist-item-master/checklist-item-master').then((m) => m.ChecklistItemMaster),
+      },
+      {
         path: 'maritalstatusMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 391, title: 'Marital Status Master' },
