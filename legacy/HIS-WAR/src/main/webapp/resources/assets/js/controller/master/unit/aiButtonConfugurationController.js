@@ -74,18 +74,32 @@
     	$scope.getAllData();
     	$scope.getDoctorChange = function(doctor)
     	{
+    		// Fix (fix/aibuttonconfiguration-stale-configid-silent-overwrite): a fresh
+    		// doctor selection means this is no longer editing the previously-loaded
+    		// config, if any -- clear configId/editFlag so Save can't silently reuse
+    		// a stale configId left over from an earlier editButtonMaster() call.
+    		$scope.configId=null;
+    		$scope.editFlag=false;
     		$scope.doctorId=doctor.doctorId;
     		$scope.doctorName=doctor.doctorName;
     		$scope.doctorSelected=true;
     	}
     	$scope.getSpecialityChange = function(speciality)
     	{
+    		// Fix (fix/aibuttonconfiguration-stale-configid-silent-overwrite): see
+    		// getDoctorChange above -- same reasoning for the speciality path.
+    		$scope.configId=null;
+    		$scope.editFlag=false;
     		$scope.specialityId=speciality.doctorId;
     		$scope.specialityName=speciality.firstName;
     		$scope.specialitySelected=true;
     	}
     	$scope.setButton = function(button)
     	{
+    		// Fix (fix/aibuttonconfiguration-stale-configid-silent-overwrite): a fresh
+    		// button selection also means a fresh entry -- same reasoning as above.
+    		$scope.configId=null;
+    		$scope.editFlag=false;
     		$scope.buttonId=button.buttonId;
     		$scope.buttonName=button.label;
     	}
@@ -313,7 +327,12 @@
                 GenericService.serviceAction("POST", URI, data).then(
                     function(response) {
                         if (response.data.status == "success") {
+                            // Fix (fix/aibuttonconfiguration-stale-configid-silent-overwrite):
+                            // clear configId alongside editFlag so the NEXT save (a genuine
+                            // new entry) can't silently reuse this save's configId and
+                            // overwrite it instead of creating a new row.
                             $scope.editFlag = false;
+                            $scope.configId = null;
                             $scope.doctor = "";
                             $scope.speciality = "";
                             $scope.button = "";
@@ -332,6 +351,16 @@
                                 growl.success(response.data.message);
                             }
                         } else {
+                            // Note (fix/aibuttonconfiguration-stale-configid-silent-overwrite):
+                            // deliberately NOT clearing configId here -- the DAO's saveConfig
+                            // only rejects on the create path (configId null); an update
+                            // (configId set) has no rejection logic, so a failure here is a
+                            // rare infra-level failure, not a business rejection, and the
+                            // correct retry is to resubmit the SAME edit, not silently switch
+                            // to creating a new row. The getDoctorChange/getSpecialityChange/
+                            // setButton resets below are what actually close the reported bug
+                            // -- any genuinely new selection clears configId regardless of how
+                            // the previous attempt ended.
                             $scope.editFlag = false;
                         }
 
