@@ -719,6 +719,14 @@ export const routes: Routes = [
         data: { moduleId: 390, title: 'Relation Master' },
         loadComponent: () => import('./features/relation-master/relation-master').then((m) => m.RelationMaster),
       },
+      // Phase 4 batch 24.
+      {
+        path: 'vitalQualifierMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Vital Observations Qualifier Master' },
+        loadComponent: () =>
+          import('./features/vital-qualifier-master/vital-qualifier-master').then((m) => m.VitalQualifierMaster),
+      },
       {
         path: 'maritalstatusMaster',
         canActivate: [moduleAccessGuard],
