@@ -1,0 +1,138 @@
+<!--
+  See checklist-equipment-mapper.ts's class doc comment: one form/button/
+  function serves both Create and Update (real upsert), no confirm-modal,
+  real 5-field client-side validation, client-side pagination over the
+  full fetched list.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="checklistName">Checklist Name</label>
+        <select
+          id="checklistName"
+          [ngModel]="form().checklistEquipmentMasterId"
+          (ngModelChange)="updateField('checklistEquipmentMasterId', $event)"
+          name="checklistName"
+        >
+          <option value=""></option>
+          @for (opt of checklistOptions(); track opt.checklistEquipmentMasterId) {
+            <option [value]="opt.checklistEquipmentMasterId">{{ opt.checklistName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="assetCategory">Asset Category</label>
+        <select
+          id="assetCategory"
+          [ngModel]="form().assetCategoryId"
+          (ngModelChange)="onAssetCategoryChange($event)"
+          name="assetCategory"
+        >
+          <option value=""></option>
+          @for (opt of assetCategoryOptions(); track opt.id) {
+            <option [value]="opt.id">{{ opt.category }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="productCategory">Product Category</label>
+        <select
+          id="productCategory"
+          [ngModel]="form().productCategoryId"
+          (ngModelChange)="updateField('productCategoryId', $event)"
+          name="productCategory"
+        >
+          <option value=""></option>
+          @for (opt of productCategoryOptions(); track opt.id) {
+            <option [value]="opt.id">{{ opt.category }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="itemCode">Item Code</label>
+        <input
+          id="itemCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().itemCode"
+          (ngModelChange)="updateField('itemCode', $event)"
+          name="itemCode"
+        />
+      </div>
+
+      <div class="field">
+        <label for="itemName">Item Name</label>
+        <input
+          id="itemName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().itemName"
+          (ngModelChange)="updateField('itemName', $event)"
+          name="itemName"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); currentPage.set(1)">
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+    <input type="text" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" placeholder="Search" />
+    <button type="button" class="btn-primary icon-btn" [title]="saveMode() ? 'Save' : 'Update'" (click)="onSaveClick()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Checklist Name</th>
+        <th>Asset Category</th>
+        <th>Product Category</th>
+        <th>Item Code</th>
+        <th>Item Name</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagedRows(); track row.checklistEquipmentMapperMasterId) {
+        <tr>
+          <td>{{ row.checklistEquipmentName }}</td>
+          <td>{{ row.assetCategoryName }}</td>
+          <td>{{ row.productCategoryName }}</td>
+          <td>{{ row.itemCode }}</td>
+          <td>{{ row.itemName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!pagedRows().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      <button type="button" [disabled]="currentPage() === 1" (click)="goToPage(1)">First</button>
+      <button type="button" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">Previous</button>
+      <span>{{ currentPage() }} / {{ totalPages() }}</span>
+      <button type="button" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">Next</button>
+      <button type="button" [disabled]="currentPage() === totalPages()" (click)="goToPage(totalPages())">Last</button>
+    </div>
+  }
+</section>

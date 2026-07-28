@@ -251,6 +251,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/generalInsuranceMaster', title: 'General Insurance Master' },
       // Phase 4 batch 24.
       { path: '/checklistEquipmentMaster', title: 'Checklist Equipment Master' },
+      { path: '/checklistEquipmentMapper', title: 'Checklist Equipment Mapper' },
     ],
   },
   {

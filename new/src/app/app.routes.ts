@@ -737,6 +737,15 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'checklistEquipmentMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 526, title: 'Checklist Equipment Mapper' },
+        loadComponent: () =>
+          import('./features/checklist-equipment-mapper/checklist-equipment-mapper').then(
+            (m) => m.ChecklistEquipmentMapper,
+          ),
+      },
+      {
         path: 'maritalstatusMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 391, title: 'Marital Status Master' },
