@@ -43,20 +43,20 @@ import {
  *   attributes are inert; there is no wrapping `<form>` element at all.
  *   Reproduced by NOT gating submission on field completeness (matching
  *   legacy exactly -- an empty Code/Description genuinely can be submitted).
- * - **The confirm modal does not auto-close after a successful Save.**
- *   `save()`'s real-persist branch (ctrl:176-202) never sets `$scope.showModal
- *   = false` -- confirmed live: after a successful save (toast shown, list
- *   refreshed behind it), the modal stays visibly open until the user
- *   manually clicks Cancel or the header X (both work, since both carry
- *   Bootstrap's own `data-dismiss="modal"` independent of the
- *   `cancel()`/`stopLoader()` functions the header X's `ng-click` calls --
- *   neither is defined anywhere in this controller, confirmed via grep, but
- *   both are harmless no-ops since `data-dismiss` closes the modal at the
- *   jQuery/Bootstrap layer regardless). This is a distinct quirk from the
- *   already-documented entry-55 "close button crashes" class -- the close
- *   buttons here already work; the gap is specifically that Save doesn't
- *   auto-dismiss on success. Faithfully reproduced: `confirmFromModal()`
- *   does not close `showConfirmModal` on success, only on explicit Cancel/X.
+ * - **Correction (2026-07-28): the confirm modal DOES auto-close on Save,
+ *   contrary to this entry's original claim.** The original finding read
+ *   only `save()`'s own real-persist branch (ctrl:176-202, which indeed
+ *   never sets `$scope.showModal = false` itself) and missed that the
+ *   shared `<modal visible="showModal">` directive
+ *   (`commonPopUpDirectives.js`) independently closes `showModal`
+ *   synchronously via its own `oneClickOnly`/`$watch` mechanism on every Ok
+ *   click, before `PopupOkBtn()`/`save()` even runs -- same root-cause
+ *   class as the project-wide "confirm-modal-never-rearms" misreads
+ *   corrected this session (see `ANGULAR_PENDING_FINDINGS.md`). Live
+ *   re-verified directly against real, unmodified legacy: a successful
+ *   save's modal closed immediately, no manual Cancel/X needed.
+ *   `confirmFromModal()` now sets `showConfirmModal` to `false` immediately
+ *   on invocation, matching legacy's real click-time close.
  * - `showUpdateBtn` (ctrl:214-242) assigns the fetched record onto
  *   `$scope.common` wholesale, then does one extra, inert line
  *   (`$scope.common.cabinId = response.data.listObject[0].cabinId`) -- a
@@ -145,10 +145,16 @@ export class VitalQualifierMaster {
     this.showConfirmModal.set(false);
   }
 
-  // mirrors PopupOkBtn -> save() real-persist branch. Deliberately does NOT
-  // close the modal on success -- see class doc comment for why this
-  // faithfully matches legacy (the modal only closes via explicit Cancel/X).
+  // mirrors PopupOkBtn -> save() real-persist branch. Correction (2026-07-28):
+  // the shared <modal> directive's own oneClickOnly/$watch mechanism
+  // (commonPopUpDirectives.js) closes showModal synchronously on every Ok
+  // click, independent of the controller's own success/failure branching --
+  // live-verified directly against real legacy this session (a successful
+  // save's modal closed immediately, not "only via explicit Cancel/X" as
+  // this class's earlier doc comment claimed). See
+  // ANGULAR_PENDING_FINDINGS.md's confirm-modal-shared-directive-audit entry.
   confirmFromModal(): void {
+    this.showConfirmModal.set(false);
     const f = this.form();
     const now = formatDateTime(new Date());
     this.api
