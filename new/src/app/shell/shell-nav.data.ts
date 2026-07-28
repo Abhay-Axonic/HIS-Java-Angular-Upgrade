@@ -289,7 +289,11 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'CSSD',
-    items: [{ path: '/sterilizationTypeMaster', title: 'Sterilization Type Master' }],
+    items: [
+      { path: '/sterilizationTypeMaster', title: 'Sterilization Type Master' },
+      // Phase 4 batch 24.
+      { path: '/autoclaveMaster', title: 'Autoclave Master' },
+    ],
   },
   {
     heading: 'OT/Theatre',

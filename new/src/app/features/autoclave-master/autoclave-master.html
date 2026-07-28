@@ -1,0 +1,186 @@
+<!--
+  See autoclave-master.ts's class doc comment: real form validation, no
+  duplicate-check (faithful), Save button label never changes based on
+  edit state even though it correctly performs an update while editing.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="machineName">Machine Name</label>
+        <input
+          id="machineName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().machine_name"
+          (ngModelChange)="updateField('machine_name', $event)"
+          name="machineName"
+        />
+        @if (isFieldInvalid('machine_name')) {
+          <p class="help-block">Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="machineDescription">Machine description</label>
+        <input
+          id="machineDescription"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().machine_description"
+          (ngModelChange)="updateField('machine_description', $event)"
+          name="machineDescription"
+        />
+        @if (isFieldInvalid('machine_description')) {
+          <p class="help-block">description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="sterilizationType">Sterilization type</label>
+        <select
+          id="sterilizationType"
+          [ngModel]="form().sterilization_type_id"
+          (ngModelChange)="updateField('sterilization_type_id', $event)"
+          name="sterilizationType"
+        >
+          <option value=""></option>
+          @for (opt of sterilizationTypes(); track opt.id) {
+            <option [value]="opt.id">{{ opt.name }}</option>
+          }
+        </select>
+        @if (isFieldInvalid('sterilization_type_id')) {
+          <p class="help-block">Sterilization is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="sterilizationTemperature">Sterilization temperature (&#8451;)</label>
+        <input
+          id="sterilizationTemperature"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().sterilization_temperature"
+          (ngModelChange)="updateField('sterilization_temperature', $event)"
+          name="sterilizationTemperature"
+        />
+        @if (isFieldInvalid('sterilization_temperature')) {
+          <p class="help-block">Temperature is Required</p>
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="sterilizationPressure">Sterilization pressure (mm Hg)</label>
+        <input
+          id="sterilizationPressure"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().sterilization_pressure"
+          (ngModelChange)="updateField('sterilization_pressure', $event)"
+          name="sterilizationPressure"
+        />
+        @if (isFieldInvalid('sterilization_pressure')) {
+          <p class="help-block">pressure is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="biologicalIndicatorDay">Biological indicator Day</label>
+        <input
+          id="biologicalIndicatorDay"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().biological_indicator_day"
+          (ngModelChange)="updateField('biological_indicator_day', $event)"
+          name="biologicalIndicatorDay"
+        />
+        @if (isFieldInvalid('biological_indicator_day')) {
+          <p class="help-block">Biological indicator Day is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="sterilizationColor">Sterilization Color</label>
+        <select
+          id="sterilizationColor"
+          [ngModel]="form().sterilization_color_id"
+          (ngModelChange)="updateField('sterilization_color_id', $event)"
+          name="sterilizationColor"
+        >
+          <option value=""></option>
+          @for (opt of sterilizationColors(); track opt.colorId) {
+            <option [value]="opt.colorId">{{ opt.colorName }}</option>
+          }
+        </select>
+        @if (isFieldInvalid('sterilization_color_id')) {
+          <p class="help-block">Sterilization Color is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <input type="text" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" placeholder="Search" />
+    <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Machine Name</th>
+        <th>Machine description</th>
+        <th>Sterilization type</th>
+        <th>Sterilization temperature</th>
+        <th>Sterilization pressure</th>
+        <th>Biological indicator Day</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.id) {
+        <tr>
+          <td>{{ row.machine_name }}</td>
+          <td>{{ row.machine_description }}</td>
+          <td>{{ row.sterilization_type }}</td>
+          <td>{{ row.sterilization_temperature }}</td>
+          <td>{{ row.sterilization_pressure }}</td>
+          <td>{{ row.biological_indicator_day }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmFromModal()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

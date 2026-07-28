@@ -746,6 +746,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'autoclaveMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 553, title: 'Autoclave Master' },
+        loadComponent: () => import('./features/autoclave-master/autoclave-master').then((m) => m.AutoclaveMaster),
+      },
+      {
         path: 'maritalstatusMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 391, title: 'Marital Status Master' },
