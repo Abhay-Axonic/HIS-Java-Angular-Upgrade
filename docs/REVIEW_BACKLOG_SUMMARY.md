@@ -43,8 +43,8 @@
 These are the highest-priority items. Each has already been fixed and independently re-verified at the source/API level — what's outstanding is *your own* hands-on walkthrough, not further engineering:
 
 1. ~~**`aiButtonConfiguration`** (batch 25)~~ — **CONFIRMED by owner (2026-07-28).** Full overwrite scenario tested: config A + config B both created as separate rows, config A left untouched. Legacy fix (merged, `c649f1e5`) and the rebuild's own correction (held on `rebuild/phase4-batch25`) both verified. Closed.
-2. **`dietTypeMaster`** (batch 21) — Update is completely, unconditionally non-functional on real, unmodified legacy (uncaught NPE, zero writes ever). Faithfully reproduced in the rebuild, not fixed (matches real legacy). **Never yet manually verified by you** — the last remaining unconfirmed severity-1.
+2. ~~**`dietTypeMaster`** (batch 21)~~ — **CONFIRMED by owner (2026-07-28).** Both apps fail identically on Update, row unchanged on both — the correct outcome, since this is a real, faithfully-reproduced (not fixed) legacy bug. Test row deactivated afterward. Closed.
 3. ~~**`doctorWise`** (batch 26)~~ — **CONFIRMED by owner and MERGED to `main` (2026-07-28).** Both search combinations (real dates + blank Time; real dates + Time 09:00-17:00, including the full downstream booking write path) tested and work as expected. Closed.
 4. ~~**`tariffMaster`** (batch 26)~~ — **RESOLVED.** Fixed (`BR-101`), live-verified, merged to `main`. Closed.
 
-**Remaining: 1 of the original 4** — `dietTypeMaster`. All others closed.
+**All 4 original severity-1 findings are now closed.** Remaining work is the routine Step 6 rebuild-parity review for each batch's own checklist (Part 1 above) — no more severity-1-specific items outstanding.
