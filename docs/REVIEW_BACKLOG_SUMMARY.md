@@ -1,0 +1,50 @@
+# Review Backlog — Consolidated Reference (as of 2026-07-28)
+
+*One-stop reference for working through the outstanding batch reviews and decision docs. Each batch's own `docs/BATCHNN_STEP6_CHECKLIST.md` has the full step-by-step test tables — this document is the index/overview, not a replacement for them.*
+
+---
+
+## Part 1 — Batches awaiting your Step 6 review
+
+| Batch | Screens (count) | Worktree / port | Branch | Status |
+|---|---|---|---|---|
+| **20** | `call`, `linenReturn`, `accessControl1`, `assetPMSScheduler`, `incidentMaster` (5) | `.claude/worktrees/step6-batch20`, **`http://localhost:4308`** | `rebuild/phase4-batch20` | Held, not merged. Checklist: `docs/BATCH20_STEP6_CHECKLIST.md` |
+| **21** | `dietTypeMaster`, `wrapperExpiryMaster`, `occupancyUnitMaster`, `genericScheduleMaster`, `growthChartMaster` (5) | `.claude/worktrees/step6-batch21`, **`http://localhost:4309`** | `rebuild/phase4-batch21` | Held, not merged. Checklist: `docs/BATCH21_STEP6_CHECKLIST.md` |
+| **24** | `vitalQualifierMaster`, `checklistEquipmentMaster`, `checklistEquipmentMapper`, `autoclaveMaster`, `checklistItemMaster` (5) | `.claude/worktrees/batch24`, **`http://localhost:4306`** | `rebuild/phase4-batch24` | Held, not merged. Checklist: `docs/BATCH24_STEP6_CHECKLIST.md`. **⚠ See correction below — the checklist's `vitalQualifierMaster` row is stale.** |
+| **25** | `aiButtonConfiguration`, `billingBedCategoryMaster`, `icutypeMaster`, `patientSourceMaster`, `referralTypeMaster` (5) | `.claude/worktrees/batch25`, **`http://localhost:4310`** | `rebuild/phase4-batch25` | Held, not merged. Checklist: `docs/BATCH25_STEP6_CHECKLIST.md` |
+| **26** | `tariffMaster`, `doctorWise`, `ambulanceTarrifMaster` (3 — deliberately shipped smaller after 2 candidates were disqualified) | `.claude/worktrees/batch26`, **`http://localhost:4311`** | `rebuild/phase4-batch26` | Held, not merged. Checklist: `docs/BATCH26_STEP6_CHECKLIST.md` |
+
+**Total: 23 screens across 5 batches**, all held on their own branches, none merged or pushed.
+
+**⚠ Correction to `docs/BATCH24_STEP6_CHECKLIST.md`:** its `vitalQualifierMaster` row still reads "confirm modal never auto-dismisses" as a faithfully-reproduced quirk. That claim was later disproven — live-verified on real legacy that the modal DOES auto-close on success — and the rebuild code was already corrected (commit `fa811897`, already on the `rebuild/phase4-batch24` branch itself, done during this session's confirm-modal shared-directive re-audit). **The code is correct; the checklist document's prose is what's stale.** When you get to batch 24, treat this as already-fixed, not an open item — full detail in `docs/ANGULAR_PENDING_FINDINGS.md`'s `PENDING-confirmmodal-shared-directive-reaudit` entry.
+
+**Key findings per batch, at a glance:**
+- **Batch 20**: no confirm-modal issues. `call`'s "Recall" button is display-only (real bug, awaiting a separate decision); `accessControl1` had a real dead duplicate-role guard, now fixed in the rebuild.
+- **Batch 21**: `dietTypeMaster` carries the **SEVERITY-1** below (Update always fails). `growthChartMaster`'s rebuild added working search/pagination where legacy's own are dead — a corrected-and-disclosed deviation, not a faithful reproduction.
+- **Batch 24**: `checklistEquipmentMapper` had a **SEVERITY-1 DB fix** (missing `general_ledger_id` column) — already fixed and verified, not a pending item. `autoclaveMaster` has a known duplicate-check gap awaiting a Tier-3 decision.
+- **Batch 25**: `aiButtonConfiguration` carries the **SEVERITY-1** below (stale-configId silent overwrite) — both the rebuild fix and the matching legacy fix are done and merged (`c649f1e5`); what's outstanding is your manual walk-through confirmation, not a code decision. `billingBedCategoryMaster` has one disclosed deviation (clean id-based diff replacing a silent reference-equality bug).
+- **Batch 26**: `tariffMaster` carries the **SEVERITY-1** below (schema mismatch, write paths all fail) — separately escalated, not part of the rebuild-checklist sign-off. `doctorWise` carried a **SEVERITY-1** search-crash bug that is now fixed, verified, and held on its own branch, already deployed to the dev environment you'll be testing against.
+
+---
+
+## Part 2 — Decision docs needing your call
+
+| Doc | One-line ask |
+|---|---|
+| `docs/DECISION_NEEDED_TariffMasterLetterHeadImageColumnMissing.md` | Approve adding the missing `letter_head_image_tariff` column to `service.m_tariff_master` (the only complete fix — it also unblocks a second, unrelated consumer in the RIS Workbench module) — or hold. |
+| `docs/DECISION_NEEDED_MealMasterInactiveRowsNoRecoveryPath.md` | Approve **Option A** (add a "Show inactive" toggle to `mealMaster`'s list, reusing an already-working but currently-uncalled backend endpoint) vs. **Option B** (separate inactive-rows view) vs. neither — this is a real product gap (no way to reactivate a deactivated meal), not a rebuild defect. |
+
+*(Two more still-open decision docs exist from earlier in the project but weren't raised in this session's conversation — `docs/DECISION_NEEDED_CompanyMasterTariffMasterCodeBlindDuplicateCheck.md` (companyMaster/tariffMaster's Code-blind duplicate-check bug, referenced above as a known-but-unfixed issue) and `docs/DECISION_NEEDED_UnitServiceTariffMasterDaoImpl.md` (unread this session). Flagging their existence for completeness, not summarizing content you haven't asked about yet.)*
+
+---
+
+## Part 3 — Severity-1 findings awaiting your manual confirmation
+
+These are the highest-priority items. Each has already been fixed and independently re-verified at the source/API level — what's outstanding is *your own* hands-on walkthrough, not further engineering:
+
+1. **`aiButtonConfiguration`** (batch 25) — stale `configId` silently overwrote unrelated saved configs. Rebuild fix + matching legacy fix (`c649f1e5`) both done and merged. **You confirmed both data-gap blockers are cleared (button seed data + `combined_ai_json` template) but have not yet walked through the actual overwrite-scenario test itself.**
+2. **`dietTypeMaster`** (batch 21) — Update is completely, unconditionally non-functional on real, unmodified legacy (uncaught NPE, zero writes ever). Faithfully reproduced in the rebuild, not fixed (matches real legacy). **Never yet manually verified by you** — this is the oldest unconfirmed severity-1 in the queue.
+3. **`doctorWise`** (batch 26) — search crashed on every input combination. Fixed, held on `fix/doctorwise-getslots-time-filter-crash`, already deployed to the dev environment. **Not yet manually confirmed by you.**
+4. **`tariffMaster`** (batch 26) — Create/Update/status-toggle all fail with HTTP 500 on real legacy (schema mismatch). **Not yet fixed** — this one is a decision, not a confirmation (see Part 2 above); nothing to manually walk through on the rebuild side until the backend fix is approved and applied.
+
+**Suggested priority order, oldest/highest-impact first:** `dietTypeMaster` (oldest, real unfixable-on-rebuild-side legacy bug you should see with your own eyes) → `aiButtonConfiguration` (data corruption class, fix already live) → `doctorWise` (fix already live) → `tariffMaster` decision doc (blocks nothing else, but is the one still-open code decision among the four).
