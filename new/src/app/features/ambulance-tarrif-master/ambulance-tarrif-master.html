@@ -1,0 +1,201 @@
+<section class="page">
+  <fieldset>
+    <legend>Ambulance Tariff Master</legend>
+
+    <div class="filter-row">
+      <div class="field">
+        <label for="ambulanceType">Ambulance Tariff Name<span class="required">*</span></label>
+        <input
+          id="ambulanceType"
+          type="text"
+          autocomplete="off"
+          [ngModel]="ambulanceType()"
+          (ngModelChange)="ambulanceType.set($event)"
+          name="ambulanceType"
+        />
+        @if (isTariffNameInvalid()) {
+          <p class="help-block">Ambulance Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ambulanceProvider">Ambulance Provider<span class="required">*</span></label>
+        <select
+          id="ambulanceProvider"
+          [ngModel]="ambulanceProvider()"
+          (ngModelChange)="ambulanceProvider.set($event)"
+          name="ambulanceProvider"
+        >
+          <option value=""></option>
+          <option value="In House">In House</option>
+          <option value="Out Sourced">Out Sourced</option>
+        </select>
+        @if (isProviderInvalid()) {
+          <p class="help-block">Ambulance Provider is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ambulanceOutSrcVender">Out Sourced Vendor Name<span class="required">*</span></label>
+        <input
+          id="ambulanceOutSrcVender"
+          type="text"
+          autocomplete="off"
+          [ngModel]="ambulanceOutSrcVender()"
+          (ngModelChange)="ambulanceOutSrcVender.set($event)"
+          name="ambulanceOutSrcVender"
+        />
+        @if (isVendorInvalid()) {
+          <p class="help-block">Out Sourced Vendor is required</p>
+        }
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="field">
+        <label for="ambulanceFirstDist">First Distance<span class="required">*</span></label>
+        <input
+          id="ambulanceFirstDist"
+          type="text"
+          autocomplete="off"
+          [ngModel]="ambulanceFirstDist()"
+          (ngModelChange)="ambulanceFirstDist.set($event)"
+          name="ambulanceFirstDist"
+        />
+        @if (isFirstDistInvalid()) {
+          <p class="help-block">First Distance is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ambulanceFirstDistRate">Rate<span class="required">*</span></label>
+        <input
+          id="ambulanceFirstDistRate"
+          type="text"
+          autocomplete="off"
+          [ngModel]="ambulanceFirstDistRate()"
+          (ngModelChange)="ambulanceFirstDistRate.set($event)"
+          name="ambulanceFirstDistRate"
+        />
+        @if (isFirstDistRateInvalid()) {
+          <p class="help-block">First Distance Rate is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ambulanceAddMileage">Additional Mileage<span class="required">*</span></label>
+        <input
+          id="ambulanceAddMileage"
+          type="text"
+          autocomplete="off"
+          [ngModel]="ambulanceAddMileage()"
+          name="ambulanceAddMileage"
+          disabled
+        />
+      </div>
+
+      <div class="field">
+        <label for="ambulanceAddMileageRate">Additional Mileage Rate Per Km<span class="required">*</span></label>
+        <input
+          id="ambulanceAddMileageRate"
+          type="text"
+          autocomplete="off"
+          [ngModel]="ambulanceAddMileageRate()"
+          (ngModelChange)="ambulanceAddMileageRate.set($event)"
+          name="ambulanceAddMileageRate"
+        />
+        @if (isAddMileageRateInvalid()) {
+          <p class="help-block">Additional Mileage Rate Per Km is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openSaveConfirm()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Ambulance Tariff Name</th>
+        <th>Ambulance Provider</th>
+        <th>Out Sourced Vendor</th>
+        <th>First Distance</th>
+        <th>Rate</th>
+        <th>Additional Mileage</th>
+        <th>Additional Mileage Rate Per Km</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.ambulanceTarrifMasterId) {
+        <tr>
+          <td>{{ row.ambulanceType }}</td>
+          <td>{{ row.ambulanceProvider }}</td>
+          <td>{{ row.ambulanceOutSrcVender }}</td>
+          <td>{{ row.ambulanceFirstDist }}</td>
+          <td>{{ row.ambulanceFirstDistRate }}</td>
+          <td>{{ row.ambulanceAddMileage }}</td>
+          <td>{{ row.ambulanceAddMileageRate }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row.ambulanceTarrifMasterId)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="9" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

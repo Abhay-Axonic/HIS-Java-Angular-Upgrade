@@ -681,6 +681,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/ambulance-service-provider-master/ambulance-service-provider-master').then((m) => m.AmbulanceServiceProviderMaster),
       },
       {
+        path: 'ambulanceTarrifMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 816, title: 'Ambulance Tariff Master' },
+        loadComponent: () => import('./features/ambulance-tarrif-master/ambulance-tarrif-master').then((m) => m.AmbulanceTarrifMaster),
+      },
+      {
         path: 'passTypeMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 821, title: 'Pass Type Master' },

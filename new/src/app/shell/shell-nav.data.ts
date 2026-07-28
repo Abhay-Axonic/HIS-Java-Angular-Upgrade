@@ -142,6 +142,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/ambulanceFacilitiesMaster', title: 'Ambulance Facilities Master' },
       { path: '/resourceAllocationMaster', title: 'Resource Allocation Master' },
       { path: '/ambulanceServiceProviderMaster', title: 'Ambulance Service Provider Master' },
+      { path: '/ambulanceTarrifMaster', title: 'Ambulance Tariff Master' },
     ],
   },
   {
