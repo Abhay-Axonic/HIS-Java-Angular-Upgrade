@@ -44,7 +44,7 @@ These are the highest-priority items. Each has already been fixed and independen
 
 1. **`aiButtonConfiguration`** (batch 25) — stale `configId` silently overwrote unrelated saved configs. Rebuild fix + matching legacy fix (`c649f1e5`) both done and merged. **You confirmed both data-gap blockers are cleared (button seed data + `combined_ai_json` template) but have not yet walked through the actual overwrite-scenario test itself.** *(Next up per your stated plan.)*
 2. **`dietTypeMaster`** (batch 21) — Update is completely, unconditionally non-functional on real, unmodified legacy (uncaught NPE, zero writes ever). Faithfully reproduced in the rebuild, not fixed (matches real legacy). **Never yet manually verified by you** — the oldest unconfirmed severity-1 in the queue.
-3. ~~**`doctorWise`** (batch 26)~~ — **CONFIRMED by owner (2026-07-28).** Both search combinations (real dates + blank Time; real dates + Time 09:00-17:00) tested and work as expected. Closed.
+3. ~~**`doctorWise`** (batch 26)~~ — **CONFIRMED by owner and MERGED to `main` (2026-07-28).** Both search combinations (real dates + blank Time; real dates + Time 09:00-17:00, including the full downstream booking write path) tested and work as expected. Closed.
 4. ~~**`tariffMaster`** (batch 26)~~ — **RESOLVED.** Fixed (`BR-101`), live-verified, merged to `main`. Closed.
 
 **Remaining: 2 of the original 4** — `aiButtonConfiguration` and `dietTypeMaster`. Owner's stated working order: `aiButtonConfiguration` (finishing the paused overwrite-scenario test) → `dietTypeMaster` next.
