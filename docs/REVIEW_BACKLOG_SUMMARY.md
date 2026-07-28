@@ -23,7 +23,7 @@
 - **Batch 21**: `dietTypeMaster` carries the **SEVERITY-1** below (Update always fails). `growthChartMaster`'s rebuild added working search/pagination where legacy's own are dead — a corrected-and-disclosed deviation, not a faithful reproduction.
 - **Batch 24**: `checklistEquipmentMapper` had a **SEVERITY-1 DB fix** (missing `general_ledger_id` column) — already fixed and verified, not a pending item. `autoclaveMaster` has a known duplicate-check gap awaiting a Tier-3 decision.
 - **Batch 25**: `aiButtonConfiguration` carries the **SEVERITY-1** below (stale-configId silent overwrite) — both the rebuild fix and the matching legacy fix are done and merged (`c649f1e5`); what's outstanding is your manual walk-through confirmation, not a code decision. `billingBedCategoryMaster` has one disclosed deviation (clean id-based diff replacing a silent reference-equality bug).
-- **Batch 26**: `tariffMaster` carries the **SEVERITY-1** below (schema mismatch, write paths all fail) — separately escalated, not part of the rebuild-checklist sign-off. `doctorWise` carried a **SEVERITY-1** search-crash bug that is now fixed, verified, and held on its own branch, already deployed to the dev environment you'll be testing against.
+- **Batch 26**: `tariffMaster`'s schema-mismatch severity-1 is now **RESOLVED and merged** (`BR-101`) — writes work on both apps now. `doctorWise`'s search-crash severity-1 is **fixed and owner-confirmed** — both closed, nothing outstanding from this batch's severity-1s. Batch 26's own Step 6 rebuild-parity checklist (`docs/BATCH26_STEP6_CHECKLIST.md`) is still open for your review.
 
 ---
 
@@ -31,7 +31,7 @@
 
 | Doc | One-line ask |
 |---|---|
-| `docs/DECISION_NEEDED_TariffMasterLetterHeadImageColumnMissing.md` | Approve adding the missing `letter_head_image_tariff` column to `service.m_tariff_master` (the only complete fix — it also unblocks a second, unrelated consumer in the RIS Workbench module) — or hold. |
+| `docs/DECISION_NEEDED_TariffMasterLetterHeadImageColumnMissing.md` | **RESOLVED (2026-07-28).** Option A approved, fixed (`BR-101`), live-verified, merged to `main`. Nothing further needed. |
 | `docs/DECISION_NEEDED_MealMasterInactiveRowsNoRecoveryPath.md` | Approve **Option A** (add a "Show inactive" toggle to `mealMaster`'s list, reusing an already-working but currently-uncalled backend endpoint) vs. **Option B** (separate inactive-rows view) vs. neither — this is a real product gap (no way to reactivate a deactivated meal), not a rebuild defect. |
 
 *(Two more still-open decision docs exist from earlier in the project but weren't raised in this session's conversation — `docs/DECISION_NEEDED_CompanyMasterTariffMasterCodeBlindDuplicateCheck.md` (companyMaster/tariffMaster's Code-blind duplicate-check bug, referenced above as a known-but-unfixed issue) and `docs/DECISION_NEEDED_UnitServiceTariffMasterDaoImpl.md` (unread this session). Flagging their existence for completeness, not summarizing content you haven't asked about yet.)*
@@ -42,9 +42,9 @@
 
 These are the highest-priority items. Each has already been fixed and independently re-verified at the source/API level — what's outstanding is *your own* hands-on walkthrough, not further engineering:
 
-1. **`aiButtonConfiguration`** (batch 25) — stale `configId` silently overwrote unrelated saved configs. Rebuild fix + matching legacy fix (`c649f1e5`) both done and merged. **You confirmed both data-gap blockers are cleared (button seed data + `combined_ai_json` template) but have not yet walked through the actual overwrite-scenario test itself.**
-2. **`dietTypeMaster`** (batch 21) — Update is completely, unconditionally non-functional on real, unmodified legacy (uncaught NPE, zero writes ever). Faithfully reproduced in the rebuild, not fixed (matches real legacy). **Never yet manually verified by you** — this is the oldest unconfirmed severity-1 in the queue.
-3. **`doctorWise`** (batch 26) — search crashed on every input combination. Fixed, held on `fix/doctorwise-getslots-time-filter-crash`, already deployed to the dev environment. **Not yet manually confirmed by you.**
-4. **`tariffMaster`** (batch 26) — Create/Update/status-toggle all fail with HTTP 500 on real legacy (schema mismatch). **Not yet fixed** — this one is a decision, not a confirmation (see Part 2 above); nothing to manually walk through on the rebuild side until the backend fix is approved and applied.
+1. **`aiButtonConfiguration`** (batch 25) — stale `configId` silently overwrote unrelated saved configs. Rebuild fix + matching legacy fix (`c649f1e5`) both done and merged. **You confirmed both data-gap blockers are cleared (button seed data + `combined_ai_json` template) but have not yet walked through the actual overwrite-scenario test itself.** *(Next up per your stated plan.)*
+2. **`dietTypeMaster`** (batch 21) — Update is completely, unconditionally non-functional on real, unmodified legacy (uncaught NPE, zero writes ever). Faithfully reproduced in the rebuild, not fixed (matches real legacy). **Never yet manually verified by you** — the oldest unconfirmed severity-1 in the queue.
+3. ~~**`doctorWise`** (batch 26)~~ — **CONFIRMED by owner (2026-07-28).** Both search combinations (real dates + blank Time; real dates + Time 09:00-17:00) tested and work as expected. Closed.
+4. ~~**`tariffMaster`** (batch 26)~~ — **RESOLVED.** Fixed (`BR-101`), live-verified, merged to `main`. Closed.
 
-**Suggested priority order, oldest/highest-impact first:** `dietTypeMaster` (oldest, real unfixable-on-rebuild-side legacy bug you should see with your own eyes) → `aiButtonConfiguration` (data corruption class, fix already live) → `doctorWise` (fix already live) → `tariffMaster` decision doc (blocks nothing else, but is the one still-open code decision among the four).
+**Remaining: 2 of the original 4** — `aiButtonConfiguration` and `dietTypeMaster`. Owner's stated working order: `aiButtonConfiguration` (finishing the paused overwrite-scenario test) → `dietTypeMaster` next.
