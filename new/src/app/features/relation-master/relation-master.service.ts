@@ -12,23 +12,14 @@ import { RelationDetail, RelationRow, RelationStatusPayload } from './relation-m
  * All POST, all under `/adt` (no `/api` prefix, BASE_URL/ROOT_URL both
  * confirmed live as "" via the running app's own globals).
  *
- * **Confirmed live against the real backend this session (2026-07-21):**
- * `getRelationMasterList`/`getRelationCount` both returned a real HTTP 200
- * with `status:"success"` (`object:0` -- zero relation rows currently exist
- * in this dev DB) via the app's own `GenericService` from an authenticated
- * session -- this screen's backend genuinely exists and works, UNLIKE
- * `modalityTypeMaster`/the homecare cluster (entries 67/77). The zero-row
- * count is itself corroborating evidence for this screen's severity-1
- * frontend bug (see relation-master.ts's class doc comment): if Save had
- * ever worked even once, there would likely be at least one row by now.
- *
- * `saveRelationMaster`/`updateRelationMaster` are included below for
- * completeness/documentation ONLY -- neither is ever called by
- * `relation-master.ts`, because neither is reachable from the live UI in
- * legacy either (see class doc comment: the Save/Update buttons call
- * `saveRelation()`/`updateRelation()`, which are undefined; the orphaned
- * `$scope.save`/`$scope.update` that DO call these endpoints are never
- * invoked by anything).
+ * **Correction, 2026-07-28:** `saveRelationMaster`/`updateRelationMaster`
+ * were previously documented as orphaned/never-callable, based on auditing
+ * the wrong (unlinked) `/relationMaster` state. The real, sidebar-linked
+ * `/commonMaster/relationmaster` route's own template correctly wires
+ * `save()`/`update()` to these exact endpoints -- confirmed live 2026-07-28,
+ * real `POST /adt/saveRelationMaster` and `POST /adt/updateRelationMaster`,
+ * both HTTP 200, new/edited rows visibly persisting across reloads. See
+ * relation-master.ts's class doc comment for the full correction writeup.
  */
 @Injectable({ providedIn: 'root' })
 export class RelationMasterService {
@@ -36,8 +27,6 @@ export class RelationMasterService {
   private readonly base = inject(API_BASE_URL);
 
   // ctrl:85-116 -- POST { organizationId, offset, noOfRecordsPerPage }.
-  // Real call, fires on load -- see class doc comment for why its result is
-  // never displayed.
   getRelationMasterList(
     organizationId: number,
     offset: number,
@@ -55,9 +44,7 @@ export class RelationMasterService {
     return this.http.post<ApiResponse<number>>(`${this.base}/adt/getRelationCount`, { organizationId });
   }
 
-  /** ctrl:194-256 -- orphaned, NEVER called from `relation-master.ts` (see
-   * class doc comment). Kept only so the real endpoint/payload shape is on
-   * record for whoever eventually fixes this screen. */
+  // ctrl:194-256 -- confirmed live 2026-07-28, real save, real persistence.
   saveRelationMaster(payload: {
     code: string;
     desc: string;
@@ -71,9 +58,8 @@ export class RelationMasterService {
     return this.http.post<ApiResponse>(`${this.base}/adt/saveRelationMaster`, payload);
   }
 
-  /** ctrl:331-383 -- orphaned, NEVER called from `relation-master.ts` (see
-   * class doc comment). Kept only so the real endpoint/payload shape is on
-   * record for whoever eventually fixes this screen. */
+  // ctrl:331-383 -- confirmed live 2026-07-28, real update, real persistence.
+  // No confirm-modal gate (matches district-master's own save-only asymmetry).
   updateRelationMaster(payload: {
     id: number;
     code: string;
@@ -85,16 +71,12 @@ export class RelationMasterService {
     return this.http.post<ApiResponse>(`${this.base}/adt/updateRelationMaster`, payload);
   }
 
-  // ctrl:258-281 -- correctly named/wired to the view's edit pencil
-  // (`showUpdateBtn`), but structurally unreachable since the table never
-  // renders any row to click -- see class doc comment.
+  // ctrl:258-281 -- confirmed live 2026-07-28, real edit-fetch round trip.
   getRelationById(id: number): Observable<ApiResponse<never, RelationDetail>> {
     return this.http.post<ApiResponse<never, RelationDetail>>(`${this.base}/adt/getRelationById`, { id });
   }
 
-  // ctrl:291-329 -- correctly named/wired to the view's status checkbox
-  // (`updateStatus`), but structurally unreachable for the same reason as
-  // getRelationById above -- see class doc comment.
+  // ctrl:291-329 -- confirmed live 2026-07-28, real status toggle.
   updateStatusForRelation(payload: RelationStatusPayload): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.base}/adt/updateStatusForRelation`, payload);
   }

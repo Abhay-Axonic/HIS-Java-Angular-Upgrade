@@ -1,142 +1,245 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../core/session.service';
+import { NotificationService } from '../../core/notification.service';
+import { StatusToggle } from '../../shared/status-toggle/status-toggle';
 import { OccupationMasterService } from './occupation-master.service';
 import { OccupationForm, OccupationRow, emptyOccupationForm } from './occupation-master.models';
 
 /**
- * Parity rebuild of views/master/GlobalMaster/occupation-master.html +
- * resources/assets/js/controller/adt/global/occupationMasterController.js
- * (`occupationMasterController`, classic `$scope`, no `controllerAs`).
- * moduleId 393 (app.js:3633-3654 resolve block, confirmed live). Backend
- * confirmed real and working (all 6 endpoints return HTTP 200 with a valid
- * token, checked 2026-07-21).
+ * Parity rebuild of the REAL, reachable `occupationMaster` screen.
  *
- * **THE SCREEN'S CORE FUNCTIONALITY IS NON-FUNCTIONAL IN LEGACY TODAY, as
- * currently wired -- identical finding to this batch's sibling
- * `marital-status-master` (see that component's doc comment for the full
- * writeup); summarized here:**
+ * =====================================================================
+ * SEVERITY-1 CORRECTION, 2026-07-28 -- see `relation-master.ts`'s class doc
+ * comment for the full writeup of this shared-family mistake; summarized
+ * here. `occupationMasterController.js` is registered on TWO legacy
+ * ui-router states: (1) a dedicated `/occupationMaster` state with its own
+ * template (`occupation-master.html`) -- confirmed via direct grep of
+ * `new-side-bar.html` to have NO live link anywhere; this is the state this
+ * component previously modeled, and entry 80's "broken" verdict is accurate
+ * for it. (2) The shared `commonMaster` dispatcher, entry `occupation` ->
+ * `occupationMasterController`, template `common-master-screen.html`.
+ * **Confirmed via direct grep: `new-side-bar.html:3395` links here**
+ * (`href="#/commonMaster/occupation"`) -- the ONLY path a real user reaches.
  *
- * 1. `ng-click="saveOccupation()"` / `ng-click="updateOccupation()"`
- *    (view:48-49) call functions never defined anywhere in
- *    occupationMasterController.js. The controller's real `$scope.save`/
- *    `$scope.update` (ctrl:196-256, 333-384) are fully-implemented, working
- *    functions -- but unreachable from this view's buttons.
- * 2. `ng-repeat="info in occupationList"` (view:79) -- `$scope.occupationList`
- *    is never assigned; only `$scope.commonList` is (ctrl:110-116/156-162,
- *    populated by a real, successful `GETOCCUPATIONLIST` call that fires on
- *    every load). The table is permanently empty regardless of real
- *    server-side data.
- * 3. Form inputs bind to `occupation.occupationCode`/`occupation.occupationName`
- *    (view:16/30), but `save()`/`update()` build their payload from
- *    `$scope.common.code`/`$scope.common.desc` (ctrl:209-210, 343-344) -- a
- *    completely different, never-written-to scope object.
+ * `common-master-screen.html` correctly names its form `commonform`
+ * (matching `$scope.commonform.$valid`), Save/Update buttons
+ * `ng-click="save()"`/`ng-click="update()"` (matching the controller's real
+ * `$scope.save`/`$scope.update`), and its list `ng-repeat="info in commonList"`
+ * (matching `$scope.commonList`) -- none of entry 80's 3 mismatch axes apply.
  *
- * Confirmed via a full read of this controller and view (not inferred).
- * Same 3-axis mismatch independently confirmed in this batch's
- * `maritalstatusMasterController.js`+marital-status-master.html and the
- * `relationMasterController.js`+relation-master.html sibling (batch-8,
- * built in parallel) -- same apparent copy-paste ancestor, same class of
- * bug as `bedBook` (docs/ANGULAR_PENDING_FINDINGS.md entry 53). Flagged for
- * docs/ANGULAR_PENDING_FINDINGS.md; not fixed here per standing parity
- * discipline -- faithfully reproduced below, same technique as
- * marital-status-master.
+ * **Confirmed live 2026-07-28, real unmodified legacy, via the actual
+ * sidebar-linked route:** created a row (real `POST /adt/saveOccupationMaster`,
+ * HTTP 200, "Occupation Added Successfully...!!", row appeared with a
+ * working status toggle), toggled its status (real
+ * `POST /adt/updateStatusForOccupation`, HTTP 200). Update/edit not
+ * individually re-exercised for this screen this pass (identical controller
+ * shape to `relationMaster`, where both were confirmed live) -- see
+ * `docs/ANGULAR_PENDING_FINDINGS.md` correction entry for the full record.
+ * Test row deactivated after verification.
  *
- * **Confirmed divergence from the marital-status-master sibling:**
- * `update()`'s payload here (ctrl:341-347) omits a `status` field entirely;
- * marital's equivalent (ctrl:343-351) hardcodes `status:'A'`. Preserved in
- * `OccupationUpdatePayload` (models.ts) for documentation fidelity even
- * though `update()` is unreachable in both siblings.
- *
- * The controller's login-redirect guard (ctrl:30-34) correctly injects
- * `$state` -- no missing-`$state`-DI crash class here (entries 8/10). No
- * search box exists in this view at all.
- *
- * **Separate copy-paste residue bug, also faithfully reproduced:** the
- * legacy view's `<legend>` literally reads "Religion Master"
- * (occupation-master.html:5), not "Occupation Master" -- confirmed by a
- * direct read of the file, not a typo introduced here. Reproduced verbatim
- * in the template below.
+ * **Real, confirmed-live behavioral quirks reproduced below:**
+ * - **Confirm-modal never-rearms-after-failure -- FIXED**, same shape and
+ *   same fix as `relation-master`'s equivalent (see that component's doc
+ *   comment for the full mechanism): `$scope.init()` (ctrl:28-59) resets
+ *   `popUpFlag` back to `true` on save SUCCESS only, not failure. Rearmed
+ *   on both outcomes here, matching this codebase's standing entry-55-class
+ *   convention.
+ * - **Update has no confirm-modal gate at all** (ctrl:333-384) -- saves
+ *   directly on click.
+ * - **The "Occupation" field uses the generic pattern** (no letters-only
+ *   restriction, unlike `relation-master`'s sibling field) -- confirmed via
+ *   direct template read: `common-master-screen.html`'s letters-only block
+ *   is scoped to `LISDynamicLabel=='Priority Master'||'Relation'` only.
+ * - **`updateStatus` has no revert-on-failure and does not reload the
+ *   list** (ctrl:293-330) -- just a growl either way.
+ * - The Color Code field (`common.colorCode`) is deliberately NOT modeled
+ *   here -- confirmed via the controller's own payload construction that it
+ *   is never sent to the backend; decorative-only, out of scope for this
+ *   correction. Same reasoning as `relation-master`.
+ * =====================================================================
  */
 @Component({
   selector: 'app-occupation-master',
-  imports: [FormsModule],
+  imports: [FormsModule, StatusToggle],
   templateUrl: './occupation-master.html',
   styleUrl: './occupation-master.scss',
 })
 export class OccupationMaster {
   private readonly session = inject(SessionService);
+  private readonly notify = inject(NotificationService);
   private readonly api = inject(OccupationMasterService);
 
   private readonly organizationId = this.session.organizationId ?? 0;
+  private readonly userId = this.session.userId ?? 0;
 
-  // ---- form state (mirrors the view's own `occupation.*` bindings, view:16/30 --
-  // NOT `$scope.common`, which is what the dead save()/update() actually read) ----
   form = signal<OccupationForm>(emptyOccupationForm());
   saveMode = signal(true);
+  formSubmitted = signal(false);
+  showConfirmModal = signal(false);
 
-  // ---- list + pagination plumbing (mirrors initOccupationMasterList/getOccupationMasterList) ----
-  private readonly noOfRecordsPerPage = 10;
-  private offset = 0;
+  // ctrl:49/190/28-59 -- rearmed on BOTH outcomes here (legacy only rearms
+  // on success, via init() -- fixed, see class doc comment).
+  private popupArmed = true;
 
-  /** Mirrors `$scope.commonList` (ctrl:110-116) -- real data, really
-   * fetched. Deliberately NOT read by the template; see class doc comment. */
-  private readonly fetchedList = signal<OccupationRow[]>([]);
-
-  /** Mirrors the legacy view's `occupationList` (view:79) -- never assigned
-   * anywhere in occupationMasterController.js. Faithful bug reproduction:
-   * this stays empty forever regardless of `fetchedList`. */
-  renderList = signal<OccupationRow[]>([]);
-
-  totalCount = signal(0);
+  rows = signal<OccupationRow[]>([]);
 
   constructor() {
     this.loadList();
-    this.loadCount();
   }
 
   private loadList(): void {
-    this.api.getOccupationList(this.organizationId, this.offset, this.noOfRecordsPerPage).subscribe({
+    this.api.getOccupationList(this.organizationId, 0, 10).subscribe({
       next: (res) => {
-        if (res.status === 'success') this.fetchedList.set(res.listObject ?? []);
+        if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
     });
-  }
-
-  private loadCount(): void {
-    this.api.getOccupationCount(this.organizationId).subscribe({
-      next: (res) => {
-        if (res.status === 'success' && typeof res.object === 'number') this.totalCount.set(res.object);
-      },
-    });
+    this.api.getOccupationCount(this.organizationId).subscribe();
   }
 
   updateField<K extends keyof OccupationForm>(field: K, value: OccupationForm[K]): void {
     this.form.update((f) => ({ ...f, [field]: value }));
   }
 
-  /** Confirmed-live silent no-op -- see doc comment below. Legacy's
-   * occupation-master.html:48 wires `ng-click="saveOccupation()"` to a
-   * function never defined anywhere in occupationMasterController.js. */
-  onSaveClick(): void {
-    // Confirmed live against the real legacy app (2026-07-21): clicking
-    // Save/Update produces ZERO console output, not a thrown TypeError --
-    // AngularJS's expression compiler guards function-call expressions
-    // against an undefined target rather than invoking `undefined()`
-    // directly, so `ng-click="saveOccupation()"` calling a scope method
-    // that doesn't exist is a genuine silent no-op, not a crash. An
-    // earlier version of this file reproduced this as a thrown TypeError,
-    // which was verified WRONG by testing the real app directly -- true
-    // no-op is the faithful reproduction, matching sibling relationMaster
-    // (docs/ANGULAR_PENDING_FINDINGS.md, the adt/global disconnected-CRUD
-    // cluster finding).
+  // ctrl:20-22 -- required code (max 10) + required occupation name (max
+  // 256, generic pattern, no letters-only restriction).
+  private requiredFieldsValid(): boolean {
+    const f = this.form();
+    return !!(f.code.trim() && f.code.length <= 10 && f.desc.trim() && f.desc.length <= 256);
   }
 
-  /** Confirmed-live silent no-op -- see onSaveClick doc comment. Legacy's
-   * occupation-master.html:49 wires `ng-click="updateOccupation()"` to a
-   * function never defined anywhere in occupationMasterController.js, and
-   * AngularJS silently no-ops the call rather than throwing. */
-  onUpdateClick(): void {
-    // Intentionally empty -- see onSaveClick doc comment.
+  isCodeInvalid(): boolean {
+    return this.formSubmitted() && !(this.form().code.trim() && this.form().code.length <= 10);
   }
+  isDescInvalid(): boolean {
+    const desc = this.form().desc;
+    return this.formSubmitted() && !(desc.trim() && desc.length <= 256);
+  }
+
+  onSaveClick(): void {
+    this.formSubmitted.set(true);
+    if (!this.requiredFieldsValid()) return;
+    if (this.popupArmed) {
+      this.showConfirmModal.set(true);
+      return;
+    }
+    this.confirmSave();
+  }
+
+  closeConfirmModal(): void {
+    this.showConfirmModal.set(false);
+  }
+
+  confirmFromModal(): void {
+    this.popupArmed = false;
+    this.showConfirmModal.set(false);
+    this.confirmSave();
+  }
+
+  private confirmSave(): void {
+    const f = this.form();
+    const now = formatDateTime(new Date());
+    this.api
+      .saveOccupation({
+        code: f.code,
+        desc: f.desc,
+        status: 'A',
+        createdBy: this.userId,
+        updatedBy: this.userId,
+        organizationId: this.organizationId,
+        createdDate: now,
+        updatedDate: now,
+      })
+      .subscribe({
+        next: (res) => {
+          if (res.status === 'success') {
+            this.notify.success('Occupation Added Successfully...!!');
+            this.form.set(emptyOccupationForm());
+            this.formSubmitted.set(false);
+          } else {
+            this.notify.error('Occupation already exits...!!');
+          }
+          this.loadList();
+          this.popupArmed = true; // FIX: rearm on both outcomes.
+        },
+      });
+  }
+
+  // mirrors $scope.update (ctrl:333-384) -- no confirm-modal gate.
+  onUpdateClick(): void {
+    this.formSubmitted.set(true);
+    if (!this.requiredFieldsValid()) return;
+    const f = this.form();
+    this.api
+      .updateOccupation({
+        id: f.id as number,
+        code: f.code,
+        desc: f.desc,
+        updatedBy: this.userId,
+        updatedDate: formatDateTime(new Date()),
+        organizationId: this.organizationId,
+      })
+      .subscribe({
+        next: (res) => {
+          if (res.status === 'success') {
+            this.notify.success('Occupation Updated Successfully...!!');
+            this.form.set(emptyOccupationForm());
+            this.formSubmitted.set(false);
+            this.saveMode.set(true);
+          } else {
+            this.notify.error('Occupation already exits...!!');
+          }
+          this.loadList();
+        },
+      });
+  }
+
+  // mirrors showUpdateBtn (ctrl:259-283).
+  edit(row: OccupationRow): void {
+    this.saveMode.set(false);
+    this.api.getOccupationById(row.id).subscribe({
+      next: (res) => {
+        if (res.status !== 'success' || !res.listObject?.length) {
+          window.alert('Error!!'); // ctrl:280 -- a real native alert, not growl
+          return;
+        }
+        const d = res.listObject[0];
+        this.form.set({ id: d.id, code: d.code, desc: d.desc });
+      },
+    });
+  }
+
+  // mirrors updateStatus (ctrl:293-330) -- no revert-on-failure, no list
+  // reload after.
+  toggleStatus(row: OccupationRow): void {
+    const nextStatus: 'A' | 'I' = row.status === 'A' ? 'I' : 'A';
+    this.rows.update((rows) => rows.map((r) => (r.id === row.id ? { ...r, status: nextStatus } : r)));
+    this.api
+      .updateOccupationStatus({
+        id: row.id,
+        status: nextStatus,
+        updatedBy: this.userId,
+        updatedDate: formatDateTime(new Date()),
+      })
+      .subscribe({
+        next: (res) => {
+          if (res.status === 'success') {
+            this.notify.success('Occupation Updated Successfully...!!');
+          } else {
+            this.notify.error('Something went wrong...!!');
+          }
+        },
+      });
+  }
+}
+
+/** `moment(new Date()).format('DD-MM-YYYY HH:mm:ss')`. */
+function formatDateTime(d: Date): string {
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  const ss = String(d.getSeconds()).padStart(2, '0');
+  return `${dd}-${mm}-${yyyy} ${hh}:${min}:${ss}`;
 }
