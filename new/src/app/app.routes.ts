@@ -473,11 +473,28 @@ export const routes: Routes = [
         data: { moduleId: 545, title: 'Ward Master' },
         loadComponent: () => import('./features/ward-master/ward-master').then((m) => m.WardMaster),
       },
+      // Phase 4 batch 25.
+      {
+        path: 'icutypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 374, title: 'ICU Type Master' },
+        loadComponent: () => import('./features/icu-type-master/icu-type-master').then((m) => m.IcuTypeMaster),
+      },
       {
         path: 'bedCategoryMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 543, title: 'Bed Category Master' },
         loadComponent: () => import('./features/bed-category-master/bed-category-master').then((m) => m.BedCategoryMaster),
+      },
+      // Phase 4 batch 25.
+      {
+        path: 'billingBedCategoryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 544, title: 'Billing Ward Bed Category Master' },
+        loadComponent: () =>
+          import('./features/billing-bed-category-master/billing-bed-category-master').then(
+            (m) => m.BillingBedCategoryMaster,
+          ),
       },
       {
         path: 'ambulanceTypeMaster',
@@ -771,6 +788,20 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 393, title: 'Occupation Master' },
         loadComponent: () => import('./features/occupation-master/occupation-master').then((m) => m.OccupationMaster),
+      },
+      {
+        path: 'patientSourceMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 394, title: 'Patient Source of referral Master' },
+        loadComponent: () =>
+          import('./features/patient-source-master/patient-source-master').then((m) => m.PatientSourceMaster),
+      },
+      {
+        path: 'referralTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 395, title: 'Referral Type Master' },
+        loadComponent: () =>
+          import('./features/referral-type-master/referral-type-master').then((m) => m.ReferralTypeMaster),
       },
       {
         path: 'prefixMaster',

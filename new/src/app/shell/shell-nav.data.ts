@@ -77,6 +77,8 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/occupationMaster', title: 'Occupation Master' },
       // Phase 4 batch 24.
       { path: '/vitalQualifierMaster', title: 'Vital Observations Qualifier Master' },
+      { path: '/patientSourceMaster', title: 'Patient Source of referral Master' },
+      { path: '/referralTypeMaster', title: 'Referral Type Master' },
       { path: '/prefixMaster', title: 'Prefix Master' },
       { path: '/nationalityMaster', title: 'Nationality Master' },
       { path: '/countryMaster', title: 'Country Master' },
@@ -123,12 +125,14 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/mortuaryBedMaster', title: 'Mortuary Bed Master' },
       { path: '/nursingStationMaster', title: 'Nursing Station Master' },
       { path: '/departmentMasterUnit', title: 'Department Master (Unit)' },
+      { path: '/icutypeMaster', title: 'ICU Type Master' },
     ],
   },
   {
     heading: 'ADT - Registration',
     items: [
       { path: '/bedCategoryMaster', title: 'Bed Category Master' },
+      { path: '/billingBedCategoryMaster', title: 'Billing Ward Bed Category Master' },
       { path: '/bedTypeMaster', title: 'Ward Bed Type Master' },
       { path: '/shortLeaveReasonMaster', title: 'Short Leave Reason Master' },
       { path: '/passTypeMaster', title: 'Pass Type Master' },
