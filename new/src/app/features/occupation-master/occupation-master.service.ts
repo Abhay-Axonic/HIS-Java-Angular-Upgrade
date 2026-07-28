@@ -17,10 +17,14 @@ import {
  * and resources/assets/js/config/adt.url.config.js:192-196/380 -- not
  * guessed. All 6 endpoints confirmed live (HTTP 200 with a real auth token)
  * via `tools/angular-audit/check_backend_endpoints.py --only occupationMaster`
- * on 2026-07-21 -- this screen's backend is real and working; see the
- * component's class doc comment for why the frontend never actually
- * reaches most of it. moduleId 393 (app.js:3633-3654 resolve block,
- * confirmed live).
+ * on 2026-07-21 -- this screen's backend is real and working. moduleId 393
+ * (app.js:3633-3654 resolve block, confirmed live).
+ *
+ * **Correction, 2026-07-28:** every endpoint below IS reachable from the
+ * real, sidebar-linked `/commonMaster/occupation` route -- confirmed live,
+ * real save/update/status-toggle/edit-fetch round trips. See
+ * occupation-master.ts's class doc comment for the full correction
+ * writeup.
  */
 @Injectable({ providedIn: 'root' })
 export class OccupationMasterService {

@@ -1,48 +1,49 @@
+<!--
+  See occupation-master.ts's class doc comment for the full 2026-07-28
+  correction writeup: this now models the REAL, sidebar-reachable
+  `/commonMaster/occupation` route (common-master-screen.html), not the
+  unlinked dedicated `/occupationMaster` state this file previously modeled
+  (whose own template had the "Religion Master" legend copy-paste residue --
+  that residue does NOT apply to this, the real, reachable screen, which
+  correctly reads "Occupation" throughout).
+-->
 <section class="page">
   <fieldset>
-    <!--
-      Faithful copy-paste-residue reproduction: legacy's occupation-master.html:5
-      literally reads "Religion Master", not "Occupation Master" -- confirmed
-      via direct read, not a typo introduced here. See class doc comment.
-    -->
-    <legend class="heading-div">Religion Master</legend>
     <div class="form-row">
       <div class="field">
-        <label for="occupationCode">Code<span class="required">*</span></label>
+        <label for="occupationCode">Code</label>
         <input
           id="occupationCode"
           type="text"
           autocomplete="off"
-          [ngModel]="form().occupationCode"
-          (ngModelChange)="updateField('occupationCode', $event)"
+          maxlength="10"
+          [ngModel]="form().code"
+          (ngModelChange)="updateField('code', $event)"
           name="occupationCode"
-          required
         />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
       </div>
 
       <div class="field">
-        <label for="occupationName">Occupation Name<span class="required">*</span></label>
+        <label for="occupationName">Occupation</label>
         <input
           id="occupationName"
           type="text"
           autocomplete="off"
-          [ngModel]="form().occupationName"
-          (ngModelChange)="updateField('occupationName', $event)"
+          maxlength="256"
+          [ngModel]="form().desc"
+          (ngModelChange)="updateField('desc', $event)"
           name="occupationName"
-          required
         />
+        @if (isDescInvalid()) {
+          <p class="help-block">Occupation is required</p>
+        }
       </div>
     </div>
   </fieldset>
 
-  <!--
-    Faithful bug reproduction, NOT a working Save/Update flow -- see the
-    class doc comment / docs/ANGULAR_PENDING_FINDINGS.md. Legacy's
-    occupation-master.html:48-49 wire these exact buttons to
-    `saveOccupation()`/`updateOccupation()`, neither of which is defined
-    anywhere in occupationMasterController.js -- every real click throws in
-    legacy today, silently, with nothing visible happening on screen.
-  -->
   <div class="toolbar">
     @if (saveMode()) {
       <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
@@ -59,33 +60,47 @@
     <thead>
       <tr>
         <th>Code</th>
-        <th>Name</th>
+        <th>Occupation</th>
         <th class="text-center">Status(n)</th>
         <th class="text-center">Action taken</th>
       </tr>
     </thead>
     <tbody>
-      <!--
-        Faithful bug reproduction -- see class doc comment. Legacy's
-        `ng-repeat="info in occupationList"` (view:79) iterates a variable
-        the controller never assigns; `renderList` here mirrors that -- it
-        is deliberately never populated, even though the real, working
-        getOccupationMasterList call fires on load and fetches real data
-        (see the private, unrendered `fetchedList` signal in the component).
-      -->
-      @for (row of renderList(); track row.occupationId) {
+      @for (row of rows(); track row.id) {
         <tr>
-          <td>{{ row.occupationCode }}</td>
-          <td>{{ row.occupationName }}</td>
-          <td class="text-center">{{ row.status }}</td>
-          <td class="text-center"></td>
+          <td>{{ row.code }}</td>
+          <td>{{ row.desc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
         </tr>
       }
-      @if (!renderList().length) {
+      @if (!rows().length) {
         <tr>
-          <td colspan="4" class="text-center">No Record Found</td>
+          <td colspan="4" class="text-center">No Records Found</td>
         </tr>
       }
     </tbody>
   </table>
 </section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmFromModal()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
