@@ -120,6 +120,14 @@ export class GeneralInsuranceMaster {
         this.loader.stop();
         this.loadList();
       },
+      // Previously missing (unlike every other network call in this file) --
+      // left the global loader spinner stuck forever on any error, e.g. the
+      // real, still-open VendorController.GetDropdowns 500 (see
+      // PENDING-vendorcontroller-getdropdowns-severity1-schemadrift-registrationconfig).
+      // A network failure should never leave the user staring at an infinite
+      // spinner; matches the error-handling shape every sibling call site in
+      // this file already uses.
+      error: () => this.loader.stop(),
     });
   }
 
