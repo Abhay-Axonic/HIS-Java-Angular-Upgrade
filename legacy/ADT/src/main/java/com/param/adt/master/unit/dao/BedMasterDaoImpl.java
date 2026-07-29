@@ -1468,27 +1468,48 @@ public class BedMasterDaoImpl extends GenericDao<BedMaster, Integer> implements 
 	@Override
 	public Boolean checkBedNumberExistOrNot(BedMasterDto bedMasterDto) throws ApplicationException {
 		try {
-			
-		StringBuilder querySb=new StringBuilder("select count(*)  from adt.m_bed_master as mbm where room_id=:roomId and lower(bed_number) like :bedNumber and unit_id =:unitId ");
-		
+
+		StringBuilder querySb=new StringBuilder("select count(*)  from adt.m_bed_master as mbm where lower(bed_number) like :bedNumber and unit_id =:unitId ");
+
+			// BR-102-followup: room_id is a raw native-SQL parameter with no entity-mapping
+			// type info available to Hibernate. Moving Bed rows genuinely have no room
+			// (roomId is always null for them, by design -- confirmed live, the frontend
+			// never sends roomId for a Moving Bed payload), and binding a null Object with
+			// no type hint on a native query made the PostgreSQL JDBC driver fall back to
+			// binding it as bytea, throwing "operator does not exist: integer = bytea" and
+			// aborting the whole transaction -- silently, since this method's own catch
+			// blocks swallow it, masking the real Update that ran immediately afterward in
+			// the same (now-aborted) transaction. Null-guarded the same way this method
+			// already null-guards bedId just below, preserving the check's real intent:
+			// duplicate bed-number detection scoped to "same room" for Normal Beds, or
+			// "the roomless Moving Bed pool" for Moving Beds -- not skipping the check
+			// entirely, just scoping it correctly instead of crashing.
+			if(bedMasterDto.getRoomId()!=null) {
+				querySb.append(" and room_id=:roomId ");
+			} else {
+				querySb.append(" and room_id is null ");
+			}
+
 			if(bedMasterDto.getBedId()!=null ) {
 				querySb.append(" and bed_id!="+bedMasterDto.getBedId());
 			}
-			
-			BigInteger cnt =(BigInteger)sessionFactory.getCurrentSession().createSQLQuery(querySb.toString())
+
+			Query query = sessionFactory.getCurrentSession().createSQLQuery(querySb.toString())
 			.setParameter("bedNumber", bedMasterDto.getBedDesc().trim().toLowerCase())
-			.setParameter("unitId", bedMasterDto.getUnitId())
-			.setParameter("roomId", bedMasterDto.getRoomId())
-			.uniqueResult();
-		 
+			.setParameter("unitId", bedMasterDto.getUnitId());
+			if(bedMasterDto.getRoomId()!=null) {
+				query.setParameter("roomId", bedMasterDto.getRoomId());
+			}
+			BigInteger cnt = (BigInteger) query.uniqueResult();
+
 		   if(cnt.intValue()>0) {
 			   return true;
 		   }
 		} catch (HibernateException he) {
 
 		} catch (Exception e) {
-			
-		} 
+
+		}
 		return false;
 	}
 
