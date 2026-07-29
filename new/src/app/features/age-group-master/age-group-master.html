@@ -1,0 +1,178 @@
+<!--
+  Parity rebuild of views/master/LIS/age-group-master.html.
+  Legacy's two commented-out markup blocks (an older Save/Update button
+  layout and an older search/entries-per-page layout, age-group-master.html
+  lines 85-128) are dead and were never ported -- the live block further
+  down the same file (lines 130-161) already supersedes them with the exact
+  same functionality this template implements.
+-->
+<section class="page">
+  <fieldset>
+    <form class="form-row" (ngSubmit)="saveMode() ? save() : update()">
+      <div class="field">
+        <label for="ageGroupCode">Code</label>
+        <input
+          id="ageGroupCode"
+          type="text"
+          autocomplete="off"
+          maxlength="10"
+          [ngModel]="record().ageGroupCode"
+          (ngModelChange)="updateField('ageGroupCode', $event)"
+          name="ageGroupCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required.</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ageTypeGrpfromId">From</label>
+        <select
+          id="ageTypeGrpfromId"
+          [ngModel]="record().ageTypeGrpfromId"
+          (ngModelChange)="updateField('ageTypeGrpfromId', $event)"
+          name="ageTypeGrpfromId"
+          [class.invalid]="isFromUnitInvalid()"
+        >
+          <option value="">Please Select From</option>
+          @for (t of ageTypeGroupList(); track t.ageTypeGrpId) {
+            <option [value]="t.ageTypeGrpId">{{ t.ageTypeGrpName }}</option>
+          }
+        </select>
+        @if (isFromUnitInvalid()) {
+          <p class="help-block">Please Select From.</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ageGroupFrom">&nbsp;</label>
+        <input
+          id="ageGroupFrom"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().ageGroupFrom"
+          (ngModelChange)="updateField('ageGroupFrom', $event)"
+          name="ageGroupFrom"
+          [class.invalid]="isFromValueInvalid()"
+        />
+        @if (isFromValueInvalid()) {
+          <p class="help-block">From is required.</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ageTypeGrptoId">To</label>
+        <select
+          id="ageTypeGrptoId"
+          [ngModel]="record().ageTypeGrptoId"
+          (ngModelChange)="updateField('ageTypeGrptoId', $event)"
+          name="ageTypeGrptoId"
+          [class.invalid]="isToUnitInvalid()"
+        >
+          <option value="">Please Select To</option>
+          @for (t of ageTypeGroupList(); track t.ageTypeGrpId) {
+            <option [value]="t.ageTypeGrpId">{{ t.ageTypeGrpName }}</option>
+          }
+        </select>
+        @if (isToUnitInvalid()) {
+          <p class="help-block">Please Select To.</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="ageGroupTo">&nbsp;</label>
+        <input
+          id="ageGroupTo"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().ageGroupTo"
+          (ngModelChange)="updateField('ageGroupTo', $event)"
+          name="ageGroupTo"
+          [class.invalid]="isToValueInvalid()"
+        />
+        @if (isToValueInvalid()) {
+          <p class="help-block">To is required.</p>
+        }
+      </div>
+    </form>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>
+          Code
+          <span class="sort-arrows">
+            <i class="fa fa-caret-up" (click)="sortBy('ageGroupCode')" aria-hidden="true"></i>
+            <i class="fa fa-caret-down" (click)="sortBy('ageGroupCode')" aria-hidden="true"></i>
+          </span>
+        </th>
+        <th>
+          Age Type Group
+          <span class="sort-arrows">
+            <i class="fa fa-caret-up" (click)="sortBy('ageTypeGrpName')" aria-hidden="true"></i>
+            <i class="fa fa-caret-down" (click)="sortBy('ageTypeGrpName')" aria-hidden="true"></i>
+          </span>
+        </th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.ageGroupId) {
+        <tr>
+          <td>{{ row.ageGroupCode }}</td>
+          <td>{{ row.ageTypeGrpName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.ageGroupStatus === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" (click)="edit($any(row.ageGroupId))"></i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>

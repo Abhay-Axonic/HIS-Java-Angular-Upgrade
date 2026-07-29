@@ -1,0 +1,20 @@
+// Screen-specific layout only -- shared table/pagination/toolbar/form-field
+// styles live in src/styles.scss (see that file's header comment).
+
+.form-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+// Legacy's Code/Machine Description sort-caret icons (view:139-159) --
+// kept as inert decoration, not wired to any click handler. See the
+// class-level comment in machine-master.ts for why (`sortColumn()` doesn't
+// exist anywhere in the legacy controller).
+.sort-carets {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 6px;
+  font-size: 10px;
+  vertical-align: middle;
+}

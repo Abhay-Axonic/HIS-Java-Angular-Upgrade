@@ -47,6 +47,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/transactionTypeMaster', title: 'Transaction Type Master' },
       { path: '/ARmaster', title: 'AR Master' },
       { path: '/APmaster', title: 'AP Master' },
+      { path: '/doctorSlabMaster', title: 'Doctor Slab Master' },
     ],
   },
   {
@@ -233,6 +234,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/wardStoreMapper', title: 'Ward Store Mapper' },
       { path: '/addfixedAssetMaster', title: 'Add Fixed Asset Opening Balance' },
       { path: '/assetReturn', title: 'Asset Return' },
+      { path: '/generalInsuranceMaster', title: 'General Insurance Master' },
     ],
   },
   {
@@ -278,6 +280,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/operationTableType', title: 'Operation Table Type' },
       { path: '/anaesthesiaType', title: 'Anaesthesia Type' },
       { path: '/operationTheatreType', title: 'Operation Theatre Type' },
+      { path: '/checklistMaster', title: 'Checklist Master' },
     ],
   },
   {
@@ -290,6 +293,10 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
   },
   {
     heading: 'Lab/LIS',
-    items: [{ path: '/machineParameterMaster', title: 'Machine Parameter Master' }],
+    items: [
+      { path: '/machineParameterMaster', title: 'Machine Parameter Master' },
+      { path: '/ageGroupMaster', title: 'Age Group Master' },
+      { path: '/machineMaster', title: 'Machine Master' },
+    ],
   },
 ];

@@ -1434,6 +1434,40 @@ export const routes: Routes = [
         data: { moduleId: 512, title: 'Meal Master' },
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
+      {
+        path: 'ageGroupMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 416, title: 'Age Group Master' },
+        loadComponent: () => import('./features/age-group-master/age-group-master').then((m) => m.AgeGroupMaster),
+      },
+      {
+        path: 'doctorSlabMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 1020, title: 'Doctor Slab Master' },
+        loadComponent: () =>
+          import('./features/doctor-slab-master/doctor-slab-master').then((m) => m.DoctorSlabMaster),
+      },
+      {
+        path: 'generalInsuranceMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 646, title: 'General Insurance Master' },
+        loadComponent: () =>
+          import('./features/general-insurance-master/general-insurance-master').then(
+            (m) => m.GeneralInsuranceMaster,
+          ),
+      },
+      {
+        path: 'machineMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 840, title: 'Machine Master' },
+        loadComponent: () => import('./features/machine-master/machine-master').then((m) => m.MachineMaster),
+      },
+      {
+        path: 'checklistMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 526, title: 'Checklist Master' },
+        loadComponent: () => import('./features/checklist-master/checklist-master').then((m) => m.ChecklistMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
