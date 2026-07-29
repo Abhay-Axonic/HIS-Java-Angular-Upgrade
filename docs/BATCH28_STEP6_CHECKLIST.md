@@ -38,9 +38,11 @@
 
 **Paths:** `doctorSlabMaster` (legacy `#/doctorSlabMaster` / rebuild `/doctorSlabMaster`, moduleId 1020).
 
-**Critical context before you start:** toggling one doctor's slab status in one unit **silently flips that same doctor's status in every unit/organization they have slab records in.** `DoctorSlabMasterDaoImpl.updateSlabStatusByDoctorId` runs a raw SQL `UPDATE ... WHERE doctor_id=:doctorId` with **no `unit_id`/`organization_id` filter**, even though slab rows are genuinely unit/org-scoped on creation. The frontend never sends `unitId` at all; the `organizationId` it does send is accepted but ignored server-side. **Not fixed** — no safe client-side workaround exists (the bug is entirely in the backend SQL), faithfully reproduced with legacy's real payload shape. **This is the highest-priority queued legacy fix from this entire batch** given its cross-organization blast radius (see the consolidated priority ranking).
+**Update (2026-07-29, during owner's Step 6 review): FIXED and MERGED, both sides.** The severity-1 below is now resolved on legacy (`fix/doctorslabmaster-crossorg-statustoggle`, merged into `main`) *and* on this rebuild (`rebuild/phase4-batch28`, commit `9d150a70`) — the rebuild had its own separate gap (its service method never sent `unitId`, since it was written to mirror legacy's pre-fix payload and was never updated after the legacy fix merged), found live by the owner and fixed the same session. Both directions re-verified with real before/after state changes. The doctor seed-data gap noted below is also resolved — the one seeded doctor's `user_id` is now linked, so the Doctor dropdown populates for real. Original context preserved below for the record.
 
-**Known testing limitation:** the one doctor seeded in this dev DB has a null `user_id`, so the real `getActiveDoctorList` join (`doctor.m_doctor_master` ⋈ `t_user_unit_mapper` on `user_id`) returns zero rows — the Doctor dropdown is empty on both apps. A full create/toggle round trip could not be demonstrated in this dev environment; this is a seed-data gap, not a code defect (both apps hit the identical real endpoint and get the identical empty result).
+**Original context:** toggling one doctor's slab status in one unit **silently flips that same doctor's status in every unit/organization they have slab records in.** `DoctorSlabMasterDaoImpl.updateSlabStatusByDoctorId` runs a raw SQL `UPDATE ... WHERE doctor_id=:doctorId` with **no `unit_id`/`organization_id` filter**, even though slab rows are genuinely unit/org-scoped on creation. The frontend never sends `unitId` at all; the `organizationId` it does send is accepted but ignored server-side.
+
+**Testing note:** the Doctor dropdown now shows "Demo Doctor" (its `user_id` was linked to the seed admin user). One real slab row exists (unit 1/org 1, created live through the actual UI during verification) — feel free to reuse it, toggle it, or add your own alongside it.
 
 | # | Step | Expected result |
 |---|---|---|
@@ -59,6 +61,8 @@
 ## 3. `generalInsuranceMaster` — SEVERITY-1 x2 (one screen-specific, one shared/cross-cutting)
 
 **Paths:** `generalInsuranceMaster` (legacy `#/generalInsuranceMaster`, self-registered — the `app.js` copy is dead/commented-out, confirmed / rebuild `/generalInsuranceMaster`, moduleId 646).
+
+**Update (2026-07-29, during owner's Step 6 review): rebuild-only stuck-spinner bug found and fixed, separate from the 2 bugs below.** `populateDropdown()`'s subscribe call was the only network call in this file missing an `error:` handler — when the Country dropdown call fails (bug #2 below, still open), the loading spinner never resolved, leaving the page permanently stuck and blocking review entirely. Fixed (`rebuild/phase4-batch28`) — the page now loads fully even though bug #2's 500 is still there, untouched, in the Network tab. Bugs #1 and #2 below are unaffected by this fix and remain open.
 
 **Critical context before you start — two independent severity-1 bugs:**
 
@@ -87,7 +91,7 @@ Both bugs together mean **the Insurance Company form cannot currently be fully c
 
 **Critical context before you start:** the "Add Checklist Items" search box silently attaches the **wrong** checklist item on Save, in a specific real sequence: select a suggestion (e.g. "Test Checklist Item One", ID=1) from the typeahead, then change your mind and type a different search string *without* picking a new suggestion. Legacy's `isEditable=false` typeahead resets the visible field's bound value to `undefined` on every unconfirmed keystroke, but the item ID from the earlier selection is never cleared — clicking Add then silently pushes the stale ID (item 1) with a blank description, attaching an unrelated item to the checklist. **I proved this live** on real legacy (selected item 1, retyped an unrelated string, triggered Add, confirmed the pushed object was `{checklistItemMasterId: 1, ...}`) and then **re-proved the fix live** on the rebuild (same sequence: `selectedSuggestion` correctly resets to `null`, nothing gets pushed, a clear visible error appears instead — "Please select a checklist item from the list."). **Fixed in the rebuild** (pure frontend bug, no legacy Java change needed, same treatment as `identificationMaster`/`currencyMaster`'s frontend-only fixes — no separate legacy branch required).
 
-**Known testing limitation:** the Role dropdown's backing table has zero seeded OT roles in this dev DB (the real `getActiveOTRoleList` call succeeds, returns an empty list) — since Role is a required field, a full Save round trip could not be demonstrated. Same seed-data-gap class as the other two screens above, not a code defect.
+**Update (2026-07-29, during owner's Step 6 review):** the Role dropdown seed-data gap is resolved — 3 real OT roles seeded (`OT Surgeon`, `OT Anesthetist`, `OT Nurse`, org 1/unit 1), confirmed live via the real endpoint. Step 5 below is now demonstrable.
 
 | # | Step | Expected result |
 |---|---|---|
