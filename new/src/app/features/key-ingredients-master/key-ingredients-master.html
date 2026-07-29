@@ -1,0 +1,35 @@
+<section class="page">
+  <fieldset>
+    <legend>Key Ingredients Master</legend>
+    <div class="filter-row">
+      <div class="field"><label>Ingredient Code<span class="required">*</span></label><input [ngModel]="model().ingredientCode" (ngModelChange)="setField('ingredientCode', $event)" name="ingredientCode" /></div>
+      <div class="field"><label>Ingredient Description<span class="required">*</span></label><input [ngModel]="model().ingredientDescription" (ngModelChange)="setField('ingredientDescription', $event)" name="ingredientDescription" /></div>
+      <div class="field"><label>Ingredient Value<span class="required">*</span></label><input [ngModel]="model().ingredientValue" (ngModelChange)="setField('ingredientValue', $event)" name="ingredientValue" /></div>
+      <div class="field"><label>UOM<span class="required">*</span></label><select [ngModel]="model().uomId" (ngModelChange)="setField('uomId', $event)" name="uomId"><option value="">Select UOM</option>@for (u of units(); track u.uomId ?? u.id) { <option [ngValue]="u.uomId ?? u.id">{{ u.uomName || u.unitName }}</option> }</select></div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Nutrition Details</legend>
+    <table class="data-table">
+      <thead><tr><th>Nutrition</th><th>Value</th><th>UOM</th><th></th></tr></thead>
+      <tbody>
+        @for (n of nutritionRows(); track $index) {
+          <tr><td><select [(ngModel)]="n.nutritionId" name="nutrition{{$index}}"><option value="">Select Nutrition</option>@for (opt of nutritions(); track opt.nutritionId ?? opt.id) { <option [ngValue]="opt.nutritionId ?? opt.id">{{ opt.nutritionName }}</option> }</select></td><td><input [(ngModel)]="n.value" name="value{{$index}}" /></td><td><select [(ngModel)]="n.uomId" name="nuom{{$index}}"><option value="">Select UOM</option>@for (u of units(); track u.uomId ?? u.id) { <option [ngValue]="u.uomId ?? u.id">{{ u.uomName || u.unitName }}</option> }</select></td><td><button class="btn-primary" type="button" (click)="removeNutritionRow($index)">Remove</button></td></tr>
+        }
+      </tbody>
+    </table>
+    <button class="btn-primary" type="button" (click)="addNutritionRow()">Add</button>
+  </fieldset>
+  <div class="toolbar"><input class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" /><button class="btn-primary" type="button" (click)="openConfirmModal()">Save</button><button class="btn-primary" type="button" (click)="clear()">Clear</button></div>
+  <table class="data-table">
+    <thead><tr><th>Ingredient Code</th><th>Description</th><th>Value</th><th>UOM</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
+    <tbody>
+      @for (row of displayedRows(); track row.keyIngredientId) {
+        <tr><td>{{ row.ingredientCode }}</td><td>{{ row.ingredientDescription }}</td><td>{{ row.ingredientValue }}</td><td>{{ row.uomName }}</td><td class="text-center"><app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" /></td><td class="text-center"><button class="link" (click)="openDetails(row)">View</button> <button class="link" (click)="edit(row)">Edit</button></td></tr>
+      }
+      @if (!displayedRows().length) { <tr><td colspan="6" class="text-center">No Record Found</td></tr> }
+    </tbody>
+  </table>
+</section>
+@if (showConfirmModal()) { <div class="modal-backdrop"><div class="modal"><header>Confirm<button (click)="showConfirmModal.set(false)">&times;</button></header><div class="modal-body">Are you sure you want to Save?</div><div class="modal-footer"><button class="btn-primary" (click)="save()">Ok</button><button class="btn-primary" (click)="showConfirmModal.set(false)">Cancel</button></div></div></div> }
+@if (showDetailsModal()) { <div class="modal-backdrop"><div class="modal wide"><header>Nutrition Details<button (click)="showDetailsModal.set(false)">&times;</button></header><div class="modal-body"><table class="data-table"><thead><tr><th>Nutrition</th><th>Value</th><th>UOM</th></tr></thead><tbody>@for (n of detailRows(); track $index) { <tr><td>{{ n.nutritionId }}</td><td>{{ n.value }}</td><td>{{ n.uomId }}</td></tr> } @if (!detailRows().length) { <tr><td colspan="3" class="text-center">No Record Found</td></tr> }</tbody></table></div></div></div> }

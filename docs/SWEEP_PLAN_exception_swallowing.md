@@ -153,7 +153,8 @@ estimate, not a defect count, same caveat this document already applies to its o
 
 **`TrustMasterServiceimpl`/`TrustMasterDaoImpl`/`TrustMasterController` (all 3 layers) fixed and fast-
 tracked ahead of any batch below**, per owner direction (2026-07-29) — see BR-105 in
-`docs/BUSINESS_RULE_MANIFEST.md`, branch `fix/trustmasterservice-swallowed-exceptions`, held for review.
+`docs/BUSINESS_RULE_MANIFEST.md`, branch `fix/trustmasterservice-swallowed-exceptions`; merged locally
+to `main` at `c0c354c0` on 2026-07-29, not pushed to origin.
 This was the single most severe instance found (Billing module, 4 of 6 broken DAO methods with zero
 logging, plus an independent second swallow at the Controller layer even on the 2 methods whose DAO/
 Service already rethrew correctly) — directly matching CLAUDE.md's #1 priority.
@@ -164,3 +165,28 @@ single, consistent trailing-return shape), a real batching plan needs the same p
 triage this document's Batch 1 already recommends, not a mechanical size-based split — proposing that
 triage's scope/estimate is the next step for this pattern, separate from (and not blocking) Batches 1–10
 above.
+
+## Catch-body-return refresh, 2026-07-29 overnight
+
+Freshly re-ran the sibling scanner after BR-105 was verified as merged locally:
+
+`python3 scripts/find_swallowed_catch_return_pattern.py legacy/CSSDMaster legacy/Global legacy/Billing legacy/Pharmacy legacy/ADT`
+
+Current count is **1,152** catch-body-return candidates, **260** unlogged:
+
+| Module | Current occurrences | Current unlogged |
+|---|---:|---:|
+| Global | 839 | 0 |
+| ADT | 156 | 151 |
+| Billing | 137 | 109 |
+| Pharmacy | 20 | 0 |
+| CSSDMaster | 0 | 0 |
+| **Total** | **1,152** | **260** |
+
+This is lower than the earlier 1,165/271 count; the drop is directionally consistent with BR-105's
+TrustMaster Billing occurrences now being fixed and merged locally to `main`.
+
+Top current unlogged file by raw scanner hit count:
+
+- `legacy/Billing/src/main/java/com/param/procedure/controller/ProcedureOrderController.java`: 29 unlogged catch-body-return hits. Direct source read confirms it is a real `/api/procedure` controller delegating to `IProcedureOrderService` for procedure order/request, planned procedure, rate, consent, staff/equipment, and medication/implant endpoints. This is a strong next triage candidate, but it has not been live-reproduced or fixed.
+- `legacy/Billing/src/main/java/com/param/billing/global/transaction/config/controller/RequestDiscountController.java`: 14 unlogged catch-body-return hits. Direct source read confirms it is a real `/api/billing` controller covering discount requests, approvals/cancels, financial clearance, credit-note approval, refund/expense/company-receipt approval, UHID merge approval data, and bill-list discount requests. Frontend references confirmed in live billing transaction controllers (`billListController.js`, `creditNoteNewController.js`, `addendumBillDetails.js`). Triage only; not live-reproduced or fixed.

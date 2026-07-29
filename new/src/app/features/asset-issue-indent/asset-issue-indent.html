@@ -1,0 +1,22 @@
+<section class="page">
+  <div class="tabs"><button [class.active]="activeTab() === 'pending'" (click)="switchTab('pending')">Pending Issue</button><button [class.active]="activeTab() === 'issued'" (click)="switchTab('issued')">Issued List</button></div>
+  <div class="filter-row">
+    <div class="field"><label>From Date</label><input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" name="fromDate" /></div>
+    <div class="field"><label>To Date</label><input type="date" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" name="toDate" /></div>
+    <div class="field"><label>From Store</label><select [(ngModel)]="fromStoreId" name="fromStore"><option value="">All</option>@for (s of dropdowns().fromStore ?? []; track s['id']) { <option [ngValue]="s['id']">{{ s['store'] || s['storeName'] }}</option> }</select></div>
+    <div class="field"><label>To Store</label><select [(ngModel)]="toStoreId" name="toStore"><option value="">All</option>@for (s of dropdowns().toStore ?? []; track s['id']) { <option [ngValue]="s['id']">{{ s['store'] || s['storeName'] }}</option> }</select></div>
+    <div class="field"><label>Status</label><select [(ngModel)]="statusId" name="status"><option value="">All</option>@for (s of dropdowns().status ?? []; track s['id']) { <option [ngValue]="s['id']">{{ s['status'] }}</option> }</select></div>
+    <div class="field"><label>Indent Type</label><select [(ngModel)]="indentTypeId" name="indentType"><option value="">All</option>@for (s of dropdowns().indentType ?? []; track s['id']) { <option [ngValue]="s['id']">{{ s['type'] || s['indentType'] || s['status'] }}</option> }</select></div>
+    <div class="field"><label>Indent No</label><input [(ngModel)]="indentNo" name="indentNo" /></div>
+    <button type="button" class="btn-primary" (click)="search()">Search</button>
+  </div>
+  <table class="data-table">
+    <thead><tr><th>Indent No</th><th>Date</th><th>From Store</th><th>To Store</th><th>Status</th><th class="text-center">Action</th></tr></thead>
+    <tbody>
+      @for (row of rows(); track $index) {
+        <tr><td>{{ value(row, ['indentNo','indentNumber']) }}</td><td>{{ value(row, ['indentDate','date']) }}</td><td>{{ value(row, ['fromStore','fromStoreName']) }}</td><td>{{ value(row, ['toStore','toStoreName']) }}</td><td>{{ value(row, ['status','statusName']) }}</td><td class="text-center"><button class="link" (click)="details(row)">Details</button></td></tr>
+      }
+      @if (!rows().length) { <tr><td colspan="6" class="text-center">No Record Found</td></tr> }
+    </tbody>
+  </table>
+</section>
