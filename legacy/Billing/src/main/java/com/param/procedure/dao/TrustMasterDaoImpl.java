@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
@@ -149,7 +148,7 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 
 		} catch (Exception e) {
 			logger.error("Exection", e);
-			return new Response(ERROR, ERR_500, null, null, null);
+			throw e;
 		}
 	}
 
@@ -254,7 +253,7 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 
 		} catch (Exception e) 	{
 			logger.error("Exection", e);
-			return new Response(ERROR, ERR_500, null, null, null);
+			throw e;
 		}
 	}
 
@@ -271,12 +270,11 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 					.setResultTransformer(Transformers.aliasToBean(TrustMasterDto.class)).list();
 
 		return new Response(SUCCESS, SUCCESS_CODE, null, listTrustMasterDto, null);
-		
-		} catch (HibernateException he) {
+
 		} catch (Exception e) {
-			
+			logger.error("Exection", e);
+			throw e;
 		}
-		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
 	@Override
@@ -291,11 +289,10 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 			Long count = (Long)c.uniqueResult();
 			return new Response(SUCCESS, null, null, null, count);
 
-		} catch (HibernateException he) {
 		} catch (Exception e) {
-			
+			logger.error("Exection", e);
+			throw e;
 		}
-		return new Response<>(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
 	@Override
@@ -308,13 +305,10 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 					.setResultTransformer(Transformers.aliasToBean(TrustMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, machineMtrDto, null);
 
-		} catch (HibernateException he) {
-
 		} catch (Exception e) {
-			
-		} finally {
+			logger.error("Exection", e);
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
 	}
 
    @Override
@@ -334,12 +328,9 @@ public class TrustMasterDaoImpl extends GenericDao<TrustMaster, Integer>
 						    .setResultTransformer(Transformers.aliasToBean(TrustMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, trustMtrDto, null);
 
-		} catch (HibernateException he) {
-
-		} catch (Exception e) { 
-			
-		} finally {
+		} catch (Exception e) {
+			logger.error("Exection", e);
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
 	}
 }

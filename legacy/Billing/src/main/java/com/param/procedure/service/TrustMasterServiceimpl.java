@@ -42,8 +42,7 @@ public class TrustMasterServiceimpl implements ITrustMasterService, ICommonConst
 		try {
 			return iTrustMasterDao.getTrustMasterById(orgId, unitId, trustId);
 		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
+			throw e;
 		}
 	}
 
@@ -66,8 +65,7 @@ public class TrustMasterServiceimpl implements ITrustMasterService, ICommonConst
 		try {
 			return iTrustMasterDao.activeInactiveTrustMaster(orgId, trustId, trustStatus);
 		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
+			throw e;
 		}
 	}
 
@@ -77,8 +75,7 @@ public class TrustMasterServiceimpl implements ITrustMasterService, ICommonConst
 		try {
 			return iTrustMasterDao.listTrustMaster(trustMasterDto);
 		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
+			throw e;
 		}
 	}
 
@@ -89,8 +86,7 @@ public class TrustMasterServiceimpl implements ITrustMasterService, ICommonConst
 		try {
 			return iTrustMasterDao.getTotalTrustMasterRecord(trustMasterDto);
 		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
+			throw e;
 		}
 	}
 
@@ -99,9 +95,8 @@ public class TrustMasterServiceimpl implements ITrustMasterService, ICommonConst
 		try {
 			return iTrustMasterDao.getActiveTrustList(trustMasterDto);
 		} catch (Exception e) {
-			
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
 	}
 	
 	@Override
@@ -109,8 +104,7 @@ public class TrustMasterServiceimpl implements ITrustMasterService, ICommonConst
 		try {
 			return iTrustMasterDao.getVisitType(trustId,orgId, unitId );
 		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
+			throw e;
 		}
 	}
 	

@@ -15,26 +15,19 @@ import com.param.global.common.Response;
 import com.param.procedure.service.ITrustMasterService;
 import com.param.service.dto.TrustMasterDto;
 
+import in.param.exception.ApplicationException;
+
 @RestController
 @RequestMapping(value = "/api/billing")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TrustMasterController implements ICommonConstants,IError {
-	
+
 	 @Autowired
 	  private ITrustMasterService iTrustMasterService;
-	
+
 @RequestMapping(value = "/addTrust", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Response saveTrust(@RequestBody  TrustMasterDto trustMasterDto) {
-	 //System.out.println(trustMasterDto.toString());
-		Response<TrustMasterDto, Integer> response = null;
-		try {
-			 
-			response = iTrustMasterService.saveTrust(trustMasterDto);
-					return response;
-		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
-		}
+	public @ResponseBody Response saveTrust(@RequestBody  TrustMasterDto trustMasterDto) throws ApplicationException {
+		return iTrustMasterService.saveTrust(trustMasterDto);
 	}
 	
 /*	@RequestMapping(value = "/updateTrustMaster", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -56,95 +49,45 @@ public class TrustMasterController implements ICommonConstants,IError {
 	}*/
  @RequestMapping(value = "/getTrustbyId/{orgId}/{unitId}/{trustId}", method = RequestMethod.GET)
 	public @ResponseBody Response getTrustMasterById(@PathVariable(value = "orgId") Integer orgId,
-			@PathVariable(value = "unitId") Integer unitId, 
-			@PathVariable(value = "trustId") Integer trustId) {
-		Response<TrustMasterDto, Integer> response = null;
-		try {
-			response = iTrustMasterService.getTrustMasterById(orgId, unitId, trustId);
-			return response;
-		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
-		}
+			@PathVariable(value = "unitId") Integer unitId,
+			@PathVariable(value = "trustId") Integer trustId) throws ApplicationException {
+		return iTrustMasterService.getTrustMasterById(orgId, unitId, trustId);
 	}
 
  @RequestMapping(value = "/updateTrustMaster", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Response updateTrustMaster(@RequestBody TrustMasterDto trustMasterDto) {
-		Response<TrustMasterDto, Integer> response = null;
-		try {
-			response = iTrustMasterService.updateTrustMaster(trustMasterDto);
-		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
-		}
-		return response;
+	public @ResponseBody Response updateTrustMaster(@RequestBody TrustMasterDto trustMasterDto) throws ApplicationException {
+		return iTrustMasterService.updateTrustMaster(trustMasterDto);
 	}
- 
+
  @RequestMapping(value = "/activeInactiveTrust/{orgId}/{trustId}/{trustStatus}", method = RequestMethod.GET)
 	public @ResponseBody Response activeInactiveTrust(@PathVariable(value = "orgId") Integer orgId,
 			@PathVariable(value = "trustId") Integer trustId,
-			@PathVariable(value = "trustStatus") Character trustStatus) {
-
-		Response<TrustMasterDto, Integer> response = null;
-		try {
-			response = iTrustMasterService.activeInactiveTrustMaster(orgId, trustId,
-					trustStatus);
-		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
-		}
-		return response;
+			@PathVariable(value = "trustStatus") Character trustStatus) throws ApplicationException {
+		return iTrustMasterService.activeInactiveTrustMaster(orgId, trustId, trustStatus);
 	}
- 
+
 	@RequestMapping(value = "/listTrustMaster", method = RequestMethod.POST , consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Response listTrustMaster(@RequestBody TrustMasterDto trustMasterDto) {
-		
-		Response<TrustMasterDto, Integer> response = null;
-		try {
-			response = iTrustMasterService.listTrustMaster(trustMasterDto);
-			return response;
-		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
-		}
+	public @ResponseBody Response listTrustMaster(@RequestBody TrustMasterDto trustMasterDto) throws ApplicationException {
+		return iTrustMasterService.listTrustMaster(trustMasterDto);
 	}
-	
-	@RequestMapping(value = "/getTotalTrustMasterRecord", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Response getTotalTrustMasterRecord(@RequestBody TrustMasterDto trustMasterDto)
-      {
-		try {
-			return iTrustMasterService.getTotalTrustMasterRecord(trustMasterDto);
-		} catch (Exception e) {
-			
-		}
-		return new Response(ERROR, null, null, null, null);
-	}
-	
-	@RequestMapping(value = "/getActiveTrustList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Response getActiveTrustList(@RequestBody TrustMasterDto trustMasterDto) {
-		try {
 
-			return iTrustMasterService.getActiveTrustList(trustMasterDto);
-		} catch (Exception e) {
-			
-		}
-		return new Response(ERROR, null, null, null, null);
+	@RequestMapping(value = "/getTotalTrustMasterRecord", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Response getTotalTrustMasterRecord(@RequestBody TrustMasterDto trustMasterDto) throws ApplicationException {
+		return iTrustMasterService.getTotalTrustMasterRecord(trustMasterDto);
 	}
-	 
-	
+
+	@RequestMapping(value = "/getActiveTrustList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Response getActiveTrustList(@RequestBody TrustMasterDto trustMasterDto) throws ApplicationException {
+		return iTrustMasterService.getActiveTrustList(trustMasterDto);
+	}
+
+
   @RequestMapping(value = "/getVisitType/{trustId}/{orgId}/{unitId}", method = RequestMethod.GET)
 	public @ResponseBody Response getVisitType(@PathVariable(value = "orgId") Integer orgId,
-			@PathVariable(value = "unitId") Integer unitId, 
-			@PathVariable(value = "trustId") Integer trustId) {
-		Response<TrustMasterDto, Integer> response = null;
-		try {
-			response = iTrustMasterService.getVisitType(trustId,orgId, unitId );
-			return response;
-		} catch (Exception e) {
-			
-			return new Response(ERROR, ERR_500, ERR_500_MESSAGE, null, null);
-		}
+			@PathVariable(value = "unitId") Integer unitId,
+			@PathVariable(value = "trustId") Integer trustId) throws ApplicationException {
+		return iTrustMasterService.getVisitType(trustId,orgId, unitId );
 	}
-	
-	
+
+
 }
