@@ -36,33 +36,42 @@
 
 ---
 
-### 2. `bedMaster` ("Ward Bed Master") — SEVERITY-1 x2, review first
+### 2. `bedMaster` ("Ward Bed Master") — 2 severity-1 backend bugs found, BOTH NOW FIXED AND MERGED
 
 **Paths:** legacy `#/bedMaster` / rebuild `/bedMaster`, moduleId 546. Two tabs: Normal Bed, Moving Bed.
 
-**Critical environment note before you start:** on real, unmodified legacy TODAY:
-1. **Save (`addBed`) fails on every single attempt, both tabs.** Root cause confirmed independently by me: `BedMasterDaoImpl.java:1527` runs `select allocated_beds from t_unit_application_billing_configuration ...` — that column does not exist in the real table (confirmed via direct `psql \d`). The exception is silently swallowed server-side, surfacing as a generic error toast. **Not fixed** — needs its own dedicated branch/DB decision, out of scope for this Angular-rebuild batch.
-2. **Moving Bed's Update silently claims success but never persists.** Confirmed twice via direct `psql` — the DB row is unchanged despite a "Updated Successfully." toast. Root cause narrowed to the shared `findById`/`update` DAO path but not fully pinned down (the base DAO class has no source in this codebase to inspect further). **Not fixed** — no safe frontend workaround exists for a backend bug like this.
+**Status update (2026-07-29): both severity-1s below are now fixed and merged into `main`.** Since this legacy backend is shared by every screen/batch, the fixes are already live on the Tomcat instance both apps point at — you'll see the *fixed* behavior on real legacy too, not just the rebuild. This section is rewritten from the original "cannot exercise a full Save round-trip" state to reflect that.
 
-Because of #1, you cannot exercise a full Save round-trip on either app right now. The table below reflects what IS testable.
+1. **Save (`addBed`) — FIXED (BR-102).** Was: failed on every attempt, both tabs (`BedMasterDaoImpl.java:1527` queried a column, `allocated_beds`, that didn't exist). Fix: additive `ALTER TABLE ... ADD COLUMN IF NOT EXISTS allocated_beds integer`. Merged, full reactor build re-verified clean.
+2. **Moving Bed's Update — FIXED.** Was: claimed success ("Updated Successfully.") but silently never persisted. Root cause: a duplicate-check query bound a null `roomId` (Moving Bed has no room) with no type hint on a native SQL query, which Postgres's JDBC driver defaulted to `bytea`, throwing a type-mismatch error that aborted the whole transaction — silently swallowed by two empty catch blocks, with the service method then blindly returning `SUCCESS` regardless. Fix: null-guard the `room_id` predicate (scoped to "same room" when one exists, "the roomless Moving Bed pool" when it doesn't). Merged, full reactor build re-verified clean.
 
-| # | Step | Expected result |
+**Since you specifically want to confirm both through the actual rebuilt UI yourself** (not just trust my backend-level `psql`/`catalina.out` verification), here's exactly how:
+
+| # | Step | Expected result (fix #1: Save) |
 |---|---|---|
 | 1 | Load the screen, Normal Bed tab | Existing bed list; ward/room/bed-category dropdowns populate |
 | 2 | Select a Ward, then a Room | Bed category + billing category auto-populate client-side (no extra API call) |
-| 3 | Attempt to Save a new bed (either tab) | Confirm modal → Ok → **error toast, 0 rows written** — matches on both apps (same real backend) |
-| 4 | Edit a vacant bed → Update | **Works correctly** on Normal Bed (only non-broken write path) — real DB change, form resets |
-| 5 | Edit a vacant Moving Bed → Update | **Claims success, but the DB value is unchanged** — matches on both apps, confirmed via direct DB check |
-| 6 | Edit an occupied bed (either tab) | 409 — "Bed is used, you can't change status." |
-| 7 | Toggle status on an occupied bed, Normal Bed tab | 409, DB unchanged, checkbox correctly reverts to its prior state |
-| 8 | Toggle status on an occupied bed, Moving Bed tab | 409, DB unchanged, but **checkbox does NOT revert** — a real, tab-specific gap (legacy's `updateStatus` is called with 2 args on this tab vs. 3 on Normal Bed, so its revert logic silently no-ops on the wrong array index) |
-| 9 | Server-side search | Works correctly, real network call |
+| 3 | Fill in a unique Bed Code/Description, Save (Normal Bed) | Confirm modal → Ok → **real success toast, new row appears in the list** — this used to be a guaranteed error toast; if you see the row appear, fix #1 is confirmed live through the UI |
+| 4 | Switch to Moving Bed tab, fill in a unique Bed Code/Description, Save | Confirm modal → Ok → **real success toast, new row appears** — same fix, Moving Bed's create path goes through the identical `addBed` call |
+
+| # | Step | Expected result (fix #2: Moving Bed Update) |
+|---|---|---|
+| 5 | On Moving Bed tab, click Edit on the row you just created, change the Description, click Update | **Real success toast** *and* — this is the part to actually verify, not just trust — **reload the page (or re-search) and confirm the Description shows your NEW value**, not the old one. Before the fix, the toast would lie: it said success but the reload would always show the stale original value. If your edited text is genuinely there after a reload, fix #2 is confirmed live through the UI. |
+| 6 | For comparison, do the same edit-and-reload check on a Normal Bed row | Should already have worked before and after the fix (Normal Bed was never affected) — confirms no regression from the shared method both fixes touch |
+
+| # | Step | Expected result (other, already-faithful behavior, unaffected by either fix) |
+|---|---|---|
+| 7 | Edit an occupied bed (either tab) | 409 — "Bed is used, you can't change status." |
+| 8 | Toggle status on an occupied bed, Normal Bed tab | 409, DB unchanged, checkbox correctly reverts to its prior state |
+| 9 | Toggle status on an occupied bed, Moving Bed tab | 409, DB unchanged, but **checkbox does NOT revert** — a real, tab-specific gap (legacy's `updateStatus` is called with 2 args on this tab vs. 3 on Normal Bed, so its revert logic silently no-ops on the wrong array index) |
+| 10 | Server-side search | Works correctly, real network call |
 
 **Needs your explicit sign-off on:**
-- **SEVERITY-1 #1, separately escalated** — Save/`addBed` schema-drift failure. Approve/reject a proposed fix path (additive `ALTER TABLE` to add `allocated_beds`, or removing the dead query — needs a decision, not yet drafted as a formal decision doc; let me know if you want one).
-- **SEVERITY-1 #2, separately escalated** — Moving Bed's silent Update no-op. This is a genuinely silent bug (claims success, isn't true) — normally this project's default is to correct silent bugs with disclosure, but since the root cause is server-side and the client can't detect the falsehood without extra work, it was faithfully reproduced. Your call on whether this needs a deeper backend investigation before your review, or whether reporting-and-holding is sufficient for now.
-- **Faithful reproduction**: Moving Bed's non-reverting 409 checkbox (item 8).
+- **Both severity-1 fixes above** — confirm you've verified them working through the actual UI per steps 3-6, not just taking my backend verification on faith.
+- **Faithful reproduction**: Moving Bed's non-reverting 409 checkbox (item 9).
+- **No action needed, informational**: `PENDING-bedmasterdaoimpl-empty-catch-blocks-codequality` — a flagged, not-fixed, DAO-wide code-quality note (empty catch blocks throughout `BedMasterDaoImpl`) you already acknowledged as a future-sweep candidate, not part of this screen's own review.
 - **No confirm-modal fix needed** — Save-only gate, correct from the start.
+- Please deactivate (not delete) any test beds you create during this verification, same convention as the rest of this project.
 
 ---
 
@@ -120,7 +129,7 @@ Because of #1, you cannot exercise a full Save round-trip on either app right no
 | Screen | Branch | Confirm-modal | Severity-1 status | Faithfully reproduced |
 |---|---|---|---|---|
 | **patientCategory** | batch27 | Save only; correct | None | ToggleStatus silent form/page-size reset; dead search; decorative sort; ids 1/2 UI-hidden; no field limits; raw server messages |
-| **bedMaster** | batch27 | Save only; correct | **2 — Save fully broken (schema drift); Moving Bed Update silently no-ops. Both separately escalated, awaiting your approval, not part of routine review.** | Moving Bed's non-reverting 409 checkbox |
+| **bedMaster** | batch27 | Save only; correct | **2 — Save fully broken (schema drift, BR-102) and Moving Bed Update silently no-op'd. BOTH FIXED AND MERGED (2026-07-29) — verify live through the UI per the steps above, don't just trust backend verification.** | Moving Bed's non-reverting 409 checkbox |
 | **tallyInterfacing** | batch27 | N/A — no gate | None (1 backend finding reported, not severity-1) | Bill Amount/Instrument No./Narration blank columns (silent field-mismatch, judgment call flagged above); on-load warning; hardcoded Under Group list |
 | **siteOfAdministration** | recovered-siteofadministration | Save only; correct, rearms on both outcomes (re-verified live) | None | No duplicate-code check; Update has no gate; status-toggle resets form+reloads; dead search box |
 
