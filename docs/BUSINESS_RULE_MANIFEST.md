@@ -1778,3 +1778,31 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 **Classification:** a real, previously-undetected schema/entity-mapping gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **Approved and merged** (2026-07-29) -- `fix/bedmaster-allocated-beds-column-missing` merged into `main`; full reactor build (`mvn -am -pl ADT,HIS-WAR package -DskipTests -o`, all 18 modules + WAR) re-run post-merge, `BUILD SUCCESS`, confirmed clean.
 
 **Notes:** the already-known, separately-tracked Code-blind duplicate-check bug (`docs/DECISION_NEEDED_CompanyMasterTariffMasterCodeBlindDuplicateCheck.md` §6) is now live/exploitable again now that Create actually writes rows -- flagged for awareness, not addressed by this fix, remains its own open decision.
+
+## BR-103 — `taxMaster`'s list (and therefore Save/Update) failed on every attempt because a column the Java code expects has apparently never existed anywhere — severity-1, real (not local-dev-only) schema gap, found during batch 28 candidate research (2026-07-29)
+
+**Confirmed live, not just from static analysis.** `TaxDao.getAll` (`legacy/Pharmacy/src/main/java/com/param/pharmacy/master/global/dao/tax/TaxDao.java:23-29`) runs an HQL query against the `Tax` entity, which maps `@Column(name = "general_ledger_id")` (`legacy/Entity/.../Tax.java:43-44`), but that column does not exist on `public.m_tax` -- confirmed via `psql \d` AND independently confirmed absent from the tracked DDL source of truth (`legacy/Database/HIS-SME-DDL_20210430_150255584.sql:67242-67255`), same class as BR-101/BR-102 -- not local-dev-only drift.
+
+**Fix applied:** `ALTER TABLE public.m_tax ADD COLUMN IF NOT EXISTS general_ledger_id integer;` -- purely additive, nullable (`docs/br103_taxmaster_generalledgerid_column.sql`). Zero Java code changes; the entity already expected this column, only the table was missing it.
+
+**Verified live, before and after, all three write operations:**
+- Before: `GET /api/globals/tax/org/1` -> HTTP 500 (`SQLGrammarException`, `column tax0_.general_ledger_id does not exist`), confirmed live.
+- After the `ALTER TABLE` (no app restart needed -- Hibernate queries the live schema, no Java changed): same GET -> HTTP 200. `POST /api/globals/tax/save` -> HTTP 200, real row persisted (`id=1`, `code='BR103TEST'`). `PATCH /api/globals/tax/1` (update) -> HTTP 200, name/percentage changed correctly. `PATCH` (status-toggle) -> HTTP 200, `is_active` flipped correctly.
+- Test row deactivated (`is_active=false`) after verification, not deleted.
+
+**Classification:** a real, previously-undetected schema/entity-mapping gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **pending** -- held on `fix/taxmaster-generalledgerid-column-missing`, awaiting individual branch approval.
+
+## BR-104 — `pharmacologicalClassificationMaster`'s list (and therefore Save/Update) failed on every attempt because a column the Java code expects was missing from this local dev DB — severity-1 *in this environment*, found during batch 28 candidate research (2026-07-29)
+
+**Correction (2026-07-29, same day):** this entry originally classified the gap as "real, not local-dev-only drift" by analogy with BR-101/BR-102/BR-103. That was wrong for this specific case. Cross-checking against the already-completed schema-drift sweep (`docs/SCHEMA_DRIFT_SWEEP.md`, run 2026-07-26) shows this exact column is already known and already scripted: `docs/br076_missing_columns.sql` contains `ALTER TABLE public."m_pharmacological_classification" ADD COLUMN "antibiotic_test" bool DEFAULT false;`, and the sweep's own raw data marks this specific mismatch `known_local_dev_drift=True` -- meaning the column exists in the staging reference schema the sweep compared against; only this local dev DB (`his_local`) was never migrated to have it. (`taxMaster`/BR-103 and the `VendorController.GetDropdowns` finding below are NOT in `br076` and remain correctly classified as real, non-local-dev-only gaps -- this correction applies to BR-104 only, checked individually.) The fix itself is unaffected by this correction (still a correct, safe additive column); only the severity/scope framing changes -- this is a local-environment provisioning gap, same class as this manifest's other `BR-local-dev-db-drift-*` entries, not independent evidence of a production defect.
+
+**Confirmed live, not just from static analysis.** `PharmacologicalClassificationDao.getAll` runs a Criteria query against the `PharmacologicalClassification` entity, which maps `@Column(name = "antibiotic_test")` (`legacy/Entity/.../PharmacologicalClassification.java:32-33`), but that column does not exist on `public.m_pharmacological_classification` in this dev DB -- confirmed via `psql \d`.
+
+**Fix applied:** `ALTER TABLE public.m_pharmacological_classification ADD COLUMN IF NOT EXISTS antibiotic_test boolean;` -- purely additive, nullable boolean matching the entity's `Boolean` field type (`docs/br104_pharmacologicalclassificationmaster_antibiotictest_column.sql`). Zero Java code changes.
+
+**Verified live, before and after, all three write operations:**
+- Before: `GET /api/units/pharmacological/classifications/org/1` -> HTTP 500 (`SQLGrammarException`, `column this_.antibiotic_test does not exist`), confirmed live.
+- After the `ALTER TABLE` (no app restart needed): same GET -> HTTP 200. `POST .../classifications/` -> HTTP 200, real row persisted (`id=2`, `antibiotic_test=true` as sent). `PATCH .../classifications/2` (update) -> HTTP 200, classification text changed correctly. `PATCH` (status-toggle) -> HTTP 200, `is_active` flipped correctly.
+- Test row deactivated (`is_active=false`) after verification, not deleted.
+
+**Classification:** a real, previously-undetected schema/entity-mapping gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **pending** -- held on `fix/pharmacologicalclassificationmaster-antibiotictest-column-missing`, awaiting individual branch approval.

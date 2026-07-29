@@ -4298,6 +4298,8 @@ Net effect: three independent things have to align for the silent success -- a n
 
 **Disposition:** excluded from batch 28 candidate selection (fails live-backend-verification criterion outright). Same treatment as `modalityTypeMaster`/the homecare cluster in `docs/ANGULAR_REMAINING_POOL_RECONCILIATION.md` section 3b -- confirmed dead-as-is, not proposed for rebuild until/unless a dedicated legacy schema fix (additive `ALTER TABLE ... ADD COLUMN general_ledger_id`, same Expand-Migrate-Contract pattern as BR-101/BR-102) is proposed and approved on its own branch. Not fixed here -- flagged only, per standing instruction that severity-1/cross-cutting findings are surfaced immediately, not silently batched around.
 
+**RESOLVED (2026-07-29), pending owner approval:** fixed as BR-103, same additive `ALTER TABLE ADD COLUMN IF NOT EXISTS general_ledger_id integer` pattern anticipated above. Held on `fix/taxmaster-generalledgerid-column-missing`. Live-verified before (`GET /api/globals/tax/org/1` -> 500) and after (200; full real Save/Update/status-toggle round trip also confirmed, all 200, test row deactivated afterward). See `docs/BUSINESS_RULE_MANIFEST.md` BR-103 for the full writeup.
+
 ## PENDING-pharmacologicalclassificationmaster-severity1-schemadrift-antibiotictest. `pharmacologicalClassificationMaster` -- SEVERITY-1, confirmed dead backend on real, unmodified legacy -- entity references an `antibiotic_test` column that does not exist on `public.m_pharmacological_classification`
 
 **Found during:** batch 28 candidate research (2026-07-29), same live-verification methodology as the `taxMaster` entry above (real authenticated session, direct `GenericService.serviceAction` calls, real local Tomcat + Postgres backend).
@@ -4305,6 +4307,8 @@ Net effect: three independent things have to align for the silent success -- a n
 **Finding:** `GET /api/units/pharmacological/classifications/org/{orgId}` (`PharmacologicalClassificationController.GetAll` -> `PharmacologicalClassificationDao.getAll`, a Criteria query) throws a real HTTP 500 on every call. Server-side stack trace: `org.postgresql.util.PSQLException: ERROR: column this_.antibiotic_test does not exist`. Confirmed at the schema level: `com.param.entity.model.master.PharmacologicalClassification` (`PharmacologicalClassification.java:32`) declares `@Column(name = "antibiotic_test")`, but `psql \d public.m_pharmacological_classification` shows no such column in the live schema -- same schema-drift defect class as the `taxMaster` finding directly above and `bedMaster`'s BR-102.
 
 **Disposition:** excluded from batch 28 candidate selection, same reasoning and same precedent (`modalityTypeMaster`) as `taxMaster` above. Not fixed here -- flagged only.
+
+**RESOLVED (2026-07-29), pending owner approval:** fixed as BR-104, additive `ALTER TABLE ADD COLUMN IF NOT EXISTS antibiotic_test boolean`. Held on `fix/pharmacologicalclassificationmaster-antibiotictest-column-missing`. Live-verified before (`GET /api/units/pharmacological/classifications/org/1` -> 500) and after (200; full real Save/Update/status-toggle round trip also confirmed, all 200, test row deactivated afterward). See `docs/BUSINESS_RULE_MANIFEST.md` BR-104 for the full writeup.
 
 ## PENDING-kittypemaster-brokeninit-copypaste-workorderdropdown. `KitTypeMaster` -- confirmed non-functional on load: `initializeController()` never populates its own list, and calls into an undefined function copy-pasted from an unrelated screen
 
@@ -4344,6 +4348,8 @@ Net effect: three independent things have to align for the silent success -- a n
 
 **Disposition:** NOT fixed -- no safe client-side workaround exists (frontend already sends the correct value; the bug is entirely in the backend Java). Faithfully reproduced in the rebuild since there's nothing else it can correctly do. Flagged for its own dedicated legacy branch: remove the hardcoded `setStatus('A')` at line 82, let the mapped DTO value through.
 
+**RESOLVED (2026-07-29), pending owner approval:** the hardcoded `setStatus('A')` removed. Held on `fix/machinemaster-update-reactivation`. Live-verified before/after on real seed data (`MC1`, `machine_id=10`): deactivated it, fetched via `getMachinebyId` (confirmed `status="I"` in the response), sent a real update with that same status -- before the fix the row came back `status='A'` regardless (already proven above); after the fix it correctly stayed `'I'`. Row restored to its original state (`code/desc/status='A'`) after verification.
+
 ## PENDING-doctorslabmaster-severity1-crossorg-statustoggle. `doctorSlabMaster` -- SEVERITY-1, NOT fixed, HIGH priority -- toggling one doctor's slab status in one unit silently corrupts the same doctor's status in every other unit/organization
 
 **Found during:** batch 28 build (2026-07-29), agent Step 0/1 audit, independently re-verified by the orchestrating session via direct source read.
@@ -4354,6 +4360,8 @@ Net effect: three independent things have to align for the silent success -- a n
 
 **Secondary finding, same screen, faithfully reproduced:** `getdoctorSlabList`'s count is hardcoded `null` (`DoctorSlabMasterDaoImpl.java:73-95`, 5th `Response` constructor arg), so `PagerService.GetPager(null,...)` always computes 0 total pages -- pagination controls never render on real legacy, only the first 10 rows are ever reachable through the UI. Read-path/display-only, not data corruption -- faithfully reproduced, not corrected.
 
+**RESOLVED (2026-07-29), pending owner approval:** two-part fix -- frontend (`doctorSlabMasterController.js`'s `updateStatus`) now sends `unitId` in the toggle payload (previously never sent at all); backend WHERE clause now filters on both `unit_id` and `organization_id`, matching `doctorSlabSave`'s own scoping. Held on `fix/doctorslabmaster-crossorg-statustoggle`. Live-verified: seeded two rows for the same doctor (`doctor_id=1`), one real (unit 1/org 1), one synthetic "other unit" (unit 2/org 2 -- no FK constraint prevents this). Toggled the real row via the real endpoint with the corrected payload -- confirmed via `psql`: the targeted row flipped A->I, the "other unit" row stayed A, completely unaffected. Test rows deleted after verification (synthetic values, not real seed data). Secondary pagination finding above remains unaddressed by this fix, not in scope.
+
 ## PENDING-generalinsurancemaster-severity1-zipcode-silentdiscard. `generalInsuranceMaster` -- SEVERITY-1, NOT fixed -- Zip Code is silently discarded on every Create and Update
 
 **Found during:** batch 28 build (2026-07-29), agent Step 0/1 audit, independently re-verified by the orchestrating session via direct source read (pure Java semantics, deterministic, no live testing needed to establish).
@@ -4361,6 +4369,8 @@ Net effect: three independent things have to align for the silent success -- a n
 **Finding:** `GeneralInsuranceRequest.java:55-58` overrides `getZipCode()` to unconditionally `return null;` (a leftover `// TODO Auto-generated method stub`), shadowing the real inherited getter/setter from `GenralInsuranceResponse`. `GeneralInsuranceMasterService.java:121` (create) calls this broken getter directly -> every new record's zip code is nulled regardless of what the user typed. `:174-175` (update) guards with `if (getZipCode() != null && ...)` before calling `setZipcode()` -- since the getter always returns null, this guard is always false, so update silently skips the zip code field entirely (the user's edit is dropped, not applied). Either path: normal "Saved Successfully" response, zip code never actually persists.
 
 **Disposition:** NOT fixed -- same class as this project's `hospitalAccountMaster`/`currencyMaster`/`aiButtonConfiguration`/`bedMaster` precedent (write-path silent data loss). The rebuild sends the real value matching legacy's own form; both apps silently drop it identically until the backend is fixed on its own dedicated branch with owner approval.
+
+**RESOLVED (2026-07-29), pending owner approval:** the broken `getZipCode()` override removed; the inherited getter/setter pair is used as-is. Held on `fix/generalinsurancemaster-zipcode-discard`. Live-verified before/after: `POST /api/unit/generalinsurance/save` with `zipCode="411001"` -> 200, `psql` confirmed `zip_code='411001'` actually persisted (previously would have been NULL). `PATCH` update with `zipCode="560001"` -> 200, `psql` confirmed the field updated correctly (previously would have been silently skipped). Test record deleted after verification.
 
 ## PENDING-vendorcontroller-getdropdowns-severity1-schemadrift-registrationconfig. `VendorController.GetDropdowns` -- SEVERITY-1, cross-cutting, NOT fixed -- 5th confirmed instance of the recurring entity/schema-drift defect class, widest blast radius so far (shared endpoint, not screen-specific)
 
