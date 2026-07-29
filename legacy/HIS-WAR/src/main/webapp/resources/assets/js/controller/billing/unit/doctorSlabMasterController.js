@@ -269,7 +269,8 @@ angular.module("myApp").controller("doctorSlabMasterController", [ '$scope','$ro
 				status : type,
 				updatedBy : $scope.userId,
 				updatedDate : $scope.currentDate,
-				organizationId : $scope.organizationId
+				organizationId : $scope.organizationId,
+				unitId : $scope.unitId
 			}
 			console.log(data);
 			var URI = BASE_URL + ROOT_URL + "/unit/DoctorSlab/updateSlabStatusByDoctorId";

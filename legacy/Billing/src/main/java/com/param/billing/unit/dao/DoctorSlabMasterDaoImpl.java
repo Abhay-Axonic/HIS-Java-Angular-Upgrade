@@ -130,10 +130,17 @@ public class DoctorSlabMasterDaoImpl extends GenericDao<DoctorSlabMaster, Intege
 	public Response updateSlabStatusByDoctorId(DoctorSlabDto doctorSlabDto) throws ApplicationException {
 		try{	
 			Session session=sessionFactory.getCurrentSession();
+			// BR-followup: this update previously filtered on doctor_id only, so
+			// toggling one doctor's slab status in one unit silently flipped that
+			// same doctor's status in EVERY unit/organization they have slab rows
+			// in -- doctorSlabSave (above) scopes rows by unit_id/organization_id
+			// on create, so the update must scope by the same two columns to match.
 			Integer count=session.createSQLQuery(" update billing.m_doctor_slab_master set status=:status "
-					+ " where doctor_id	=:doctorId ")
+					+ " where doctor_id=:doctorId and unit_id=:unitId and organization_id=:organizationId ")
 					.setParameter("doctorId", doctorSlabDto.getDoctorId())
 					.setParameter("status", doctorSlabDto.getStatus())
+					.setParameter("unitId", doctorSlabDto.getUnitId())
+					.setParameter("organizationId", doctorSlabDto.getOrganizationId())
 					.executeUpdate();
 			
 			   return new Response(SUCCESS, SUCCESS_CODE, null, null, null);
