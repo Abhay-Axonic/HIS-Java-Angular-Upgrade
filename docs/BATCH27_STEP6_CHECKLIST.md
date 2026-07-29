@@ -2,6 +2,17 @@
 
 *Covers 4 screens across two held branches. **3 are new batch 27 work** (`patientCategory`, `bedMaster`, `tallyInterfacing`, all on `rebuild/phase4-batch27`); **1 is recovered prior-session work** (`siteOfAdministration`, on its own branch `rebuild/phase4-recovered-siteofadministration`, kept separate per your explicit instruction). Both are through Steps 0-5, held, not merged, not pushed. See `docs/ANGULAR_PENDING_FINDINGS.md` for full findings write-ups behind each item below.*
 
+**Review status (updated 2026-07-29, Session 1):**
+
+| Screen | Status |
+|---|---|
+| **patientCategory** | ✅ **SIGNED OFF** — owner confirmed working correctly (`PENDING-patientcategory-step6-signoff`) |
+| **siteOfAdministration** | ✅ **SIGNED OFF** — owner confirmed working correctly (`PENDING-siteofadministration-step6-signoff`); closes out Step 6 for the entire recovered-work branch |
+| **bedMaster** | ⏳ **PENDING** — blocked by Access Denied (moduleId 546 not yet patched into owner's `permissions` localStorage). Retry next session with the additive console snippet already provided. |
+| **tallyInterfacing** | ⏳ **PENDING** — blocked by Access Denied (a real backend 401 via the session-expiry interceptor, not a permissions/moduleId issue — likely caused by concurrent test logins during this session's bedMaster fix verification work, since this backend only allows one active session at a time). Retry next session with a fresh login. |
+
+Batch 27 (`rebuild/phase4-batch27`) is not yet fully signed off — `bedMaster`/`tallyInterfacing` remain open below. `rebuild/phase4-recovered-siteofadministration` is now fully signed off (its only screen) and eligible for merge approval whenever the owner chooses, independent of batch 27's remaining items.
+
 **Setup, once, before starting:**
 - **Batch 27** (3 screens): worktree `.claude/worktrees/batch27`, branch `rebuild/phase4-batch27`. `ng serve --port 4312 --proxy-config proxy.conf.json` from `.claude/worktrees/batch27/new`.
 - **siteOfAdministration** (recovered work): worktree `.claude/worktrees/recovered-siteofadministration`, branch `rebuild/phase4-recovered-siteofadministration`. `ng serve --port 4313 --proxy-config proxy.conf.json` from that worktree's `new/`.
@@ -15,7 +26,7 @@
 
 ## PART A — New batch 27 work (3 screens)
 
-### 1. `patientCategory` ("Patient Category Master")
+### 1. `patientCategory` ("Patient Category Master") — ✅ SIGNED OFF (2026-07-29)
 
 **Paths:** legacy `#/patientCategory` / rebuild `/patientCategory`, moduleId 446.
 
@@ -101,7 +112,7 @@
 
 ## PART B — Recovered prior-session work (1 screen)
 
-### 4. `siteOfAdministration` ("Site of Administration") — recovered, not new work
+### 4. `siteOfAdministration` ("Site of Administration") — recovered, not new work — ✅ SIGNED OFF (2026-07-29)
 
 **Paths:** legacy `#/siteOfAdministration` / rebuild (port 4313) `/siteOfAdministration`, moduleId 753.
 

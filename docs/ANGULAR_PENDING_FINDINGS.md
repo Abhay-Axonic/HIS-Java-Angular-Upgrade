@@ -4273,3 +4273,19 @@ Net effect: three independent things have to align for the silent success -- a n
 **Why this matters beyond the one bug already found and fixed:** an empty catch block converts *any* SQL/Hibernate failure -- a real constraint violation, a real connection drop, a real type mismatch like the one just fixed, or a genuinely different bug introduced by some future change -- into either a silently-`false`/`null`/empty-list return (indistinguishable from "legitimately no data" or "legitimately no duplicate") or, worse, into a poisoned-but-unreported transaction state that then causes an *unrelated, subsequent* operation in the same request to fail or silently no-op, exactly as happened here. Debugging any future symptom in this DAO will be materially harder than it needs to be, because the actual exception is never logged anywhere -- not even to `catalina.out` -- only PostgreSQL's own error output (which happened to be visible here only because of live server-log tailing during this investigation, not because the application surfaced it in any way).
 
 **Not fixed.** This is a broad, pre-existing, DAO-wide pattern -- not a single defect with a narrow, safe fix. Per the owner's explicit instruction, flagged here as its own standalone code-quality note rather than folded into the one specific bug that happened to surface it. A real fix (e.g. routing every caught exception through the single centralized global exception handler this project's own `CLAUDE.md` already mandates, rather than discarding it) would be a much larger, dedicated effort across this DAO -- and likely others -- requiring its own scoping and owner decision, not attempted here.
+
+## PENDING-patientcategory-step6-signoff. Owner's Step 6 review of `patientCategory` complete -- confirmed working correctly
+
+**Context:** owner began Step 6 review of `docs/BATCH27_STEP6_CHECKLIST.md` (2026-07-29), working through `http://localhost:4312/patientCategory` (rebuild, `rebuild/phase4-batch27`, held) against real, unmodified legacy. No Access Denied or other blocker encountered on this screen -- module 446's `moduleAccessGuard` patch worked on the first attempt.
+
+**Owner's own words:** "patientCategory ... confirmed working correctly and can be signed off."
+
+**Action taken:** recorded as a permanent Step 6 sign-off artifact per this project's standing convention. `patientCategory` is now the only one of this batch's 3 screens fully signed off; `bedMaster` and `tallyInterfacing` remain open (see their own entries) -- this batch's own Step 6 checklist is not yet fully cleared, only this one screen within it.
+
+## PENDING-siteofadministration-step6-signoff. Owner's Step 6 review of `siteOfAdministration` (recovered work) complete -- confirmed working correctly
+
+**Context:** owner reviewed `http://localhost:4313/siteOfAdministration` (rebuild, `rebuild/phase4-recovered-siteofadministration`, held, kept separate from batch 27 per owner's own earlier instruction) against real, unmodified legacy, same session as the `patientCategory` review above.
+
+**Owner's own words:** "siteOfAdministration ... confirmed working correctly and can be signed off."
+
+**Action taken:** recorded as a permanent Step 6 sign-off artifact. This closes out Step 6 review for the entire recovered-work branch (its only screen) -- `rebuild/phase4-recovered-siteofadministration` is now fully reviewed and eligible for merge approval whenever the owner chooses, independent of batch 27's own remaining open items.
