@@ -1,0 +1,72 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+// Status-toggle CSS is NOT here on purpose: <app-status-toggle> ships its
+// own (new/src/app/shared/status-toggle/status-toggle.scss).
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+  padding-bottom: 4px;
+}
+
+.field-action {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: normal;
+}
+
+.add-item-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.typeahead-wrapper {
+  position: relative;
+  flex: 1;
+
+  input {
+    width: 100%;
+  }
+}
+
+.typeahead-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+
+  li {
+    padding: 6px 10px;
+    cursor: pointer;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+}

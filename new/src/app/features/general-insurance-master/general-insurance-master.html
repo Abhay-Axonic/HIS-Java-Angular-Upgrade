@@ -1,0 +1,232 @@
+<!--
+  Parity rebuild of
+  views/master/GlobalMaster/AssetManagenent/Master/general-insurance-master.html.
+  No pagination in legacy (a fixed-height scrolling table body instead of
+  PagerService) -- reproduced the same way, not invented here.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label>Insurance Company<span class="required">*</span></label>
+        <input
+          type="text"
+          [ngModel]="form().insuranceCompany"
+          (ngModelChange)="updateField('insuranceCompany', $event, 'isInsuranceCompanyValid')"
+        />
+        @if (validity().isInsuranceCompanyValid) {
+          <p class="help-block">Insurance Company is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Contact No<span class="required">*</span></label>
+        <input type="text" [ngModel]="form().contactNo" (ngModelChange)="updateField('contactNo', $event, 'isContactNoValid')" />
+        @if (validity().isContactNoValid) {
+          <p class="help-block">Contact No is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Email Address<span class="required">*</span></label>
+        <input type="text" [ngModel]="form().emailAddress" (ngModelChange)="updateField('emailAddress', $event, 'isemailValid')" />
+        @if (validity().isemailValid) {
+          <p class="help-block">Email Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Contact Person<span class="required">*</span></label>
+        <input
+          type="text"
+          [ngModel]="form().contactPersonName"
+          (ngModelChange)="updateField('contactPersonName', $event, 'iscontactPersonNameValid')"
+        />
+        @if (validity().iscontactPersonNameValid) {
+          <p class="help-block">Contact Person Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Contact Person No<span class="required">*</span></label>
+        <input
+          type="text"
+          [ngModel]="form().contactPersonNo"
+          (ngModelChange)="updateField('contactPersonNo', $event, 'isContactPersonNoValid')"
+        />
+        @if (validity().isContactPersonNoValid) {
+          <p class="help-block">Contact No is required</p>
+        }
+      </div>
+
+      <div class="field wide">
+        <label>Address<span class="required">*</span></label>
+        <input type="text" [ngModel]="form().address" (ngModelChange)="updateField('address', $event, 'isaddressValid')" [title]="form().address" />
+        @if (validity().isaddressValid) {
+          <p class="help-block">Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Country<span class="required">*</span></label>
+        <select [ngModel]="form().countryName" (ngModelChange)="onCountryChange($event)">
+          @for (c of countries(); track c.countryId ?? -1) {
+            <option [ngValue]="c">{{ c.countryName }}</option>
+          }
+        </select>
+        @if (validity().iscountryNameValid) {
+          <p class="help-block">Country is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>State<span class="required">*</span></label>
+        <select [ngModel]="form().stateName" (ngModelChange)="onStateChange($event)">
+          @for (s of states(); track s.stateId ?? -1) {
+            <option [ngValue]="s">{{ s.stateName }}</option>
+          }
+        </select>
+        @if (validity().isstateNameValid) {
+          <p class="help-block">State is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>City<span class="required">*</span></label>
+        <select [ngModel]="form().cityName" (ngModelChange)="onCityChange($event)">
+          @for (c of cities(); track c.cityId ?? -1) {
+            <option [ngValue]="c">{{ c.cityName }}</option>
+          }
+        </select>
+        @if (validity().iscityNameValid) {
+          <p class="help-block">City is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Area<span class="required">*</span></label>
+        <select [ngModel]="form().areaName" (ngModelChange)="onAreaChange($event)">
+          @for (a of areas(); track a.areaId ?? -1) {
+            <option [ngValue]="a">{{ a.areaName }}</option>
+          }
+        </select>
+        @if (validity().isareaNameValid) {
+          <p class="help-block">Area is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Zip Code<span class="required">*</span></label>
+        <input type="text" maxlength="6" [ngModel]="form().zipCode" (ngModelChange)="onZipCodeInput($event)" />
+        @if (validity().iszipCodeValid) {
+          <p class="help-block">Zip Code is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" />
+    <!--
+      Legacy has exactly ONE save control -- an icon-only button always
+      titled "Save" (fa-floppy-o), reused unchanged for both Create and
+      Update; `SaveGenInsMaster()` itself picks the branch based on
+      whether an id is loaded. There is no separate "Update" label and
+      NO Cancel button anywhere in the legacy view -- reproduced exactly
+      (not adding UI legacy doesn't have). The `disabled` class is
+      cosmetic only -- legacy's <a> has no real disabled state and always
+      opens the confirm modal regardless; reproduced the same way, the
+      click handler is never gated by it.
+    -->
+    <button
+      type="button"
+      class="btn-primary"
+      title="Save"
+      [class.disabled]="
+        !form().insuranceCompany ||
+        !form().contactNo ||
+        !form().emailAddress ||
+        !form().contactPersonName ||
+        !form().contactPersonNo ||
+        !form().address ||
+        !form().countryName.countryId ||
+        !form().cityName.cityId ||
+        !form().stateName.stateId ||
+        !form().areaName.areaId ||
+        !form().zipCode
+      "
+      (click)="showSaveConfirm.set(true)"
+    >
+      Save
+    </button>
+  </div>
+
+  <div class="data-table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th (click)="setSort('insuranceCompanyName')">Insurance Company</th>
+          <th (click)="setSort('contactNo')">Contact No</th>
+          <th (click)="setSort('email')">Email</th>
+          <th (click)="setSort('contactPersonName')">Contact Person</th>
+          <th (click)="setSort('contactPersonNumber')">Contact Person No</th>
+          <th class="text-center">Address</th>
+          <th class="text-center">Status(n)</th>
+          <th class="text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of filteredList(); track row.id) {
+          <tr>
+            <td [title]="row.insuranceCompanyName">{{ row.insuranceCompanyName }}</td>
+            <td [title]="row.contactNo">{{ row.contactNo }}</td>
+            <td [title]="row.email">{{ row.email }}</td>
+            <td [title]="row.contactPersonName">{{ row.contactPersonName }}</td>
+            <td [title]="row.contactPersonNumber">{{ row.contactPersonNumber }}</td>
+            <td class="text-center"><i class="icon-view" title="Address Details" (click)="viewAddress(row)"></i></td>
+            <td class="text-center">
+              <app-status-toggle [checked]="row.status" (toggled)="toggleStatus(row)" />
+            </td>
+            <td class="text-center">
+              <i class="icon-edit" [class.disabled]="!row.status" title="Edit" (click)="edit(row.id)"></i>
+            </td>
+          </tr>
+        }
+        @if (!filteredList().length) {
+          <tr>
+            <td colspan="8" class="text-center">No Record Found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+@if (showSaveConfirm()) {
+  <div class="modal-backdrop" (click)="showSaveConfirm.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm <button type="button" (click)="showSaveConfirm.set(false)">&times;</button></header>
+      <div class="modal-body"><span>Are you sure you want to Save?</span></div>
+      <footer>
+        <button type="button" class="btn-primary" (click)="showSaveConfirm.set(false); save()">Ok</button>
+        <button type="button" class="btn-primary" (click)="showSaveConfirm.set(false)">Cancel</button>
+      </footer>
+    </div>
+  </div>
+}
+
+@if (showAddressModal()) {
+  <div class="modal-backdrop" (click)="closeAddressModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Address Details <button type="button" (click)="closeAddressModal()">&times;</button></header>
+      <div class="modal-body">
+        <p><b>Address:</b> {{ addressDetails().address }}</p>
+        <p><b>Country:</b> {{ addressDetails().country }}</p>
+        <p><b>State:</b> {{ addressDetails().state }}</p>
+        <p><b>City:</b> {{ addressDetails().city }}</p>
+        <p><b>Area:</b> {{ addressDetails().area }}</p>
+        <p><b>ZIP Code:</b> {{ addressDetails().zipCode }}</p>
+      </div>
+    </div>
+  </div>
+}

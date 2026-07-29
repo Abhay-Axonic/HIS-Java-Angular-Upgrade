@@ -1,0 +1,61 @@
+// Screen-specific layout only -- shared table/pagination/modal/toolbar
+// styles live in src/styles.scss (see that file's header comment).
+
+.doctor-field {
+  max-width: 320px;
+  margin-bottom: 12px;
+}
+
+.slab-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 8px;
+  min-height: 1px; // preserves the empty-row gap left by a soft-deleted
+  // (removeSlab'd) tier, matching legacy's own layout exactly -- see the
+  // comment above the slab-row @for loop in doctor-slab-master.html.
+}
+
+.slab-field {
+  max-width: 160px;
+
+  input[disabled] {
+    background: #f2f2f2;
+    color: #666;
+  }
+}
+
+.slab-actions {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.btn-slab {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 3px;
+  background: #1565c0;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+
+  &:hover {
+    background: #0d47a1;
+  }
+}
+
+// Cosmetic-only "looks disabled" state for the edit pencil on an Inactive
+// doctor row (ng-class="{disabled: info.status=='I'}" in legacy) -- the
+// click handler stays fully live either way, matching real legacy
+// behavior exactly. Named `.dimmed` rather than reusing a `.disabled`
+// class so it can never be confused with an actually-disabled control.
+.icon-edit.dimmed {
+  opacity: 0.4;
+}
+
+.no-records {
+  text-align: center;
+  margin: 8px 0 0;
+}

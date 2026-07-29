@@ -1,0 +1,159 @@
+<section class="page">
+  <fieldset>
+    <legend>Doctor Slab Master</legend>
+
+    <div class="field doctor-field">
+      <label for="doctorId">Doctor</label>
+      <select id="doctorId" name="doctorId" [ngModel]="doctorId()" (ngModelChange)="doctorId.set($event)" required>
+        <option value="">Select Doctor</option>
+        @for (doctor of doctorsList(); track doctor.doctorId) {
+          <option [value]="doctor.doctorId">{{ doctor.doctorName }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Slab-tier list ($scope.doctorSlabList) -- the outer row wrapper
+         always renders (matching legacy's ng-repeat, which has no ng-if of
+         its own), but the fields/buttons inside only show for status='A'
+         rows (view:31/44/57/70/73's own ng-if). A soft-deleted tier
+         (removeSlab on an already-persisted row) leaves an empty gap here
+         on real legacy rather than fully collapsing -- reproduced exactly,
+         not "fixed" into a cleaner @for that would hide the whole row. -->
+    @for (row of doctorSlabList(); track $index; let i = $index) {
+      <div class="row slab-row">
+        @if (row.status === 'A') {
+          <div class="field slab-field">
+            <label>Slab From</label>
+            <input type="text" autocomplete="off" [value]="row.slabFrom" disabled />
+          </div>
+          <div class="field slab-field">
+            <label>Slab To</label>
+            <input
+              type="text"
+              autocomplete="off"
+              [ngModel]="row.slabTo"
+              (ngModelChange)="updateRow(i, { slabTo: $event })"
+              name="slabTo{{ i }}"
+            />
+          </div>
+          <div class="field slab-field">
+            <label>Percentage %</label>
+            <input
+              type="text"
+              autocomplete="off"
+              [ngModel]="row.percentage"
+              (ngModelChange)="onPercentageChange(i, $event)"
+              name="percentage{{ i }}"
+            />
+          </div>
+          <div class="slab-actions">
+            <button type="button" class="btn-slab" (click)="addSlab(i + 1)">+</button>
+            <button type="button" class="btn-slab" (click)="removeSlab(i + 1)">-</button>
+          </div>
+        }
+      </div>
+    }
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <button type="button" class="btn-primary" (click)="saveDoctorSlab()">Save</button>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Doctor</th>
+        <th class="text-center">Slab Info</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (info of filteredList(); track info.doctorId) {
+        <tr>
+          <td>{{ info.doctorName }}</td>
+          <td class="text-center">
+            <i class="icon-view" title="Information" (click)="viewSlabInfo(info)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="info.status === 'A'" (toggled)="toggleStatus(info)" />
+          </td>
+          <td class="text-center">
+            <!-- Cosmetic-only: legacy dims the pencil for an Inactive
+                 doctor (ng-class="{disabled: info.status=='I'}") but never
+                 actually guards the click -- the edit-load still fires.
+                 Reproduced exactly: a CSS class only, no [disabled]. -->
+            <i class="icon-edit" [class.dimmed]="info.status === 'I'" (click)="editDoctorSlab(info)"></i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagerPages().length) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="setPage(1, true)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="setPage(currentPage() - 1, true)">Previous</a></li>
+      @for (page of pagerPages(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="setPage(page, true)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()">
+        <a (click)="setPage(currentPage() + 1, true)">Next</a>
+      </li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="setPage(totalPages(), true)">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showSlabInfoModal()) {
+  <div class="modal-backdrop" (click)="closeSlabInfoModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Slab Information
+        <button type="button" (click)="closeSlabInfoModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Slab From</th>
+              <th>Slab To</th>
+              <th>Percentage %</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (detail of doctorSlabDetailsList(); track $index) {
+              <tr>
+                <td>{{ detail.slabFrom }}</td>
+                <td>{{ detail.slabTo }}</td>
+                <td>{{ detail.percentage }} %</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (doctorSlabDetailsList().length === 0) {
+          <p class="no-records">No Records Found</p>
+        }
+      </div>
+    </div>
+  </div>
+}
