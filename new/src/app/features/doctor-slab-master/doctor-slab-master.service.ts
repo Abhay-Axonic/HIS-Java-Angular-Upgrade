@@ -57,18 +57,26 @@ export class DoctorSlabMasterService {
     return this.http.post<ApiResponse>(`${this.base}/unit/DoctorSlab/doctorSlabSave`, rows);
   }
 
-  /** Deliberately mirrors legacy's real payload exactly, including its own
-   * gap: no `unitId` is ever sent (ctrl:267-273 never includes it), and
-   * the DAO's own bulk update ignores `organizationId` too even though it
-   * IS sent -- see the write-up in this batch's audit report. Faithfully
-   * reproduced, not silently "fixed" by adding a `unitId` legacy never
-   * sends -- that's a server-side scoping decision, not a client one. */
+  /** Previously mirrored legacy's pre-fix payload exactly (no `unitId`),
+   * matching the DAO's then-real cross-org/unit scoping gap -- see this
+   * batch's audit report. That gap is now fixed on both sides:
+   * `doctorSlabMasterController.js`'s `updateStatus` was updated to send
+   * `unitId` (fix/doctorslabmaster-crossorg-statustoggle, merged into
+   * `main`), and `DoctorSlabMasterDaoImpl.updateSlabStatusByDoctorId`'s
+   * WHERE clause now filters on both `unit_id` and `organization_id`.
+   * This method was left sending the old, incomplete payload after that
+   * merge -- corrected here to match. Without `unitId`, the fixed WHERE
+   * clause receives `unit_id = NULL`, which SQL never matches against
+   * anything (not even another NULL), so the UPDATE silently affects
+   * zero rows while the DAO still unconditionally returns `SUCCESS` --
+   * found live during the owner's own Step 6 review. */
   updateSlabStatusByDoctorId(
     doctorId: number,
     status: 'A' | 'I',
     updatedBy: number,
     updatedDate: string,
     organizationId: number,
+    unitId: number,
   ): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.base}/unit/DoctorSlab/updateSlabStatusByDoctorId`, {
       doctorId,
@@ -76,6 +84,7 @@ export class DoctorSlabMasterService {
       updatedBy,
       updatedDate,
       organizationId,
+      unitId,
     });
   }
 

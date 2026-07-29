@@ -342,13 +342,14 @@ export class DoctorSlabMaster {
   // ---- status toggle (ctrl:260-297, `updateStatus`) ----
 
   /** Per-DOCTOR toggle, not per-tier -- the payload is `{doctorId, status,
-   * updatedBy, updatedDate, organizationId}` with no per-row identifier,
-   * and the real backend query
+   * updatedBy, updatedDate, organizationId, unitId}` with no per-row
+   * identifier, and the real backend query
    * (`DoctorSlabMasterDaoImpl.updateSlabStatusByDoctorId`) flips every
-   * slab row belonging to that doctor at once. See this batch's audit
-   * report for a confirmed, more serious scoping gap in that same server
-   * query (no `unitId`/`organizationId` filter at all) -- flagged there,
-   * not fixed here; this method sends legacy's exact real payload.
+   * slab row belonging to that doctor, in that unit/org, at once. The
+   * cross-org/unit scoping gap this batch's audit report originally
+   * flagged here is now fixed on both legacy and this rebuild (see the
+   * service method's own doc comment) -- `unitId` is sent, matching the
+   * corrected legacy payload.
    *
    * Uses `<app-status-toggle>`'s standard update-on-confirmed-success
    * pattern (project-wide standing convention, not re-litigated per
@@ -357,7 +358,9 @@ export class DoctorSlabMaster {
   toggleStatus(row: DoctorSlabMasterListRow): void {
     const nextStatus: 'A' | 'I' = row.status === 'A' ? 'I' : 'A';
     const updatedDate = formatDateTime(new Date());
-    this.api.updateSlabStatusByDoctorId(row.doctorId, nextStatus, this.userId, updatedDate, this.organizationId).subscribe({
+    this.api
+      .updateSlabStatusByDoctorId(row.doctorId, nextStatus, this.userId, updatedDate, this.organizationId, this.unitId)
+      .subscribe({
       next: (res) => {
         if (res.status === 'success') {
           this.doctorSlabMasterList.update((rows) =>
