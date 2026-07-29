@@ -1,0 +1,187 @@
+<div class="container-fluid his-style">
+  <fieldset>
+    <div class="row padding-top10">
+      <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+        <label>Date</label>
+        <input type="date" class="form-control" [ngModel]="searchDate()" (ngModelChange)="searchDate.set($event)" />
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 padding-left-right-set4 padding-top10">
+        <label>Clinical Unit<span class="star">*</span></label>
+        <select class="form-control" [ngModel]="selectedUnitId()" (ngModelChange)="selectedUnitId.set($event); onUnitChange()">
+          <option value="">Select Unit</option>
+          @for (u of unitList(); track u.unitId) {
+            <option [value]="u.unitId">{{ u.unitName }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+        <a href="javascript:void(0)" class="btn btn-primary btn-save-box-shadow" title="Search" (click)="search()">
+          <i class="fa fa-search" style="font-size: 21px" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto">
+        <button type="button" class="btn btn-primary" style="width:95px;" (click)="openTallyLedgerModal()">Tally Ledger</button>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto" style="margin-left: 52px;">
+        <button type="button" class="btn btn-primary" style="width:95px;" (click)="exportTallyToXml()">Export</button>
+      </div>
+    </div>
+
+    <div class="row padding-left-right-set4 margin-top8 custom-sub-tab">
+      <ul class="tabs nav nav-tabs">
+        <li [class.active]="activeTab() === 1"><a href="javascript:void(0)" (click)="setTab(1)">OPD</a></li>
+        <li [class.active]="activeTab() === 2"><a href="javascript:void(0)" (click)="setTab(2)">IPD</a></li>
+        <li [class.active]="activeTab() === 3"><a href="javascript:void(0)" (click)="setTab(3)">Inventory</a></li>
+        <li [class.active]="activeTab() === 4"><a href="javascript:void(0)" (click)="setTab(4)">Doctor's Share</a></li>
+      </ul>
+    </div>
+
+    <div class="row padding-left-right-set4">
+      <div class="col-md-12 col-lg-12 table-responsive padding-left-right-set4 common-popup-height-370">
+        <table class="table table-bordered common-tbody-scroll">
+          <thead>
+            <tr>
+              <th>Ledger</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Narration</th>
+              <th>Reference</th>
+              <th>VoucherType</th>
+              <th>Bill Amount</th>
+              <th>Instrument No.</th>
+              <th>Instrument Date</th>
+              <th>Bank Name</th>
+              <th>Ref No</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Bill Amount and Instrument No. are intentionally never bound
+                 to real row data here -- legacy's own view binds these two
+                 columns to properties that don't exist on the real API
+                 response (`billAmount`/`instrumentNo` vs. the real
+                 `billingAmount`/`instrumentNumber`), so both columns render
+                 blank on every tab, on real unmodified legacy, faithfully
+                 reproduced (see docs/ANGULAR_PENDING_FINDINGS.md,
+                 PENDING-tallyinterfacing-billamount-instrumentno-blank-fieldname-mismatch).
+                 Narration is likewise only wired for OPD/IPD (see
+                 activeTabShowsNarration and
+                 PENDING-tallyinterfacing-narration-blank-inventory-doctorshare). -->
+            @for (row of activeList(); track $index) {
+              <tr style="text-align: center;">
+                <td>{{ row.ledger }}</td>
+                <td>{{ row.debit }}</td>
+                <td>{{ row.credit }}</td>
+                <td>{{ activeTabShowsNarration() ? row.voucherNarration : '' }}</td>
+                <td>{{ row.reference }}</td>
+                <td>{{ row.voucherType }}</td>
+                <td></td>
+                <td></td>
+                <td>{{ row.instrumentDate }}</td>
+                <td>{{ row.bankName }}</td>
+                <td>{{ row.refNo }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-2 padding-left-right-set4 padding-top10 text-width-auto" style="margin-left: 635px;">
+        <button type="button" class="btn btn-primary" style="width:95px;" (click)="transfer()">Transfer</button>
+      </div>
+    </div>
+  </fieldset>
+</div>
+
+<!-- Tally Ledger picker modal -->
+@if (showTallyLedgerModal()) {
+  <div class="modal-backdrop" (click)="closeTallyLedgerModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Tally Ledger
+        <button type="button" (click)="closeTallyLedgerModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="row input-container margin-top10">
+          <div class="col-lg-5 col-sm-5 col-md-5">
+            <label>Tally Ledger</label>
+            <select class="form-control" [(ngModel)]="selectedTallyLedgerName">
+              <option value="">Select Ledger</option>
+              @for (info of tallyLedgerNames(); track $index) {
+                <option [value]="info">{{ info }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-lg-3 col-sm-3 col-md-3">
+            <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="Refresh" (click)="sendRefreshLedgerNameRequest()">
+              Refresh
+            </button>
+          </div>
+          <div class="col-lg-3 col-sm-3 col-md-3">
+            <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="Create" (click)="closeTallyLedgerModal(); openCreateLedgerModal()">
+              Create
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="Close" (click)="closeTallyLedgerModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Confirm-create-ledger modal -->
+@if (showConfirmCreateModal()) {
+  <div class="modal-backdrop" (click)="confirmCreateNo()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <span>Ledger "{{ createThisLedger() }}" is not available in Tally.</span><br />
+        <span>Do you want to Create it ?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="Yes" (click)="confirmCreateYes()">Yes</button>
+        <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="No" (click)="confirmCreateNo()">No</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Create Ledger in Tally modal -->
+@if (showCreateLedgerModal()) {
+  <div class="modal-backdrop" (click)="closeCreateLedgerModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Create Ledger in Tally
+        <button type="button" (click)="closeCreateLedgerModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="row input-container margin-top10">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <label>Ledger Name</label>
+            <input type="text" class="form-control" [(ngModel)]="createThisLedger" />
+          </div>
+        </div>
+        <div class="row input-container margin-top10">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <label>Under Group</label>
+            <select class="form-control" [(ngModel)]="selectedUnderGroup">
+              <option value="">Select</option>
+              @for (info of underGroupList; track info) {
+                <option [value]="info">{{ info }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="Ok" (click)="createLedgerInTally(); closeCreateLedgerModal()">
+          Create
+        </button>
+        <button type="button" class="btn btn-primary btn-save-box-shadow width100" title="Close" (click)="closeCreateLedgerModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

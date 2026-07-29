@@ -1170,6 +1170,31 @@ export const routes: Routes = [
         data: { moduleId: 388, title: 'Identification Card Master' },
         loadComponent: () => import('./features/identification-master/identification-master').then((m) => m.IdentificationMaster),
       },
+      // Phase 4 batch 27.
+      {
+        path: 'patientCategory',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 446, title: 'Patient Category Master' },
+        loadComponent: () =>
+          import('./features/patient-category-master/patient-category-master').then(
+            (m) => m.PatientCategoryMaster,
+          ),
+      },
+      {
+        path: 'bedMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 546, title: 'Ward Bed Master' },
+        loadComponent: () => import('./features/bed-master/bed-master').then((m) => m.BedMaster),
+      },
+      {
+        // No moduleId in legacy's own state registration (tallyInterfacingController.js's
+        // config() has no resolve block) -- same class as billingGroupMaster/periodicityService,
+        // no moduleAccessGuard needed, matching legacy exactly (verified during batch 27's own
+        // audit).
+        path: 'tallyInterfacing',
+        data: { title: 'Tally Interfacing' },
+        loadComponent: () => import('./features/tally-interfacing/tally-interfacing').then((m) => m.TallyInterfacing),
+      },
       // Phase 4 batch 16 -- second batch in the clinical/billing risk tier.
       {
         path: 'currencyMaster',
