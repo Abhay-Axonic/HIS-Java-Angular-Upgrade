@@ -1790,7 +1790,7 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 - After the `ALTER TABLE` (no app restart needed -- Hibernate queries the live schema, no Java changed): same GET -> HTTP 200. `POST /api/globals/tax/save` -> HTTP 200, real row persisted (`id=1`, `code='BR103TEST'`). `PATCH /api/globals/tax/1` (update) -> HTTP 200, name/percentage changed correctly. `PATCH` (status-toggle) -> HTTP 200, `is_active` flipped correctly.
 - Test row deactivated (`is_active=false`) after verification, not deleted.
 
-**Classification:** a real, previously-undetected schema/entity-mapping gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **pending** -- held on `fix/taxmaster-generalledgerid-column-missing`, awaiting individual branch approval.
+**Classification:** a real, previously-undetected schema/entity-mapping gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **Approved and merged** (2026-07-29) -- `fix/taxmaster-generalledgerid-column-missing` merged into `main`; full reactor build (`mvn -am -pl ADT,HIS-WAR package -DskipTests -o`, all 18 modules + WAR) re-run post-merge alongside BR-104 and 3 other fixes, `BUILD SUCCESS`, confirmed clean.
 
 ## BR-104 — `pharmacologicalClassificationMaster`'s list (and therefore Save/Update) failed on every attempt because a column the Java code expects was missing from this local dev DB — severity-1 *in this environment*, found during batch 28 candidate research (2026-07-29)
 
@@ -1805,4 +1805,4 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 - After the `ALTER TABLE` (no app restart needed): same GET -> HTTP 200. `POST .../classifications/` -> HTTP 200, real row persisted (`id=2`, `antibiotic_test=true` as sent). `PATCH .../classifications/2` (update) -> HTTP 200, classification text changed correctly. `PATCH` (status-toggle) -> HTTP 200, `is_active` flipped correctly.
 - Test row deactivated (`is_active=false`) after verification, not deleted.
 
-**Classification:** a real, previously-undetected schema/entity-mapping gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **pending** -- held on `fix/pharmacologicalclassificationmaster-antibiotictest-column-missing`, awaiting individual branch approval.
+**Classification:** a local-dev-environment provisioning gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Owner Decision: **Approved and merged** (2026-07-29) -- `fix/pharmacologicalclassificationmaster-antibiotictest-column-missing` merged into `main`; full reactor build re-run post-merge alongside BR-103 and 3 other fixes, `BUILD SUCCESS`, confirmed clean.
