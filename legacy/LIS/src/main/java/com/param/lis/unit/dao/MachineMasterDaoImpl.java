@@ -78,9 +78,13 @@ public class MachineMasterDaoImpl extends GenericDao<MachineMaster, Integer>
 		try {
 			MachineMaster machineMaster = mapper.map(machineMasterDto, MachineMaster.class,
 					"MachineMasterDtoTOmachineMasterDto");
-			
-			machineMaster.setStatus('A');
-			
+
+			// Previously hardcoded to 'A' here, discarding whatever status the
+			// mapped DTO actually carried -- meant editing and saving ANY machine
+			// silently reactivated it, even one the user had just deactivated.
+			// The mapped value (from machineMasterDto.getStatus(), which the
+			// frontend already sends correctly on every update) is used as-is.
+
 			MachineMaster machineMat = update(machineMaster);
 			if (machineMat != null) {
 				return new Response(SUCCESS, SUCCESS_200, MACHINE_TEST_UPDATE_SUCC, null, null);
