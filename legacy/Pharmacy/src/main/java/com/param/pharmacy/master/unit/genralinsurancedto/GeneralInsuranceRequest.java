@@ -52,9 +52,11 @@ public class GeneralInsuranceRequest extends GenralInsuranceResponse {
 		this.stateId = stateId;
 	}
 
-	public String getZipCode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	// Previously overridden here to unconditionally `return null;` (a leftover
+	// stub), shadowing the real getter/setter pair inherited from
+	// GenralInsuranceResponse -- silently discarded the zip code on every
+	// Create (nulled outright) and Update (the null-check guard around
+	// setZipcode() meant the field was silently skipped instead of applied).
+	// Removed; the inherited getter is now used.
 
 }
