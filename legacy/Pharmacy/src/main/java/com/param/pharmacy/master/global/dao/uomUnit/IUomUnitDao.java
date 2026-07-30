@@ -8,7 +8,7 @@ public interface IUomUnitDao {
 
 	List<UomUnit> getAll(Integer orgId);
 
-	UomUnit getById(Integer id);
+	UomUnit getById(Integer id, Integer orgId);
 
 	Integer create(UomUnit uomUnit);
 
