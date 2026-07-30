@@ -88,7 +88,9 @@ public class UomUnitController {
 			CommonResponse errorResponse = new CommonResponse();
 			errorResponse.setId(CustomeRespone.getId());
 			errorResponse.setMessage(CustomeRespone.getMessage());
-			return new ResponseEntity<Object>(errorResponse, HttpStatus.NOT_ACCEPTABLE);
+			HttpStatus status = "Unit not found".equals(CustomeRespone.getMessage()) ? HttpStatus.NOT_FOUND
+					: HttpStatus.NOT_ACCEPTABLE;
+			return new ResponseEntity<Object>(errorResponse, status);
 		}
 	}
 }

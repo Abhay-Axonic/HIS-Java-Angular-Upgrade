@@ -32,10 +32,13 @@ public class UomUnitDao extends AbstractDao<Integer, UomUnit> implements IUomUni
 	}
 
 	@Override
-	public UomUnit getById(Integer id) {
+	public UomUnit getById(Integer id, Integer orgId) {
 		Criteria criteria = getSession().createCriteria(UomUnit.class);
 		criteria.add(Restrictions.eq("id", id));
 		criteria.add(Restrictions.eq("isDeleted", false));
+
+		Criteria orgCriteria = criteria.createCriteria("organization");
+		orgCriteria.add(Restrictions.eq("organizationId", orgId != null ? orgId : sessionService.getOrganizationId()));
 
 		return (UomUnit) criteria.uniqueResult();
 	}

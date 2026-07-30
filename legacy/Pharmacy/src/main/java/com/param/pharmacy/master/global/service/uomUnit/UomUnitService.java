@@ -62,7 +62,7 @@ public class UomUnitService implements IUomUnitService {
 
 		UomUnitDetailsResponse response = new UomUnitDetailsResponse();
 
-		UomUnit uomUnit = UomUnitDao.getById(id);
+		UomUnit uomUnit = UomUnitDao.getById(id, orgId);
 
 		if (uomUnit != null) {
 			response.setId((Integer) uomUnit.getId());
@@ -113,7 +113,12 @@ public class UomUnitService implements IUomUnitService {
 	@Transactional
 	public CommonResponse update(UomUnitRequest uomUnitRequest) throws CustomeException {
 
-		UomUnit uomUnit = UomUnitDao.getById(uomUnitRequest.getId());
+		UomUnit uomUnit = UomUnitDao.getById(uomUnitRequest.getId(), uomUnitRequest.getOrganizationId());
+
+		if (uomUnit == null) {
+			throw new CustomeException(uomUnitRequest.getId() != null ? uomUnitRequest.getId().longValue() : null,
+					"Unit not found", false);
+		}
 
 		if (uomUnitRequest.getCode() != null && uomUnitRequest.getCode() != "") {
 			uomUnit.setCode(uomUnitRequest.getCode());
