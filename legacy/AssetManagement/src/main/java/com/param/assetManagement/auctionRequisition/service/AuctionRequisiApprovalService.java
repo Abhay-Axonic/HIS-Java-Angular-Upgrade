@@ -83,7 +83,10 @@ private SessionService sessionService;
 	@Override
 	@Transactional
 	public Object getAuctionRequisitionApproval(Integer id) {
-		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id);
+		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id, sessionService.getUnitId());
+		if (auctionRequisition == null) {
+			throw new RuntimeException("Auction requisition not found");
+		}
 
 		List<RejectReasonResponse> rejectReasons = getRejectReasons();
 		AuctionRequisitionListResponse response = new AuctionRequisitionListResponse(auctionRequisition.getId(),
@@ -173,7 +176,10 @@ private SessionService sessionService;
 	@Transactional
 	public Object saveAuctionRequisitionApproval(AuctionRequisitionApprovalRequest request) {
 
-		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(request.getId());
+		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(request.getId(), request.getUnitId());
+		if (auctionRequisition == null) {
+			throw new RuntimeException("Auction requisition not found");
+		}
 		auctionRequisition.approveAuctionRequisition(new Status(request.getStatusId()),
 				new Status(request.getApprovalStatusId()));
 
@@ -244,7 +250,10 @@ private SessionService sessionService;
 	@Transactional
 	public Object approveAuctionRequisitionApproval(AuctionRequisitionApprovalRequest request) {
 		for (Integer id : request.getAuctionRequisitionId()) {
-			AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id);
+			AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id, request.getUnitId());
+			if (auctionRequisition == null) {
+				throw new RuntimeException("Auction requisition not found");
+			}
 
 			Random rand = new Random();
 			int num = rand.nextInt(1000);
