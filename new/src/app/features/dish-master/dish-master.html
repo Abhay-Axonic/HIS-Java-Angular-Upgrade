@@ -1,0 +1,328 @@
+<section class="page">
+  <fieldset>
+    <legend>Dish Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Code<span class="required">*</span></label>
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().dishCode"
+          (ngModelChange)="updateField('dishCode', $event)"
+        />
+        @if (isDishCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Dish Name<span class="required">*</span></label>
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().dishDescription"
+          (ngModelChange)="updateField('dishDescription', $event)"
+        />
+        @if (isDishDescriptionInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Value<span class="required">*</span></label>
+        <input
+          type="number"
+          [ngModel]="record().dishValue"
+          (ngModelChange)="updateField('dishValue', $event)"
+        />
+        @if (isDishValueInvalid()) {
+          <p class="help-block">Value is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Clinical Unit<span class="required">*</span></label>
+        <select [ngModel]="record().uomId" (ngModelChange)="updateField('uomId', $event)">
+          <option [value]="''"></option>
+          @for (u of uomList(); track u.uomId) {
+            <option [value]="u.uomId">{{ u.uomDescription }}</option>
+          }
+        </select>
+        @if (isUomInvalid()) {
+          <p class="help-block">Clinical Unit is required</p>
+        }
+      </div>
+    </div>
+
+    <div class="checkbox-groups">
+      <div class="checkbox-group">
+        <h6>Meal Preference<span class="required">*</span></h6>
+        <div class="checkbox-list">
+          @for (opt of mealPreferenceList(); track opt.mealPreferenceId) {
+            <label class="checkbox-inline">
+              <input
+                type="checkbox"
+                [checked]="isMealPreferenceChecked(opt.mealPreferenceId)"
+                (change)="toggleMealPreference(opt, $any($event.target).checked)"
+              />
+              <span>{{ opt.mealPreferenceDesc }}</span>
+            </label>
+          }
+        </div>
+        @if (isMealPreferenceGroupInvalid()) {
+          <p class="help-block">Meal Preference is required</p>
+        }
+      </div>
+
+      <div class="checkbox-group">
+        <h6>Meal Type<span class="required">*</span></h6>
+        <div class="checkbox-list">
+          @for (opt of mealTypeList(); track opt.mealId) {
+            <label class="checkbox-inline">
+              <input
+                type="checkbox"
+                [checked]="isMealTypeChecked(opt.mealId)"
+                (change)="toggleMealType(opt, $any($event.target).checked)"
+              />
+              <span>{{ opt.name }}</span>
+            </label>
+          }
+        </div>
+        @if (isMealTypeGroupInvalid()) {
+          <p class="help-block">Meal Type is required</p>
+        }
+      </div>
+
+      <div class="checkbox-group">
+        <h6>Diet Type<span class="required">*</span></h6>
+        <div class="checkbox-list">
+          @for (opt of dietTypeList(); track opt.dietTypeId) {
+            <label class="checkbox-inline">
+              <input
+                type="checkbox"
+                [checked]="isDietTypeChecked(opt.dietTypeId)"
+                (change)="toggleDietType(opt, $any($event.target).checked)"
+              />
+              <span>{{ opt.dietTypeDescription }}</span>
+            </label>
+          }
+        </div>
+        @if (isDietTypeGroupInvalid()) {
+          <p class="help-block">Diet Type is required</p>
+        }
+      </div>
+    </div>
+
+    <div class="ingredients-table-wrap">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Ingredients</th>
+            <th>Value</th>
+            <th>Clinical Unit</th>
+            <th>Action taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of ingredientRows(); track $index) {
+            <tr>
+              <td>
+                <select
+                  [ngModel]="row.keyIngredientId"
+                  (ngModelChange)="updateIngredientField($index, 'keyIngredientId', $event)"
+                >
+                  <option [value]="''"></option>
+                  @for (i of ingredientOptions(); track i.keyIngredientId) {
+                    <option [value]="i.keyIngredientId">{{ i.ingredientDescription }}</option>
+                  }
+                </select>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  [ngModel]="row.value"
+                  (ngModelChange)="updateIngredientField($index, 'value', $event)"
+                />
+              </td>
+              <td>
+                <select [ngModel]="row.uomId" (ngModelChange)="updateIngredientField($index, 'uomId', $event)">
+                  <option [value]="''"></option>
+                  @for (u of uomList(); track u.uomId) {
+                    <option [value]="u.uomId">{{ u.uomDescription }}</option>
+                  }
+                </select>
+              </td>
+              <td class="text-center">
+                <button type="button" class="btn-mini" (click)="addIngredientRow()">+</button>
+                <button type="button" class="btn-mini" (click)="removeIngredientRow($index + 1)">-</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      records
+    </label>
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchText()"
+      (ngModelChange)="searchText.set($event)"
+    />
+    @if (!editMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openSaveConfirm()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="openUpdateConfirm()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Dish Name</th>
+        <th>Value</th>
+        <th>Clinical Unit</th>
+        <th>Meal Preference</th>
+        <th>Meal Type</th>
+        <th>Diet Type</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+        <th class="text-center">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayRows(); track row.dishId) {
+        <tr>
+          <td>{{ row.dishCode }}</td>
+          <td>{{ row.dishDescription }}</td>
+          <td>{{ row.dishValue }}</td>
+          <td>{{ row.uomName }}</td>
+          <td>
+            @for (d of row.dietPreferenceList; track d.dietPreferenceId) {
+              <div>{{ d.dietPreferenceDesc }}</div>
+            }
+          </td>
+          <td>
+            @for (m of row.dietMealTypeList; track m.mealTypeId) {
+              <div>{{ m.mealPreferenceDesc }}</div>
+            }
+          </td>
+          <td>
+            @for (d of row.dietTypeList; track d.dietTypeId) {
+              <div>{{ d.dietTypeDescription }}</div>
+            }
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row, row.status === 'A' ? 'I' : 'A')" />
+          </td>
+          <td class="text-center">
+            <i
+              class="fa fa-pencil"
+              [class.disabled]="!referenceListsLoaded()"
+              [title]="referenceListsLoaded() ? 'Edit' : 'Loading meal/diet reference data…'"
+              (click)="edit(row)"
+            ></i>
+          </td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" title="Details" (click)="showDetails(row)"></i>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showSaveConfirm()) {
+  <div class="modal-backdrop" (click)="closeSaveConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <p>Are you sure you want to Save?</p>
+        <div class="modal-actions">
+          <button type="button" (click)="closeSaveConfirm()">Cancel</button>
+          <button type="button" class="btn-primary" (click)="confirmSave()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showUpdateConfirm()) {
+  <div class="modal-backdrop" (click)="closeUpdateConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <p>Are you sure you want to Update?</p>
+        <div class="modal-actions">
+          <button type="button" (click)="closeUpdateConfirm()">Cancel</button>
+          <button type="button" class="btn-primary" (click)="confirmUpdate()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeDetailsModal()">
+    <div class="modal modal-wide" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" class="close" (click)="closeDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ingredients</th>
+              <th>Value</th>
+              <th>UOM</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (info of detailsIngredientRows(); track $index) {
+              <tr>
+                <td>{{ info.ingredientDescription }}</td>
+                <td>{{ info.value }}</td>
+                <td>{{ info.uomName }}</td>
+              </tr>
+            }
+            @for (info of detailsNutritionRows(); track $index) {
+              <tr>
+                <td>{{ info.name }}</td>
+                <td>{{ info.value.toFixed(2) }}</td>
+                <td>{{ info.uomName }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

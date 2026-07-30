@@ -291,6 +291,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/nutritionalMaster', title: 'Nutritional Master' },
       { path: '/dietUnitMater', title: 'Diet Unit Master' },
       { path: '/mealMaster', title: 'Meal Master' },
+      { path: '/dishMaster', title: 'Dish Master' },
     ],
   },
   {

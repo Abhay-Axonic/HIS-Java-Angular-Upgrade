@@ -1486,6 +1486,17 @@ export const routes: Routes = [
         data: { title: 'Camp Master' },
         loadComponent: () => import('./features/camp-master/camp-master').then((m) => m.CampMaster),
       },
+      // Phase 4 batch 30. dishMaster (Diet & Nutrition module) -- moduleId
+      // 511 confirmed via Step 0/1 this session, classic `$scope` screen
+      // (no controllerAs). See dish-master.ts's class doc for the full
+      // audit trail, the golden-trace capture (Step 2/4), and the
+      // owner-approved Edit-gating race-condition fix.
+      {
+        path: 'dishMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 511, title: 'Dish Master' },
+        loadComponent: () => import('./features/dish-master/dish-master').then((m) => m.DishMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
