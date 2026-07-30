@@ -20,6 +20,7 @@ import com.param.pharmacy.master.unit.dto.storewiseGenericMapper.StorewiseGeneri
 import com.param.pharmacy.master.unit.dto.storewiseGenericMapper.StorewiseGenericMapperListResponse;
 import com.param.pharmacy.master.unit.dto.storewiseGenericMapper.StorewiseGenericMapperRequest;
 import com.param.pharmacy.master.unit.dto.storewiseGenericMapper.VedResponseList;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.service.global.SessionService;
 import com.param.utility.TimeZoneComponent;
 
@@ -28,17 +29,24 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 
 	@Autowired
 	IStorewiseGenericMapperDao StorewiseGenericMapperDao;
-	
+
 	@Autowired
 	private SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 
 	@Override
 	@Transactional
 	public List<StorewiseGenericMapperListResponse> getAll(Integer unitId) {
+		// BR-121: unitId was previously taken directly from the URL path with
+		// no session/JWT cross-check -- any unit's list was readable simply by
+		// changing the path segment. Always use the verified value instead.
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 		List<StorewiseGenericMapperListResponse> list = new ArrayList<StorewiseGenericMapperListResponse>();
 
-		for (StorewiseGenericMapper storewiseGenericMapper : StorewiseGenericMapperDao.getAll(unitId)) {
+		for (StorewiseGenericMapper storewiseGenericMapper : StorewiseGenericMapperDao.getAll(verifiedUnitId)) {
 			StorewiseGenericMapperListResponse storewiseGenericResponse = new StorewiseGenericMapperListResponse();
 			storewiseGenericResponse.setId((Integer) storewiseGenericMapper.getId());
 			storewiseGenericResponse.setStoreId((Integer) storewiseGenericMapper.getStore().getStoreId());
@@ -70,7 +78,12 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 
 		StorewiseGenericMapperDetailsResponse response = new StorewiseGenericMapperDetailsResponse();
 
-		StorewiseGenericMapper storewiseGenericMapper = StorewiseGenericMapperDao.getById(id);
+		// BR-121: getById(id) previously had no ownership check at all -- any
+		// id was readable by any authenticated user regardless of unit. A
+		// cross-tenant id now falls through to the same pre-existing
+		// null/not-found handling below as a genuinely nonexistent id.
+		StorewiseGenericMapper storewiseGenericMapper = StorewiseGenericMapperDao.getById(id,
+				verifiedIdentityService.getVerifiedUnitId());
 
 		if (storewiseGenericMapper != null) {
 			response.setId((Integer) storewiseGenericMapper.getId());
@@ -98,15 +111,23 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 	@Transactional
 	public CommonResponse create(StorewiseGenericMapperRequest storewiseGenericMapperRequest) {
 
+		// BR-121: organizationId/unitId previously came from the client body
+		// when present, overriding the session default -- a forged org/unit
+		// in the request was honored outright. Always use the JWT-verified
+		// values instead, never the client-supplied ones.
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+		Integer userId = storewiseGenericMapperRequest.getUserId()!=null ? storewiseGenericMapperRequest.getUserId() : sessionService.getUserId();
+
 		Store store = new Store();
-		//sessionService.setEntityDefaults(store);	
-		store.setCreateDefaults(storewiseGenericMapperRequest.getOrganizationId()!=null ? storewiseGenericMapperRequest.getOrganizationId() : sessionService.getOrganizationId(),storewiseGenericMapperRequest.getUnitId() !=null ? storewiseGenericMapperRequest.getUnitId() :sessionService.getUnitId() ,storewiseGenericMapperRequest.getUserId()!=null ? storewiseGenericMapperRequest.getUserId() : sessionService.getUserId());
+		//sessionService.setEntityDefaults(store);
+		store.setCreateDefaults(verifiedOrgId, verifiedUnitId, userId);
 		store.setStoreId(storewiseGenericMapperRequest.getStoreId());
 
 		Generic generic = new Generic();
-		//sessionService.setEntityDefaults(generic);	
-		generic.setCreateDefaults(storewiseGenericMapperRequest.getOrganizationId()!=null ? storewiseGenericMapperRequest.getOrganizationId() : sessionService.getOrganizationId(),storewiseGenericMapperRequest.getUnitId() !=null ? storewiseGenericMapperRequest.getUnitId() :sessionService.getUnitId() ,storewiseGenericMapperRequest.getUserId()!=null ? storewiseGenericMapperRequest.getUserId() : sessionService.getUserId());
-		
+		//sessionService.setEntityDefaults(generic);
+		generic.setCreateDefaults(verifiedOrgId, verifiedUnitId, userId);
+
 		generic.setId(storewiseGenericMapperRequest.getGenericId());
 
 		Ved ved = new Ved();
@@ -114,8 +135,8 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 
 		StorewiseGenericMapper storewiseGenericMapper = new StorewiseGenericMapper();
 	//	sessionService.setEntityDefaults(storewiseGenericMapper);
-		storewiseGenericMapper.setCreateDefaults(storewiseGenericMapperRequest.getOrganizationId()!=null ? storewiseGenericMapperRequest.getOrganizationId() : sessionService.getOrganizationId(),storewiseGenericMapperRequest.getUnitId() !=null ? storewiseGenericMapperRequest.getUnitId() :sessionService.getUnitId() ,storewiseGenericMapperRequest.getUserId()!=null ? storewiseGenericMapperRequest.getUserId() : sessionService.getUserId());
-		
+		storewiseGenericMapper.setCreateDefaults(verifiedOrgId, verifiedUnitId, userId);
+
 		storewiseGenericMapper.setIsActive(storewiseGenericMapperRequest.getStatus());
 		storewiseGenericMapper.setStore(store);
 		storewiseGenericMapper.setGeneric(generic);
@@ -132,8 +153,13 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 	@Transactional
 	public CommonResponse update(StorewiseGenericMapperRequest storewiseGenericMapperRequest) throws CustomeException {
 
+		// BR-121: same ownership-check gap as the read path above -- a
+		// cross-tenant id now falls through to the same pre-existing
+		// null-entity behavior as a genuinely nonexistent id (this method has
+		// no null guard of its own, a distinct pre-existing issue, not
+		// introduced by this fix -- see docs/ANGULAR_PENDING_FINDINGS.md).
 		StorewiseGenericMapper storewiseGenericMapper = StorewiseGenericMapperDao
-				.getById(storewiseGenericMapperRequest.getId());
+				.getById(storewiseGenericMapperRequest.getId(), verifiedIdentityService.getVerifiedUnitId());
 
 		if (storewiseGenericMapperRequest.getStoreId() != null && storewiseGenericMapperRequest.getStoreId() > 0) {
 			Store store = StorewiseGenericMapperDao.getStore(storewiseGenericMapperRequest.getStoreId());
@@ -201,8 +227,14 @@ public class StorewiseGenericMapperService implements IStorewiseGenericMapperSer
 	@Override
 	@Transactional
 	public Object getGenericList(String name, Integer unitId, Integer orgId) {
+		// BR-121: unitId/orgId previously came directly from the URL path
+		// with no session/JWT cross-check -- combined with the DAO query's
+		// own OR-precedence bug (fixed alongside this), any tenant's generics
+		// were enumerable via this search. Always use verified values.
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
 		List<GenericResponseDto> genericList = new ArrayList<GenericResponseDto>();
-		for (Generic generic : StorewiseGenericMapperDao.getGenericList(name, unitId, orgId)) {
+		for (Generic generic : StorewiseGenericMapperDao.getGenericList(name, verifiedUnitId, verifiedOrgId)) {
 
 			/*
 			 * GenericResponseDto genericResponse = new GenericResponseDto(generic.getId(),

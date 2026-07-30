@@ -11,7 +11,12 @@ public interface IStorewiseGenericMapperDao {
 
 	List<StorewiseGenericMapper> getAll(Integer unitId);
 
-	StorewiseGenericMapper getById(Integer id);
+	/**
+	 * BR-121: id-only lookup with no ownership check at all previously --
+	 * any authenticated user could read/write any other unit's row by id.
+	 * unitId here is always the JWT-verified value, never client-supplied.
+	 */
+	StorewiseGenericMapper getById(Integer id, Integer unitId);
 
 	Integer create(StorewiseGenericMapper storewiseGenericMapper);
 
