@@ -1497,6 +1497,26 @@ export const routes: Routes = [
         data: { moduleId: 511, title: 'Dish Master' },
         loadComponent: () => import('./features/dish-master/dish-master').then((m) => m.DishMaster),
       },
+      // Phase 4 batch 31. subDepartmentMasterUnit -- moduleId 534 confirmed
+      // via Step 0/1 + this session's own read of app.js:8524-8544. Path
+      // kept identical to legacy's URL for drop-in continuity; feature
+      // folder/component/nav label deliberately renamed to
+      // `unit-sub-speciality-mapping` / "Unit Sub-Speciality Mapping" --
+      // see unit-sub-speciality-mapping.ts's class doc "NAMING DISCLOSURE"
+      // section for the full reasoning (this screen actually manages
+      // Speciality -> Sub-Speciality mapping at the unit level, not a
+      // "sub-department" entity, and legacy's own "Sub Department Master"
+      // title collides with the already-rebuilt `/subSpecialityMaster`
+      // route's identical nav label).
+      {
+        path: 'subDepartmentMasterUnit',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 534, title: 'Unit Sub-Speciality Mapping' },
+        loadComponent: () =>
+          import('./features/unit-sub-speciality-mapping/unit-sub-speciality-mapping').then(
+            (m) => m.UnitSubSpecialityMapping,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

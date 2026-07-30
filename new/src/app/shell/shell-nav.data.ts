@@ -65,6 +65,10 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/referralMaster', title: 'Referral Master' },
       { path: '/specialityMaster', title: 'Department Master' },
       { path: '/subSpecialityMaster', title: 'Sub Department Master' },
+      // Phase 4 batch 31 -- deliberately NOT labeled "Sub Department
+      // Master" a second time despite legacy's own title collision; see
+      // unit-sub-speciality-mapping.ts's class doc.
+      { path: '/subDepartmentMasterUnit', title: 'Unit Sub-Speciality Mapping' },
       { path: '/raceMaster', title: 'Race Master' },
       { path: '/stateMaster', title: 'State Master' },
       { path: '/districtMaster', title: 'District Master' },
