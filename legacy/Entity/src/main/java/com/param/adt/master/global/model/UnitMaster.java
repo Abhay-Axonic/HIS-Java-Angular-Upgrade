@@ -50,6 +50,17 @@ import com.param.global.model.StateMaster;
 
 @NamedQueries({
 
+		/**
+		 * docs/DECISION_NEEDED_OrganizationIdNotCryptographicallyVerified.md --
+		 * the one query the new VerifiedIdentityService (Global module) relies on
+		 * to derive organizationId from a JWT-verified unitId, since unitId is
+		 * the only tenant claim the JWT actually signs. Deliberately minimal
+		 * (single column, PK lookup) rather than reusing a heavier existing
+		 * multi-join query.
+		 */
+		@NamedQuery(name = "GET_ORGANIZATION_ID_BY_UNIT_ID", query = "SELECT unit.organizationId "
+				+ "FROM UnitMaster unit WHERE unit.unitId = :unitId"),
+
 		@NamedQuery(name = "GET_UNIT_BY_ORGANIZATION_ID", query = " SELECT "
 				+ "	uniT.unitId as unitId, "
 				+ "	uniT.unitName as unitName, "
