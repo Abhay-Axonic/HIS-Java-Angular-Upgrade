@@ -59,8 +59,8 @@ implements IMpesaAppConfigDao, ICommonConstants {
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, mstr);
 			}else {
 				
-				MpesaApplicationConfigurationDto dto = new MpesaApplicationConfigurationDto();
-				if(mpesaApplicationConfigurationDto.getOrganizationId()!=null && mpesaApplicationConfigurationDto.getUnitId()!=null) {	
+				MpesaApplicationConfigurationDto dto = null;
+				if(mpesaApplicationConfigurationDto.getOrganizationId()!=null && mpesaApplicationConfigurationDto.getUnitId()!=null) {
 					
 					dto = (MpesaApplicationConfigurationDto) sessionFactory.getCurrentSession()
 								.getNamedQuery("CHECK_FOR_UNIQUE_MPESA_APP_CONFIGURATION")
