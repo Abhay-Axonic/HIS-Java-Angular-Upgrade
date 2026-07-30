@@ -1475,6 +1475,17 @@ export const routes: Routes = [
         data: { moduleId: 526, title: 'Checklist Master' },
         loadComponent: () => import('./features/checklist-master/checklist-master').then((m) => m.ChecklistMaster),
       },
+      // Phase 4 batch 30. campMaster (Blood Bank module) -- confirmed NO
+      // resolve block at all in legacy's live `.state('campMaster', ...)`
+      // (app.js:19389-19394, title 'Camp Master'), same shape as
+      // billingGroupMaster/periodicityService -- not a gap this rebuild
+      // introduces.
+      {
+        path: 'campMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Camp Master' },
+        loadComponent: () => import('./features/camp-master/camp-master').then((m) => m.CampMaster),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
