@@ -100,15 +100,11 @@ public class TaxComponentService implements ITaxComponentService {
 			taxComponent.setComponent(taxComponentRequest.getComponent());
 		}
 
-		if (taxComponentRequest.getStatus() != null) {
-			taxComponent.setIsActive(taxComponentRequest.getStatus());
-		}
-
 		CommonResponse response = new CommonResponse();
 		response.setMessage("Tax Component Updated Successfully");
 		Long count = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
-		if (!taxComponent.getIsActive()) {
+		if (taxComponentRequest.getStatus() != null && !taxComponentRequest.getStatus()) {
 			count = TaxComponentDao.getTaxComponentFromTax(taxComponentRequest.getId(),taxComponentRequest.getOrganizationId());
 		}
 		if (count <= 0) {
