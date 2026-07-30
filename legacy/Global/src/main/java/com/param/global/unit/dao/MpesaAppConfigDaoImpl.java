@@ -30,35 +30,52 @@ implements IMpesaAppConfigDao, ICommonConstants {
 	public Response saveMpesaAppConfig(MpesaApplicationConfigurationDto mpesaApplicationConfigurationDto)
 			throws ApplicationException {
 		try {
-		
-			MpesaApplicationConfiguration mstr = new MpesaApplicationConfiguration();
-			
-			mstr.setAccountRefernece("re");
-			mstr.setAppKey(mpesaApplicationConfigurationDto.getAppKey());
-			mstr.setAppSecretKey(mpesaApplicationConfigurationDto.getAppSecretKey());
-			mstr.setBusinessShortcode(mpesaApplicationConfigurationDto.getBusinessShortcode());
-			mstr.setCallbackUrl("https://be070c6d.ngrok.io/hooks/mpesa");
-			mstr.setPartyB(mpesaApplicationConfigurationDto.getPartyB());
-			mstr.setStkPushPassword(mpesaApplicationConfigurationDto.getStkPushPassword());
-			mstr.setStkTimestamp("20190413123520");
-			mstr.setTerminalMsisdn(mpesaApplicationConfigurationDto.getTerminalMsisdn());
-			mstr.setTransactionDescription("re");
-			mstr.setTransactionType("CustomerPayBillOnline");
-			mstr.setValidationPassword(mpesaApplicationConfigurationDto.getValidationPassword());
-			mstr.setCreatedBy(mpesaApplicationConfigurationDto.getCreatedBy());
-			mstr.setCreatedDate(GlobalCommonDateUtils.getDate(mpesaApplicationConfigurationDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
-			mstr.setOrganizationId(mpesaApplicationConfigurationDto.getOrganizationId());
-			mstr.setStatus(mpesaApplicationConfigurationDto.getStatus());
-			mstr.setUnitId(mpesaApplicationConfigurationDto.getUnitId());
-			mstr.setUpdatedBy(mpesaApplicationConfigurationDto.getUpdatedBy());
-			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(mpesaApplicationConfigurationDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
-			
+
 			if(mpesaApplicationConfigurationDto.getMpesaApplicationConfigurationId()!=null) {
-				mstr.setMpesaApplicationConfigurationId(mpesaApplicationConfigurationDto.getMpesaApplicationConfigurationId());
+
+				MpesaApplicationConfiguration mstr = findById(mpesaApplicationConfigurationDto.getMpesaApplicationConfigurationId());
+
+				mstr.setAppKey(mpesaApplicationConfigurationDto.getAppKey());
+				mstr.setAppSecretKey(mpesaApplicationConfigurationDto.getAppSecretKey());
+				mstr.setBusinessShortcode(mpesaApplicationConfigurationDto.getBusinessShortcode());
+				mstr.setPartyB(mpesaApplicationConfigurationDto.getPartyB());
+				mstr.setStkPushPassword(mpesaApplicationConfigurationDto.getStkPushPassword());
+				mstr.setTerminalMsisdn(mpesaApplicationConfigurationDto.getTerminalMsisdn());
+				mstr.setValidationPassword(mpesaApplicationConfigurationDto.getValidationPassword());
+				mstr.setCreatedBy(mpesaApplicationConfigurationDto.getCreatedBy());
+				mstr.setCreatedDate(GlobalCommonDateUtils.getDate(mpesaApplicationConfigurationDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
+				mstr.setOrganizationId(mpesaApplicationConfigurationDto.getOrganizationId());
+				mstr.setStatus(mpesaApplicationConfigurationDto.getStatus());
+				mstr.setUnitId(mpesaApplicationConfigurationDto.getUnitId());
+				mstr.setUpdatedBy(mpesaApplicationConfigurationDto.getUpdatedBy());
+				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(mpesaApplicationConfigurationDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+
 				update(mstr);
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, mstr);
 			}else {
-				
+
+				MpesaApplicationConfiguration mstr = new MpesaApplicationConfiguration();
+
+				mstr.setAccountRefernece("re");
+				mstr.setAppKey(mpesaApplicationConfigurationDto.getAppKey());
+				mstr.setAppSecretKey(mpesaApplicationConfigurationDto.getAppSecretKey());
+				mstr.setBusinessShortcode(mpesaApplicationConfigurationDto.getBusinessShortcode());
+				mstr.setCallbackUrl("https://be070c6d.ngrok.io/hooks/mpesa");
+				mstr.setPartyB(mpesaApplicationConfigurationDto.getPartyB());
+				mstr.setStkPushPassword(mpesaApplicationConfigurationDto.getStkPushPassword());
+				mstr.setStkTimestamp("20190413123520");
+				mstr.setTerminalMsisdn(mpesaApplicationConfigurationDto.getTerminalMsisdn());
+				mstr.setTransactionDescription("re");
+				mstr.setTransactionType("CustomerPayBillOnline");
+				mstr.setValidationPassword(mpesaApplicationConfigurationDto.getValidationPassword());
+				mstr.setCreatedBy(mpesaApplicationConfigurationDto.getCreatedBy());
+				mstr.setCreatedDate(GlobalCommonDateUtils.getDate(mpesaApplicationConfigurationDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
+				mstr.setOrganizationId(mpesaApplicationConfigurationDto.getOrganizationId());
+				mstr.setStatus(mpesaApplicationConfigurationDto.getStatus());
+				mstr.setUnitId(mpesaApplicationConfigurationDto.getUnitId());
+				mstr.setUpdatedBy(mpesaApplicationConfigurationDto.getUpdatedBy());
+				mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(mpesaApplicationConfigurationDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
+
 				MpesaApplicationConfigurationDto dto = null;
 				if(mpesaApplicationConfigurationDto.getOrganizationId()!=null && mpesaApplicationConfigurationDto.getUnitId()!=null) {
 					
