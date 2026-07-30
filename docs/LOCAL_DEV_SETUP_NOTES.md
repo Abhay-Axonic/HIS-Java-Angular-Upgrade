@@ -54,3 +54,32 @@ The deployed `jdbc.properties` inside `his-local-tomcat` had its active `jdbc.ur
 Note: from INSIDE the his-local-tomcat container, Postgres is reachable at `his-local-postgres:5432` (Docker-internal hostname/port) -- this differs from the host-machine connection string (`localhost:5434`) used in all our `psql` commands throughout this documentation.
 
 **This fix is currently only applied to the running container, not to any tracked source file** (the tracked `legacy/HIS-WAR/src/main/resources/jdbc.properties` correctly uses a placeholder, `CHANGE_ME_SET_LOCALLY_NOT_IN_GIT`, and is not the deployed file's actual source — the deployment/build process substitutes real values, similar to the `ROOT_URL`/`root` substitution pattern in items 1 and 4 above). If this container is ever rebuilt from a fresh WAR/image, this same fix will need to be re-applied. Real credential rotation for the exposed remote-server passwords found in this file (see BR-074) is a separate, still-outstanding action item.
+
+## 6. Tomcat is now a native Homebrew process, not the Docker container items 1/2/4/5 assume -- `brew services` restart/stop is unreliable, use `catalina.sh` directly (found 2026-07-30)
+
+**Environment discrepancy worth flagging:** items 1, 2, 4, and 5 above all reference `docker exec his-local-tomcat` / `docker cp ... his-local-tomcat:...`. As of tonight (2026-07-30), this machine's Tomcat is a **native Homebrew install** (`tomcat@9`, `/opt/homebrew/Cellar/tomcat@9/9.0.120/libexec/`), deployed as an exploded `webapps/ROOT/` directory, managed (nominally) via a per-user launchd agent (`~/Library/LaunchAgents/homebrew.mxcl.tomcat@9.plist`) -- there is no `his-local-tomcat` Docker container running. Whether this machine migrated off Docker at some point, or this is a different machine/session than whichever one wrote items 1/2/4/5, wasn't investigated -- flagging so a future session doesn't waste time hunting for a container that isn't there. If Docker-based Tomcat is still in use elsewhere, treat this item as machine-specific.
+
+**The actual quirk:** `brew services restart tomcat@9` and `brew services stop tomcat@9` both reliably print success (`Successfully started/stopped ...`) without actually cycling the underlying Java process. Confirmed by checking the JVM's process start timestamp (`ps -eo pid,lstart,command | grep catalina.startup.Bootstrap`) before and after a "successful" restart -- the PID and start time were unchanged. A naive redeploy workflow (copy new jar into `WEB-INF/lib/`, `brew services restart`, test) would silently test against the **old, already-running** code and produce a false "verified" result. This was caught once this session (see BR-117's process note) before trusting a live-verification result that would have been wrong.
+
+**Working alternative, used for the rest of this session's live-deploy-verify cycles:**
+```bash
+# Stop: brew services stop doesn't reliably kill it -- find and kill the actual PID
+ps -eo pid,command | grep "catalina.startup.Bootstrap" | grep -v grep | awk '{print $1}' | xargs -I{} kill {}
+sleep 5
+
+# Start: catalina.sh directly, with JAVA_HOME set explicitly (not on PATH in a plain shell here)
+export JAVA_HOME=/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home
+export CATALINA_HOME=/opt/homebrew/Cellar/tomcat@9/9.0.120/libexec
+export CATALINA_BASE=/opt/homebrew/Cellar/tomcat@9/9.0.120/libexec
+cd "$CATALINA_HOME"
+nohup ./bin/catalina.sh run > /tmp/tomcat_manual_start.log 2>&1 &
+disown
+sleep 25   # cold start is slow; confirm rather than assume
+
+# Always confirm the restart actually happened before trusting any live test after it
+ps -eo pid,lstart,command | grep -i "catalina.startup.Bootstrap" | grep -v grep
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/
+```
+`nohup ... &` followed by `disown` is needed so the process survives the end of the shell tool's command (otherwise it gets killed when the invoking command returns). Manual starts write to the file passed after `>`, not to the usual `logs/catalina.out` -- check that file (or wherever it was redirected to) for exceptions after a manual start, not `catalina.out`, or you'll be looking at stale output from the last container/launchd-managed run.
+
+**Side effect worth knowing:** restarting the JVM this way invalidates any existing browser session (JWT tokens issued before the restart stop validating afterward -- not yet root-caused, possibly a non-persisted/per-boot signing key; see `fix/jwt-signing-key-externalize` if related). Anyone testing across a redeploy needs to log back in after each restart.
