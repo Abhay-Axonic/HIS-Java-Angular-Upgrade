@@ -2023,3 +2023,22 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 **Explicitly NOT done here, per owner direction:** migrating the ~115-138+ existing call sites that still trust the spoofable value to use this new service instead. This is real, individual, per-file work, not something the foundation's mere existence fixes automatically -- logged as its own major, dedicated future initiative in the decision doc, same "cheap foundation, expensive migration" shape as the schema-drift sweep. Also not started: a codebase-wide sweep for more instances of this same pattern beyond the 5 already confirmed, flagged as a clear future-session candidate given how many times this exact pattern recurred tonight.
 
 **Classification:** a real, previously-undetected authentication/authorization architecture gap -- not a business-rule or calculation change. Owner-approved and merged into `main` (2026-07-30), full multi-module build verified clean afterward. The 5 confirmed-vulnerable screens (`checklistEquipmentMaster`, `keyIngredientsMaster`, `storewiseGenericMapper`, `userNursingStationMapper`, `departmentNursingStationMapper`) remain excluded from any rebuild batch pending their own individual stopgap fixes, applying this foundation, each on its own dedicated branch.
+
+## BR-122 — `checklistEquipmentMaster`'s read, write, and status-toggle all trusted client-supplied `organizationId`/`unitId` with zero server-side check -- BR-121 stopgap #1 (2026-07-30)
+
+**Live-confirmed cross-tenant IDOR** on `getAllEquipmentChecklistMasterListPaginationList`, `saveChecklistEquipmentMaster`, and `updateChecklistEquipmentMasterStatus` -- a forged `organizationId`/`unitId` in the request body was honored outright on all three, both reading and mutating another org's data.
+
+**Fix applied, two layers, both required:**
+1. `EquipmentChecklistServiceImpl` -- overwrites `organizationId`/`unitId` on every incoming DTO with `VerifiedIdentityService`'s JWT-derived values (see BR-121) before it ever reaches the DAO, at one shared point covering all 6 endpoints. Required exposing `VerifiedIdentityService.getVerifiedUnitId()` as public (it was private/internal-only until this fix needed it too).
+2. `EquipmentChecklistDaoImpl` -- the update-by-id and status-toggle paths never actually used `organizationId`/`unitId` for a WHERE-clause ownership check at all, confirmed live: even after the DTO carried the correct verified values, both paths remained exploitable since the DAO simply never consulted those fields for authorization, only for populating the row's own columns on insert. Added an explicit ownership check (row exists AND belongs to the verified org/unit) before either mutation, refusing with a clear "Not found." rather than a silent cross-tenant write.
+
+**A real implementation bug found and fixed while verifying, not a smooth first pass:** the ownership check originally used `findById()` to load a second entity for comparison -- live-confirmed this throws Hibernate's `NonUniqueObjectException` ("A different object with the same identifier value was already associated with the session") on an otherwise-legitimate self-update, since a second, separately-constructed entity with the same identifier was already being saved in the same session. Fixed by using a row-count `Criteria` query for the ownership check instead of loading a second managed entity.
+
+**Verified live, full matrix, before and after, via a seeded victim row under a different organization (`organization_id=999`, no FK constraint on that column so this required no real second tenant):**
+- Legitimate update of one's own row -- succeeds.
+- Legitimate status-toggle of one's own row -- succeeds.
+- Forged request targeting the victim row via update -- blocked, `"Not found."`.
+- Forged request targeting the victim row via status-toggle -- blocked, `"Not found."`.
+- Confirmed via `psql` after each: the victim row was untouched in both attack cases; the real row was correctly updated in both legitimate cases.
+
+**Classification:** a real, previously-undetected cross-tenant IDOR, the first of 5 stopgap fixes applying the BR-121 foundation -- not a business-rule or calculation change. Owner-approved and merged into `main` (2026-07-30), full multi-module build verified clean afterward.
