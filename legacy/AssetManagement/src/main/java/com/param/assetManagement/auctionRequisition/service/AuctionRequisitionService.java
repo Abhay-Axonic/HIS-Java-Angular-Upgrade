@@ -76,7 +76,10 @@ private SessionService sessionService;
 	@Transactional
 	public Object getAuctionRequisition(Integer id,Integer unitId, Integer orgId, Integer userId) {
 
-		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id);
+		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id, unitId);
+		if (auctionRequisition == null) {
+			throw new RuntimeException("Auction requisition not found");
+		}
 
 		AuctionRequisitionListResponse response = new AuctionRequisitionListResponse(auctionRequisition.getId(),
 				auctionRequisition.getAuctionRequisitionNo(), auctionRequisition.getAddedDate(),
@@ -195,7 +198,10 @@ private SessionService sessionService;
 	@Transactional
 	public Object approveAuctionRequisition(AuctionRequisitionListResponse request) {
 		for (Integer id : request.getAuctionRequisitionId()) {
-			AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id);
+			AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(id, request.getUnitId());
+			if (auctionRequisition == null) {
+				throw new RuntimeException("Auction requisition not found");
+			}
 			auctionRequisition.setStatus(new Status(request.getStatusId()));
 			auctionRequisition.setApprovalStatus(new Status(request.getApprovalStatusId()));
 			auctionRequisition.setApprovedOn(TimeZoneComponent.getDateByzone(auctionRequisition.getUnitId()));
@@ -215,7 +221,10 @@ private SessionService sessionService;
 	@Override
 	@Transactional
 	public Object cancelAuctionRequisition(AuctionRequisitionListResponse request) {
-		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(request.getId());
+		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(request.getId(), request.getUnitId());
+		if (auctionRequisition == null) {
+			throw new RuntimeException("Auction requisition not found");
+		}
 
 		auctionRequisition.setCancelReason(new CancelReason(request.getCancelReasonId()));
 		auctionRequisition.setCancelNote(request.getCancelNote());
@@ -234,7 +243,10 @@ private SessionService sessionService;
 	@Transactional
 	public Object updateAuctionRequisition(AuctionRequisitionListResponse request) {
 
-		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(request.getId());
+		AuctionRequisition auctionRequisition = auctionRequisitionDao.getAuctionRequisition(request.getId(), request.getUnitId());
+		if (auctionRequisition == null) {
+			throw new RuntimeException("Auction requisition not found");
+		}
 		auctionRequisition.updateAuctionRequisition(new Store(request.getStoreId()), request.getRemark());
 
 		for (AuctionRequisitionDetail detail : auctionRequisition.getAuctionRequisitionDetails()) {

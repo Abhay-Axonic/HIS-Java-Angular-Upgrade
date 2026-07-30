@@ -12,7 +12,7 @@ public interface IAuctionRequisitionDao {
 
 	List<AuctionRequisitionListResponse> searchAuctionRequisition(AuctionRequisitionRequest request, Integer screenId);
 
-	AuctionRequisition getAuctionRequisition(Integer id);
+	AuctionRequisition getAuctionRequisition(Integer id, Integer unitId);
 
 	AuctionRequisition saveAuctionRequisition(AuctionRequisition auctionRequisition);
 

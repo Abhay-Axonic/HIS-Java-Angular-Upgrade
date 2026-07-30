@@ -50,12 +50,14 @@ public class AuctionRequisitionDao extends AbstractDao<Integer, AuctionRequisiti
 	}
 
 	@Override
-	public AuctionRequisition getAuctionRequisition(Integer id) {
+	public AuctionRequisition getAuctionRequisition(Integer id, Integer unitId) {
 		String hql = "SELECT auctionRequisition FROM com.param.entity.model.asset.AuctionRequisition AS auctionRequisition "
-				+ "WHERE auctionRequisition.id = :id  AND auctionRequisition.isActive = true AND auctionRequisition.isDeleted = false ";
+				+ "WHERE auctionRequisition.id = :id AND auctionRequisition.unit.unitId = :unitId "
+				+ "AND auctionRequisition.isActive = true AND auctionRequisition.isDeleted = false ";
 
 		Query query = getSession().createQuery(hql);
 		query.setParameter("id", id);
+		query.setParameter("unitId", unitId != null ? unitId : sessionService.getUnitId());
 
 		return (AuctionRequisition) query.uniqueResult();
 	}
