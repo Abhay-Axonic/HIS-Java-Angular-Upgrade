@@ -33,10 +33,13 @@ public class TaxComponentDao extends AbstractDao<Integer, TaxComponent> implemen
 	}
 
 	@Override
-	public TaxComponent getById(Integer id) {
+	public TaxComponent getById(Integer id, Integer orgId) {
 		Criteria criteria = getSession().createCriteria(TaxComponent.class);
 		criteria.add(Restrictions.eq("id", id));
 		criteria.add(Restrictions.eq("isDeleted", false));
+
+		Criteria orgCriteria = criteria.createCriteria("organization");
+		orgCriteria.add(Restrictions.eq("organizationId", orgId!=null ? orgId : sessionService.getOrganizationId()));
 
 		return (TaxComponent) criteria.uniqueResult();
 	}
