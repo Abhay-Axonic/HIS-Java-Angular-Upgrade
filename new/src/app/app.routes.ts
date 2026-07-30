@@ -85,6 +85,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'referralMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 396, title: 'Referral Master' },
+        loadComponent: () =>
+          import('./features/referral-master/referral-master').then((m) => m.ReferralMaster),
+      },
+      {
         path: 'MISReports',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 768, title: 'MIS Report' },
@@ -1467,6 +1474,28 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 526, title: 'Checklist Master' },
         loadComponent: () => import('./features/checklist-master/checklist-master').then((m) => m.ChecklistMaster),
+      },
+      // Phase 4 batch 30. campMaster (Blood Bank module) -- confirmed NO
+      // resolve block at all in legacy's live `.state('campMaster', ...)`
+      // (app.js:19389-19394, title 'Camp Master'), same shape as
+      // billingGroupMaster/periodicityService -- not a gap this rebuild
+      // introduces.
+      {
+        path: 'campMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Camp Master' },
+        loadComponent: () => import('./features/camp-master/camp-master').then((m) => m.CampMaster),
+      },
+      // Phase 4 batch 30. dishMaster (Diet & Nutrition module) -- moduleId
+      // 511 confirmed via Step 0/1 this session, classic `$scope` screen
+      // (no controllerAs). See dish-master.ts's class doc for the full
+      // audit trail, the golden-trace capture (Step 2/4), and the
+      // owner-approved Edit-gating race-condition fix.
+      {
+        path: 'dishMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 511, title: 'Dish Master' },
+        loadComponent: () => import('./features/dish-master/dish-master').then((m) => m.DishMaster),
       },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],

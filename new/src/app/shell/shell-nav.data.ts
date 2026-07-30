@@ -62,6 +62,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     heading: 'Admin',
     items: [
       { path: '/organizationMaster', title: 'Organization Master' },
+      { path: '/referralMaster', title: 'Referral Master' },
       { path: '/specialityMaster', title: 'Department Master' },
       { path: '/subSpecialityMaster', title: 'Sub Department Master' },
       { path: '/raceMaster', title: 'Race Master' },
@@ -267,6 +268,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/bloodBagCapacity', title: 'Blood Bag Capacity Master' },
       { path: '/bloodBankMaster', title: 'Blood Bank Master' },
       { path: '/bloodBagType', title: 'Blood Bag Type Master' },
+      { path: '/campMaster', title: 'Camp Master' },
     ],
   },
   {
@@ -289,6 +291,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/nutritionalMaster', title: 'Nutritional Master' },
       { path: '/dietUnitMater', title: 'Diet Unit Master' },
       { path: '/mealMaster', title: 'Meal Master' },
+      { path: '/dishMaster', title: 'Dish Master' },
     ],
   },
   {

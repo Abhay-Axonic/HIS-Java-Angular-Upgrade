@@ -1,0 +1,210 @@
+<section class="page">
+  <fieldset>
+    <legend>Referral Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Referral -Type<span class="required">*</span></label>
+        <select [ngModel]="record().referralTypeId" (ngModelChange)="updateField('referralTypeId', $event)">
+          <option [value]="''">Select Referral -Type</option>
+          @for (t of referralTypeList(); track t.id) {
+            <option [value]="t.id">{{ t.desc }}</option>
+          }
+        </select>
+        @if (isReferralTypeInvalid()) {
+          <p class="help-block">Referral -Type is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Referral Name<span class="required">*</span></label>
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().referralName"
+          (ngModelChange)="updateField('referralName', $event)"
+        />
+        @if (isReferralNameInvalid()) {
+          <p class="help-block">Referral Name is required</p>
+        }
+      </div>
+
+      <div class="field wide">
+        <label>Address<span class="required">*</span></label>
+        <input type="text" autocomplete="off" [ngModel]="record().address" (ngModelChange)="updateField('address', $event)" />
+        @if (isAddressInvalid()) {
+          <p class="help-block">Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Country</label>
+        <select [ngModel]="record().countryId" (ngModelChange)="onCountryChange($event)">
+          <option [value]="''">Select Country</option>
+          @for (c of countryList(); track c.countryId) {
+            <option [value]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>State</label>
+        <select [ngModel]="record().stateId" (ngModelChange)="onStateChange($event)" [disabled]="!stateList().length">
+          <option [value]="''"></option>
+          @for (s of stateList(); track s.stateId) {
+            <option [value]="s.stateId">{{ s.stateName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>District</label>
+        <select [ngModel]="record().districtId" (ngModelChange)="onDistrictChange($event)" [disabled]="!districtList().length">
+          <option [value]="''"></option>
+          @for (d of districtList(); track d.districtId) {
+            <option [value]="d.districtId">{{ d.districtName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>City</label>
+        <select [ngModel]="record().cityId" (ngModelChange)="onCityChange($event)" [disabled]="!cityList().length">
+          <option [value]="''"></option>
+          @for (c of cityList(); track c.cityId) {
+            <option [value]="c.cityId">{{ c.cityName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Area</label>
+        <select [ngModel]="record().areaId" (ngModelChange)="onAreaChange($event)" [disabled]="!areaList().length">
+          <option [value]="''"></option>
+          @for (a of areaList(); track a.areaId) {
+            <option [value]="a.areaId">{{ a.areaName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" [ngModel]="record().email" (ngModelChange)="updateField('email', $event)" />
+      </div>
+
+      <div class="field">
+        <label>Contact No.<span class="required">*</span></label>
+        <input type="text" autocomplete="off" [ngModel]="record().contact" (ngModelChange)="updateField('contact', $event)" />
+        @if (isContactInvalid()) {
+          <p class="help-block">Contact Number is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Contact Person</label>
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().contactPerson"
+          (ngModelChange)="updateField('contactPerson', $event)"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="searchKeyword()" (ngModelChange)="searchKeyword.set($event)" />
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" (click)="openSaveConfirm()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" (click)="update()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Referral -Type</th>
+        <th>Referral Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Contact Person</th>
+        <th>Status</th>
+        <th class="text-center">Action taken</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.referralId) {
+        <tr>
+          <td>{{ row.referralTypeDesc }}</td>
+          <td>{{ row.referralName }}</td>
+          <td>{{ row.referralEmail }}</td>
+          <td>{{ row.referralContact }}</td>
+          <td>{{ row.referralContactPerson }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row, row.status === 'A' ? 'I' : 'A')" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row.referralId)"></i></td>
+          <td class="text-center"><i class="fa fa-info-circle" title="Details" (click)="showDetails(row)"></i></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <p>Are you sure you want to Save?</p>
+        <div class="modal-actions">
+          <button type="button" (click)="closeConfirmModal()">Cancel</button>
+          <button type="button" class="btn-primary" (click)="confirmSave()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showDetailsModal() && detailsRow(); as info) {
+  <div class="modal-backdrop" (click)="closeDetails()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Address Details
+        <button type="button" class="close" (click)="closeDetails()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="table">
+          <tr><td><b>Address :</b></td><td>{{ info.referralAddress }}</td></tr>
+          <tr><td><b>Country :</b></td><td>{{ info.countryName }}</td></tr>
+          <tr><td><b>State :</b></td><td>{{ info.stateName }}</td></tr>
+          <tr><td><b>District</b></td><td>{{ info.districtName }}</td></tr>
+          <tr><td><b>City</b></td><td>{{ info.cityName }}</td></tr>
+          <tr><td><b>Area :</b></td><td>{{ info.areaName }}</td></tr>
+          <tr><td><b>ZIP Code :</b></td><td>{{ info.postCode }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,225 @@
+<section class="page">
+  <fieldset>
+    <legend>Camp Master</legend>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Camp Code<span class="required">*</span></label>
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().campCode"
+          (ngModelChange)="updateField('campCode', $event)"
+        />
+        @if (isCampCodeInvalid()) {
+          <p class="help-block">Camp Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Camp Name<span class="required">*</span></label>
+        <input
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().campName"
+          (ngModelChange)="updateField('campName', $event)"
+        />
+        @if (isCampNameInvalid()) {
+          <p class="help-block">Camp Name is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Patient Class</label>
+        <select [ngModel]="record().patientTypeId" (ngModelChange)="updateField('patientTypeId', $event)">
+          <option [value]="''">Select Patient Class</option>
+          @for (t of patientTypeList(); track t.patientTypeId) {
+            <option [value]="t.patientTypeId">{{ t.description }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field wide">
+        <label>Address<span class="required">*</span></label>
+        <input type="text" autocomplete="off" [ngModel]="record().address" (ngModelChange)="updateField('address', $event)" />
+        @if (isAddressInvalid()) {
+          <p class="help-block">Address is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Country<span class="required">*</span></label>
+        <select [ngModel]="record().countryId" (ngModelChange)="onCountryChange($event)">
+          <option [value]="''"></option>
+          @for (c of countryList(); track c.countryId) {
+            <option [value]="c.countryId">{{ c.countryName }}</option>
+          }
+        </select>
+        @if (isCountryInvalid()) {
+          <p class="help-block">Country is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>State<span class="required">*</span></label>
+        <select [ngModel]="record().stateId" (ngModelChange)="onStateChange($event)" [disabled]="!stateList().length">
+          <option [value]="''"></option>
+          @for (s of stateList(); track s.stateId) {
+            <option [value]="s.stateId">{{ s.stateName }}</option>
+          }
+        </select>
+        @if (isStateInvalid()) {
+          <p class="help-block">State is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>District<span class="required">*</span></label>
+        <select [ngModel]="record().districtId" (ngModelChange)="onDistrictChange($event)" [disabled]="!districtList().length">
+          <option [value]="''"></option>
+          @for (d of districtList(); track d.districtId) {
+            <option [value]="d.districtId">{{ d.districtName }}</option>
+          }
+        </select>
+        @if (isDistrictInvalid()) {
+          <p class="help-block">District is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>City<span class="required">*</span></label>
+        <select [ngModel]="record().cityId" (ngModelChange)="onCityChange($event)" [disabled]="!cityList().length">
+          <option [value]="''"></option>
+          @for (c of cityList(); track c.cityId) {
+            <option [value]="c.cityId">{{ c.cityName }}</option>
+          }
+        </select>
+        @if (isCityInvalid()) {
+          <p class="help-block">City is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Area<span class="required">*</span></label>
+        <select [ngModel]="record().areaId" (ngModelChange)="onAreaChange($event)" [disabled]="!areaList().length">
+          <option [value]="''"></option>
+          @for (a of areaList(); track a.areaId) {
+            <option [value]="a.areaId">{{ a.areaName }}</option>
+          }
+        </select>
+        @if (isAreaInvalid()) {
+          <p class="help-block">Area is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Pin Code<span class="required">*</span></label>
+        <input type="text" autocomplete="off" [ngModel]="record().pincode" (ngModelChange)="updateField('pincode', $event)" />
+        @if (isPincodeInvalid()) {
+          <p class="help-block">Pin Code is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+    <!-- Legacy's search box (view:180) has no ng-model/ng-change anywhere --
+         confirmed genuinely dead, reproduced here as an inert, unwired
+         input rather than inventing a client-side filter legacy never had
+         (see class doc). -->
+    <input type="text" class="search-box" placeholder="Search" disabled />
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" (click)="openSaveConfirm()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" (click)="openUpdateConfirm()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Camp Code</th>
+        <th>Camp Name</th>
+        <th>Patient Type</th>
+        <th class="text-center">Address</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>District</th>
+        <th>City</th>
+        <th>Area</th>
+        <th>Pin Code</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row.campId) {
+        <tr>
+          <td>{{ row.campCode }}</td>
+          <td>{{ row.campName }}</td>
+          <td>{{ row.patientTypeName }}</td>
+          <td>{{ row.address }}</td>
+          <td>{{ row.countryName }}</td>
+          <td>{{ row.stateName }}</td>
+          <td>{{ row.districtName }}</td>
+          <td>{{ row.cityName }}</td>
+          <td>{{ row.areaName }}</td>
+          <td>{{ row.pincode }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row, row.status === 'A' ? 'I' : 'A')" />
+          </td>
+          <td class="text-center"><i class="fa fa-pencil" title="Edit" (click)="edit(row)"></i></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showSaveConfirm()) {
+  <div class="modal-backdrop" (click)="closeSaveConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <p>Are you sure you want to Save?</p>
+        <div class="modal-actions">
+          <button type="button" (click)="closeSaveConfirm()">Cancel</button>
+          <button type="button" class="btn-primary" (click)="confirmSave()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showUpdateConfirm()) {
+  <div class="modal-backdrop" (click)="closeUpdateConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>Confirm</header>
+      <div class="modal-body">
+        <p>Are you sure you want to Update?</p>
+        <div class="modal-actions">
+          <button type="button" (click)="closeUpdateConfirm()">Cancel</button>
+          <button type="button" class="btn-primary" (click)="confirmUpdate()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
