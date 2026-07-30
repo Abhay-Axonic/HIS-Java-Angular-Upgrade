@@ -4621,7 +4621,7 @@ Net effect: three independent things have to align for the silent success -- a n
 
 **Owner's decision (2026-07-30), same treatment as `pharmacyproductCategoryMaster` in batch 31:** exclude both screens from any rebuild batch until their real bugs are fixed via dedicated branches; propose all 4 as separate fix branches; shrink batch 32 to just `productRestriction.productCategoryMapping`.
 
-**All 4 fixes now built, live-verified before/after on a fresh Tomcat JVM running each actual compiled fix (not source review alone), and held on their own branches pending owner review** -- see BR-117, BR-118, BR-119, BR-120 for full detail on each. None merged yet.
+**All 4 fixes built, live-verified before/after on a fresh Tomcat JVM running each actual compiled fix (not source review alone), reviewed by the owner branch-by-branch, and approved** -- see BR-117, BR-118, BR-119, BR-120 for full detail on each. All 4 merged into `main` (2026-07-30); the two `mpesaApplicationConfiguration` fixes (BR-119/BR-120) both touch `MpesaAppConfigDaoImpl.java` and produced a real merge conflict, resolved manually and confirmed post-merge to contain both fixes correctly, not one overwriting the other. Full multi-module build verified clean after all 4 merges. Not yet pushed to GitHub.
 
 **Disposition:** `taxComponentMaster` and `mpesaApplicationConfiguration` excluded from batch 32 (and any Angular rebuild) until their respective fix branches are reviewed and merged. Batch 32 is now just `productRestriction.productCategoryMapping` (1 screen), same "shrink rather than pad" precedent as batch 31.
 
