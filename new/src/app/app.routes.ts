@@ -1517,6 +1517,29 @@ export const routes: Routes = [
             (m) => m.UnitSubSpecialityMapping,
           ),
       },
+      // Phase 4 batch 32. productCategoryMapping -- moduleId 633 confirmed
+      // identically on BOTH the legacy parent `productRestriction` state's
+      // own resolve block AND this child state's own resolve block (both
+      // read directly from their respective controller files). Path kept
+      // as the full legacy nested-state URL (`/productRestriction` parent +
+      // `/productCategoryMapping` child, ui-router's default url
+      // concatenation since the child url has no `^` override) for drop-in
+      // continuity. `data.title` matches the legacy state's own literal
+      // `title: 'Product Restriction'` (shown in the top bar); the nav
+      // label below is deliberately more specific ("Product Category
+      // Mapping") since only this one tab is built in this batch, not the
+      // sibling `itemRestriction` tab -- see
+      // product-category-mapping.ts's class doc for the tab-shell-parent
+      // analysis.
+      {
+        path: 'productRestriction/productCategoryMapping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 633, title: 'Product Restriction' },
+        loadComponent: () =>
+          import('./features/product-category-mapping/product-category-mapping').then(
+            (m) => m.ProductCategoryMapping,
+          ),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

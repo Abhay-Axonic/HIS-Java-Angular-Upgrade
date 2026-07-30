@@ -1,0 +1,55 @@
+// Screen-specific layout only -- shared table/pagination/toolbar/field/modal
+// styles live in src/styles.scss (see that file's header comment).
+
+.filter-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+
+  .field {
+    min-width: 220px;
+  }
+}
+
+.show-entries {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+
+  select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+// Defect A disclosure (see product-category-mapping.ts class doc, "DEFECT A"
+// section) -- a mandatory, always-visible caveat about a real, owner-
+// approved, deliberately-not-fixed backend gap. Kept scoped to this screen
+// (not promoted to the shared styles.scss) since no other rebuilt screen
+// currently needs an equivalent banner -- promote if a second screen does.
+.disclosure-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff8e1;
+  border: 1px solid #f0c14b;
+  border-left: 4px solid #f9a825;
+  border-radius: 3px;
+  padding: 10px 14px;
+  margin: 4px 0 16px;
+  font-size: 13px;
+  color: #6b4f00;
+}
+
+.disclosure-icon {
+  font-size: 15px;
+  line-height: 1.4;
+}
