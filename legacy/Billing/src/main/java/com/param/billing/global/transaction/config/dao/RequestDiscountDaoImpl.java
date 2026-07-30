@@ -43,10 +43,10 @@ public class RequestDiscountDaoImpl implements IRequestDiscountDao,ICommonConsta
 
 			return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, reqId);
 		} catch (HibernateException he) {
+			throw he;
 		} catch (Exception e) {
-			
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
 	}
 
 	@Override
@@ -115,10 +115,10 @@ public class RequestDiscountDaoImpl implements IRequestDiscountDao,ICommonConsta
 				sessionFactory.getCurrentSession().save(requestDiscount);
 			return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
 		} catch (HibernateException he) {
+			throw he;
 		} catch (Exception e) {
-			
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
 	}
 
 	@Override
@@ -643,9 +643,8 @@ public class RequestDiscountDaoImpl implements IRequestDiscountDao,ICommonConsta
 
 			return new Response<>(SUCCESS,null,null,null,null);
 		} catch (Exception e) {
-			
+			throw e;
 		}
-		return null;
 	}
 
 	@Override
@@ -684,9 +683,8 @@ public class RequestDiscountDaoImpl implements IRequestDiscountDao,ICommonConsta
 				return new Response<>(SUCCESS, SUCCESS_CODE, null, creditDetailsObj, null);
 	        } catch (Exception e)
 	        {
-	            
+	            throw e;
 	        }
-	        return new Response(ERROR, ERROR_CODE, SERVER_ERROR, null, null);
 	}
 
 	@Override
@@ -731,14 +729,14 @@ public class RequestDiscountDaoImpl implements IRequestDiscountDao,ICommonConsta
 
 			return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, reqId);
 		} catch (HibernateException he) {
+			throw he;
 		} catch (Exception e) {
-			
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
 	}
 
 	@Override
-	public Response updateEncounterMasterStatus(RequestDiscountDto requestDiscountDto) throws ApplicationException { 
+	public Response updateEncounterMasterStatus(RequestDiscountDto requestDiscountDto) throws ApplicationException {
 		try {
 				if(requestDiscountDto.getEncounterId() != null) {
 				 sessionFactory.getCurrentSession().createQuery("UPDATE EncounterMaster set statusId=5 WHERE encounterId=:encounterId ")
@@ -747,11 +745,10 @@ public class RequestDiscountDaoImpl implements IRequestDiscountDao,ICommonConsta
 			    }
 	     	return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
 		} catch (HibernateException he) {
+			throw he;
 		} catch (Exception e) {
-			
+			throw e;
 		}
-		return new Response(ERROR, null, null, null, null);
-		
 		}
 
 }
