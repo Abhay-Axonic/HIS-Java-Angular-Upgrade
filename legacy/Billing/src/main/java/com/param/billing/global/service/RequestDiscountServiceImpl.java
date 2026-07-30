@@ -208,6 +208,7 @@ public class RequestDiscountServiceImpl implements IRequestDiscountService,IComm
 	}
 
 	@Override
+	@Transactional
 	public Response getRequestedDiscountsForDashboard(RequestDiscountDto requestDiscountDto)
 			throws ApplicationException {
 		try{
