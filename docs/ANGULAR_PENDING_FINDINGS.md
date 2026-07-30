@@ -4640,3 +4640,25 @@ Net effect: three independent things have to align for the silent success -- a n
 **Defect D (dead code from this screen's perspective):** `ProductRestrictionService.update()` (backing a sibling `PATCH /pcMapper/{id}` endpoint this screen's frontend never calls) has logic that can also flip the shared master `ProductCategory.isActive` flag as a side effect. Not exercised by this screen today, but a live, callable production endpoint worth flagging for whoever else calls it.
 
 **Disposition:** none fixed yet -- Defect A is a legacy-behavior-preservation/disclosure question for whoever does this screen's Step 3 rebuild, not a bug to silently correct; Defects B/C are real but lower-urgency than the batch 32 findings that got fast-tracked (BR-117 through BR-120), and haven't been proposed as dedicated fix branches. Proceeding with this screen's Step 0-7 rebuild as batch 32's sole screen; Defect A in particular needs explicit disclosure in the rebuild's own documentation, matching the silent-bug-disclosure precedent used throughout this project.
+
+## CROSS-CUTTING, OWNER-REVIEWED: the "product category to store" toggle across the whole application gives false confidence -- deactivating a mapping does NOT exclude that product category from downstream store/consumption/billing logic in 5 real consumers
+
+**Standalone entry, not buried in the productRestriction.productCategoryMapping rebuild notes.** Escalated as a cross-cutting finding (2026-07-30), owner-reviewed same day. Not a single-screen bug -- this is a whole-application data-integrity gap that happens to have been discovered while auditing one screen's Angular rebuild.
+
+**The finding, empirically confirmed live by the orchestrating session, not just source-traced.** `productRestriction.productCategoryMapping`'s toggle correctly persists `m_store_pc_mapper.is_active` -- the checkbox, the save, and the DB write all behave exactly as a user would expect. But **none of the 5 real downstream consumers of this table check that flag**, all filtering by row existence only:
+- `Procurement/.../dao/barcode/BarcodeDao.java`
+- `Inventory/.../dao/ConsumptionDao.java`
+- `Inventory/.../dao/ShelfAllocationDao.java`
+- `Global/.../dao/items/ItemsDaoImpl.java`
+- `Inventory/.../dao/stopTransaction/StopTransactionDao.java` (`searchAllStopTransactionNonZeroNewList`)
+
+**Live-reproduced by the orchestrating session, directly, not inferred from reading the DAOs alone:** created a real mapping (store 1, product category 1), toggled it OFF via the live `PATCH` endpoint, confirmed via `psql` that `is_active` correctly flipped to `false` -- then ran `StopTransactionDao`'s exact subquery shape directly against the live DB (`... WHERE pc.id IN (SELECT product_category_id FROM m_store_pc_mapper WHERE store_id=1) AND pc.id=1`). It still returned the product category as present/included, despite the mapping being toggled off. Test row deleted afterward.
+
+**Why this matters, stated plainly:** a pharmacy/inventory staff member using this screen to exclude a product category from a store reasonably believes that exclusion takes effect. It does not -- the category remains includable in barcode printing, non-billable consumption entries, shelf allocation, item transfers, and the stop-transaction/non-zero-stock item picker, indefinitely, regardless of the toggle's displayed state. This is a real, currently-live gap between what the UI communicates and what the system actually does.
+
+**Disposition, owner decision (2026-07-30):**
+1. **Not fixed now.** Properly fixing this means adding an `is_active` filter to all 5 DAOs above, spanning at least Procurement, Inventory, and Global modules -- genuinely out of scope for a single-screen rebuild task. Queued as its own, separate, properly-scoped future initiative, same treatment as the exception-swallowing sweep (scoped, not yet estimated in detail, not started) -- NOT bundled into `productRestriction.productCategoryMapping`'s rebuild, NOT rushed through in this session.
+2. **The Angular rebuild of `productRestriction.productCategoryMapping` replicates legacy's current behavior exactly** (Option 1, per CLAUDE.md's exact-parity rule) -- the toggle will continue to only set the flag, since the rebuild calls the same backend endpoints and cannot unilaterally fix 5 unrelated DAOs from a single screen's scope.
+3. **In-UI disclosure is mandatory, not just documentation.** The rebuilt screen must display a visible caveat near the toggle control itself -- not only in this findings doc or code comments -- so anyone actually using the screen sees the limitation, not just whoever reads project documentation. Implemented as part of Step 3 below.
+
+**Scope for the future fix, to be estimated properly when picked up:** touches 5 DAOs across 3 modules (Procurement, Inventory, Global) plus their respective services; needs a decision on whether `is_active=false` should exclude a category outright or require a data-migration/backfill step for existing "orphaned" mappings currently relied upon by these 5 flows. Not started.
