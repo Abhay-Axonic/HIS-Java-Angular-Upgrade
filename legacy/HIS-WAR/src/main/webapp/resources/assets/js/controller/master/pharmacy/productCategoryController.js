@@ -232,7 +232,7 @@
     var ToggleStatus = function(productCategory) {
       var URI =
         CONSTANTS.MASTER.GLOBAL.PHARAMACY.PRODUCT_CATEGORY_MASTER
-          .PRODUCT_CATEGORY_API + productCategory.id +"/"+$scope.organizationId;
+          .PRODUCT_CATEGORY_API + $scope.organizationId + "/" + productCategory.id;
 
           var data = {
             "status": productCategory.status
