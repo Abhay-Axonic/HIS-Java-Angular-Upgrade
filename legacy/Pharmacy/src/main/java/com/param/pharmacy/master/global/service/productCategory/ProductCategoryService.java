@@ -81,6 +81,10 @@ public class ProductCategoryService implements IProductCategoryService {
 	@Transactional
 	public CommonResponse create(ProductCategoryRequest productCategoryRequest) {
 
+		productCategoryRequest.setOrganizationId(sessionService.getOrganizationId());
+		productCategoryRequest.setUnitId(sessionService.getUnitId());
+		productCategoryRequest.setUserId(sessionService.getUserId());
+
 		AssetCategory assetCategory = new AssetCategory();
 		assetCategory.setId(productCategoryRequest.getAssetCategoryId());
 
