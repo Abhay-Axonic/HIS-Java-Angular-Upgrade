@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.param.common.dto.CommonResponse;
-import com.param.global.common.ServiceException;
 import com.param.pharmacy.master.global.CustomeException;
 import com.param.pharmacy.master.global.dto.uomUnit.UomUnitDetailsResponse;
 import com.param.pharmacy.master.global.dto.uomUnit.UomUnitListResponse;
@@ -86,7 +85,10 @@ public class UomUnitController {
 			return new ResponseEntity<Object>(UomUnitService.update(uomUnitRequest), HttpStatus.CREATED);
 		} catch (CustomeException CustomeRespone) {
 			logger.error(CustomeRespone.getMessage(), CustomeRespone);
-			throw new ServiceException(CustomeRespone.getMessage());
+			CommonResponse errorResponse = new CommonResponse();
+			errorResponse.setId(CustomeRespone.getId());
+			errorResponse.setMessage(CustomeRespone.getMessage());
+			return new ResponseEntity<Object>(errorResponse, HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 }
