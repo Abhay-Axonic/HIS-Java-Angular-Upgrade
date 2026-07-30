@@ -6,9 +6,9 @@
       <div class="field">
         <label>Department<span class="required">*</span></label>
         <select [ngModel]="selectedSpecialityId()" (ngModelChange)="onSpecialityChange($event)">
-          <option [value]="''">Select</option>
+          <option [ngValue]="''">Select</option>
           @for (s of specialityList(); track s.specialityId) {
-            <option [value]="s.specialityId">{{ s.specialityName }}</option>
+            <option [ngValue]="s.specialityId">{{ s.specialityName }}</option>
           }
         </select>
       </div>
