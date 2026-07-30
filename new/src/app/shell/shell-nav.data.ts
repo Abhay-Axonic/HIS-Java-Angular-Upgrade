@@ -205,6 +205,12 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/frequencyMaster', title: 'Frequency Master' },
       { path: '/pharmacyformulationTypeMaster', title: 'Formulation Type Master' },
       { path: '/storageunitMaster', title: 'Storage Unit Master' },
+      // Phase 4 batch 32 -- only the `productCategoryMapping` tab of
+      // legacy's "Product Restriction" tab-shell is built so far (sibling
+      // `itemRestriction` tab not in this batch); labeled specifically
+      // rather than reusing "Product Restriction" for a lone nav entry --
+      // see product-category-mapping.ts's class doc.
+      { path: '/productRestriction/productCategoryMapping', title: 'Product Category Mapping' },
     ],
   },
   {

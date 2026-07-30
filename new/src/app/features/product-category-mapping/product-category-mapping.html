@@ -1,0 +1,119 @@
+<section class="page">
+  <fieldset>
+    <legend>Product Category Mapping</legend>
+    <div class="filter-row">
+      <div class="field">
+        <label for="store">Store</label>
+        <select
+          id="store"
+          [ngModel]="selectedStore()"
+          (focus)="onStoreFocus()"
+          (ngModelChange)="onStoreChange($event)"
+          name="store"
+        >
+          @for (s of stores(); track s.id) {
+            <option [ngValue]="s">{{ s.store }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="search">Search Category</label>
+        <input
+          id="search"
+          type="text"
+          autocomplete="off"
+          placeholder="Search Category"
+          [ngModel]="pagination().search"
+          (ngModelChange)="onSearchChange($event)"
+          name="search"
+        />
+      </div>
+
+      <label class="show-entries">
+        Show
+        <select [(ngModel)]="pagination().pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        records
+      </label>
+    </div>
+  </fieldset>
+
+  <!-- Defect A -- mandatory, always-visible caveat about a real, owner-approved,
+       deliberately-not-fixed backend gap. See product-category-mapping.ts's
+       class doc "DEFECT A" section. Not hover-only, not collapsed by default. -->
+  <div class="disclosure-banner" role="note">
+    <span class="disclosure-icon" aria-hidden="true">&#9888;</span>
+    <span>
+      Deactivating a mapping here does not currently exclude the product category from store consumption, barcode
+      printing, or billing processes elsewhere in the system.
+    </span>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th class="sortable" (click)="sortBy('assetType')">Asset Type</th>
+        <th class="sortable" (click)="sortBy('assetCategory')">Asset Category</th>
+        <th class="sortable" (click)="sortBy('productCategory')">Product Category</th>
+        <!-- "Status(n)" is literal legacy copy, kept verbatim -- see class doc. -->
+        <th class="text-center">Status(n)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of pagination().data; track row.productCategoryId) {
+        <tr>
+          <td>{{ row.assetType }}</td>
+          <td>{{ row.assetCategory }}</td>
+          <td>{{ row.productCategory }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status" (toggled)="toggleStatus(row, !row.status)" />
+          </td>
+        </tr>
+      }
+      @if (!pagination().data.length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (pagination().totalPages > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
+      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
+      @for (p of pagesList(); track p) {
+        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
+      }
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages">
+        <a (click)="page('next')">Next</a>
+      </li>
+      <li [class.disabled]="pagination().currentPage === pagination().totalPages">
+        <a (click)="page('last')">Last</a>
+      </li>
+    </ul>
+  }
+</section>
+
+@if (showStoreChangeModal()) {
+  <div class="modal-backdrop" (click)="closeStoreChangeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeStoreChangeModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to change store?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmStoreChange()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeStoreChangeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

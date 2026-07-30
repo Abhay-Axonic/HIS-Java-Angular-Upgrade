@@ -65,6 +65,25 @@ export function setPage<T>(currentPage: number, p: PaginationState<T>): void {
   p.currentPage = currentPage;
   setPagedData(p);
 }
+
+/**
+ * Port of legacy `PaginationService.sortBy` (paginationService.js:76-79):
+ * `$filter('orderBy')(pagination.filteredData, property, reverse)` then
+ * `setTotalPages` (which resets to page 1, same as a fresh search).  Added
+ * for product-category-mapping (Phase 4 batch 32), the first screen so far
+ * whose legacy controller wires `pagination.sortBy` directly to real
+ * column headers -- generic here so any future screen doing the same can
+ * reuse it instead of hand-rolling its own comparator.
+ */
+export function sortBy<T>(p: PaginationState<T>, property: keyof T, reverse: boolean): void {
+  p.filteredData = [...p.filteredData].sort((a, b) => {
+    const av = a[property];
+    const bv = b[property];
+    if (av === bv) return 0;
+    return (av > bv ? 1 : -1) * (reverse ? -1 : 1);
+  });
+  setTotalPages(p);
+}
 export function setFirstPage<T>(p: PaginationState<T>): void {
   setPage(1, p);
 }
