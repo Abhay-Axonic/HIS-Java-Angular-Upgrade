@@ -4581,3 +4581,11 @@ Net effect: three independent things have to align for the silent success -- a n
 **Lesson for the process, not just this screen:** a sub-agent's own "Verified live" claims in its Step 2-4 report should not be trusted as equivalent to the orchestrating session's own Step 5 verification -- this exact fix was reported as implemented and working in the build agent's own summary, and the build/tsc output was clean (a type-coercion-via-DOM-string-semantics bug is invisible to TypeScript's type checker, since the mismatch only manifests at runtime through the browser's native `<select>` behavior). Only live interaction testing caught it.
 
 **Disposition:** RESOLVED. Both fixes committed to `rebuild/phase4-batch31-subdepartmentmasterunit`, `tsc`/`ng build` clean, held for the owner's Step 6 review.
+
+## PENDING-batch31-step6-signoff. Owner's Step 6 review of batch 31 complete -- subDepartmentMasterUnit signed off
+
+**Context:** owner conducted an independent Step 6 review of `docs/BATCH31_STEP6_CHECKLIST.md` (2026-07-30), working through `http://localhost:4200/subDepartmentMasterUnit` (rebuild, `rebuild/phase4-batch31-subdepartmentmasterunit`, held) against the seeded dev-DB test data (5 sub-specialities across the 2 existing specialities, seeded additively at the owner's request for this review, same reversible seed-data pattern as every prior batch). Review specifically targeted the two items flagged as needing owner confirmation: the exact map -> deactivate -> re-select -> attempt-duplicate reproduction sequence that surfaced the Step 5 dedup-guard bug, and the naming-consistency fix across nav/title, in-page table headers, and field labels.
+
+**Owner's own words:** "Step 6 review complete for subDepartmentMasterUnit -- confirmed behaving exactly as expected: the map -> deactivate -> re-select -> attempt-duplicate sequence correctly prevents the duplicate mapping now, and the naming-consistency fix is confirmed throughout the page."
+
+**Action taken:** recorded as a permanent Step 6 sign-off artifact per this project's standing convention. Batch 31's sole screen (`subDepartmentMasterUnit`, rebuilt as `unit-sub-speciality-mapping`) is now fully reviewed and signed off -- `rebuild/phase4-batch31-subdepartmentmasterunit` is eligible for merge approval whenever the owner chooses.
