@@ -1830,7 +1830,7 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 
 **Verified live, before and after, a full real create-then-approve round trip:** Before: `requestDiscount`, `requestedDiscount/user`, `getDiscReqDtlsForOPBilling`, `getBadDebitRequestObject`, `approveRequest`, and `requestDiscountBillList` all failed with real, confirmed `column ... does not exist` errors (only visible after BR-107's fix stopped masking them as fake-200 responses). After: all 6 succeed -- confirmed a genuine create (`req_disc_id=21`, `POST requestDiscount` -> `"Added Successfully."`) followed by a genuine approve (`POST approveRequest` -> `req_status` flipped `1`->`2`, `remark` persisted correctly, confirmed via direct `psql` read, not just the response body). Test rows (`req_disc_id` 21 and 22) marked cancelled (`req_status=3`, `remark='BR-106 verification test row, cancelled'`) afterward, not deleted.
 
-**Classification:** a local-dev-environment provisioning gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Held on `fix/requestdiscountmaster-missing-columns`, not yet merged, pending owner review.
+**Classification:** a local-dev-environment provisioning gap, not a business-rule or behavioral change -- purely additive DDL, no existing data touched, no application code changed. Merged into `main` (2026-07-30), full multi-module build verified clean afterward.
 
 ## BR-107 — `RequestDiscountController`'s controller and DAO layers silently swallowed real exceptions on all 14 / 6 of their respective methods (service layer already correct) — found during the cross-module fake-500 sweep triage (2026-07-30)
 
@@ -1842,7 +1842,7 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 
 **Verified live, before and after, plus a full endpoint sweep.** Real trigger: `POST /api/billing/approveRequest` with `updatedDate: null` -> `GlobalCommonDateUtils`'s downstream `SimpleDateFormat.format(null)` throws a genuine `NullPointerException` before any DB write. Before (source-verified): fabricated HTTP 200. After (live): HTTP 500, logged with correlation ID, `GlobalExceptionHandler` confirmed reached. Live-testing all 14 endpoints post-fix additionally surfaced BR-106 (see above) and one still-open finding: `getRequestedDiscountsForDashboard` is missing `@Transactional`, throwing `"No Session found for current thread"` on every real call -- **not yet fixed**, flagged for a follow-up fix, separate from this entry's scope.
 
-**Classification:** a real, previously-undetected exception-handling defect (silent error swallowing, no data corruption in the fixed methods) -- not a business-rule or calculation change. Matches CLAUDE.md's #1 priority directly; this controller sits underneath discount, financial-clearance, credit-note, and refund approvals across 13+ live Angular controllers spanning core OP/IP billing workflows. Held on `fix/requestdiscountcontroller-swallowed-exceptions`, not yet merged, pending owner review.
+**Classification:** a real, previously-undetected exception-handling defect (silent error swallowing, no data corruption in the fixed methods) -- not a business-rule or calculation change. Matches CLAUDE.md's #1 priority directly; this controller sits underneath discount, financial-clearance, credit-note, and refund approvals across 13+ live Angular controllers spanning core OP/IP billing workflows. Merged into `main` (2026-07-30), full multi-module build verified clean afterward.
 
 ## BR-108 — `RequestDiscountServiceImpl.getRequestedDiscountsForDashboard` missing `@Transactional`, threw "No Session found for current thread" on every real call (2026-07-30)
 
@@ -1852,7 +1852,31 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 
 **Verified live, before and after:** Before: real `ServiceException`, `"No Session found for current thread"`, confirmed via `catalina.out`. After: `POST /api/billing/requestedDiscount/dashboard` returns clean `status:"success"`. Regression-checked two sibling endpoints (`requestedDiscount/user`, `getBadDebitRequestObject`) immediately after -- both still clean, no side effects.
 
-**Classification:** a real, previously-undetected code defect (missing transaction boundary) -- not a business-rule or calculation change. Held on `fix/requestdiscountservice-dashboard-missing-transactional`, not yet merged, pending owner review.
+**Classification:** a real, previously-undetected code defect (missing transaction boundary) -- not a business-rule or calculation change. Merged into `main` (2026-07-30), full multi-module build verified clean afterward.
+
+## BR-109 — `referralMaster`'s `adt.m_referral_master` is missing the `medall_referral_id` column already mapped by `ReferralMaster.java` — already-known local-dev-DB drift, found during batch 30 Step 5 live testing (2026-07-30)
+
+**Confirmed live, not just from static analysis.** Save failed on every attempt during batch 30's Step 5 testing of `referralMaster`: a real `SQLGrammarException`, masked by the app's HTTP-200-wrapped-fake-error pattern (`status:"error"` in the body, no row ever persisted). Traced to `medall_referral_id`, mapped by the entity but absent from the live table.
+
+**Already known, already scripted -- not novel drift.** `docs/br076_missing_columns.sql` already scripts this exact column; the schema-drift sweep's own data marks it `known_local_dev_drift=True` -- same classification as BR-104/BR-106.
+
+**Fix applied:** `docs/br109_referralmaster_medallreferralid_column.sql` -- one purely additive, nullable `ALTER TABLE ADD COLUMN`. Zero application code changed.
+
+**Verified live, before and after:** real save now succeeds (`referral_id=5` created), confirmed via direct `psql` read matching the submitted geo chain (country/state/district/city) exactly.
+
+**Classification:** a local-dev-environment provisioning gap, not a business-rule or behavioral change. Merged into `main` (2026-07-30), full multi-module build verified clean afterward.
+
+## BR-110 — `dishMaster`'s `kitchen.m_dish_master` + `dish_master_diet_pref_mapper` are missing 6 columns total already mapped by `DishMaster.java` — already-known local-dev-DB drift, found during batch 30 Step 5 live testing (2026-07-30)
+
+**Confirmed live, not just from static analysis.** Save failed across 2 successive schema-drift errors within the same transaction during batch 30's Step 5 testing of `dishMaster`: `m_dish_master` missing 4 columns, then `dish_master_diet_pref_mapper` missing 2 more once the first was fixed.
+
+**Already known, already scripted -- not novel drift.** Same `br076_missing_columns.sql` provenance as BR-104/BR-106/BR-109.
+
+**Fix applied:** `docs/br110_dishmaster_missing_columns.sql` -- additive, nullable `ALTER TABLE ADD COLUMN` statements across both tables. Zero application code changed.
+
+**Verified live, before and after:** real dish save now succeeds end-to-end (`dish_id=5` created with full field/checkbox-group data, confirmed via direct `psql` read), plus status-toggle and edit-load both confirmed working against the same row afterward.
+
+**Classification:** a local-dev-environment provisioning gap, not a business-rule or behavioral change. Merged into `main` (2026-07-30), full multi-module build verified clean afterward.
 
 ## BR-111 — `pharmacyunitMaster`'s Update endpoint mapped a real, working business-rule block (deactivation refused while a unit is in use) to a generic HTTP 500 instead of the HTTP 406 the frontend already checks for, silently desyncing the UI from the database (2026-07-30)
 
