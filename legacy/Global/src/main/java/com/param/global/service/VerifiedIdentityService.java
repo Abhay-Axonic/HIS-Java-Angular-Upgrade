@@ -85,9 +85,13 @@ public class VerifiedIdentityService {
 	 * against the signed JWT for this request. Not a new trust decision --
 	 * this class's entire premise is that this specific header, at this
 	 * specific point in the request lifecycle, is the one value in this
-	 * application that has actually been cryptographically checked.
+	 * application that has actually been cryptographically checked. Public
+	 * (not just an internal step of {@link #getVerifiedOrganizationId()}) --
+	 * callers scoping a query/update by unitId should use this instead of a
+	 * client-supplied DTO field for the same reason. No DB access, no
+	 * `@Transactional` needed.
 	 */
-	private Integer getVerifiedUnitId() {
+	public Integer getVerifiedUnitId() {
 		ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		if (attrs == null) {
 			throw new IllegalStateException(

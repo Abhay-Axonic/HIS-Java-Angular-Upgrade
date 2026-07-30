@@ -77,6 +77,29 @@ public class EquipmentChecklistDaoImpl extends GenericDao<EquipmentChecklist, In
 			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(equipmentChecklistDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
 			
 			if(equipmentChecklistDto.getChecklistEquipmentMasterId()!=null) {
+				// BR-121: an id-only lookup has no ownership check -- the DTO's
+				// organizationId/unitId (verified by the service layer before
+				// this method is called) is otherwise never actually consulted
+				// for this update path. Explicitly verify the row being updated
+				// really belongs to the verified tenant before proceeding,
+				// rather than silently updating regardless.
+				//
+				// Uses a row-count Criteria query, not findById(), because
+				// findById() loads a second, separately-managed entity with the
+				// same identifier as `mstr` below -- confirmed live to throw
+				// Hibernate's NonUniqueObjectException ("A different object
+				// with the same identifier value was already associated with
+				// the session") on an otherwise-legitimate update, once tried.
+				Long ownedCount = (Long) sessionFactory.getCurrentSession().createCriteria(EquipmentChecklist.class)
+						.add(Restrictions.eq("checklistEquipmentMasterId", equipmentChecklistDto.getChecklistEquipmentMasterId()))
+						.add(Restrictions.eq("organizationId", equipmentChecklistDto.getOrganizationId()))
+						.add(Restrictions.eq("unitId", equipmentChecklistDto.getUnitId()))
+						.setProjection(Projections.rowCount()).uniqueResult();
+				if (ownedCount == null || ownedCount == 0) {
+					logger.error("saveEquipmentChecklist: refused update of checklistEquipmentMasterId="
+							+ equipmentChecklistDto.getChecklistEquipmentMasterId() + " -- not owned by the verified organization/unit");
+					return new Response<>(ERROR, ERROR_CODE, "Not found.", null, null);
+				}
 				mstr.setChecklistEquipmentMasterId(equipmentChecklistDto.getChecklistEquipmentMasterId());
 				update(mstr);
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, mstr);
@@ -113,6 +136,16 @@ public class EquipmentChecklistDaoImpl extends GenericDao<EquipmentChecklist, In
 			throws ApplicationException {
 		try {
 			EquipmentChecklist mstr = findById(equipmentChecklistDto.getChecklistEquipmentMasterId());
+			// BR-121: findById(id) alone has no ownership check, and this
+			// endpoint doesn't even receive organizationId/unitId from the
+			// legacy frontend -- verify the row really belongs to the
+			// (service-layer-verified) tenant on the DTO before mutating it.
+			if (mstr == null || !mstr.getOrganizationId().equals(equipmentChecklistDto.getOrganizationId())
+					|| !mstr.getUnitId().equals(equipmentChecklistDto.getUnitId())) {
+				logger.error("updateChecklistEquipmentMasterStatus: refused update of checklistEquipmentMasterId="
+						+ equipmentChecklistDto.getChecklistEquipmentMasterId() + " -- not owned by the verified organization/unit");
+				return new Response<>(ERROR, ERROR_CODE, "Not found.", null, null);
+			}
 			mstr.setStatus(equipmentChecklistDto.getStatus());
 			mstr.setUpdatedBy(equipmentChecklistDto.getUpdatedBy());
 			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(equipmentChecklistDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
