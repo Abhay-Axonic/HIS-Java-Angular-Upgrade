@@ -1,0 +1,107 @@
+<section class="page">
+  <fieldset>
+    <legend>Unit Sub-Speciality Mapping</legend>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Speciality<span class="required">*</span></label>
+        <select [ngModel]="selectedSpecialityId()" (ngModelChange)="onSpecialityChange($event)">
+          <option [ngValue]="''">Select</option>
+          @for (s of specialityList(); track s.specialityId) {
+            <option [ngValue]="s.specialityId">{{ s.specialityName }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="speciality-picker">
+      <div class="speciality-column">
+        <label>Global Master<span class="required">*</span></label>
+        <div class="scroll-list">
+          @for (item of filteredAvailable(); track item.subSpecialityMasterId) {
+            <label class="checkbox-row">
+              <input type="checkbox" [checked]="isChecked(item.subSpecialityMasterId)" (change)="toggleCheck(item)" />
+              {{ item.subSpecialityMasterName }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="move-button">
+        <button type="button" (click)="moveToSelected()">&lt;&lt;&gt;&gt;</button>
+      </div>
+
+      <div class="speciality-column">
+        <label>Clinical Unit Master<span class="required">*</span></label>
+        <div class="scroll-list">
+          @for (item of selectedForSave(); track item.subSpecialityMasterId) {
+            <div class="checkbox-row">{{ item.subSpecialityName }}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <button type="button" class="btn-primary" title="Save" (click)="save()">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+    </button>
+    <input
+      type="text"
+      autocomplete="off"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="onSearchKeywordChange($event)"
+    />
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Speciality Code</th>
+        <th>Speciality Description</th>
+        <th>Sub-Speciality Code</th>
+        <th>Sub-Speciality Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.unitSubSpecialityId) {
+        <tr>
+          <td>{{ row.specialityCode }}</td>
+          <td>{{ row.specialityName }}</td>
+          <td>{{ row.subSpecialityMasterCode }}</td>
+          <td>{{ row.subSpecialityName }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row, row.status === 'A' ? 'I' : 'A')" />
+          </td>
+        </tr>
+      }
+      @if (displayedRows().length === 0) {
+        <tr>
+          <td colspan="5" class="text-center">{{ loadingMsg() }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
