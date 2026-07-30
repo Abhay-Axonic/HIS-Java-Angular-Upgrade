@@ -4,7 +4,7 @@
 
     <div class="form-row">
       <div class="field">
-        <label>Department<span class="required">*</span></label>
+        <label>Speciality<span class="required">*</span></label>
         <select [ngModel]="selectedSpecialityId()" (ngModelChange)="onSpecialityChange($event)">
           <option [ngValue]="''">Select</option>
           @for (s of specialityList(); track s.specialityId) {
@@ -68,10 +68,10 @@
   <table class="data-table">
     <thead>
       <tr>
-        <th>Department Code</th>
-        <th>Department Description</th>
-        <th>Sub Department Code</th>
-        <th>Sub Department Description</th>
+        <th>Speciality Code</th>
+        <th>Speciality Description</th>
+        <th>Sub-Speciality Code</th>
+        <th>Sub-Speciality Description</th>
         <th>Status</th>
       </tr>
     </thead>
