@@ -48,7 +48,7 @@ public class TaxComponentService implements ITaxComponentService {
 	public TaxComponentDetailsResponse getById(Integer id, Integer orgId) {
 		TaxComponentDetailsResponse response = new TaxComponentDetailsResponse();
 
-		TaxComponent taxComponent = TaxComponentDao.getById(id);
+		TaxComponent taxComponent = TaxComponentDao.getById(id, orgId);
 
 		if (taxComponent != null) {
 			response.setId(taxComponent.getId());
@@ -86,7 +86,11 @@ public class TaxComponentService implements ITaxComponentService {
 	@Transactional
 	public CommonResponse update(TaxComponentRequest taxComponentRequest) throws CustomeException {
 
-		TaxComponent taxComponent = TaxComponentDao.getById(taxComponentRequest.getId());
+		TaxComponent taxComponent = TaxComponentDao.getById(taxComponentRequest.getId(), taxComponentRequest.getOrganizationId());
+
+		if (taxComponent == null) {
+			throw new CustomeException(null, "Tax Component Not Found", null);
+		}
 
 		if (taxComponentRequest.getCode() != null && taxComponentRequest.getCode() != "") {
 			taxComponent.setCode(taxComponentRequest.getCode());

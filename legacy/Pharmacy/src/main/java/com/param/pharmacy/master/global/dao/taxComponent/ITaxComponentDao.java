@@ -8,7 +8,7 @@ public interface ITaxComponentDao {
 
 	List<TaxComponent> getAll(Integer orgId);
 
-	TaxComponent getById(Integer id);
+	TaxComponent getById(Integer id, Integer orgId);
 
 	Integer create(TaxComponent taxComponent);
 
