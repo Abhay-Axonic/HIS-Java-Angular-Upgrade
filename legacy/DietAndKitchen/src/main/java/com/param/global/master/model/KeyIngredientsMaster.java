@@ -61,7 +61,11 @@ import javax.persistence.Table;
 				+ "unitOfMeasurmentMaster.uomName as uomName, " + "unitOfMeasurmentMaster.uomId as uomId "
 				+ "FROM KeyIngredientsMaster keyIngMas "
 				+ "INNER JOIN keyIngMas.unitOfMeasurmentMaster as unitOfMeasurmentMaster "
-				+ "WHERE keyIngMas.organizationId=:organizationId "), // and keyIngMas.unitId=:unitId"), //dilip
+				+ "WHERE keyIngMas.organizationId=:organizationId AND keyIngMas.unitId=:unitId "),
+		// BR-121: the unitId condition above was previously only a trailing Java
+		// comment, outside the actual query string -- the WHERE clause never
+		// filtered by unit at all, so any unit within the same org could see
+		// every other unit's ingredients. Restored as a real query condition.
 		
 		@NamedQuery(name = "GET_ALL_KEY_INGREDIENTS_MASTER_WITHOUT_ORG_ID", query = "SELECT keyIngMas.keyIngredientId as keyIngredientId, "
 				+ "keyIngMas.ingredientCode as ingredientCode, "
@@ -78,8 +82,10 @@ import javax.persistence.Table;
 				+ "keyIngMas.ingredientValue as ingredientValue, " + "keyIngMas.status as status, "
 				+ "unitOfMeasurmentMaster.uomName as uomName " + "FROM KeyIngredientsMaster keyIngMas "
 				+ "INNER JOIN keyIngMas.unitOfMeasurmentMaster as unitOfMeasurmentMaster "
-				+ "WHERE keyIngMas.status='A' and keyIngMas.organizationId=:organizationId "
-				+ " ORDER BY keyIngMas.ingredientDescription ASC "), // and keyIngMas.unitId=:unitId") //dilip
+				+ "WHERE keyIngMas.status='A' and keyIngMas.organizationId=:organizationId AND keyIngMas.unitId=:unitId "
+				+ " ORDER BY keyIngMas.ingredientDescription ASC ")
+		// BR-121: same fix as GET_ALL_KEY_INGREDIENTS_MASTER above -- unitId was
+		// only a trailing comment, never a real query condition.
 
 })
 

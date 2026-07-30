@@ -31,4 +31,14 @@ public interface IKeyIngredientsMasterDao {
 
 	Response updateKeyIngredientsMaster(KeyIngredientsMasterDto keyIngredientsMasterDto) throws ApplicationException;
 
+	/**
+	 * BR-121: dedicated ownership check for keyIngredientId, used before
+	 * returning its nutrition sub-list -- that endpoint's frontend never sends
+	 * organizationId/unitId at all, so there is no existing scoped query to
+	 * reuse (GET_KEY_INGREDIENTS_MASTER_BY_ID is close, but also requires
+	 * status='A', wrong for a pure ownership check on a possibly-inactive row).
+	 */
+	boolean isKeyIngredientOwnedByOrgAndUnit(Integer keyIngredientId, Integer organizationId, Integer unitId)
+			throws ApplicationException;
+
 }

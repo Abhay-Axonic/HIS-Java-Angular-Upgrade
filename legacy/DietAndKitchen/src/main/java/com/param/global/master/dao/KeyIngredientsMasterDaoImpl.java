@@ -162,10 +162,15 @@ public class KeyIngredientsMasterDaoImpl extends GenericDao<KeyIngredientsMaster
 	@Override
 	public Response getAllKeyIngredientsMaster(Integer organizationId,Integer unitId) throws ApplicationException {
 		try {
+			// BR-121: unitId was accepted by this method's signature but never
+			// actually applied to the query (commented out, tagged "dilip") --
+			// any unit within the same org could see every other unit's
+			// ingredients. Restored now that the service layer passes only
+			// verified values here, closing this alongside the org-level fix.
 			List<KeyIngredientsMasterDto> getAllKeyIngredientsMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_ALL_KEY_INGREDIENTS_MASTER")
 					.setParameter("organizationId", organizationId)
-					//.setParameter("unitId",unitId) //dilip
+					.setParameter("unitId",unitId)
 					.setResultTransformer(Transformers.aliasToBean(KeyIngredientsMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, getAllKeyIngredientsMasterDtosList, null);
 
@@ -192,10 +197,13 @@ public class KeyIngredientsMasterDaoImpl extends GenericDao<KeyIngredientsMaster
 	@Override
 	public Response getActiveKeyIngredientsMaster(Integer organizationId,Integer unitId) throws ApplicationException {
 		try {
+			// BR-121: unitId was accepted by this method's signature but never
+			// actually applied to the query (commented out, tagged "dilip") --
+			// same gap as getAllKeyIngredientsMaster above.
 			List<KeyIngredientsMasterDto> getAllKeyIngredientsMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_ACTIVE_KEY_INGREDIENTS_MASTER")
 					.setParameter("organizationId", organizationId)
-					//.setParameter("unitId", unitId) //dilip
+					.setParameter("unitId", unitId)
 					.setResultTransformer(Transformers.aliasToBean(KeyIngredientsMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, getAllKeyIngredientsMasterDtosList, null);
 
@@ -212,6 +220,18 @@ public class KeyIngredientsMasterDaoImpl extends GenericDao<KeyIngredientsMaster
 			Session session = sessionFactory.getCurrentSession();
 			KeyIngredientsMaster keyIngredientsMaster = (KeyIngredientsMaster) session.get(KeyIngredientsMaster.class,
 					keyIngredientsMasterDto.getKeyIngredientId());
+
+			// BR-121: session.get(id) alone has no ownership check -- this
+			// endpoint's legacy frontend doesn't even send organizationId/unitId,
+			// so the DTO's values here are the service-layer-verified ones.
+			// Refuse rather than silently mutating another tenant's row.
+			if (keyIngredientsMaster == null
+					|| !keyIngredientsMaster.getOrganizationId().equals(keyIngredientsMasterDto.getOrganizationId())
+					|| !keyIngredientsMaster.getUnitId().equals(keyIngredientsMasterDto.getUnitId())) {
+				logger.error("updateKeyIngredientsMasterStatus: refused update of keyIngredientId="
+						+ keyIngredientsMasterDto.getKeyIngredientId() + " -- not owned by the verified organization/unit");
+				return new Response<>(ERROR, ERROR_CODE, "Not found.", null, null);
+			}
 
 			keyIngredientsMaster.setStatus(keyIngredientsMasterDto.getStatus());
 			keyIngredientsMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(keyIngredientsMasterDto.getUnitId()!= null ? keyIngredientsMasterDto.getUnitId() :0));
@@ -235,6 +255,23 @@ public class KeyIngredientsMasterDaoImpl extends GenericDao<KeyIngredientsMaster
 		try {
 
 			KeyIngredientsMaster keyIngredientsMaster = findById(keyIngredientsMasterDto.getKeyIngredientId());
+
+			// BR-121: findById(id) alone has no ownership check -- verify the
+			// row being updated really belongs to the (service-layer-verified)
+			// tenant on the DTO before mutating it. Checked against the same
+			// already-loaded managed entity (not a second findById() call),
+			// since loading a second entity with the same identifier in this
+			// session throws Hibernate's NonUniqueObjectException once this
+			// method's own update() call runs -- confirmed live on the
+			// checklistEquipmentMaster stopgap fix, avoided here from the start.
+			if (keyIngredientsMaster == null
+					|| !keyIngredientsMaster.getOrganizationId().equals(keyIngredientsMasterDto.getOrganizationId())
+					|| !keyIngredientsMaster.getUnitId().equals(keyIngredientsMasterDto.getUnitId())) {
+				logger.error("updateKeyIngredientsMaster: refused update of keyIngredientId="
+						+ keyIngredientsMasterDto.getKeyIngredientId() + " -- not owned by the verified organization/unit");
+				return new Response<>(ERROR, ERROR_CODE, "Not found.", null, null);
+			}
+
 			keyIngredientsMaster.setIngredientCode(keyIngredientsMasterDto.getIngredientCode());
 			keyIngredientsMaster.setIngredientDescription(keyIngredientsMasterDto.getIngredientDescription());
 			keyIngredientsMaster.setIngredientValue(keyIngredientsMasterDto.getIngredientValue());
@@ -298,6 +335,20 @@ public class KeyIngredientsMasterDaoImpl extends GenericDao<KeyIngredientsMaster
 			// }
 
 			return new Response<KeyIngredientsMasterDto, Integer>(SUCCESS, null, COMMON_UPDATE, null, null);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public boolean isKeyIngredientOwnedByOrgAndUnit(Integer keyIngredientId, Integer organizationId, Integer unitId)
+			throws ApplicationException {
+		try {
+			KeyIngredientsMaster keyIngredientsMaster = findById(keyIngredientId);
+			return keyIngredientsMaster != null
+					&& keyIngredientsMaster.getOrganizationId().equals(organizationId)
+					&& keyIngredientsMaster.getUnitId().equals(unitId);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			throw new ServiceException(e.getMessage());
