@@ -62,6 +62,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     heading: 'Admin',
     items: [
       { path: '/organizationMaster', title: 'Organization Master' },
+      { path: '/referralMaster', title: 'Referral Master' },
       { path: '/specialityMaster', title: 'Department Master' },
       { path: '/subSpecialityMaster', title: 'Sub Department Master' },
       { path: '/raceMaster', title: 'Race Master' },

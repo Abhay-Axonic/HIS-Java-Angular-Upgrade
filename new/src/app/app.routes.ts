@@ -85,6 +85,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'referralMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 396, title: 'Referral Master' },
+        loadComponent: () =>
+          import('./features/referral-master/referral-master').then((m) => m.ReferralMaster),
+      },
+      {
         path: 'MISReports',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 768, title: 'MIS Report' },
