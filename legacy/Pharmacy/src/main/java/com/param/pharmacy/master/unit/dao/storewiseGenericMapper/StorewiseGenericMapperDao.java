@@ -51,10 +51,13 @@ public class StorewiseGenericMapperDao extends AbstractDao<Integer, StorewiseGen
 	}
 
 	@Override
-	public StorewiseGenericMapper getById(Integer id) {
+	public StorewiseGenericMapper getById(Integer id, Integer unitId) {
+		// BR-121: previously had no unitId restriction at all -- any id was
+		// readable/writable by any authenticated user regardless of unit.
 		Criteria criteria = getSession().createCriteria(StorewiseGenericMapper.class);
 		criteria.add(Restrictions.eq("id", id));
 		criteria.add(Restrictions.eq("isDeleted", false));
+		criteria.add(Restrictions.eq("unitId", unitId));
 
 		return (StorewiseGenericMapper) criteria.uniqueResult();
 	}
@@ -98,9 +101,15 @@ public class StorewiseGenericMapperDao extends AbstractDao<Integer, StorewiseGen
 	@Override
 	public List<Generic> getGenericList(String name, Integer unitId, Integer orgId) {
 
+		// BR-121: the OR here was previously unparenthesized, so this parsed as
+		// (unitId AND orgId AND name-match) OR (code-match AND isActive AND
+		// isDeleted=false) -- any tenant's generic matching by code bypassed
+		// the unit/org scoping entirely, regardless of the unitId/orgId
+		// parameters passed in. Parenthesizing the OR restores the intended
+		// "scoped to this unit/org, matching by either name or code" meaning.
 		String hql = "SELECT generic FROM Generic as generic"
 				+ " WHERE generic.unitId = :unitId AND generic.organizationId = :orgId "
-				+ " AND lower(generic.name) LIKE :name OR lower(generic.code) LIKE :name "
+				+ " AND (lower(generic.name) LIKE :name OR lower(generic.code) LIKE :name) "
 				+ " AND generic.isActive = true AND generic.isDeleted = false ";
 		Query query = getSession().createQuery(hql);
 		query.setParameter("name", name != null ? name.toLowerCase() + '%' : "");
