@@ -52,6 +52,9 @@ public class MainStoreService implements IMainStoreService {
 	private SessionService sessionService;
 
 	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
+	@Autowired
 	IGlobalDao GlobalDao;
 
 	@Autowired
@@ -68,9 +71,13 @@ public class MainStoreService implements IMainStoreService {
 	@Transactional
 	public List<MainStoreListResponse> getAll(Integer unitId, Integer orgId) {
 
+		// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+
 		List<MainStoreListResponse> list = new ArrayList<MainStoreListResponse>();
 
-		for (Store mainStore : MainStoreDao.getAll(unitId, orgId)) {
+		for (Store mainStore : MainStoreDao.getAll(verifiedUnitId, verifiedOrgId)) {
 			MainStoreListResponse mainStoreRes = new MainStoreListResponse();
 			mainStoreRes.setId((Integer) mainStore.getStoreId());
 			mainStoreRes.setStoreTypeId((Integer) mainStore.getStoreType().getId());
@@ -97,6 +104,15 @@ public class MainStoreService implements IMainStoreService {
 		MainStoreDetailsResponse response = new MainStoreDetailsResponse();
 
 		Store mainStore = MainStoreDao.getById(id);
+		// BR-121-class fix: getById(id) alone has zero org/unit filter at all --
+		// refuse if the loaded row doesn't actually belong to the verified tenant,
+		// same "not found" shape as a genuinely nonexistent id.
+		if (mainStore != null && (mainStore.getOrganizationId() == null
+				|| !mainStore.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+				|| mainStore.getUnitId() == null
+				|| !mainStore.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId()))) {
+			mainStore = null;
+		}
 
 		if (mainStore != null) {
 			response.setId((Integer) mainStore.getStoreId());
@@ -123,20 +139,20 @@ public class MainStoreService implements IMainStoreService {
 	@Override
 	@Transactional
 	public CommonResponse create(MainStoreRequest mainStoreRequest) {
+		// BR-121-class fix: always use verified identity, ignore client-supplied
+		// org/unit (previously honored a client-supplied value outright when
+		// present, only falling back to the still-spoofable SessionService).
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+
 		Store store = new Store();
 		// sessionService.setEntityDefaults(store);
-		store.setCreateDefaults(
-				mainStoreRequest.getOrganizationId() != null ? mainStoreRequest.getOrganizationId()
-						: sessionService.getOrganizationId(),
-				mainStoreRequest.getUnitId() != null ? mainStoreRequest.getUnitId() : sessionService.getUnitId(),
+		store.setCreateDefaults(verifiedOrgId, verifiedUnitId,
 				mainStoreRequest.getUserId() != null ? mainStoreRequest.getUserId() : sessionService.getUserId());
 
 		StoreType storeType = new StoreType();
 		// sessionService.setEntityDefaults(storeType);
-		storeType.setCreateDefaults(
-				mainStoreRequest.getOrganizationId() != null ? mainStoreRequest.getOrganizationId()
-						: sessionService.getOrganizationId(),
-				mainStoreRequest.getUnitId() != null ? mainStoreRequest.getUnitId() : sessionService.getUnitId(),
+		storeType.setCreateDefaults(verifiedOrgId, verifiedUnitId,
 				mainStoreRequest.getUserId() != null ? mainStoreRequest.getUserId() : sessionService.getUserId());
 
 		storeType.setId(mainStoreRequest.getStoreTypeId());
@@ -168,16 +184,11 @@ public class MainStoreService implements IMainStoreService {
 		Integer storeId = MainStoreDao.create(store);
 		response.setId(storeId.longValue());
 		response.setMessage("Store Inserted Successfully");
-		List<ProductCategoryListResponse> data = ProductCategoryDao
-				.getAll(mainStoreRequest.getOrganizationId() != null ? mainStoreRequest.getOrganizationId()
-						: sessionService.getOrganizationId());
+		List<ProductCategoryListResponse> data = ProductCategoryDao.getAll(verifiedOrgId);
 		for (ProductCategoryListResponse p : data) {
 			StoreProductCategoryMapper storeProductCategoryMapper = new StoreProductCategoryMapper();
 			// sessionService.setEntityDefaults(storeProductCategoryMapper);
-			storeProductCategoryMapper.setCreateDefaults(
-					mainStoreRequest.getOrganizationId() != null ? mainStoreRequest.getOrganizationId()
-							: sessionService.getOrganizationId(),
-					mainStoreRequest.getUnitId() != null ? mainStoreRequest.getUnitId() : sessionService.getUnitId(),
+			storeProductCategoryMapper.setCreateDefaults(verifiedOrgId, verifiedUnitId,
 					mainStoreRequest.getUserId() != null ? mainStoreRequest.getUserId() : sessionService.getUserId());
 
 			storeProductCategoryMapper.setIsActive(true);
@@ -188,8 +199,8 @@ public class MainStoreService implements IMainStoreService {
 
 		StoreRabbitDto storeRabbitDto = new StoreRabbitDto(response.getId().intValue(), store.getStoreCode(),
 				store.getStoreName(), mainStoreRequest.getUserId(), store.getAddedDate(), store.getUpdatedByUser(),
-				store.getUpdatedDate(), store.getIsDeleted(), store.getIsActive(), mainStoreRequest.getOrganizationId(),
-				mainStoreRequest.getUnitId(),
+				store.getUpdatedDate(), store.getIsDeleted(), store.getIsActive(), verifiedOrgId,
+				verifiedUnitId,
 				new StoreTypeRabbitDto(storeType.getId(), storeType.getCode(), storeType.getType()),
 				new VisitTypeRabbitDto(visitType.getVisitTypeId(), visitType.getVisitTypeName(),
 						visitType.getVisitTypeCode()));
@@ -208,13 +219,24 @@ public class MainStoreService implements IMainStoreService {
 	@Transactional
 	public CommonResponse update(MainStoreRequest mainStoreRequest) {
 
+		// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+
 		Store store = MainStoreDao.getById(mainStoreRequest.getId());
+		// BR-121-class fix: getById(id) alone has zero org/unit filter at all --
+		// refuse if the loaded row doesn't actually belong to the verified tenant,
+		// same "not found" shape as a genuinely nonexistent id.
+		if (store == null || store.getOrganizationId() == null || !store.getOrganizationId().equals(verifiedOrgId)
+				|| store.getUnitId() == null || !store.getUnitId().equals(verifiedUnitId)) {
+			CommonResponse response = new CommonResponse();
+			response.setStatus(HttpStatus.NOT_FOUND.toString());
+			response.setMessage("Not found.");
+			return response;
+		}
 		StoreType storeType = new StoreType();
 		// sessionService.setEntityDefaults(storeType);
-		storeType.setCreateDefaults(
-				mainStoreRequest.getOrganizationId() != null ? mainStoreRequest.getOrganizationId()
-						: sessionService.getOrganizationId(),
-				mainStoreRequest.getUnitId() != null ? mainStoreRequest.getUnitId() : sessionService.getUnitId(),
+		storeType.setCreateDefaults(verifiedOrgId, verifiedUnitId,
 				mainStoreRequest.getUserId() != null ? mainStoreRequest.getUserId() : sessionService.getUserId());
 
 		if (mainStoreRequest.getStoreTypeId() != null && mainStoreRequest.getStoreTypeId() > 0) {
@@ -291,12 +313,25 @@ public class MainStoreService implements IMainStoreService {
 	@Transactional
 	public CommonResponse updateStatus(Integer storeId, Boolean status, Integer orgId, Integer unitId, Integer userId) {
 
+		// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+
 		Store store = MainStoreDao.getById(storeId);
+		// BR-121-class fix: getById(id) alone has zero org/unit filter at all --
+		// refuse if the loaded row doesn't actually belong to the verified tenant,
+		// same "not found" shape as a genuinely nonexistent id.
+		if (store == null || store.getOrganizationId() == null || !store.getOrganizationId().equals(verifiedOrgId)
+				|| store.getUnitId() == null || !store.getUnitId().equals(verifiedUnitId)) {
+			CommonResponse response = new CommonResponse();
+			response.setStatus(HttpStatus.NOT_FOUND.toString());
+			response.setMessage("Not found.");
+			return response;
+		}
 		StoreType storeType = new StoreType();
 		//// System.out.println("Store Id : "+store.getStoreId());
 		// sessionService.setEntityDefaults(storeType);
-		storeType.setCreateDefaults(orgId != null ? orgId : sessionService.getOrganizationId(),
-				unitId != null ? unitId : sessionService.getUnitId(),
+		storeType.setCreateDefaults(verifiedOrgId, verifiedUnitId,
 				userId != null ? userId : sessionService.getUserId());
 
 		if (status) {
@@ -441,13 +476,24 @@ public class MainStoreService implements IMainStoreService {
 	@Override
 	@Transactional
 	public CommonResponse updateNew(MainStoreRequestNew mainStoreRequest) {
+		// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+
 		Store store = MainStoreDao.getById(mainStoreRequest.getId());
+		// BR-121-class fix: getById(id) alone has zero org/unit filter at all --
+		// refuse if the loaded row doesn't actually belong to the verified tenant,
+		// same "not found" shape as a genuinely nonexistent id.
+		if (store == null || store.getOrganizationId() == null || !store.getOrganizationId().equals(verifiedOrgId)
+				|| store.getUnitId() == null || !store.getUnitId().equals(verifiedUnitId)) {
+			CommonResponse response = new CommonResponse();
+			response.setStatus(HttpStatus.NOT_FOUND.toString());
+			response.setMessage("Not found.");
+			return response;
+		}
 		StoreType storeType = new StoreType();
 		// sessionService.setEntityDefaults(storeType);
-		storeType.setCreateDefaults(
-				mainStoreRequest.getOrganizationId() != null ? mainStoreRequest.getOrganizationId()
-						: sessionService.getOrganizationId(),
-				mainStoreRequest.getUnitId() != null ? mainStoreRequest.getUnitId() : sessionService.getUnitId(),
+		storeType.setCreateDefaults(verifiedOrgId, verifiedUnitId,
 				mainStoreRequest.getUserId() != null ? mainStoreRequest.getUserId() : sessionService.getUserId());
 
 		if (mainStoreRequest.getStoreTypeId() != null && mainStoreRequest.getStoreTypeId() > 0) {

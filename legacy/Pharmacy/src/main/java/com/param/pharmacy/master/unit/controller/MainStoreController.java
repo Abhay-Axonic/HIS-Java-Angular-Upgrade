@@ -92,9 +92,9 @@ public class MainStoreController {
 			@ApiResponse(code = 405, message = "Method Not Allowed") })
 	public ResponseEntity<CommonResponse> Update(@PathVariable("id") Integer id,
 												 @PathVariable("status") Boolean status ,
-												 @PathVariable("id") Integer orgId,
-												 @PathVariable("id") Integer unitId,
-												 @PathVariable("id") Integer userId) {
+												 @PathVariable("orgId") Integer orgId,
+												 @PathVariable("unitId") Integer unitId,
+												 @PathVariable("userId") Integer userId) {
 		return new ResponseEntity<CommonResponse>(MainStoreService.updateStatus(id,status, orgId,unitId,userId),
 				HttpStatus.CREATED);
 		/*if (MainStoreService.updateStatus(id,status).getStatus().equals(HttpStatus.OK.toString()))
