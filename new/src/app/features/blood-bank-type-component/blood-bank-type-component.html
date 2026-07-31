@@ -1,0 +1,134 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="bloodBagTypeId">Blood Bag Type<span class="required">*</span></label>
+        <select id="bloodBagTypeId" [ngModel]="bloodBagTypeId()" (ngModelChange)="bloodBagTypeId.set($event)" name="bloodBagTypeId">
+          <option value="">Select Bag Type</option>
+          @for (b of bagTypeList(); track b.bloodBagTypeId) {
+            <option [value]="b.bloodBagTypeId">{{ b.bloodBagTypeDesc }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="dual-list">
+      <div class="component-picker">
+        <p>Available Components</p>
+        @for (c of componentList(); track c.bloodComponentId) {
+          <label class="checkbox">
+            <input type="checkbox" [checked]="isPicked().has(c.bloodComponentId)" (click)="toggleComponentPick(c)" />
+            {{ c.bloodComponentDesc }}
+          </label>
+        }
+      </div>
+      <div class="component-picked">
+        <p>Selected Components</p>
+        @for (c of pickedComponents(); track c.bloodComponentId) {
+          <div>{{ c.bloodComponentDesc }}</div>
+        }
+        @if (!pickedComponents().length) {
+          <p class="muted">None selected</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Blood Bag Type</th>
+        <th class="text-center">Details</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.bloodBagTypeId) {
+        <tr>
+          <td>{{ row.bloodBagTypeDesc }}</td>
+          <td class="text-center"><i class="icon-view" (click)="viewDetails(row.bloodBagTypeId)"></i></td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row.bloodBagTypeId)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (detailModalRows(); as rows) {
+  <div class="modal-backdrop" (click)="closeDetailModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Components for this Bag Type
+        <button type="button" (click)="closeDetailModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        @for (r of rows; track r.bloodComponentId) {
+          <div>{{ r.bloodComponentDesc }}</div>
+        }
+        @if (!rows.length) {
+          <p class="muted">No components mapped</p>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeDetailModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,90 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="tpaId">TPA</label>
+        <select id="tpaId" [ngModel]="selectedTpaId()" (ngModelChange)="onTpaChange($event)" name="tpaId">
+          <option value="">Select TPA</option>
+          @for (t of tpaList(); track t.companyId) {
+            <option [value]="t.companyId">{{ t.companyDesc }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="dual-list">
+      <div class="component-picker">
+        <p>Insurance Companies Not Mapped</p>
+        @for (i of notMappedList(); track i.insuranceId) {
+          <label class="checkbox">
+            <input type="checkbox" [checked]="isPicked().has(i.insuranceId)" (click)="togglePickInsurance(i)" />
+            {{ i.insuranceDesc }}
+          </label>
+        }
+      </div>
+      <div class="component-picked">
+        <p>Selected Insurance Companies</p>
+        @for (i of pickedInsurance(); track i.insuranceId) {
+          <div>{{ i.insuranceDesc }}</div>
+        }
+        @if (!pickedInsurance().length) {
+          <p class="muted">None selected</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    <button type="button" class="btn-primary" title="Save" (click)="save()">Save</button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>TPA</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.insuranceTpaMapperId) {
+        <tr>
+          <td>{{ row.companyDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit disabled" title="Editing an existing TPA mapping is not currently supported" (click)="editUnavailable()"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="3" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>

@@ -1540,6 +1540,62 @@ export const routes: Routes = [
             (m) => m.ProductCategoryMapping,
           ),
       },
+      // Phase 4 batch 34. 5 screens, all confirmed real via a genuine,
+      // authenticated live golden-trace browser capture (2026-07-31), not
+      // static analysis alone -- see tools/golden-trace/capture-live-batch34.js.
+      // A 6th candidate, mpesaApplicationConfiguration, was excluded: its
+      // controller script is never referenced by index.html and so never
+      // loads (docs/ANGULAR_PENDING_FINDINGS.md,
+      // PENDING-mpesaapplicationconfiguration-missing-script-include).
+      // moduleId values read directly from each state's own live resolve
+      // block in app.js (InsuranceTPAMapping/operationTable/
+      // bloodBankTypeComponent) or the screen's own self-registered
+      // `.config($stateProvider)` block (pharmacyStrengthUnitMaster).
+      // tubeFeedingProducts has no `data.moduleId` -- confirmed its legacy
+      // state genuinely has no resolve block at all (app.js:19683-19689),
+      // same class as billingGroupMaster/periodicityService above.
+      {
+        // Legacy's real state/URL uses capital "InsuranceTPAMapping"
+        // (confirmed at app.js:8082, not `insuranceTPAMapping`) -- kept for
+        // parity even though it looks inconsistent with this file's other
+        // camelCase routes.
+        path: 'InsuranceTPAMapping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 573, title: 'Insurance & TPA Mapping' },
+        loadComponent: () =>
+          import('./features/insurance-tpa-mapping/insurance-tpa-mapping').then((m) => m.InsuranceTpaMapping),
+      },
+      {
+        path: 'operationTable',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 522, title: 'Operation Table' },
+        loadComponent: () => import('./features/operation-table/operation-table').then((m) => m.OperationTable),
+      },
+      {
+        path: 'bloodBankTypeComponent',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 739, title: 'Blood Bank Type Component Master' },
+        loadComponent: () =>
+          import('./features/blood-bank-type-component/blood-bank-type-component').then(
+            (m) => m.BloodBankTypeComponent,
+          ),
+      },
+      {
+        path: 'pharmacyStrengthUnitMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 468, title: 'Strength Clinical Unit Master' },
+        loadComponent: () =>
+          import('./features/pharmacy-strength-unit-master/pharmacy-strength-unit-master').then(
+            (m) => m.PharmacyStrengthUnitMaster,
+          ),
+      },
+      {
+        path: 'tubeFeedingProducts',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Tube Feeding Products' },
+        loadComponent: () =>
+          import('./features/tube-feeding-products/tube-feeding-products').then((m) => m.TubeFeedingProducts),
+      },
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },

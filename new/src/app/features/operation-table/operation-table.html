@@ -1,0 +1,152 @@
+<section class="page">
+  <fieldset>
+    <div class="filter-row">
+      <div class="field">
+        <label for="tableCode">Table Code<span class="required">*</span></label>
+        <input
+          id="tableCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().tableCode"
+          (ngModelChange)="updateField('tableCode', $event)"
+          name="tableCode"
+          [class.invalid]="isRequiredMissing(record().tableCode)"
+        />
+      </div>
+
+      <div class="field">
+        <label for="tableName">Table Name<span class="required">*</span></label>
+        <input
+          id="tableName"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().tableName"
+          (ngModelChange)="updateField('tableName', $event)"
+          name="tableName"
+          [class.invalid]="isRequiredMissing(record().tableName)"
+        />
+      </div>
+
+      <div class="field">
+        <label for="tableTypeId">Table Type<span class="required">*</span></label>
+        <select
+          id="tableTypeId"
+          [ngModel]="record().tableTypeId"
+          (ngModelChange)="updateField('tableTypeId', $event)"
+          name="tableTypeId"
+        >
+          <option value="">Select Table Type</option>
+          @for (t of tableTypeList(); track t.operationTableTypeId) {
+            <option [value]="t.operationTableTypeId">{{ t.tableName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="operationTheatreId">Theatre<span class="required">*</span></label>
+        <select
+          id="operationTheatreId"
+          [ngModel]="record().operationTheatreId"
+          (ngModelChange)="updateField('operationTheatreId', $event)"
+          name="operationTheatreId"
+        >
+          <option value="">Select Theater</option>
+          @for (t of theatreList(); track t.operationTheatreId) {
+            <option [value]="t.operationTheatreId">{{ t.theatreName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field wide">
+        <label for="tableDesc">Table Description<span class="required">*</span></label>
+        <input
+          id="tableDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="record().tableDesc"
+          (ngModelChange)="updateField('tableDesc', $event)"
+          name="tableDesc"
+          [class.invalid]="isRequiredMissing(record().tableDesc)"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input type="text" class="search-box" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" name="search" />
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary" title="Save" (click)="openConfirmModal()">Save</button>
+    } @else {
+      <button type="button" class="btn-primary" title="Update" (click)="update()">Update</button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Table Code</th>
+        <th>Table Name</th>
+        <th>Table Description</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.operationTableId) {
+        <tr>
+          <td>{{ row.tableCode }}</td>
+          <td>{{ row.tableName }}</td>
+          <td>{{ row.tableDesc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center"><i class="icon-edit" (click)="edit(row.operationTableId)"></i></td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
