@@ -153,6 +153,7 @@ import com.param.global.pharmacy.dto.SaleDetailPackageMapperDto;
 import com.param.global.pharmacy.dto.SaleDetailPayeeMapperDto;
 import com.param.global.service.items.CustomException;
 import com.param.global.utility.Util;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.service.global.SessionService;
 import com.param.service.global.model.SaleDetailPackageMapper;
 import com.param.utility.TimeZoneComponent;
@@ -176,6 +177,9 @@ public class GlobalService implements IGlobalService {
 	
 	@Autowired
 	SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Autowired
 	private IGlobalUnitMasterDao iGlobalUnitMasterDao;
@@ -759,8 +763,11 @@ public class GlobalService implements IGlobalService {
 	@Override
 	@Transactional
 	public Object getInsuranceCompanyList(String name, Integer unitId) {
+		// BR-121-class fix: always use verified identity, ignore the client-supplied
+		// unitId URL path variable entirely.
 		List<InsuranceCompanyDetails> insuranceCompanyList = new ArrayList<InsuranceCompanyDetails>();
-		for (Company company : GlobalDao.getInsuranceCompanyList(name, unitId)) {
+		for (Company company : GlobalDao.getInsuranceCompanyList(name,
+				verifiedIdentityService.getVerifiedUnitId(), verifiedIdentityService.getVerifiedOrganizationId())) {
 
 			InsuranceCompanyDetails insuranceCompany = new InsuranceCompanyDetails(company.getCompanyId(),
 					company.getCompanyDesc());

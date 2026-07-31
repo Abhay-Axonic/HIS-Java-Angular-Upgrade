@@ -361,7 +361,7 @@ public interface IGlobalDao {
 
 	List<Vendor> getServiceProviderList(String name, Integer orgId);
 
-	List<Company> getInsuranceCompanyList(String name, Integer unitId);
+	List<Company> getInsuranceCompanyList(String name, Integer unitId, Integer organizationId);
 
 	User getUserById(Integer id);
 
