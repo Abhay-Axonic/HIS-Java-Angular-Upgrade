@@ -29,6 +29,9 @@ public class PreOperativeDetailsDaoImpl extends GenericDao<PreOperativeDetails, 
 
 	private static final Logger logger = Logger.getLogger(PreOperativeDetailsDaoImpl.class);
 
+	@org.springframework.beans.factory.annotation.Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
 	public PreOperativeDetailsDaoImpl() {
 		super(PreOperativeDetails.class);
 	}
@@ -155,8 +158,8 @@ public class PreOperativeDetailsDaoImpl extends GenericDao<PreOperativeDetails, 
 
 				PreOperativeDetailsDto credResult = (PreOperativeDetailsDto) sessionFactory.getCurrentSession()
 						.createSQLQuery(query)
-						.setParameter("unitId", preOperativeDetailsDto.getUnitId())
-						.setParameter("orgId", preOperativeDetailsDto.getOrganizationId())
+						.setParameter("unitId", verifiedIdentityService.getVerifiedUnitId())
+						.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
 						.setResultTransformer(Transformers.aliasToBean(PreOperativeDetailsDto.class))
 						.uniqueResult();
 

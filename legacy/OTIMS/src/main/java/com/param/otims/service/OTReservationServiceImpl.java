@@ -54,7 +54,10 @@ public class OTReservationServiceImpl  implements IOTReservationService, ICommon
 
 	@Autowired
 	IOTReservationDao iOTReservationDao;
-	
+
+	@Autowired
+	com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
 	@Autowired
 	IPatientRegistrationService patientRegistrationServiceImpl;
 	
@@ -411,7 +414,7 @@ public class OTReservationServiceImpl  implements IOTReservationService, ICommon
 	@Override
 	public Response getEquipmentTyoeAndAssetItem(int orgId, int unitId) throws ApplicationException {
 		try {
-			Response res =  iOTReservationDao.getEquipmentTyoeAndAssetItem(orgId,unitId);
+			Response res =  iOTReservationDao.getEquipmentTyoeAndAssetItem(verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 			
 			List<AssetVO> assetTypelist = new ArrayList<>();
 			List<AssetVO> assetTypelistFinal = new ArrayList<>();
