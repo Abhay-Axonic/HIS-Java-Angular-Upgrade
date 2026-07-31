@@ -49,9 +49,12 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Autowired
 	HikariDataSource driverManager;
+
+	@Autowired
+	com.param.global.service.VerifiedIdentityService verifiedIdentityService;
 	
 	@Override
 	public Response getUnitApplicationBillingConfigByOrgUnit(
@@ -82,6 +85,13 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 				if(unitApplicationConfigurationDto.getUnitApplicationBillingConfigurationId()!=null)
 				{
 					unitApplicationBillingConfiguration = (UnitApplicationBillingConfiguration) sessionFactory.getCurrentSession().get(UnitApplicationBillingConfiguration.class, unitApplicationConfigurationDto.getUnitApplicationBillingConfigurationId());
+
+					if (unitApplicationBillingConfiguration == null || unitApplicationBillingConfiguration.getOrganizationId() == null
+							|| !unitApplicationBillingConfiguration.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+							|| unitApplicationBillingConfiguration.getUnitId() == null
+							|| !unitApplicationBillingConfiguration.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+						return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+					}
 				}else{
 					unitApplicationBillingConfiguration = new UnitApplicationBillingConfiguration();
 				}
@@ -92,8 +102,8 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 					unitApplicationBillingConfiguration.setRadiologySpecialityId(unitApplicationConfigurationDto.getRadiologySpecialityId());
 					unitApplicationBillingConfiguration.setPatientCategoryId(unitApplicationConfigurationDto.getPatientCategoryId());
 					unitApplicationBillingConfiguration.setDefaultPatientCategoryId(unitApplicationConfigurationDto.getDefaultPatientCategoryId());
-					unitApplicationBillingConfiguration.setOrganizationId(unitApplicationConfigurationDto.getOrganizationId());
-					unitApplicationBillingConfiguration.setUnitId(unitApplicationConfigurationDto.getUnitId());
+					unitApplicationBillingConfiguration.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+					unitApplicationBillingConfiguration.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 					unitApplicationBillingConfiguration.setStatus(unitApplicationConfigurationDto.getStatus());
 					unitApplicationBillingConfiguration.setCreatedBy(unitApplicationConfigurationDto.getCreatedBy());
 					unitApplicationBillingConfiguration.setCreatedDate(GlobalCommonDateUtils.getDate(unitApplicationConfigurationDto.getCreatedDate(), "dd-M-yyyy HH:mm:ss"));
@@ -278,7 +288,10 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 	public Response updateUnitApplicationBillingConfig(UnitApplicationConfigurationDto unitApplicationConfigurationDto)
 			throws ApplicationException {
 		
-		try{	
+		try{
+			unitApplicationConfigurationDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			unitApplicationConfigurationDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+
 			if(unitApplicationConfigurationDto.getUnitApplicationBillingConfigurationId()!= null){
 			 sessionFactory.getCurrentSession()
 					.getNamedQuery("UPDATE_UNIT_APPLICATION_BILLING_CONFIGURATION_MAPPER")
@@ -345,6 +358,9 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 						unitApplicationBillingConfiguration.setDiagnosisRequire(unitApplicationConfigurationDto.getDiagnosisRequire());
 						unitApplicationBillingConfiguration.setDefaultDiscountOwnership(unitApplicationConfigurationDto.getDefaultDiscountOwnership());
 						unitApplicationBillingConfiguration.setIsSendMailOnMailPrescription(unitApplicationConfigurationDto.getIsSendMailOnMailPrescription());
+						unitApplicationBillingConfiguration.setIsRateVisibleOnCoversheet(unitApplicationConfigurationDto.getIsRateVisibleOnCoversheet());
+						unitApplicationBillingConfiguration.setIsVitalQualifierVisible(unitApplicationConfigurationDto.getIsVitalQualifierVisible());
+						unitApplicationBillingConfiguration.setIsAdvisedDateVisible(unitApplicationConfigurationDto.getIsAdvisedDateVisible());
 						unitApplicationBillingConfiguration.setKioskLandingScreen(unitApplicationConfigurationDto.getKioskLandingScreen());
 						unitApplicationBillingConfiguration.setDoctorSlipTDS(unitApplicationConfigurationDto.getDoctorSlipTDS());
 						unitApplicationBillingConfiguration.setBiomedicalsChargesServiceId(unitApplicationConfigurationDto.getBiomedicalsChargesServiceId());
@@ -390,8 +406,8 @@ public class UnitApplicationBillingConfigurationDaoImpl extends GenericDao<UnitA
 	public Response updateUnitApplicationBillingConfigStatus(UnitApplicationConfigurationDto unitApplicationConfigurationDto) throws ApplicationException {
 		try {
 			sessionFactory.getCurrentSession().createQuery("update UnitApplicationBillingConfiguration set status='I' where organizationId=:orgId AND unitId=:unitId")
-			.setParameter("orgId",unitApplicationConfigurationDto.getOrganizationId())
-			.setParameter("unitId", unitApplicationConfigurationDto.getUnitId())
+			.setParameter("orgId",verifiedIdentityService.getVerifiedOrganizationId())
+			.setParameter("unitId", verifiedIdentityService.getVerifiedUnitId())
 			.executeUpdate();
 		
 		return new Response<>(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null);
