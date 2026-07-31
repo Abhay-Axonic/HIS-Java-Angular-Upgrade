@@ -40,6 +40,9 @@ public class UserRoleMapperDaoImpl extends GenericDao<UserRoleMapper, Integer> i
 	}
 	@Autowired
 	SessionFactory SessionFactory;
+
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
 	
 	
 	 
@@ -81,9 +84,16 @@ public class UserRoleMapperDaoImpl extends GenericDao<UserRoleMapper, Integer> i
 	public Response updateUserRoleMapper(UserRoleMapperDto userRoleMapperDto) throws ApplicationException {
 		try {
 			UserRoleMapper userRoleMapper=findById(userRoleMapperDto.getUserRoleMpprId());
-			
-			userRoleMapper.setOrganisationId(userRoleMapperDto.getOrganisationId());
-			userRoleMapper.setUnitId(userRoleMapperDto.getUnitId());
+
+			if (userRoleMapper == null || userRoleMapper.getOrganisationId() == null
+					|| !userRoleMapper.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| userRoleMapper.getUnitId() == null
+					|| !userRoleMapper.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
+			userRoleMapper.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
+			userRoleMapper.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			userRoleMapper.setRoleId(userRoleMapperDto.getRoleId());
 			userRoleMapper.setUpdatedBy(userRoleMapperDto.getUpdatedBy());
 			userRoleMapper.setUpdatedDate(GlobalCommonDateUtils.getDate(userRoleMapperDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
@@ -102,6 +112,14 @@ public class UserRoleMapperDaoImpl extends GenericDao<UserRoleMapper, Integer> i
 	public Response updateUserRoleMapperStatus(UserRoleMapperDto userRoleMapperDto) throws ApplicationException {
 		try {
 			UserRoleMapper userRoleMapper=findById(userRoleMapperDto.getUserRoleMpprId());
+
+			if (userRoleMapper == null || userRoleMapper.getOrganisationId() == null
+					|| !userRoleMapper.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| userRoleMapper.getUnitId() == null
+					|| !userRoleMapper.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			userRoleMapper.setUpdatedBy(userRoleMapperDto.getUpdatedBy());
 			userRoleMapper.setUpdatedDate(GlobalCommonDateUtils.getDate(userRoleMapperDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			userRoleMapper.setStatus(userRoleMapperDto.getStatus());

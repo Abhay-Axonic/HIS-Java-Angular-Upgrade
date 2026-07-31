@@ -43,6 +43,9 @@ public class UserRoleMapperServiceImpl implements IUserRoleMapperService , IComm
 	 
 	 @Autowired
 		Gson gson;
+
+	 @Autowired
+	 private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
 	 
 	@Override
 	public Response saveUserRoleMapper(UserRoleMapperDto userRoleMapperDto) throws ApplicationException {
@@ -123,6 +126,9 @@ public class UserRoleMapperServiceImpl implements IUserRoleMapperService , IComm
 	@Override
 	public Response updateUserRoleMapper(UserRoleMapperDto userRoleMapperDto) throws ApplicationException {
 		try {
+			userRoleMapperDto.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
+			userRoleMapperDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+
 			Response res1=iUserRoleMapperDao.updateUserUnitMapper(userRoleMapperDto);
 				
 			Response response=iUserRoleMapperDao.truncteRecode(userRoleMapperDto);
