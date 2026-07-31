@@ -2061,14 +2061,19 @@ public class GlobalDao extends AbstractDao<Integer, Integer> implements IGlobalD
 	}
 
 	@Override
-	public List<Company> getInsuranceCompanyList(String name, Integer unitId) {
+	public List<Company> getInsuranceCompanyList(String name, Integer unitId, Integer organizationId) {
+		// BR-121-class fix: this query previously had no organization_id
+		// predicate at all -- unitId alone (client-supplied, no ownership check
+		// elsewhere in this call chain) determined the whole result set.
 		String hql = "SELECT company FROM Company as company "
 				+ "WHERE lower(company.companyDesc) LIKE :name "
 				+ "AND company.status = 'A' "
-				+ "AND company.unitId = :unitId";
+				+ "AND company.unitId = :unitId "
+				+ "AND company.organizationId = :organizationId";
 		Query query = getSession().createQuery(hql);
 		query.setParameter("name", name != null ? name.toLowerCase() + "%" : "");
 		query.setParameter("unitId", unitId);
+		query.setParameter("organizationId", organizationId);
 		return query.list();
 	}
 
