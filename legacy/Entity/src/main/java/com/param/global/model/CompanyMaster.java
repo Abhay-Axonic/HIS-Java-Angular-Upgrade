@@ -161,7 +161,11 @@ import com.param.service.global.model.MCompanyContractMaster;
               		+ " gradeMstr.grade_desc AS \"gradeDesc\" "
               		+ " FROM service.t_company_contarct_grade_mpper mpper "
               		+ " INNER JOIN service.m_contract_grade_master gradeMstr on mpper.contract_grade_master_id=gradeMstr.contract_grade_master_id"
-              		+ " WHERE mpper.company_id=:companyId AND mpper.status='A' ")
+              		// BR-121-class fix: this query previously had no organization/unit
+              		// predicate at all -- any companyId (client-supplied, no ownership
+              		// check elsewhere in this call chain) returned its grade mappings
+              		// regardless of tenant.
+              		+ " WHERE mpper.company_id=:companyId AND mpper.org_id=:orgId AND mpper.org_unit_id=:unitId AND mpper.status='A' ")
 @Entity
 @Table(name="t_company_master", schema="public")
 @SequenceGenerator(name = "company_master_seq", sequenceName = "public.company_master_seq", allocationSize = 1)
