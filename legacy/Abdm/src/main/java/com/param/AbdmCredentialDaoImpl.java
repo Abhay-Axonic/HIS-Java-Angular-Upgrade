@@ -242,6 +242,9 @@ public class AbdmCredentialDaoImpl extends GenericDao<AbdmCredential, Integer>
 	@Autowired
 	IGlobalDao GlobalDao;
 
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
 	public static final String nounce = "a+vkTHbJdbncWxFHAkyA/qvtOSQ9YOSX5A8hHvTWFfY=";
 
 	public static final String privateKey = "Cu5dGG/oxTd81RNVvN5zibjAtJxLGEdPUoVAlHuCvoc=";
@@ -314,8 +317,8 @@ public class AbdmCredentialDaoImpl extends GenericDao<AbdmCredential, Integer>
 									+ " inner join public.m_unit_master unit on  unit.unit_id = ddcds.unit_id "
 									+ " where ddcds.organization_id =:organizationId" + " and ddcds.unit_id =:unitId "
 									+ " and ddcds.status ='A'")
-					.setInteger("unitId", abdmCredentialdDto.getUnitId())
-					.setInteger("organizationId", abdmCredentialdDto.getOrganizationId())
+					.setInteger("unitId", verifiedIdentityService.getVerifiedUnitId())
+					.setInteger("organizationId", verifiedIdentityService.getVerifiedOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(AbdmCredentialdDto.class)).uniqueResult();
 
 			JSONArray jsonArray = new JSONArray();
@@ -640,12 +643,17 @@ public class AbdmCredentialDaoImpl extends GenericDao<AbdmCredential, Integer>
 					return new Response(ERROR, ERROR_CODE, response.message(), null, NULL);
 				}
 				JSONObject jsonObject = new JSONObject(response.body().string());
+				Integer verifiedOrganizationId = verifiedIdentityService.getVerifiedOrganizationId();
+				Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 				Session session = sessionFactory.getCurrentSession();
-				Query query = session.createQuery("update AbdmCredential dis set dis.id ='"
-						+ abdmCredentialdDto.getName() + abdmCredentialdDto.getOrganizationId() + "',dis.aliseName ='"
-						+ abdmCredentialdDto.getAliseName() + "', dis.facialityJson= '" + jsonObject.toString() + "'"
-						+ " where dis.organizationId=" + abdmCredentialdDto.getOrganizationId() + " AND dis.unitId="
-						+ abdmCredentialdDto.getUnitId());
+				Query query = session.createQuery("update AbdmCredential dis set dis.id = :bridgeId,"
+						+ " dis.aliseName = :aliseNameParam, dis.facialityJson = :facialityJsonParam"
+						+ " where dis.organizationId = :organizationId AND dis.unitId = :unitId");
+				query.setParameter("bridgeId", abdmCredentialdDto.getName() + verifiedOrganizationId);
+				query.setParameter("aliseNameParam", abdmCredentialdDto.getAliseName());
+				query.setParameter("facialityJsonParam", jsonObject.toString());
+				query.setParameter("organizationId", verifiedOrganizationId);
+				query.setParameter("unitId", verifiedUnitId);
 				query.executeUpdate();
 			}
 
