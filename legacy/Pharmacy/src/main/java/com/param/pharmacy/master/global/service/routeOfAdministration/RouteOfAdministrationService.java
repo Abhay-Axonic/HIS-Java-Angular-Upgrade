@@ -16,6 +16,7 @@ import com.param.pharmacy.master.global.dto.routeOfAdministration.RouteOfAdminis
 import com.param.pharmacy.master.global.dto.routeOfAdministration.RouteOfAdministrationRequest;
 import com.param.rabbitmq.service.EmrService.IEmrService;
 import com.param.service.global.SessionService;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 @Service("RouteOfAdministrationService")
@@ -23,19 +24,25 @@ public class RouteOfAdministrationService implements IRouteOfAdministrationServi
 
 	@Autowired
 	IRouteOfAdministrationDao RouteOfAdministrationDao;
-	
+
 	@Autowired
 	IEmrService EmrService;
-	
+
 	@Autowired
 	private SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	@Transactional
 	public List<RouteOfAdministrationListResponse> getAll(Integer orgId) {
+		// orgId param intentionally ignored -- BR-pending (batch 35 Step 0/1):
+		// this previously trusted a client-supplied/path orgId directly, a
+		// confirmed live cross-tenant IDOR. Always use the JWT-verified org.
 		List<RouteOfAdministrationListResponse> list = new ArrayList<RouteOfAdministrationListResponse>();
 
-		for (RouteOfAdministration routeOfAdministration : RouteOfAdministrationDao.getAll(orgId)) {
+		for (RouteOfAdministration routeOfAdministration : RouteOfAdministrationDao.getAll(verifiedIdentityService.getVerifiedOrganizationId())) {
 			RouteOfAdministrationListResponse routOfAdminResponse = new RouteOfAdministrationListResponse();
 			routOfAdminResponse.setId((Integer) routeOfAdministration.getId());
 			routOfAdminResponse.setCode((String) routeOfAdministration.getCode());
@@ -49,9 +56,10 @@ public class RouteOfAdministrationService implements IRouteOfAdministrationServi
 	@Override
 	@Transactional
 	public RouteOfAdministrationDetailsResponse getById(Integer id,Integer orgId) {
+		// orgId param intentionally ignored, same basis as getAll() above.
 		RouteOfAdministrationDetailsResponse response = new RouteOfAdministrationDetailsResponse();
 
-		RouteOfAdministration routeOfAdministration = RouteOfAdministrationDao.getById(id);
+		RouteOfAdministration routeOfAdministration = RouteOfAdministrationDao.getById(id, verifiedIdentityService.getVerifiedOrganizationId());
 
 		if (routeOfAdministration != null) {
 			response.setId((Integer) routeOfAdministration.getId());
@@ -74,8 +82,14 @@ public class RouteOfAdministrationService implements IRouteOfAdministrationServi
 		routeOfAdministration.setIsActive(routeOfAdministrationRequest.getStatus());
 
 		CommonResponse response = new CommonResponse();
-		//sessionService.setEntityDefaults(routeOfAdministration);
-		routeOfAdministration.setCreateDefaults(routeOfAdministrationRequest.getOrganizationId()!=null ? routeOfAdministrationRequest.getOrganizationId() : sessionService.getOrganizationId(),routeOfAdministrationRequest.getUnitId() !=null ? routeOfAdministrationRequest.getUnitId() :sessionService.getUnitId() ,routeOfAdministrationRequest.getUserId()!=null ? routeOfAdministrationRequest.getUserId() : sessionService.getUserId());
+		// organizationId/unitId always taken from the JWT-verified identity now --
+		// BR-pending (batch 35 Step 0/1): the prior ternary trusted a
+		// client-supplied organizationId/unitId directly whenever the request
+		// body included one, a confirmed live cross-tenant write IDOR. userId is
+		// left on sessionService, same precedent as BR-127: it's independently
+		// JWT-bound via JwtTokenFilter's UserComponent lookup, a separate,
+		// already-verified check.
+		routeOfAdministration.setCreateDefaults(verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId(), routeOfAdministrationRequest.getUserId()!=null ? routeOfAdministrationRequest.getUserId() : sessionService.getUserId());
 		response.setId(RouteOfAdministrationDao.create(routeOfAdministration).longValue());
 		response.setMessage("Route Of Administration Added Successfully");
 		routeOfAdministration.setId(response.getId().intValue());
@@ -100,8 +114,19 @@ public class RouteOfAdministrationService implements IRouteOfAdministrationServi
 	@Transactional
 	public CommonResponse update(RouteOfAdministrationRequest routeOfAdministrationRequest) throws CustomeException {
 
+		// BR-pending (batch 35 Step 0/1): getById() previously had zero
+		// organization scoping -- any authenticated user could update/deactivate
+		// any organization's record purely by id. Now scoped to the JWT-verified
+		// org; a record belonging to a different org resolves to null here
+		// exactly like a genuinely nonexistent id would.
 		RouteOfAdministration routeOfAdministration = RouteOfAdministrationDao
-				.getById(routeOfAdministrationRequest.getId());
+				.getById(routeOfAdministrationRequest.getId(), verifiedIdentityService.getVerifiedOrganizationId());
+
+		if (routeOfAdministration == null) {
+			throw new CustomeException(
+					routeOfAdministrationRequest.getId() != null ? routeOfAdministrationRequest.getId().longValue() : null,
+					"Route Of Administration not found", false);
+		}
 
 		if (routeOfAdministrationRequest.getCode() != null && routeOfAdministrationRequest.getCode() != "") {
 			routeOfAdministration.setCode(routeOfAdministrationRequest.getCode());

@@ -24,7 +24,10 @@ public class FormulationTypeAndROADao extends AbstractDao<Integer, FormulationAn
 	
 	@Override
 	public List<FormulationAndRoa> getAll(Integer orgId) {
-
+		// orgId is always the server-verified organizationId by the time it
+		// reaches here (see FormulationTypeAndROAService) -- BR-pending
+		// (batch 35 Step 0/1), same cross-tenant IDOR class as
+		// routeAdministration.
 		String hql = "SELECT formulationAndRoa FROM FormulationAndRoa AS formulationAndRoa "
 				+ " INNER JOIN formulationAndRoa.routeOfAdministration roa WITH roa.isActive = true AND roa.isDeleted = false AND roa.organization.organizationId=:orgId"
 				+ " where formulationAndRoa.isActive=true AND formulationAndRoa.isDeleted=false AND formulationAndRoa.organization.organizationId=:orgId"
@@ -50,12 +53,16 @@ public class FormulationTypeAndROADao extends AbstractDao<Integer, FormulationAn
 	}
 
 	@Override
-	public FormulationAndRoa getById(Integer id) {
-
+	public FormulationAndRoa getById(Integer id, Integer orgId) {
+		// orgId added (BR-pending, batch 35 Step 0/1): this query previously had
+		// zero organization scoping at all -- any authenticated user could fetch
+		// any organization's record purely by id. orgId is always the
+		// server-verified organizationId by the time it reaches here.
 		String hql = "SELECT formulationAndRoa FROM FormulationAndRoa AS formulationAndRoa "
-				+ "WHERE formulationAndRoa.id = :id  AND formulationAndRoa.isDeleted = false";
+				+ "WHERE formulationAndRoa.id = :id AND formulationAndRoa.isDeleted = false AND formulationAndRoa.organizationId = :orgId";
 		Query query = getSession().createQuery(hql);
 		query.setParameter("id", id);
+		query.setParameter("orgId", orgId);
 
 		return (FormulationAndRoa) query.uniqueResult();
 	}

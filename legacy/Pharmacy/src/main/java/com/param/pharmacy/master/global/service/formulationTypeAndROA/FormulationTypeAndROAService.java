@@ -20,6 +20,7 @@ import com.param.pharmacy.master.global.dto.formulationTypeAndROA.FormulationTyp
 import com.param.pharmacy.master.global.dto.formulationTypeAndROA.FormulationTypeAndROAResponse;
 import com.param.pharmacy.master.global.dto.formulationTypeAndROA.FormulationTypeAndROAResponseByID;
 import com.param.service.global.SessionService;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 @Service
@@ -28,16 +29,22 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 
 	@Autowired
 	IFormulationTypeAndROADao FormulationTypeAndROADao;
-	
+
 	@Autowired
 	private SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	@Transactional
 	public List<FormulationTypeAndROAResponse> getAll(Integer orgId) {
+		// orgId param intentionally ignored -- BR-pending (batch 35 Step 0/1):
+		// this previously trusted a client-supplied/path orgId directly, a
+		// confirmed live cross-tenant IDOR, same class as routeAdministration.
 		List<FormulationTypeAndROAResponse> responseList = new ArrayList<FormulationTypeAndROAResponse>();
 
-		for (FormulationAndRoa response : FormulationTypeAndROADao.getAll(orgId)) {
+		for (FormulationAndRoa response : FormulationTypeAndROADao.getAll(verifiedIdentityService.getVerifiedOrganizationId())) {
 			FormulationTypeAndROAResponse formulationTypeAndROAResponse = new FormulationTypeAndROAResponse(
 					response.getId(), response.getFormulationType().getType(),
 					response.getRouteOfAdministration().getDescription(), response.getIsActive());
@@ -87,13 +94,19 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 			formulationTypeAndROA.setOrganizationId(request.getOrganizationId());
 			formulationTypeAndROA.setUnitId(request.getUnitId());
 			formulationTypeAndROA.setUpdatedByUser(request.getUserId());
-			formulationTypeAndROA.setCreateDefaults(request.getOrganizationId()!=null ? request.getOrganizationId() : sessionService.getOrganizationId(),request.getUnitId() !=null ? request.getUnitId() :sessionService.getUnitId() ,request.getUserId()!=null ? request.getUserId() : sessionService.getUserId());
+			// organizationId/unitId always taken from the JWT-verified identity now
+			// -- BR-pending (batch 35 Step 0/1): the prior ternary trusted a
+			// client-supplied organizationId/unitId directly from the request body,
+			// a confirmed live cross-tenant write IDOR (the real frontend already
+			// sends these fields in the body). userId left on sessionService, same
+			// precedent as BR-127.
+			formulationTypeAndROA.setCreateDefaults(verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId(), request.getUserId()!=null ? request.getUserId() : sessionService.getUserId());
 			FormulationTypeAndROADao.saveFormulationTypeAndROA(formulationTypeAndROA);
 		}
 
 		CommonResponse response = new CommonResponse();
 		//sessionService.setEntityDefaults(formulationTypeAndROA);
-		formulationTypeAndROA.setCreateDefaults(request.getOrganizationId()!=null ? request.getOrganizationId() : sessionService.getOrganizationId(),request.getUnitId() !=null ? request.getUnitId() :sessionService.getUnitId() ,request.getUserId()!=null ? request.getUserId() : sessionService.getUserId());
+		formulationTypeAndROA.setCreateDefaults(verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId(), request.getUserId()!=null ? request.getUserId() : sessionService.getUserId());
 		response.setId(formulationTypeAndROA.getId().longValue());
 		response.setMessage("Formulation And Roa Inserted Successfully");
 
@@ -104,7 +117,18 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 	@Transactional
 	public CommonResponse update(FormulationTypeAndROARequest formulationTypeAndROARequest) throws CustomeException {
 
-		FormulationAndRoa formulationAndRoa = FormulationTypeAndROADao.getById(formulationTypeAndROARequest.getId());
+		// BR-pending (batch 35 Step 0/1): getById() previously had zero
+		// organization scoping -- any authenticated user could update/deactivate
+		// any organization's record purely by id. Now scoped to the JWT-verified
+		// org; a record belonging to a different org resolves to null here
+		// exactly like a genuinely nonexistent id would.
+		FormulationAndRoa formulationAndRoa = FormulationTypeAndROADao.getById(formulationTypeAndROARequest.getId(), verifiedIdentityService.getVerifiedOrganizationId());
+
+		if (formulationAndRoa == null) {
+			throw new CustomeException(
+					formulationTypeAndROARequest.getId() != null ? formulationTypeAndROARequest.getId().longValue() : null,
+					"Formulation And Roa not found", false);
+		}
 
 		if (formulationTypeAndROARequest.getFormulationtypeid() != null
 				&& formulationTypeAndROARequest.getFormulationtypeid() > 0) {
@@ -166,9 +190,10 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 	@Override
 	@Transactional
 	public List<FormulationTypeAndROAList> getDropdownList(Integer orgId) {
+		// orgId param intentionally ignored, same basis as getAll() above.
 		List<FormulationTypeAndROAList> response = new ArrayList<FormulationTypeAndROAList>();
 
-		for (RouteOfAdministration Route : FormulationTypeAndROADao.getDropdownList(orgId)) {
+		for (RouteOfAdministration Route : FormulationTypeAndROADao.getDropdownList(verifiedIdentityService.getVerifiedOrganizationId())) {
 			response.add(new FormulationTypeAndROAList(Route.getId(), Route.getCode(), Route.getDescription()));
 		}
 		return response;
@@ -177,8 +202,9 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 	@Override
 	@Transactional
 	public FormulationTypeAndROAResponseByID getById(Integer id,Integer orgId) {
+		// orgId param intentionally ignored, same basis as getAll() above.
 		FormulationTypeAndROAResponseByID responseList = new FormulationTypeAndROAResponseByID();
-		FormulationAndRoa andRoa = FormulationTypeAndROADao.getById(id);
+		FormulationAndRoa andRoa = FormulationTypeAndROADao.getById(id, verifiedIdentityService.getVerifiedOrganizationId());
 		if (andRoa != null) {
 			responseList = new FormulationTypeAndROAResponseByID(andRoa.getId(), andRoa.getFormulationType().getType(),
 					andRoa.getRouteOfAdministration().getDescription(), andRoa.getFormulationType().getId(),
@@ -191,16 +217,17 @@ public class FormulationTypeAndROAService implements IFormulationTypeAndROAServi
 	@Override
 	@Transactional
 	public Long getCount(Integer orgId) {
-		// TODO Auto-generated method stub
-		return FormulationTypeAndROADao.getCount(orgId);
+		// orgId param intentionally ignored, same basis as getAll() above.
+		return FormulationTypeAndROADao.getCount(verifiedIdentityService.getVerifiedOrganizationId());
 	}
 
 	@Override
 	@Transactional
 	public List<FormulationTypeAndROAResponse> getFormulationTypeAndROA(Integer offset, Integer noOfRecordsPerPage,Integer orgId) {
+		// orgId param intentionally ignored, same basis as getAll() above.
 		List<FormulationTypeAndROAResponse> responseList = new ArrayList<FormulationTypeAndROAResponse>();
 
-		for (FormulationAndRoa response : FormulationTypeAndROADao.getFormulationTypeAndROA(offset,noOfRecordsPerPage,orgId)) {
+		for (FormulationAndRoa response : FormulationTypeAndROADao.getFormulationTypeAndROA(offset,noOfRecordsPerPage,verifiedIdentityService.getVerifiedOrganizationId())) {
 			FormulationTypeAndROAResponse formulationTypeAndROAResponse = new FormulationTypeAndROAResponse(
 					response.getId(), response.getFormulationType().getType(),
 					response.getRouteOfAdministration().getDescription(), response.getIsActive());
