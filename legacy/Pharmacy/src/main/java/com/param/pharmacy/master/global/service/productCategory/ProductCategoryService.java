@@ -19,6 +19,7 @@ import com.param.pharmacy.master.global.dto.productCategory.ProductCategoryDetai
 import com.param.pharmacy.master.global.dto.productCategory.ProductCategoryListResponse;
 import com.param.pharmacy.master.global.dto.productCategory.ProductCategoryRequest;
 import com.param.pharmacy.master.unit.dao.productRestriction.IProductRestrictionDao;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.rabbitmq.dto.base.Payload;
 import com.param.rabbitmq.dto.base.Request;
 import com.param.rabbitmq.service.EmrService.IEmrService;
@@ -36,6 +37,9 @@ public class ProductCategoryService implements IProductCategoryService {
 
 	@Autowired
 	private SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Autowired
 	IGlobalDao GlobalDao;
@@ -81,8 +85,14 @@ public class ProductCategoryService implements IProductCategoryService {
 	@Transactional
 	public CommonResponse create(ProductCategoryRequest productCategoryRequest) {
 
-		productCategoryRequest.setOrganizationId(sessionService.getOrganizationId());
-		productCategoryRequest.setUnitId(sessionService.getUnitId());
+		// BR-115 correction: sessionService.getOrganizationId()/getUnitId() both
+		// read the unsigned, client-editable cookieObject cookie -- the original
+		// BR-115 fix pinned organizationId/unitId to "the session's" values but
+		// never verified the session itself, so it remained spoofable via the
+		// same cookie-forgery path as every other BR-121-class IDOR. Use the
+		// JWT-verified values instead.
+		productCategoryRequest.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		productCategoryRequest.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		productCategoryRequest.setUserId(sessionService.getUserId());
 
 		AssetCategory assetCategory = new AssetCategory();
