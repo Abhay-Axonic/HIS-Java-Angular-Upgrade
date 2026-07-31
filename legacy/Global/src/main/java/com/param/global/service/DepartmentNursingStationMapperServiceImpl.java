@@ -25,17 +25,29 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 
 	@Autowired
 	IDepartmentNursingStationMapperDao iDepartmentNursingStationMapperDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response saveDepartmentNursingStationMapper(DepartmentNursingStationMapperDto departmentNursingStationMapperDto) throws ApplicationException {
 		try
 		{
+			// BR-121: organisationId/unitId previously came straight from the
+			// client (no SessionService or any identity check anywhere in this
+			// screen's call chain) -- always use the JWT-verified values instead.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+			departmentNursingStationMapperDto.setOrganisationId(verifiedOrgId);
+			departmentNursingStationMapperDto.setUnitId(verifiedUnitId);
+
 			Response res = iDepartmentNursingStationMapperDao.checkDepartmentNursingStationMapperAvailable(departmentNursingStationMapperDto);
 			if(res.getListObject() != null && res.getListObject().size() > 0){
-				
+
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
-				
+
 			}else{
-			Iterator ite=departmentNursingStationMapperDto.getSelectdepartmentNursingStationMapperList().iterator(); 
+			Iterator ite=departmentNursingStationMapperDto.getSelectdepartmentNursingStationMapperList().iterator();
 			while (ite.hasNext()) {
 				DepartmentNursingStationMapperDto dto = new DepartmentNursingStationMapperDto();
 				Integer nursingStationId = (Integer) ite.next();
@@ -43,8 +55,8 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 				dto.setSpecialityId(departmentNursingStationMapperDto.getSpecialityId());
 				dto.setNursingStationId(nursingStationId);
 				dto.setStatus(departmentNursingStationMapperDto.getStatus());
-				dto.setOrganisationId(departmentNursingStationMapperDto.getOrganisationId());
-				dto.setUnitId(departmentNursingStationMapperDto.getUnitId());
+				dto.setOrganisationId(verifiedOrgId);
+				dto.setUnitId(verifiedUnitId);
 				dto.setCreatedBy(departmentNursingStationMapperDto.getCreatedBy());
 				dto.setUpdatedBy(departmentNursingStationMapperDto.getUpdatedBy());
 				dto.setUpdatedDate(departmentNursingStationMapperDto.getUpdatedDate());
@@ -53,7 +65,7 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 				iDepartmentNursingStationMapperDao.saveDepartmentNursingStationMapper(dto);
 			}
 			}
-			
+
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
 		} catch (Exception e)
 		{
@@ -66,8 +78,12 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 	public Response updateDepartmentNursingStationMapper(DepartmentNursingStationMapperDto departmentNursingStationMapperDto) throws ApplicationException {
 		try
 		{
+			// BR-121: same override as save -- always use verified identity.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+
 			List<DepartmentNursingStationMapperDto> listDepartmentNursingStationMapperDto = new ArrayList();
-			Iterator ite=departmentNursingStationMapperDto.getSelectdepartmentNursingStationMapperList().iterator(); 
+			Iterator ite=departmentNursingStationMapperDto.getSelectdepartmentNursingStationMapperList().iterator();
 			while (ite.hasNext()) {
 				DepartmentNursingStationMapperDto dto=new DepartmentNursingStationMapperDto();
 
@@ -75,13 +91,12 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 				dto.setUpdatedDate(departmentNursingStationMapperDto.getUpdatedDate());
 				dto.setSpecialityId(departmentNursingStationMapperDto.getSpecialityId());
 				dto.setCreatedBy(departmentNursingStationMapperDto.getCreatedBy());
-				dto.setOrganisationId(departmentNursingStationMapperDto.getOrganisationId());
-				dto.setUnitId(departmentNursingStationMapperDto.getUnitId());
+				dto.setOrganisationId(verifiedOrgId);
+				dto.setUnitId(verifiedUnitId);
 				dto.setCreatedDate(departmentNursingStationMapperDto.getCreatedDate());
 				dto.setStatus(departmentNursingStationMapperDto.getStatus());
 				dto.setIsDeleted(departmentNursingStationMapperDto.getIsDeleted());
 				dto.setNursingStationId(nursingStationId);
-				dto.setOrganisationId(departmentNursingStationMapperDto.getOrganisationId());
 				dto.setUpdatedBy(departmentNursingStationMapperDto.getUpdatedBy());
 				listDepartmentNursingStationMapperDto.add(dto);
 			}
@@ -103,7 +118,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 			Character status) throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.updateDepartmentNursingStationMapperStatus(specialityId, organisationId, unitId, status);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.updateDepartmentNursingStationMapperStatus(specialityId,
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId(), status);
 		} catch (Exception e)
 		{
 		logger.error("updateDepartmentNursingStationMapperStatus failed", e);
@@ -116,6 +133,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 	public Response getDepartmentNursingStationMapperlist(DepartmentNursingStationMapperDto departmentNursingStationMapperDto) throws ApplicationException {
 		try
 		{
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			departmentNursingStationMapperDto.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
+			departmentNursingStationMapperDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iDepartmentNursingStationMapperDao.getDepartmentNursingStationMapperlist(departmentNursingStationMapperDto);
 		} catch (Exception e)
 		{
@@ -129,7 +149,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 	public Response getDepartmentNursingStationMapperCount(Integer organisationId, Integer unitId) throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.getDepartmentNursingStationMapperCount(organisationId,unitId);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.getDepartmentNursingStationMapperCount(
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e)
 		{
 		logger.error("getDepartmentNursingStationMapperCount failed", e);
@@ -142,7 +164,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 	public Response getActiveDepartmentNursingStationMapper(Integer organisationId, Integer unitId) throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.getActiveDepartmentNursingStationMapper(organisationId, unitId);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.getActiveDepartmentNursingStationMapper(
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e)
 		{
 		logger.error("getActiveDepartmentNursingStationMapper failed", e);
@@ -156,7 +180,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 			throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.getDepartmentNursingStationMapperById(specialityId, organisationId, unitId);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.getDepartmentNursingStationMapperById(specialityId,
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e)
 		{
 		logger.error("getDepartmentNursingStationMapperById failed", e);
@@ -183,7 +209,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 			throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.getDetailedListNursingStation(specialityId, organisationId, unitId);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.getDetailedListNursingStation(specialityId,
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e)
 		{
 		logger.error("getDetailedListNursingStation failed", e);
@@ -196,7 +224,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 			throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.getDeptListByNursingStationId(nursingStationId, organisationId, unitId);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.getDeptListByNursingStationId(nursingStationId,
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e)
 		{
 		logger.error("getDeptListByNursingStationId failed", e);
@@ -208,7 +238,9 @@ public class DepartmentNursingStationMapperServiceImpl implements IDepartmentNur
 	public Response getWardListForER(Integer organisationId, Integer unitId) throws ApplicationException {
 		try
 		{
-			return iDepartmentNursingStationMapperDao.getWardListForER(organisationId, unitId);
+			// BR-121: always use verified identity, ignore client-supplied org/unit.
+			return iDepartmentNursingStationMapperDao.getWardListForER(
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e)
 		{
 		logger.error("getWardListForER failed", e);
