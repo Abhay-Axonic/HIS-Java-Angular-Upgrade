@@ -269,9 +269,13 @@ public class DepartmentNursingStationMapperDaoImpl extends GenericDao<Department
 					.setParameter("nursingStationId", nursingStationId)
 					.setResultTransformer(Transformers.aliasToBean(DepartmentNursingStationMapperDto.class)).list();
 			
+			// BR-121: query previously had no org/unit predicate at all -- see
+			// NursingStationWardMapper.java's GET_WARD_LIST_BY_NURSING_STATION.
 			List<DepartmentNursingStationMapperDto> wardList=sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_WARD_LIST_BY_NURSING_STATION")
 					.setParameter("nursingStationId", nursingStationId)
+					.setParameter("orgId", organisationId)
+					.setParameter("unitId", unitId)
 					.setResultTransformer(Transformers.aliasToBean(DepartmentNursingStationMapperDto.class)).list();
 			
 			

@@ -110,12 +110,18 @@ import com.param.adt.master.global.model.UnitMaster;
 					+"where unsm.user_id=:userId and nswm.status = 'A'"
 					+ " AND nswm.organization_id=:orgId AND  nswm.unit_id=:unitId "),
 	
+	// BR-121: this query previously had no organization_id/unit_id predicate
+	// at all -- any nursingStationId (fully client-supplied, no ownership
+	// check elsewhere in this call chain) returned its ward list regardless
+	// of tenant. Sibling query GET_WARD_LIST_BY_USER_ID already scoped
+	// correctly; matching that pattern here.
 	@NamedNativeQuery(name="GET_WARD_LIST_BY_NURSING_STATION",query="select "
 			+"distinct(ward_id) as \"id\" "
 			+"from	adt.t_nursing_station_ward_mapper nswm "
 			+"inner join adt.t_user_nursing_station_mapper unsm on "
 			+ 	"nswm.nursing_station_id = unsm.nursing_station_id "
 			+"where unsm.nursing_station_id=:nursingStationId "
+			+ "and nswm.organization_id=:orgId and nswm.unit_id=:unitId "
 			+ "and nswm.status = 'A' and nswm.is_deleted='N' "),
 	
 	@NamedNativeQuery(name="GET_NURSING_STATION_WARD_MAPPER_LIST",query="select "
