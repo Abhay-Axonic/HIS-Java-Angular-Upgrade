@@ -79,7 +79,10 @@ public class GlobalOrganizationMasterServiceImpl implements IGlobalOrganizationM
 	
 	@Autowired
 	private IScheduleLogsDao isheduleDao;
-	
+
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
 	// Define the length of the password
     private static final int PASSWORD_LENGTH = 8; // Adjust as needed
 	
@@ -216,6 +219,7 @@ public class GlobalOrganizationMasterServiceImpl implements IGlobalOrganizationM
 	public CommonResponse updateOrganizationMaster(OrganizationMasterDto organizationMasterDto)
 			throws ApplicationException {
 		try {
+			organizationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response orgRes = iGlobalOrganisationMasterDao.getOrganizationByNameAndNotById(organizationMasterDto);
 			if (orgRes.getStatus() == SUCCESS && orgRes.getListObject() != null && orgRes.getListObject().size() > 0) {
 				return new CommonResponse(ERROR, ERROR_CODE, ALREADY_EXIST, null, null);
@@ -321,7 +325,8 @@ public class GlobalOrganizationMasterServiceImpl implements IGlobalOrganizationM
 	@Transactional
 	public Response getOrganizationById(int organizationId)throws ApplicationException {
 		try{
-			OrganizationMasterDto organizationMasterDto = iGlobalOrganisationMasterDao.getOrganizationById(organizationId);
+			OrganizationMasterDto organizationMasterDto = iGlobalOrganisationMasterDao
+					.getOrganizationById(verifiedIdentityService.getVerifiedOrganizationId());
 			if(organizationMasterDto!=null && organizationMasterDto.getOrgPrivileges()!=null && organizationMasterDto.getOrgPrivileges().length()>0) 
 			{
 				final ObjectMapper objectMapper = new ObjectMapper();
@@ -362,6 +367,7 @@ public class GlobalOrganizationMasterServiceImpl implements IGlobalOrganizationM
 	@Transactional
 	public Response updateOrganizationStatus(OrganizationMasterDto organizationMasterDto)throws ApplicationException {
 		try{
+			organizationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iGlobalOrganisationMasterDao.updateOrganizationStatus(organizationMasterDto);
 		}catch(Exception e){
 		throw new ApplicationException(e.getMessage(), e);
@@ -395,9 +401,10 @@ public class GlobalOrganizationMasterServiceImpl implements IGlobalOrganizationM
   @Transactional
   public Response saveOrganizationImage(int organizationId,MultipartFile inputFile) throws ApplicationException {
     try{
-      if(organizationId>0&&!inputFile.isEmpty())
+      int verifiedOrganizationId = verifiedIdentityService.getVerifiedOrganizationId();
+      if(verifiedOrganizationId>0&&!inputFile.isEmpty())
       {
-        Response organizationRes =  iGlobalOrganisationMasterDao.getOrganiazationFolderPath(organizationId);
+        Response organizationRes =  iGlobalOrganisationMasterDao.getOrganiazationFolderPath(verifiedOrganizationId);
         OrganizationMasterDto organizationMasterDto = (OrganizationMasterDto) organizationRes.getObject();
         String organizationLogo =  docUploadUtility.uploadOrganiazationLogo(inputFile, organizationMasterDto);
         organizationMasterDto.setOrganizationLogo(organizationLogo);
