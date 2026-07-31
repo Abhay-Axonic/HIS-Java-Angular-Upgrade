@@ -8,6 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.param.billing.global.dto.DiscountRightsMasterDto;
@@ -15,6 +16,7 @@ import com.param.billing.global.model.DiscountRightsMaster;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
@@ -24,9 +26,13 @@ public class DiscountRightsMasterDaoImpl extends GenericDao<DiscountRightsMaster
 
 	public DiscountRightsMasterDaoImpl() {
 		super(DiscountRightsMaster.class);
+
 		
 	}
 
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	@Override
 	public Response saveDiscountRightsMaster(DiscountRightsMasterDto discountRightsMasterDto)
 			throws ApplicationException {
@@ -83,6 +89,9 @@ public class DiscountRightsMasterDaoImpl extends GenericDao<DiscountRightsMaster
 			throws ApplicationException {
 		try {
 			DiscountRightsMaster discountRightsMaster=findById(discountRightsMasterDto.getDiscountRightId());
+			if (discountRightsMaster == null || !discountRightsMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !discountRightsMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+			throw new ApplicationException("Discount rights do not belong to the current organization");
+			}
 				discountRightsMaster.setUserId(discountRightsMasterDto.getUserId());
 				discountRightsMaster.setFromDiscountAmount(discountRightsMasterDto.getFromDiscountAmount()!=null ? discountRightsMasterDto.getFromDiscountAmount() : BigDecimal.ZERO);
 				discountRightsMaster.setToDiscountAmount(discountRightsMasterDto.getToDiscountAmount()!=null ? discountRightsMasterDto.getToDiscountAmount() : BigDecimal.ZERO);
@@ -132,6 +141,9 @@ public class DiscountRightsMasterDaoImpl extends GenericDao<DiscountRightsMaster
 			throws ApplicationException {
 		try {
 			DiscountRightsMaster discountRightsMaster=findById(discountRightsMasterDto.getDiscountRightId());
+			if (discountRightsMaster == null || !discountRightsMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !discountRightsMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+			throw new ApplicationException("Discount rights do not belong to the current organization");
+			}
 			
 			discountRightsMaster.setStatus(discountRightsMasterDto.getStatus());
 			discountRightsMaster.setUpdatedBy(discountRightsMasterDto.getUpdatedBy());
