@@ -22,19 +22,28 @@ public class RouteOfAdministrationDao extends AbstractDao<Integer, RouteOfAdmini
 	 
 	@Override
 	public List<RouteOfAdministration> getAll(Integer orgId) {
+		// orgId is always the server-verified organizationId by the time it
+		// reaches here (see RouteOfAdministrationService) -- no client-supplied
+		// or sessionService fallback used, closing the cross-tenant IDOR this
+		// query previously had (BR-pending, found during batch 35 Step 0/1).
 		Criteria criteria = getSession().createCriteria(RouteOfAdministration.class);
 		Criteria org = criteria.createCriteria("organization");
 		criteria.addOrder(Order.asc("id"));
 		criteria.add(Restrictions.eq("isDeleted", false));
-		org.add(Restrictions.eq("organizationId" , orgId!=null ? orgId : sessionService.getOrganizationId()));
+		org.add(Restrictions.eq("organizationId" , orgId));
 		return criteria.list();
 	}
 
 	@Override
-	public RouteOfAdministration getById(Integer id) {
+	public RouteOfAdministration getById(Integer id, Integer orgId) {
+		// orgId added (BR-pending, batch 35 Step 0/1): this query previously had
+		// zero organization scoping at all -- any authenticated user could fetch
+		// any organization's record purely by id. orgId is always the
+		// server-verified organizationId by the time it reaches here.
 		Criteria criteria = getSession().createCriteria(RouteOfAdministration.class);
 		criteria.add(Restrictions.eq("id", id));
 		criteria.add(Restrictions.eq("isDeleted", false));
+		criteria.add(Restrictions.eq("organizationId", orgId));
 
 		return (RouteOfAdministration) criteria.uniqueResult();
 	}

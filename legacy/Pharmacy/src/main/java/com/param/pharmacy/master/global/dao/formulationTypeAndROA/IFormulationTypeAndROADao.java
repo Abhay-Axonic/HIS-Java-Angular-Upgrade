@@ -16,7 +16,7 @@ public interface IFormulationTypeAndROADao {
 	
 	FormulationAndRoa saveFormulationTypeAndROA(FormulationAndRoa formulationAndRoa);
 
-	FormulationAndRoa getById(Integer id);
+	FormulationAndRoa getById(Integer id, Integer orgId);
 
 	FormulationType getFormulationType(Integer formulationtypeid);
 

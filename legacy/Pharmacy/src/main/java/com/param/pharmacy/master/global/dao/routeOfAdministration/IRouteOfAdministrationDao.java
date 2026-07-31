@@ -8,7 +8,7 @@ public interface IRouteOfAdministrationDao {
 
 	List<RouteOfAdministration> getAll(Integer orgId);
 
-	RouteOfAdministration getById(Integer id);
+	RouteOfAdministration getById(Integer id, Integer orgId);
 
 	Integer create(RouteOfAdministration routeOfAdministration);
 
