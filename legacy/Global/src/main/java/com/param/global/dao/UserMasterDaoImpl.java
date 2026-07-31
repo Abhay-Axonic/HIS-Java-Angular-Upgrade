@@ -78,6 +78,9 @@ public class UserMasterDaoImpl extends GenericDao<UserMaster, Integer> implement
     @Autowired
     private IwhatsAppServiceImpl iwhatsAppServiceImpl;
 
+    @Autowired
+    private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
     final static Logger logger = Logger.getLogger(UserMasterDaoImpl.class);
 
     @Override
@@ -1072,6 +1075,13 @@ return null;
         try {
 
             UserMaster userMaster = findById(dto.getUserId());
+
+            if (userMaster == null || userMaster.getOrganizationId() == null
+                    || !userMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+                    || userMaster.getUnitId() == null
+                    || !userMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+                return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+            }
 
             if (dto.getPassword() != null) {
                 String encryptedPed = GlobalCommonDateUtils.encrypt(dto.getPassword());
