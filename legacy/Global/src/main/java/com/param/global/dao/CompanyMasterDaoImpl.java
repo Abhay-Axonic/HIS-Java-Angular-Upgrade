@@ -141,6 +141,17 @@ public class CompanyMasterDaoImpl extends GenericDao<CompanyMaster, Integer>
 	public Response updateCompanyMaster(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
 			CompanyMaster companyMaster = findById(companyMasterDto.getCompanyId());
+			// BR-121-class fix: findById(companyId) alone has zero org/unit filter --
+			// companyMasterDto.getOrganizationId()/getUnitId() are the caller's
+			// service-layer-verified values by this point, not client-supplied;
+			// refuse if the row being loaded doesn't actually belong to that tenant,
+			// same "Not found" shape as a genuinely nonexistent id.
+			if (companyMaster == null || companyMaster.getOrganizationId() == null
+					|| !companyMaster.getOrganizationId().equals(companyMasterDto.getOrganizationId())
+					|| companyMaster.getUnitId() == null
+					|| !companyMaster.getUnitId().equals(companyMasterDto.getUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
 			companyMaster.setAddress(companyMasterDto.getAddress());
 			companyMaster.setArCodeId(companyMasterDto.getArCodeId());
 			companyMaster.setAreaId(companyMasterDto.getAreaId());
@@ -204,6 +215,17 @@ public class CompanyMasterDaoImpl extends GenericDao<CompanyMaster, Integer>
 	public Response updateCompanyMasterStatus(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
 			CompanyMaster companyMaster = findById(companyMasterDto.getCompanyId());
+			// BR-121-class fix: findById(companyId) alone has zero org/unit filter at
+			// all -- a pure ID-enumeration IDOR, not just a trusted-client-value one.
+			// companyMasterDto.getOrganizationId()/getUnitId() are the caller's
+			// service-layer-verified values by this point; refuse if the row being
+			// loaded doesn't actually belong to that tenant.
+			if (companyMaster == null || companyMaster.getOrganizationId() == null
+					|| !companyMaster.getOrganizationId().equals(companyMasterDto.getOrganizationId())
+					|| companyMaster.getUnitId() == null
+					|| !companyMaster.getUnitId().equals(companyMasterDto.getUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
 			companyMaster.setUpdatedDate(
 					GlobalCommonDateUtils.getDate(companyMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			companyMaster.setUpdatedBy(companyMasterDto.getUpdatedBy());
@@ -297,6 +319,8 @@ public class CompanyMasterDaoImpl extends GenericDao<CompanyMaster, Integer>
 			List<CompanyMasterDto> listCompanyMasterDto = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_COMPANY_CONTRACT_GRADE_BY_COMPANY_ID")
 					.setParameter("companyId",companyMasterDto.getCompanyId())
+					.setParameter("orgId",companyMasterDto.getOrganizationId())
+					.setParameter("unitId",companyMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(CompanyMasterDto.class)).list();
 			return new Response(SUCCESS, SUCCESS_CODE, null, listCompanyMasterDto, null);
 		} catch (HibernateException he) {

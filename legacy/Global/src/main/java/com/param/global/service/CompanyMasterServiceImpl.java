@@ -42,6 +42,8 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
     IGlobalOrganisationMasterDao iGlobalOrganisationMasterDao;
 	@Autowired
     DocUploadUtility docUploadUtility;
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	private Cache<Integer, List<CompanyMasterDto>> companyMasterCache;
 
@@ -56,6 +58,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	
 	public Response getActiveCompanyMasterList(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			List<CompanyMasterDto> responseCache = companyMasterCache.getIfPresent(companyMasterDto.getUnitId());
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
@@ -76,6 +81,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 
 	@Override
 	public Response saveCompanyMaster(CompanyMasterDto companyMasterDto) throws ApplicationException {
+		// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+		companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		Response res=iCompanyMasterDao.getCompanyMasterListByName(companyMasterDto);
 		try {
 			if(res.getListObject().size()>0){
@@ -97,6 +105,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	@Override
 	public Response getCompanyMasterList(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iCompanyMasterDao.getCompanyMasterList(companyMasterDto);
 		}catch (Exception e) {
 		logger.error("getCompanyMasterList failed", e);
@@ -108,7 +119,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	public Response getCompanyMasterListById(Integer unitId, Integer orgId, Integer companyId)
 			throws ApplicationException {
 		try {
-			return iCompanyMasterDao.getCompanyMasterListById(unitId,orgId,companyId);
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			return iCompanyMasterDao.getCompanyMasterListById(verifiedIdentityService.getVerifiedUnitId(),
+					verifiedIdentityService.getVerifiedOrganizationId(), companyId);
 		}catch (Exception e) {
 		logger.error("getCompanyMasterListById failed", e);
 		}
@@ -118,6 +131,13 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	
 	@Override
 	public Response updateCompanyMaster(CompanyMasterDto companyMasterDto) throws ApplicationException {
+		// BR-121-class fix: always use verified identity, ignore client-supplied
+		// org/unit -- also prevents a forged org/unit from reassigning an existing
+		// row into a different tenant, not just scoping the duplicate-check/DAO
+		// load below (see CompanyMasterDaoImpl.updateCompanyMaster's own ownership
+		// check for the companyId-only load itself).
+		companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		Response res2=iCompanyMasterDao.getCompanyMasterListByNameNotById(companyMasterDto);
 		try {
 			if(res2.getListObject().size()>0){
@@ -162,6 +182,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	@Override
 	public Response countOfCompanyMasterList(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iCompanyMasterDao.countOfCompanyMasterList(companyMasterDto);
 		}catch (Exception e) {
 		logger.error("countOfCompanyMasterList failed", e);
@@ -172,6 +195,13 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	@Override
 	public Response updateCompanyMasterStatus(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
+			// BR-121-class fix: always use verified identity. The DAO's own
+			// findById(companyId) lookup has zero org/unit filter at all (a pure
+			// ID-enumeration IDOR, not just a trusted-client-value one) -- the DAO
+			// now checks the loaded entity's real org/unit against these verified
+			// values before applying the status change.
+			companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response saveRes = iCompanyMasterDao.updateCompanyMasterStatus(companyMasterDto);
 			if(saveRes.getStatus().equals(SUCCESS) && saveRes.getObject() != null) {
 				Integer filterId = (Integer) saveRes.getObject();
@@ -207,6 +237,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	@Override
 	public Response getCompanyContractGradeByCompanyId(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iCompanyMasterDao.getCompanyContractGradeByCompanyId(companyMasterDto);
 		}catch (Exception e) {
 		logger.error("getCompanyContractGradeByCompanyId failed", e);
@@ -217,6 +250,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	@Override
 	public Response getActiveTPA(CompanyMasterDto companyMasterDto) throws ApplicationException {
 		try {
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			companyMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iCompanyMasterDao.getActiveTPA(companyMasterDto);
 		}catch (Exception e) {
 		logger.error("getActiveTPA failed", e);
@@ -228,6 +264,9 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 	public Response saveCompanyImage(int orgId, int unitId, int companyId, MultipartFile inputFile)
 			throws ApplicationException {
 		try{
+			// BR-121-class fix: always use verified identity, ignore client-supplied org/unit.
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			unitId = verifiedIdentityService.getVerifiedUnitId();
 			if(orgId>0&&unitId>0&&companyId>0&&!inputFile.isEmpty())
 		      {
 		        Response unitRes =  iGlobalOrganisationMasterDao.getOrganiazationFolderPath(orgId);
