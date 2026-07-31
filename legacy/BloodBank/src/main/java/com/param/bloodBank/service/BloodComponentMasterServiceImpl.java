@@ -21,17 +21,22 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 	@Autowired
 	IBloodComponentMasterDao iBloodComponentMasterDao;
 
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response saveBloodComponentMaster(BloodComponentMasterDto bloodComponentMasterDto)
 			throws ApplicationException {
 		try {
+			bloodComponentMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			bloodComponentMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response response=iBloodComponentMasterDao.getBloodComponentMasterByName(bloodComponentMasterDto);
-			
+
 			if(response.getListObject()!=null && response.getListObject().size()>0){
-				
+
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 			}else{
-				
+
 				return iBloodComponentMasterDao.saveBloodComponentMaster(bloodComponentMasterDto);
 			}
 		} catch (Exception e) {
@@ -44,13 +49,15 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 	public Response updateBloodComponentMaster(BloodComponentMasterDto bloodComponentMasterDto)
 			throws ApplicationException {
 		try {
+			bloodComponentMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			bloodComponentMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response response=iBloodComponentMasterDao.getBloodComponentMasterByNameNotId(bloodComponentMasterDto);
-			
+
 			if(response.getListObject()!=null && response.getListObject().size()>0){
-				
+
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 			}else{
-				
+
 				return iBloodComponentMasterDao.updateBloodComponentMaster(bloodComponentMasterDto);
 			}
 		} catch (Exception e) {
@@ -63,9 +70,10 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 	public Response updateBloodComponentMasterStatus(BloodComponentMasterDto bloodComponentMasterDto)
 			throws ApplicationException {
 		try {
-			
+			bloodComponentMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			bloodComponentMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 				return iBloodComponentMasterDao.updateBloodComponentMasterStatus(bloodComponentMasterDto);
-			
+
 		} catch (Exception e) {
 			logger.error("updateBloodComponentMasterStatus failed", e);
 			throw new ServiceException(e.getMessage());
@@ -78,8 +86,10 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 			throws ApplicationException {
 		try {
 
+			bloodComponentMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			bloodComponentMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 				return iBloodComponentMasterDao.getBloodComponentMasterList(bloodComponentMasterDto);
-			
+
 		} catch (Exception e) {
 			logger.error("getBloodComponentMasterList failed", e);
 			throw new ServiceException(e.getMessage());
@@ -92,8 +102,9 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 			throws ApplicationException {
 		try {
 
-			return iBloodComponentMasterDao.getBloodComponentMasterById(bloodComponentId, organizationId, unitId);
-		
+			return iBloodComponentMasterDao.getBloodComponentMasterById(bloodComponentId,
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
+
 		} catch (Exception e) {
 			logger.error("getBloodComponentMasterById failed", e);
 			throw new ServiceException(e.getMessage());
@@ -104,8 +115,9 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 	public Response getActiveBloodComponentMaster(Integer organizationId, Integer unitId) throws ApplicationException {
 		try {
 
-			return iBloodComponentMasterDao.getActiveBloodComponentMaster(organizationId, unitId);
-		
+			return iBloodComponentMasterDao.getActiveBloodComponentMaster(
+					verifiedIdentityService.getVerifiedOrganizationId(), verifiedIdentityService.getVerifiedUnitId());
+
 	} catch (Exception e) {
 		logger.error("getActiveBloodComponentMaster failed", e);
 		throw new ServiceException(e.getMessage());
@@ -117,8 +129,10 @@ public class BloodComponentMasterServiceImpl implements IBloodComponentMasterSer
 			throws ApplicationException {
 		try {
 
+			bloodComponentMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			bloodComponentMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iBloodComponentMasterDao.getBloodComponentMasterCount(bloodComponentMasterDto);
-		
+
 	} catch (Exception e) {
 		logger.error("getBloodComponentMasterCount failed", e);
 		throw new ServiceException(e.getMessage());

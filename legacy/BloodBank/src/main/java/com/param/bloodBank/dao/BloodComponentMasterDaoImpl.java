@@ -74,7 +74,14 @@ public class BloodComponentMasterDaoImpl extends GenericDao<BloodComponentMaster
 			throws ApplicationException {
 		try {
 			BloodComponentMaster bloodComponentMaster=findById(bloodComponentMasterDto.getBloodComponentId());
-			
+
+			if (bloodComponentMaster == null || bloodComponentMaster.getOrganizationId() == null
+					|| !bloodComponentMaster.getOrganizationId().equals(bloodComponentMasterDto.getOrganizationId())
+					|| bloodComponentMaster.getUnitId() == null
+					|| !bloodComponentMaster.getUnitId().equals(bloodComponentMasterDto.getUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			bloodComponentMaster.setBloodComponentCode(bloodComponentMasterDto.getBloodComponentCode());
 			bloodComponentMaster.setBloodComponentDesc(bloodComponentMasterDto.getBloodComponentDesc());
 			bloodComponentMaster.setBloodComponentShortDesc(bloodComponentMasterDto.getBloodComponentShortDesc());
@@ -104,6 +111,14 @@ public class BloodComponentMasterDaoImpl extends GenericDao<BloodComponentMaster
 			throws ApplicationException {
 		try {
 			BloodComponentMaster bloodComponentMaster=findById(bloodComponentMasterDto.getBloodComponentId());
+
+			if (bloodComponentMaster == null || bloodComponentMaster.getOrganizationId() == null
+					|| !bloodComponentMaster.getOrganizationId().equals(bloodComponentMasterDto.getOrganizationId())
+					|| bloodComponentMaster.getUnitId() == null
+					|| !bloodComponentMaster.getUnitId().equals(bloodComponentMasterDto.getUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			bloodComponentMaster.setStatus(bloodComponentMasterDto.getStatus());
 			bloodComponentMaster.setUpdatedBy(bloodComponentMasterDto.getUpdatedBy());
 			bloodComponentMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bloodComponentMasterDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
