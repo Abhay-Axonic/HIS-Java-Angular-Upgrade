@@ -52,6 +52,9 @@ public class UserRoleMasterDaoImpl extends GenericDao<UserRoleMaster, Integer>
 
 	@Autowired
 	IUserRoleMasterService iUserRoleMasterService;
+
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
 	
 	@Override
 	public Response saveUserRoleMaster(UserRoleMasterDto userRoleMasterDto) throws ApplicationException {
@@ -106,11 +109,19 @@ public class UserRoleMasterDaoImpl extends GenericDao<UserRoleMaster, Integer>
 	public Response updateUserRoleMaster(UserRoleMasterDto userRoleMasterDto) throws ApplicationException {
 		try {
 			UserRoleMaster userRoleMaster = findById(userRoleMasterDto.getRoleId());
+
+			if (userRoleMaster == null || userRoleMaster.getOrganisationId() == null
+					|| !userRoleMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| userRoleMaster.getUnitId() == null
+					|| !userRoleMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			userRoleMaster.setIsCounterApplicable(userRoleMasterDto.getIsCounterApplicable());
 			userRoleMaster.setDashboardId(userRoleMasterDto.getDashboardId());
 			userRoleMaster.setRoleName(userRoleMasterDto.getRoleName());
-			userRoleMaster.setOrganisationId(userRoleMasterDto.getOrganisationId());
-			userRoleMaster.setUnitId(userRoleMasterDto.getUnitId());
+			userRoleMaster.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
+			userRoleMaster.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			userRoleMaster.setUpdatedBy(userRoleMasterDto.getUpdatedBy());
 			userRoleMaster.setRoleTypeId(userRoleMasterDto.getRoleTypeId());
 			userRoleMaster
@@ -159,6 +170,14 @@ public class UserRoleMasterDaoImpl extends GenericDao<UserRoleMaster, Integer>
 	public Response updateUserRoleMasterStatus(UserRoleMasterDto userRoleMasterDto) throws ApplicationException {
 		try {
 			UserRoleMaster userRoleMaster = findById(userRoleMasterDto.getRoleId());
+
+			if (userRoleMaster == null || userRoleMaster.getOrganisationId() == null
+					|| !userRoleMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| userRoleMaster.getUnitId() == null
+					|| !userRoleMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			userRoleMaster.setUpdatedBy(userRoleMasterDto.getUpdatedBy());
 			userRoleMaster.setUpdatedDate(
 					GlobalCommonDateUtils.getDate(userRoleMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
