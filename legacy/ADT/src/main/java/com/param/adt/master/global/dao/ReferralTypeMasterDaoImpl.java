@@ -18,6 +18,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.adt.master.global.dto.ReferralTypeMasterDto;
 import com.param.adt.master.global.model.ReferralTypeMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -37,6 +38,9 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 	
 	@Autowired 
 	private DozerBeanMapper mapper;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 	@Override
 	public Response getReferralTypeByName(ReferralTypeMasterDto referralTypeMasterDto) throws ApplicationException {
@@ -100,6 +104,16 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 					.getNamedQuery("GET_REFFERAL_TYPE_MASTER_LIST_BY_ID")
 					.setParameter("id", referralTypeMasterDto.getId())
 					.setResultTransformer(Transformers.aliasToBean(ReferralTypeMasterDto.class)).list();
+
+			// BR-144: cross-tenant IDOR fix -- filter the by-id result to the
+			// JWT-verified org so a forged id can never read another org's row.
+			if (referralTypeMasterDtosList != null && !referralTypeMasterDtosList.isEmpty()) {
+				ReferralTypeMaster row = findById(referralTypeMasterDtosList.get(0).getId());
+				if (row == null || row.getOrganizationId() == null
+						|| !row.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+					referralTypeMasterDtosList = new java.util.ArrayList<>();
+				}
+			}
 			return new Response(SUCCESS, null, null, referralTypeMasterDtosList, null);
 
 		} catch (HibernateException he) {
@@ -155,6 +169,17 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 	public Response updateReferralTypeMaster(ReferralTypeMasterDto referralTypeMasterDto) throws ApplicationException {
 		try {
 			ReferralTypeMaster referralTypeMaster = findById(referralTypeMasterDto.getId());
+
+			// BR-144: cross-tenant IDOR fix -- the target row's organization must
+			// match the JWT-verified identity, never a client-supplied value.
+			// (Same VerifiedIdentityService pattern as BR-143 on the sibling
+			// patientSourceMaster DAO.)
+			if (referralTypeMaster == null || referralTypeMaster.getOrganizationId() == null
+					|| !referralTypeMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			referralTypeMaster.setDesc(referralTypeMasterDto.getDesc());
 			referralTypeMaster.setCode(referralTypeMasterDto.getCode());
 			referralTypeMaster.setUpdatedBy(referralTypeMasterDto.getUpdatedBy());
@@ -177,6 +202,14 @@ public class ReferralTypeMasterDaoImpl extends GenericDao<ReferralTypeMaster, In
 			throws ApplicationException {
 		try {
 			ReferralTypeMaster referralTypeMaster = findById(referralTypeMasterDto.getId());
+
+			// BR-144: cross-tenant IDOR fix -- same ownership check as updateReferralTypeMaster.
+			if (referralTypeMaster == null || referralTypeMaster.getOrganizationId() == null
+					|| !referralTypeMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			referralTypeMaster.setUpdatedBy(referralTypeMasterDto.getUpdatedBy());
 			referralTypeMaster.setUpdatedDate(ADTCommonDateUtils.getDate(referralTypeMasterDto.getUpdatedDate(),"dd-M-yyyy HH:mm:ss"));
 			referralTypeMaster.setStatus(referralTypeMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
