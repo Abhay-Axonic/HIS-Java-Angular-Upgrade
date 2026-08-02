@@ -18,6 +18,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.adt.master.global.dto.ICUTypeMasterDto;
 import com.param.adt.master.global.model.ICUTypeMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -37,6 +38,9 @@ public class ICUTypeMasterDaoImpl extends GenericDao<ICUTypeMaster, Integer>
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response addICUTypeMaster(ICUTypeMasterDto icuTypeMasterDto) throws ApplicationException {
@@ -136,6 +140,16 @@ public class ICUTypeMasterDaoImpl extends GenericDao<ICUTypeMaster, Integer>
 			// //System.out.println(icuTypeMasterDto.+"
 			// "+SpecialityMasterDto.getSpecialityName());
 			ICUTypeMaster icuTypeMaster = findById(icuTypeMasterDto.getICUTypeMasterId());
+
+			// BR-145: cross-tenant IDOR fix -- the target row's organization must
+			// match the JWT-verified identity, never a client-supplied value.
+			// (Same VerifiedIdentityService pattern as BR-143/BR-144.)
+			if (icuTypeMaster == null || icuTypeMaster.getOrganizationId() == null
+					|| !icuTypeMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<ICUTypeMasterDto, Integer>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			icuTypeMaster.setICUType(icuTypeMasterDto.getICUType());
 			icuTypeMaster.setICUtypeCode(icuTypeMasterDto.getICUtypeCode());
 			icuTypeMaster.setIsCloseICU(icuTypeMasterDto.getIsCloseICU());
@@ -159,6 +173,14 @@ public class ICUTypeMasterDaoImpl extends GenericDao<ICUTypeMaster, Integer>
 			// //System.out.println(icuTypeMasterDto.+"
 			// "+SpecialityMasterDto.getSpecialityName());
 			ICUTypeMaster icuTypeMaster = findById(icuTypeMasterDto.getICUTypeMasterId());
+
+			// BR-145: cross-tenant IDOR fix -- same ownership check as updateICUTypeMaster.
+			if (icuTypeMaster == null || icuTypeMaster.getOrganizationId() == null
+					|| !icuTypeMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<ICUTypeMasterDto, Integer>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			icuTypeMaster.setUpdatedBy(icuTypeMasterDto.getUpdatedBy());
 			icuTypeMaster.setUpdatedDate(ADTCommonDateUtils.getDate(icuTypeMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			icuTypeMaster.setStatus(icuTypeMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
