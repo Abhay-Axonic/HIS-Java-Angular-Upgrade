@@ -4902,3 +4902,20 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 ---
 
 ## patientCategoryMaster — Step 6 SIGN-OFF (2026-08-02, batch 27)
+
+
+## patientSourceMaster backend — BR-143 Step 6 SIGN-OFF (2026-08-02)
+
+**Finding:** `PatientSourceMasterDaoImpl.updatePatientSource` / `updatePatientSourceStatus` load their target via `findById(dto.getId())` — a pure primary-key lookup with zero organization predicate — then persist client-supplied fields. `PatientSourceMasterServiceImpl` carries zero `VerifiedIdentityService` references; the controller is a plain `@RequestBody` passthrough. Same Pattern A shape as BR-121–139.
+
+**Live before (unpatched):** seeded three app-realistic victim rows in org 999 (`VICTIM001`, `VICTIM002`, `CRT999`; `updated_by=0` — required because the entity's `updatedBy` is a primitive `int` and psql-seeded rows with NULL can't hydrate; that artifact briefly masked the exploit and was corrected). Forged `POST /adt/updatePatientSourceMaster` from the org-1 admin session changed all three victims' `patient_source_code`/`patient_source_name` to attacker values — psql-confirmed with `updated_by=1` on every row. PostgreSQL statement log captured the unscoped `findById` SELECT + UPDATE.
+
+**Live after (patched):** same forged attacks now return an error; all three victim rows' code/name/status confirmed untouched via psql; legitimate same-org update + status-toggle still work end-to-end.
+
+**Second defect disclosed, not fixed:** the service returns `SUCCESS`/`COMMON_UPDATE` unconditionally, masking DAO failures (HTTP 200 means nothing on this endpoint). Same silent-failure class as the project's #1 priority.
+
+**Fix:** `VerifiedIdentityService` injected into the DAO (BR-135 pattern); ownership check on update/status-toggle, create bound to verified org, by-id read filtered to verified org. Merged into main (56951f8d), owner-approved; builds clean (tsc 0, `mvn -pl ADT -am` SUCCESS).
+
+**Status:** ✅ FIXED + VERIFIED + MERGED (BR-143). Deferred: the service-layer unconditional-SUCCESS masking (separate decision item).
+
+---
