@@ -1,0 +1,388 @@
+<section class="page">
+  <ul class="nav nav-tabs">
+    <li [class.active]="activeTab() === 1"><a href="javascript:void(0)" (click)="selectTab(1)">Normal Bed</a></li>
+    <li [class.active]="activeTab() === 2"><a href="javascript:void(0)" (click)="selectTab(2)">Moving Bed</a></li>
+  </ul>
+
+  <!-- ============== TAB 1: Normal Bed ============== -->
+  @if (activeTab() === 1) {
+    <fieldset>
+      <div class="form-row">
+        <div class="field">
+          <label for="wardId">Ward<span class="required">*</span></label>
+          <select
+            id="wardId"
+            [ngModel]="form().wardId"
+            (ngModelChange)="onWardChange($event)"
+            name="wardId"
+            [class.invalid]="isWardInvalid()"
+          >
+            <option [ngValue]="null"></option>
+            @for (w of wardList(); track w.wardId) {
+              <option [ngValue]="w.wardId">{{ w.wardName }}</option>
+            }
+          </select>
+          @if (isWardInvalid()) {
+            <p class="help-block">Ward is required</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="roomId">Room<span class="required">*</span></label>
+          <select
+            id="roomId"
+            [ngModel]="form().roomId"
+            (ngModelChange)="onRoomChange($event)"
+            name="roomDesc"
+            [class.invalid]="isRoomInvalid()"
+          >
+            <option [ngValue]="null"></option>
+            @for (r of roomList(); track r.roomId) {
+              <option [ngValue]="r.roomId">{{ r.roomDesc }}</option>
+            }
+          </select>
+          @if (isRoomInvalid()) {
+            <p class="help-block">Room is required</p>
+          }
+        </div>
+
+        @if (hideBed() === 'N') {
+          <div class="field">
+            <label for="bedCategoryId">Ward Bed Category<span class="required">*</span></label>
+            <select id="bedCategoryId" [ngModel]="form().bedCategoryId" name="bedCat" disabled [class.invalid]="isBedCategoryInvalid()">
+              <option [ngValue]="null"></option>
+              @for (b of bedCategoryList(); track b.bedCategoryId) {
+                <option [ngValue]="b.bedCategoryId">{{ b.bedCategoryDesc }}</option>
+              }
+            </select>
+            @if (isBedCategoryInvalid()) {
+              <p class="help-block">Ward Bed Category is required</p>
+            }
+          </div>
+
+          <div class="field">
+            <label for="billingBedDesc">Billing Ward Bed Category</label>
+            <input id="billingBedDesc" type="text" autocomplete="off" [ngModel]="form().billingBedDesc" name="billingBedDesc" disabled />
+          </div>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="bedCode">Ward Bed Code<span class="required">*</span></label>
+          <input
+            id="bedCode"
+            type="text"
+            autocomplete="off"
+            [ngModel]="form().bedCode"
+            (ngModelChange)="updateFormField('bedCode', $event)"
+            name="code"
+            [class.invalid]="isCodeInvalid()"
+          />
+          @if (isCodeInvalid()) {
+            <p class="help-block">Bed Code is required</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="bedDesc">Ward Bed Number<span class="required">*</span></label>
+          <input
+            id="bedDesc"
+            type="text"
+            autocomplete="off"
+            [ngModel]="form().bedDesc"
+            (ngModelChange)="updateFormField('bedDesc', $event)"
+            name="desc"
+            [class.invalid]="isDescRequiredInvalid() || isDescPatternInvalid()"
+          />
+          @if (isDescRequiredInvalid()) {
+            <p class="help-block">Bed Number is required</p>
+          }
+          @if (isDescPatternInvalid()) {
+            <p class="help-block">Please Enter Valid Bed Number</p>
+          }
+        </div>
+
+        @if (showDialysisSelect() === 'Y') {
+          <div class="field">
+            <label for="itemId">Dialysis chair<span class="required">*</span></label>
+            <select id="itemId" [ngModel]="form().itemId" (ngModelChange)="updateFormField('itemId', $event)" name="itemId">
+              <option [ngValue]="null"></option>
+              @for (a of dialysisAssetList(); track a.itemId) {
+                <option [ngValue]="a.itemId">{{ a.assetype }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <div class="field checkbox-field-group">
+          <label class="checkbox-inline">
+            <input
+              type="checkbox"
+              [ngModel]="form().isVirtual === 'Y'"
+              (ngModelChange)="updateFormField('isVirtual', $event ? 'Y' : 'N')"
+              name="isVirtual"
+            />
+            Is Virtual
+          </label>
+          <label class="checkbox-inline">
+            <input
+              type="checkbox"
+              [ngModel]="form().earMarking === 'Y'"
+              (ngModelChange)="updateFormField('earMarking', $event ? 'Y' : 'N')"
+              name="earMarking"
+            />
+            EarMarking
+          </label>
+        </div>
+      </div>
+
+      @if (form().earMarking === 'Y') {
+        <div class="form-row">
+          <div class="field">
+            <label for="earMarkingDesc">Earmarking Description</label>
+            <input
+              id="earMarkingDesc"
+              type="text"
+              autocomplete="off"
+              [ngModel]="form().earMarkingDesc"
+              (ngModelChange)="updateFormField('earMarkingDesc', $event)"
+              name="earMarkingDesc"
+            />
+          </div>
+        </div>
+      }
+    </fieldset>
+
+    <div class="toolbar">
+      <label class="show-entries">
+        Show
+        <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+          @for (size of pageSizeOptions; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+        entries
+      </label>
+
+      @if (saveMode()) {
+        <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      } @else {
+        <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      }
+
+      <input
+        type="text"
+        class="search-box"
+        placeholder="Search"
+        autocomplete="off"
+        [ngModel]="search()"
+        (ngModelChange)="onSearchChange($event)"
+        name="searchKeyword"
+      />
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Ward</th>
+          <th>Room</th>
+          <th>Ward Bed Category</th>
+          <th>Billing Ward Bed Category</th>
+          <th>Ward Bed Number</th>
+          <th>Ward Bed Code</th>
+          <th>Is Virtual</th>
+          <th>EarMarking</th>
+          <th class="text-center">Status(n)</th>
+          <th class="text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of list(); track row.bedId) {
+          <tr>
+            <td>{{ row.wardName }}</td>
+            <td>{{ row.roomDesc }}</td>
+            <td>{{ row.bedCategoryDesc }}</td>
+            <td>{{ row.billingBedDesc }}</td>
+            <td>{{ row.bedNumber }}</td>
+            <td>{{ row.bedCode }}</td>
+            <td>{{ row.isVirtual }}</td>
+            <td>{{ row.isEarMarking }}</td>
+            <td class="text-center">
+              <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatusNormal(row)" />
+            </td>
+            <td class="text-center">
+              <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+            </td>
+          </tr>
+        }
+        @if (!list().length) {
+          <tr>
+            <td colspan="10" class="text-center">{{ loadingMsg() }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+
+  <!-- ============== TAB 2: Moving Bed ============== -->
+  @if (activeTab() === 2) {
+    <div class="form-row">
+      <div class="field">
+        <label for="movCode">Code<span class="required">*</span></label>
+        <input
+          id="movCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="movingForm().bedCode"
+          (ngModelChange)="updateMovingFormField('bedCode', $event)"
+          name="movCode"
+          [class.invalid]="isMovingCodeInvalid()"
+        />
+        @if (isMovingCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="movDesc">Description<span class="required">*</span></label>
+        <input
+          id="movDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="movingForm().bedDesc"
+          (ngModelChange)="updateMovingFormField('bedDesc', $event)"
+          name="movDesc"
+          [class.invalid]="isMovingDescInvalid()"
+        />
+        @if (isMovingDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <label class="show-entries">
+        Show
+        <select [ngModel]="movingPageSize()" (ngModelChange)="movingPageSize.set($event); onMovingPageSizeChange()" name="movingPageSize">
+          @for (size of pageSizeOptions; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+        entries
+      </label>
+
+      @if (movingSaveMode()) {
+        <button type="button" class="btn-primary icon-btn" title="Save" (click)="onMovingSaveClick()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      } @else {
+        <button type="button" class="btn-primary icon-btn" title="Update" (click)="onMovingUpdateClick()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      }
+
+      <input
+        type="text"
+        class="search-box"
+        placeholder="Search"
+        autocomplete="off"
+        [ngModel]="movingSearch()"
+        (ngModelChange)="onMovingSearchChange($event)"
+        name="searchMovingBedString"
+      />
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Bed Number</th>
+          <th class="text-center">Status(n)</th>
+          <th class="text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of movingList(); track row.bedId) {
+          <tr>
+            <td>{{ row.bedCode }}</td>
+            <td>{{ row.bedDesc }}</td>
+            <td>{{ row.bedNumber }}</td>
+            <td class="text-center">
+              <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatusMoving(row)" />
+            </td>
+            <td class="text-center">
+              <i class="icon-edit" title="Edit" (click)="editMoving(row)"></i>
+            </td>
+          </tr>
+        }
+        @if (!movingList().length) {
+          <tr>
+            <td colspan="5" class="text-center">{{ movingLoadingMsg() }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <ul class="pagination">
+      <li [class.disabled]="movingCurrentPage() === 1"><a (click)="goToMovingPage(1)">First</a></li>
+      <li [class.disabled]="movingCurrentPage() === 1"><a (click)="goToMovingPage(movingCurrentPage() - 1)">Previous</a></li>
+      @for (page of movingPageNumbers(); track page) {
+        <li [class.active]="movingCurrentPage() === page"><a (click)="goToMovingPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="movingCurrentPage() === movingTotalPages()"><a (click)="goToMovingPage(movingCurrentPage() + 1)">Next</a></li>
+      <li [class.disabled]="movingCurrentPage() === movingTotalPages()"><a (click)="goToMovingPage(movingTotalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (movingShowConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeMovingConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeMovingConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmMovingSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeMovingConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

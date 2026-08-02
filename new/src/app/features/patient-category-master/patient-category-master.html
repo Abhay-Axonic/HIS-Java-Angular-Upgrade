@@ -1,0 +1,136 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="categoryCode">Code<span class="required">*</span></label>
+        <input
+          id="categoryCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().code"
+          (ngModelChange)="updateField('code', $event)"
+          name="categoryCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="categoryDesc">Description<span class="required">*</span></label>
+        <input
+          id="categoryDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().desc"
+          (ngModelChange)="updateField('desc', $event)"
+          name="categoryDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field field-checkbox">
+        <label class="checkbox-inline" for="isForeigner">
+          <input
+            id="isForeigner"
+            type="checkbox"
+            [ngModel]="form().isForeigner"
+            (ngModelChange)="updateField('isForeigner', $event)"
+            name="isForeigner"
+          />
+          Is Foreigner
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <!-- Sort carets are decorative only -- legacy has zero click wiring
+             on any of these 5 headers (see class doc comment). -->
+        <th>Code <span class="sort-carets"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span></th>
+        <th>Description <span class="sort-carets"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span></th>
+        <th>Is Foreigner <span class="sort-carets"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span></th>
+        <th class="text-center">Status(n) <span class="sort-carets"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span></th>
+        <th class="text-center">Action taken <span class="sort-carets"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.patientCategoryId) {
+        <tr>
+          <td>{{ row.patientCategoryCode }}</td>
+          <td>{{ row.patientCategory }}</td>
+          <td>{{ row.isForeginerCategory }}</td>
+          <td class="text-center">
+            @if (!isProtected(row)) {
+              <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+            }
+          </td>
+          <td class="text-center">
+            @if (!isProtected(row)) {
+              <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+            }
+          </td>
+        </tr>
+      }
+      @if (!list().length) {
+        <tr>
+          <td colspan="5" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+    <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+    @for (page of pageNumbers(); track page) {
+      <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+    }
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+    <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+  </ul>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmFromModal()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

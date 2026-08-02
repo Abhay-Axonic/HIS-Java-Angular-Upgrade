@@ -309,6 +309,10 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
     items: [
       { path: '/machineParameterMaster', title: 'Machine Parameter Master' },
       { path: '/ageGroupMaster', title: 'Age Group Master' },
+      { path: '/tallyInterfacing', title: 'Tally Interfacing' },
+      { path: '/patientCategory', title: 'Patient Category Master' },
+      { path: '/bedMaster', title: 'Ward Bed Master' },
+
       { path: '/machineMaster', title: 'Machine Master' },
       { path: '/rackMaster', title: 'Rack Master' },
       { path: '/assetIssueIndent', title: 'Asset Issue Indent' },
