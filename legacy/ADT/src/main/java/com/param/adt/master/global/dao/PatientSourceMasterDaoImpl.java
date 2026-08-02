@@ -18,6 +18,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.adt.master.global.dto.PatientSourceMasterDto;
 import com.param.adt.master.global.model.PatientSourceMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -38,6 +39,9 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 	
 	@Autowired
 	private DozerBeanMapper mapper;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 	@Override
 	public Response getPatientSourceByName(PatientSourceMasterDto patientSourceMasterDto) throws ApplicationException {
@@ -63,6 +67,10 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 			throws ApplicationException {
 		try {
 			PatientSourceMaster patientSourceMaster = mapper.map(patientSourceMasterDto, PatientSourceMaster.class, "PatientSourceMasterDto_to_PatientSourceMaster");
+
+			// BR-143: cross-tenant IDOR fix -- create is bound to the JWT-verified
+			// org, never a client-supplied organizationId from the DTO.
+			patientSourceMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			patientSourceMaster.setCreatedDate(TimeZoneComponent.getDateByzone(0));
 			patientSourceMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(0));
 			patientSourceMaster.setStatus('A');
@@ -102,6 +110,16 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 					.getNamedQuery("GET_PATIENT_SOURCE_LIST_BY_ID")
 					.setParameter("id", patientSourceMasterDto.getId())
 					.setResultTransformer(Transformers.aliasToBean(PatientSourceMasterDto.class)).list();
+
+			// BR-143: cross-tenant IDOR fix -- filter the by-id result to the
+			// JWT-verified org so a forged id can never read another org's row.
+			if (patientSourceMasterDtoList != null && !patientSourceMasterDtoList.isEmpty()) {
+				PatientSourceMaster row = findById(patientSourceMasterDtoList.get(0).getId());
+				if (row == null || row.getOrganizationId() == null
+						|| !row.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+					patientSourceMasterDtoList = new java.util.ArrayList<>();
+				}
+			}
 			return new Response(SUCCESS, null, null, patientSourceMasterDtoList, null);
 
 		} catch (HibernateException he) {
@@ -156,6 +174,17 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 	public Response updatePatientSource(PatientSourceMasterDto patientSourceMasterDto) throws ApplicationException {
 		try {
 			PatientSourceMaster patientSourceMaster = findById(patientSourceMasterDto.getId());
+
+			// BR-143: cross-tenant IDOR fix -- the target row's organization must
+			// match the JWT-verified identity, never a client-supplied value.
+			// (VerifiedIdentityService derives org from the unitId header, which
+			// JwtTokenFilter has already validated against the signed JWT.)
+			if (patientSourceMaster == null || patientSourceMaster.getOrganizationId() == null
+					|| !patientSourceMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			patientSourceMaster.setDesc(patientSourceMasterDto.getDesc());
 			patientSourceMaster.setCode(patientSourceMasterDto.getCode());
 			patientSourceMaster.setUpdatedBy(patientSourceMasterDto.getUpdatedBy());
@@ -177,6 +206,14 @@ public class PatientSourceMasterDaoImpl extends GenericDao<PatientSourceMaster, 
 			throws ApplicationException {
 		try {
 			PatientSourceMaster patientSourceMaster = findById(patientSourceMasterDto.getId());
+
+			// BR-143: cross-tenant IDOR fix -- same ownership check as updatePatientSource.
+			if (patientSourceMaster == null || patientSourceMaster.getOrganizationId() == null
+					|| !patientSourceMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			patientSourceMaster.setUpdatedBy(patientSourceMasterDto.getUpdatedBy());
 			patientSourceMaster.setUpdatedDate(ADTCommonDateUtils.getDate(patientSourceMasterDto.getUpdatedDate(),"dd-M-yyyy HH:mm:ss"));
 			patientSourceMaster.setStatus(patientSourceMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
