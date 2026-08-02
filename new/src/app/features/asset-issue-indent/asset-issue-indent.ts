@@ -54,6 +54,7 @@ export class AssetIssueIndent {
         this.dropdowns.set(res);
         this.search();
       },
+      error: (err) => console.error('assetIssueIndent dropdowns error', err),
     });
   }
 

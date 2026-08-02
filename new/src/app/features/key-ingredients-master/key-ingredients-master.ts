@@ -63,9 +63,9 @@ export class KeyIngredientsMaster {
   }
 
   loadAll(): void {
-    this.api.list(this.organizationId, this.unitId).subscribe({ next: (r) => this.rows.set(r.listObject ?? []) });
-    this.api.units(this.organizationId, this.unitId).subscribe({ next: (r) => this.units.set(r.listObject ?? []) });
-    this.api.nutritions(this.organizationId, this.unitId).subscribe({ next: (r) => this.nutritions.set(r.listObject ?? []) });
+    this.api.list(this.organizationId, this.unitId).subscribe({ next: (r) => this.rows.set(r.listObject ?? []), error: (e) => console.error('keyIngredientsMaster list error', e) });
+    this.api.units(this.organizationId, this.unitId).subscribe({ next: (r) => this.units.set(r.listObject ?? []), error: (e) => console.error('keyIngredientsMaster units error', e) });
+    this.api.nutritions(this.organizationId, this.unitId).subscribe({ next: (r) => this.nutritions.set(r.listObject ?? []), error: (e) => console.error('keyIngredientsMaster nutritions error', e) });
   }
 
   setField(field: keyof KeyIngredientRow, value: string): void {
@@ -108,7 +108,9 @@ export class KeyIngredientsMaster {
       unitId: this.unitId,
       createdBy: this.userId,
       updatedBy: this.userId,
-      nutriciansList: this.nutritionRows().map((n) => ({ ...n })),
+      nutriciansList: this.nutritionRows()
+        .filter((n) => n.nutritionId !== '' && n.nutritionId != null)
+        .map((n) => ({ ...n })),
     };
     const call = this.editing() ? this.api.update(payload) : this.api.create(payload);
     call.subscribe({
@@ -120,6 +122,10 @@ export class KeyIngredientsMaster {
         } else {
           this.notify.error(this.editing() ? 'Key ingredient already exits...!!' : 'Nutrition already exits...!!');
         }
+      },
+      error: (err) => {
+        this.notify.error('Save failed. Please try again.');
+        console.error('keyIngredientsMaster save error', err);
       },
     });
   }
