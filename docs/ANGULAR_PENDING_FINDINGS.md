@@ -4919,3 +4919,20 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 **Status:** ✅ FIXED + VERIFIED + MERGED (BR-143). Deferred: the service-layer unconditional-SUCCESS masking (separate decision item).
 
 ---
+
+
+## referralTypeMaster backend — BR-144 Step 6 SIGN-OFF (2026-08-02)
+
+**Finding:** `ReferralTypeMasterDaoImpl.updateReferralTypeMaster` (157) / `updateStatusForReferralType` (179) load via `findById(dto.getId())` with zero org predicate; service has 0 `VerifiedIdentityService` refs; plain `@RequestBody` controller. BR-143-class cross-tenant write IDOR.
+
+**Live before (unpatched):** seeded org-999 victim row 4 (`VICTIM-RT-999`, `updated_by=0`); forged `POST /adt/updateReferralTypeMaster` from org-1 session → psql-confirmed corruption (`HACKED-BY-ORG1-RT`, `Victim RT CORRUPTED cross-tenant`, `updated_by=1`).
+
+**Live after (patched, jar rebuilt + Tomcat genuinely restarted):** forged update + forged status-toggle both blocked — victim row 4 pristine via psql (code/name/status/updated_by unchanged); legitimate same-org update persists (row 1 desc changed + restored). Status-toggle returns a proper error; update still returns masked "Updated Successfully." (service-layer unconditional-SUCCESS defect, disclosed separately, same as BR-143).
+
+**Fix:** `VerifiedIdentityService` injected into the DAO (BR-143 pattern); ownership check on update/status-toggle, by-id read org-filtered. Branch `fix/referraltype-crosstenant-idor` (7056d54a), held for owner approval.
+
+**Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-144, held). Deferred: service-layer unconditional-SUCCESS masking (same decision item as BR-143's).
+
+**Siblings still pending owner pacing decision:** icuType (`ICUTypeMasterDaoImpl` 138/161) and billingBedCategory (`BillingBedCategoryMasterDaoImpl` 181/206) — same confirmed pattern (billingBedCategory live-proven earlier tonight), not yet fixed.
+
+---

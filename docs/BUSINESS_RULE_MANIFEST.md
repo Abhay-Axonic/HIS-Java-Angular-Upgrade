@@ -2346,3 +2346,18 @@ ALTER TABLE billing.m_preauth_request_master ADD COLUMN IF NOT EXISTS document_t
 **Classification:** cross-tenant IDOR fix (BR-121-class, same severity tier as BR-122-126/134-139), fully live-verified before and after. Merged into `main` (2026-08-02, commit 56951f8d) after owner approval, build verified clean afterward (tsc exit 0 + `mvn -pl ADT -am` BUILD SUCCESS).
 
 ---
+
+
+## BR-144 — `referralTypeMaster`'s update and status-toggle endpoints had zero organization ownership check -- a live-confirmed cross-tenant write IDOR (2026-08-02)
+
+**Found during:** batch 25 Step 6 review, flagged for immediate investigation per the owner's instruction (same priority as BR-143). `ReferralTypeMasterDaoImpl.updateReferralTypeMaster` (line 157) and `updateStatusForReferralType` (line 179) load their target by `findById(dto.getId())` -- a pure primary-key lookup with no organization predicate -- then persist client fields. Service carries zero `VerifiedIdentityService` references; controller is a plain `@RequestBody` passthrough. Identical Pattern A shape to BR-143.
+
+**Live-confirmed, before the fix, using a real seeded victim tenant (organization_id=999) and the real org=1/unit=1 admin session:** seeded `VICTIM-RT-999`/`VictimOrg999 ReferralType` in org 999 (id 4, `updated_by=0`). A forged `POST /adt/updateReferralTypeMaster` from the org-1 session targeting id 4 changed the row's code/name to attacker values (`HACKED-BY-ORG1-RT`, `Victim RT CORRUPTED cross-tenant`) -- psql-confirmed with `updated_by=1`. No mitigating factor; the dup-check is scoped by the client-supplied org and passes trivially.
+
+**Fixed by injecting `VerifiedIdentityService`** into `ReferralTypeMasterDaoImpl` (exact BR-143 pattern): update + status-toggle reject with an error when the target row's `organizationId` differs from the JWT-verified org; `getReferralTypeById` filters its result to the verified org. **Verified live, before and after, identical forged attacks:** post-fix, forged update and status-toggle both blocked (victim row 4 confirmed pristine via psql -- code/name/status/updated_by all unchanged); legitimate same-org update confirmed still working end-to-end (changed org-1 row 1's desc, psql-verified, then restored).
+
+**Second defect disclosed (not fixed, same as BR-143):** `ReferralTypeMasterServiceImpl.updateReferralTypeMaster` returns `SUCCESS`/`COMMON_UPDATE` unconditionally even when the DAO failed -- the forged update above returned "Updated Successfully." while psql proved no write. HTTP 200 means nothing on this endpoint; psql is the only truth.
+
+**Classification:** cross-tenant IDOR fix (BR-121-class, same severity tier as BR-143), fully live-verified before and after. Held on `fix/referraltype-crosstenant-idor` (7056d54a), awaiting owner approval to merge into main.
+
+---
