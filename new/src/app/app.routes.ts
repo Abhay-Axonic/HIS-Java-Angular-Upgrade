@@ -1596,6 +1596,27 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/tube-feeding-products/tube-feeding-products').then((m) => m.TubeFeedingProducts),
       },
+      // Phase 4 batch 29.
+      {
+        path: 'rackMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 630, title: 'Rack Master' },
+        loadComponent: () => import('./features/rack-master/rack-master').then((m) => m.RackMaster),
+      },
+      {
+        path: 'keyIngredientsMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 509, title: 'Key Ingredients Master' },
+        loadComponent: () =>
+          import('./features/key-ingredients-master/key-ingredients-master').then((m) => m.KeyIngredientsMaster),
+      },
+      {
+        path: 'assetIssueIndent',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 207, title: 'Asset Issue Indent' },
+        loadComponent: () => import('./features/asset-issue-indent/asset-issue-indent').then((m) => m.AssetIssueIndent),
+      },
+
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
