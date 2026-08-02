@@ -26,6 +26,7 @@ import com.param.global.common.Response;
 import com.param.global.common.ServiceException;
 import com.param.opd.encounter.dto.PatientDocReqDto;
 import com.param.utility.TimeZoneComponent;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
@@ -42,6 +43,9 @@ public class IPreAuthorizationRequestDaoImpl extends GenericDao<MPreauthRequestM
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 
 	@Override
@@ -445,6 +449,9 @@ public class IPreAuthorizationRequestDaoImpl extends GenericDao<MPreauthRequestM
 					.setInteger("unitId", reqDto.getUnitId())
 					.executeUpdate();*/
 					MPreauthRequestMaster mPreauthRequestMaster = findById(reqDto.getPreauthRequestId());
+					if (mPreauthRequestMaster == null || !mPreauthRequestMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !mPreauthRequestMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					throw new BillingException("Preauthorization request does not belong to the current organization");
+					}
 						mPreauthRequestMaster.setAuthorizationNo(reqDto.getAuthorizationNo());
 						mPreauthRequestMaster.setAuthorizationAmount(reqDto.getAuthorizationAmount());
 						mPreauthRequestMaster.setAuthorizationDate(reqDto.getAuthorizationDate() != null ? new Date(reqDto.getAuthorizationDate()) : TimeZoneComponent.getDateByzone(reqDto.getUnitId()));
@@ -1063,6 +1070,9 @@ public class IPreAuthorizationRequestDaoImpl extends GenericDao<MPreauthRequestM
 		try
 		{
 			MPreauthRequestMaster preauthRequestMst= findById(reqDto.getPreauthRequestId());
+			if (preauthRequestMst == null || !preauthRequestMst.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !preauthRequestMst.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					throw new BillingException("Preauthorization request does not belong to the current organization");
+			}
 			if (preauthRequestMst.getPreauthRequestId() != 0)
 			{
 				preauthRequestMst.setAuthStatusId(reqDto.getAuthStatusId());
@@ -1113,6 +1123,9 @@ public class IPreAuthorizationRequestDaoImpl extends GenericDao<MPreauthRequestM
 	public Response updateIsSplitStatusByPreAuthorizationId(MPreauthRequestMasterDto reqDto) throws BillingException {
 		try{
 			MPreauthRequestMaster preauthRequestMst = findById(reqDto.getPreauthRequestId());
+			if (preauthRequestMst == null || !preauthRequestMst.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !preauthRequestMst.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					throw new BillingException("Preauthorization request does not belong to the current organization");
+			}
 			if (preauthRequestMst.getPreauthRequestId()!= 0)
 			{
 				preauthRequestMst.setIsSplitStatus('Y');
