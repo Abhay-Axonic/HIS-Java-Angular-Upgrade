@@ -394,7 +394,7 @@ angular
 								sessionStorage.setItem("roleIds", roleIds);
 
 								var cookieObject = { 'organizationId': $scope.organizationId, 'unitId': $scope.unitId, 'userId': response.data.object.userId, 'doctorId': response.data.object.doctorId }
-								$cookies.putObject('cookieObject', cookieObject);
+								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								//console.log(data);
 
 								sessionStorage.setItem("userName", $scope.userName);
@@ -464,7 +464,7 @@ angular
 									  cookieObject.firstName = 'Admin';
 									}
 								$scope.roleId=response.data.object.roleIds[0].roleId;
-								$cookies.putObject('cookieObject', cookieObject);
+								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								console.log('cookieObjecttttttttttttt', cookieObject);
 								//console.log(data);
 								$scope.checkABDMaccess();
@@ -1128,7 +1128,7 @@ angular
 								sessionStorage.setItem("roleIds", roleIds);
 
 								var cookieObject = { 'organizationId': $scope.organizationId, 'unitId': $scope.unitId, 'userId': response.data.object.userId, 'doctorId': response.data.object.doctorId }
-								$cookies.putObject('cookieObject', cookieObject);
+								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								//console.log(data);
 
 								sessionStorage.setItem("userName", $scope.userName);
@@ -1196,7 +1196,7 @@ angular
 									  cookieObject.userName = 'Admin';
 									  cookieObject.firstName = 'Admin';
 									}
-								$cookies.putObject('cookieObject', cookieObject);
+								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								$scope.getRmoRoster(cookieObject.isRMO,cookieObject.doctorId);
 								//console.log(data);
 								$rootScope.stopLoader();
