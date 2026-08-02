@@ -4950,3 +4950,20 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 **Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-145, BR-146, held). This completes the batch-25 backend IDOR thread (BR-143 patientSource, BR-144 referralType, BR-145 icuType, BR-146 billingBedCategory). Service-layer unconditional-SUCCESS masking remains a disclosed, separate decision item across all four. fix/icutype-billingbedcategory-crosstenant-idor
 
 ---
+
+
+## allergyTypeMaster + doseMaster backend — BR-147/BR-148 Step 6 SIGN-OFF (2026-08-02)
+
+**Findings (both BR-143-class, same Pattern A shape as BR-143-146):**
+- `AllergyTypeMasterDaoImpl.updateAllergyTypeMaster` (82) / `updateAllergyTypeMasterStatus` (102) — pure `findById(dto.getAllergyTypeId())`, zero org predicate. Data feeds patient-allergy records (coversheet alert) + antibiotic test doses.
+- `DoseMasterDaoImpl.updateDoseMaster` (99) / `updateDoseMasterStatus` (118) — pure `findById(dto.getDoseId())`, zero org predicate. Data feeds every medication dose dropdown.
+
+**Live before (unpatched, both screens):** seeded org-999 victims (`VICTIM-ALLERGY-999` id 10, `VICTIM-DOSE-999` id 1, `updated_by=0`); forged org-1 updates corrupted both — psql: `HACKED-BY-ORG1-ALLERGY` / `HACKED-BY-ORG1-DOSE`, `updated_by=1` on each. Forged status-toggles also succeeded.
+
+**Live after (patched, jar rebuilt + deployed + Tomcat restarted):** all 4 forged attacks (update + status-toggle per screen) blocked — both victim rows pristine via psql (code/name/desc/status/updated_by unchanged); legitimate same-org updates persist on both screens (row 11 allergy / row 2 dose changed + restored). Deployed-bytecode javap-verified.
+
+**Fix:** `VerifiedIdentityService` injected into both DAOs (BR-143 pattern); ownership checks on update + status-toggle. Branch `fix/allergydose-crosstenant-idor` (b7bed96b), held for owner approval.
+
+**Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-147, BR-148, held). Disclosed not fixed: `DoseMasterServiceImpl.updateDoseMaster` unconditional-SUCCESS masking (same decision item as BR-143-146's; psql is the only truth).
+
+---

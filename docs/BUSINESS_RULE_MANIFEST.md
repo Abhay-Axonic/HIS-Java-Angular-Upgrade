@@ -2382,3 +2382,28 @@ ALTER TABLE billing.m_preauth_request_master ADD COLUMN IF NOT EXISTS document_t
 **Classification:** cross-tenant IDOR fix (BR-121-class, same severity tier as BR-143/BR-144/BR-145), fully live-verified before and after. Held on `fix/icutype-billingbedcategory-crosstenant-idor` (7eed81e0) together with BR-145 (identical root cause, same branch), awaiting owner approval to merge into main. fix/icutype-billingbedcategory-crosstenant-idor
 
 ---
+
+
+## BR-147 — `allergyTypeMaster`'s update and status-toggle endpoints had zero organization ownership check -- a live-confirmed cross-tenant write IDOR on real patient-allergy reference data (2026-08-02)
+
+**Found during:** live verification requested by the owner after `AllergyTypeMasterDaoImpl` showed 0 `VerifiedIdentityService` references in the SME-gated screens audit (same direct pattern check as BR-143-146). `updateAllergyTypeMaster` (line 82) and `updateAllergyTypeMasterStatus` (line 102) load their target by `findById(dto.getAllergyTypeId())` -- a pure primary-key lookup with no organization predicate -- then persist client fields. The table `emr.m_allergy_type_master` feeds `AllergyPatientMapper` (patient allergy record, coversheet alert) and `AntibioticTestDoseDto` (pharmacy nursing workstation) -- real patient-safety data.
+
+**Live-confirmed, before the fix, using a real seeded victim tenant (organization_id=999) and the real org=1/unit=1 admin session:** seeded `VICTIM-ALLERGY-999`/`VictimOrg999 AllergyType` in org 999 (id 10, `updated_by=0`). A forged `POST /api/global/updateAllergyTypeMaster` from the org-1 session targeting id 10 changed the row's name/desc to attacker values (`HACKED-BY-ORG1-ALLERGY`, `Victim allergy CORRUPTED cross-tenant`) -- psql-confirmed with `updated_by=1`. A forged status-toggle also flipped the victim's status.
+
+**Fixed by injecting `VerifiedIdentityService`** into `AllergyTypeMasterDaoImpl` (exact BR-143-146 pattern): update + status-toggle reject with an error when the target row's `organizationId` differs from the JWT-verified org. **Verified live, before and after, identical forged attacks:** post-fix, forged update and forged status-toggle both blocked (victim row 10 confirmed pristine via psql -- name/desc/status/updated_by all unchanged); legitimate same-org update confirmed still working end-to-end (changed org-1 row 11's desc, psql-verified, then restored). Deployed-bytecode verified via javap.
+
+**Classification:** cross-tenant IDOR fix (BR-121-class, same severity tier as BR-143-146), fully live-verified before and after. Held on `fix/allergydose-crosstenant-idor` (b7bed96b), awaiting owner approval to merge into main.
+
+---
+
+## BR-148 — `doseMaster`'s update and status-toggle endpoints had zero organization ownership check -- a live-confirmed cross-tenant write IDOR on real medication-dosing reference data (2026-08-02)
+
+**Found during:** same SME-gated screens audit as BR-147. `updateDoseMaster` (line 99) and `updateDoseMasterStatus` (line 118) load their target by `findById(dto.getDoseId())` -- a pure primary-key lookup with no organization predicate -- then persist client fields. The table `public.m_dose` feeds dose selection on `MedicationModel`/medication orders -- every medication dose dropdown in the system.
+
+**Live-confirmed, before the fix:** seeded `VICTIM-DOSE-999`/`VictimOrg999 Dose` in org 999 (id 1, `updated_by=0`). A forged `POST /api/common/updateDoseMaster` from the org-1 session targeting id 1 changed the row's code/desc to attacker values (`HACKED-BY-ORG1-DOSE`, `Victim dose CORRUPTED cross-tenant`) -- psql-confirmed with `updated_by=1`. A forged status-toggle also flipped the victim's status.
+
+**Fixed by injecting `VerifiedIdentityService`** into `DoseMasterDaoImpl` (exact BR-143-146 pattern): update + status-toggle reject with an error when the target row's `organizationId` differs from the JWT-verified org. **Verified live, before and after:** post-fix, forged update and forged status-toggle both blocked (victim row 1 confirmed pristine via psql); legitimate same-org update confirmed still working end-to-end (changed org-1 row 2's desc, psql-verified, then restored). **Disclosed, not fixed (same masking defect as BR-143-146):** `DoseMasterServiceImpl.updateDoseMaster` returns `SUCCESS` unconditionally regardless of the DAO result -- the blocked cross-tenant write still responds "Updated Successfully." while psql proves no write occurred. The security boundary holds; the response message is misleading.
+
+**Classification:** cross-tenant IDOR fix (BR-121-class, same severity tier as BR-143-146), fully live-verified before and after. Held on `fix/allergydose-crosstenant-idor` (b7bed96b) together with BR-147 (identical root cause, same branch), awaiting owner approval to merge into main.
+
+---
