@@ -1476,6 +1476,13 @@ export const routes: Routes = [
         data: { moduleId: 617, title: 'AP Master' },
         loadComponent: () => import('./features/ap-master/ap-master').then((m) => m.ApMaster),
       },
+      // Phase 4 batch 26.
+      {
+        path: 'tariffMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 609, title: 'Tariff Master' },
+        loadComponent: () => import('./features/tariff-master/tariff-master').then((m) => m.TariffMaster),
+      },
       {
         path: 'bloodBankMaster',
         canActivate: [moduleAccessGuard],

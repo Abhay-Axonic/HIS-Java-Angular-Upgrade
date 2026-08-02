@@ -1,0 +1,270 @@
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="tariffCode">Tariff Code<span class="required">*</span></label>
+        <input
+          type="text"
+          id="tariffCode"
+          autocomplete="off"
+          [ngModel]="form().tariffCode"
+          (ngModelChange)="updateField('tariffCode', $event)"
+          name="tariffCode"
+          [class.invalid]="isCodeInvalid()"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Tariff Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="tariffDesc">Tariff Description<span class="required">*</span></label>
+        <input
+          type="text"
+          id="tariffDesc"
+          autocomplete="off"
+          [ngModel]="form().tariffDesc"
+          (ngModelChange)="updateField('tariffDesc', $event)"
+          name="tariffDesc"
+          [class.invalid]="isDescInvalid()"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Tariff Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="validFrom">Validity From<span class="required">*</span></label>
+        <input
+          type="date"
+          id="validFrom"
+          [ngModel]="form().validFrom ? toDateInputValue(form().validFrom!) : ''"
+          (ngModelChange)="onDateChange('validFrom', $event)"
+          name="validFrom"
+          [class.invalid]="isValidFromInvalid()"
+        />
+        @if (isValidFromInvalid()) {
+          <p class="help-block">Validity From is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="validTo">Validity To<span class="required">*</span></label>
+        <input
+          type="date"
+          id="validTo"
+          [ngModel]="form().validTo ? toDateInputValue(form().validTo!) : ''"
+          (ngModelChange)="onDateChange('validTo', $event)"
+          name="validTo"
+          [class.invalid]="isValidToInvalid()"
+        />
+        @if (isValidToInvalid()) {
+          <p class="help-block">Validity To is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <button type="button" class="btn-secondary" (click)="openPropertiesModal()">Add Tariff Properties</button>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      name="searchKeyword"
+      autocomplete="off"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Tariff Code</th>
+        <th>Tariff Desc</th>
+        <th>Validity From</th>
+        <th>Validity To</th>
+        <th></th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Tariff Properties</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.tariffId) {
+        <tr>
+          <td>{{ row.tariffCode }}</td>
+          <td>{{ row.tariffDesc }}</td>
+          <td>{{ row.validFrom }}</td>
+          <td>{{ row.validTo }}</td>
+          <td class="text-center">
+            <i class="fa fa-pencil" aria-hidden="true" title="Edit" (click)="edit(row)"></i>
+          </td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" aria-hidden="true" title="Payment Entitlement Details" (click)="viewDetails(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="7" class="text-center">No Record Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showPropertiesModal()) {
+  <div class="modal-backdrop" (click)="closePropertiesModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Tariff Properties
+        <button type="button" (click)="closePropertiesModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field multiselect-field">
+            <label>Visit Type</label>
+            <div class="multiselect-panel">
+              @for (opt of visitTypeOptions(); track opt.id) {
+                <label class="checkbox-row">
+                  <input type="checkbox" [checked]="isVisitTypeChecked(opt.id)" (change)="toggleVisitType(opt.id)" />
+                  {{ opt.label }}
+                </label>
+              }
+            </div>
+            @if (selectedVisitTypeLabels().length) {
+              <p class="selected-summary">{{ selectedVisitTypeLabels().join(', ') }}</p>
+            }
+          </div>
+
+          <div class="field multiselect-field">
+            <label>Patient Type</label>
+            <div class="multiselect-panel">
+              @for (opt of patientTypeOptions(); track opt.id) {
+                <label class="checkbox-row">
+                  <input type="checkbox" [checked]="isPatientTypeChecked(opt.id)" (change)="togglePatientType(opt.id)" />
+                  {{ opt.label }}
+                </label>
+              }
+            </div>
+            @if (selectedPatientTypeLabels().length) {
+              <p class="selected-summary">{{ selectedPatientTypeLabels().join(', ') }}</p>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closePropertiesModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showDetailsModal()) {
+  <div class="modal-backdrop" (click)="closeDetailsModal()">
+    <div class="modal modal-large" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeDetailsModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="form-row">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Visit Type</th>
+                <th class="text-center">Status(n)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of visitTypeDetails(); track row.tariffVisitTypeMapperId) {
+                <tr>
+                  <td>{{ row.visitTypeName }}</td>
+                  <td class="text-center">
+                    <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleVisitMapperStatus(row)" />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Patient Type</th>
+                <th class="text-center">Status(n)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of patientTypeDetails(); track row.tariffPatientTypeMapperId) {
+                <tr>
+                  <td>{{ row.patientCategory }}</td>
+                  <td class="text-center">
+                    <app-status-toggle [checked]="row.status === 'A'" (toggled)="togglePatientMapperStatus(row)" />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+}
