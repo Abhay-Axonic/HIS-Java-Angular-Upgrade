@@ -4919,3 +4919,21 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 **Status:** ✅ FIXED + VERIFIED + MERGED (BR-143). Deferred: the service-layer unconditional-SUCCESS masking (separate decision item).
 
 ---
+
+
+## icuTypeMaster + billingBedCategoryMaster backend — BR-145/BR-146 Step 6 SIGN-OFF (2026-08-02)
+
+**Findings (both BR-143-class, same Pattern A shape as BR-143/BR-144):**
+- `ICUTypeMasterDaoImpl.updateICUTypeMaster` (138) / `updateICUStatus` (161) — pure `findById(dto.getICUTypeMasterId())`, zero org predicate.
+- `BillingBedCategoryMasterDaoImpl.updateBillingBedCategoryMaster` (181) / `updateBillingBedCategoryMasterStatus` (206) — pure `findById(dto.getBillingBedCategoryId())`, zero org predicate.
+- Both services: 0 `VerifiedIdentity` refs; plain `@RequestBody` controllers.
+
+**Live before (unpatched, both screens):** seeded org-999 victims (`VICTIM-ICU-999` id 5, `VICTIM-BBC-999` id 5, `updated_by=0`); forged org-1 updates corrupted both — psql: `HACKED-BY-ORG1-ICU` / `HACKED-BY-ORG1-BBC`, `updated_by=1` on each.
+
+**Live after (patched, jar rebuilt + Tomcat restarted via catalina.sh):** all 4 forged attacks (update + status-toggle per screen) blocked — both victim rows pristine via psql (code/name/status/updated_by unchanged); legitimate same-org updates persist on both screens (row 3 ICU / row 1 BBC changed + restored).
+
+**Fix:** `VerifiedIdentityService` injected into both DAOs (BR-143 pattern); ownership checks on update + status-toggle. Branch `fix/icutype-billingbedcategory-crosstenant-idor` (7eed81e0), held for owner approval.
+
+**Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-145, BR-146, held). This completes the batch-25 backend IDOR thread (BR-143 patientSource, BR-144 referralType, BR-145 icuType, BR-146 billingBedCategory). Service-layer unconditional-SUCCESS masking remains a disclosed, separate decision item across all four.
+
+---
