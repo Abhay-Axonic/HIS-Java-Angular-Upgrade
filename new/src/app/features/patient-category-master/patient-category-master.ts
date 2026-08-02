@@ -233,6 +233,7 @@ export class PatientCategoryMaster {
           this.loadListAndCount();
           this.popupArmed = true; // rearm on both outcomes -- see class doc comment
         },
+        error: () => this.notify.error('Something went wrong'),
       });
   }
 
@@ -263,6 +264,7 @@ export class PatientCategoryMaster {
           this.currentPage.set(1);
           this.loadListAndCount();
         },
+        error: () => this.notify.error('Something went wrong'),
       });
   }
 
@@ -293,6 +295,7 @@ export class PatientCategoryMaster {
         this.activeId = d.patientCategoryId;
         this.saveMode.set(false);
       },
+      error: () => this.notify.error('Something went wrong'),
     });
   }
 
@@ -325,6 +328,7 @@ export class PatientCategoryMaster {
             this.notify.error(res.message ?? '');
           }
         },
+        error: () => this.notify.error('Something went wrong'),
       });
   }
 }
