@@ -938,6 +938,18 @@ export const routes: Routes = [
         data: { title: 'AI Button Master' },
       },
       {
+        // Phase 4 batch 25. Previously deferred out of batch 14 (see
+        // docs/ANGULAR_PENDING_FINDINGS.md entry 143) over the
+        // doctor-identity-binding concern, not any code defect -- built
+        // now per this batch's explicit assignment. Legacy's own `.state()`
+        // has no `resolve` block (states_enriched.json: has_resolve=false),
+        // matching `aIButtonMaster` above -- no moduleId gate here either.
+        path: 'aiButtonConfiguration',
+        loadComponent: () =>
+          import('./features/ai-button-configuration/ai-button-configuration').then((m) => m.AiButtonConfiguration),
+        data: { title: 'AI Button Configuration' },
+      },
+      {
         path: 'employeeSurvey',
         loadComponent: () => import('./features/employee-survey/employee-survey').then((m) => m.EmployeeSurvey),
         data: { title: 'Employee Satisfaction Survey' },

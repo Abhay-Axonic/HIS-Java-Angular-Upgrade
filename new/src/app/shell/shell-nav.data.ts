@@ -115,6 +115,7 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/roomModality', title: 'Room Modality' },
       { path: '/ticketSystemMaster', title: 'Ticket Master' },
       { path: '/aIButtonMaster', title: 'AI Button Master' },
+      { path: '/aiButtonConfiguration', title: 'AI Button Configuration' },
       { path: '/employeeSurvey', title: 'Employee Satisfaction Survey' },
       { path: '/holidayCalendarMasterUnit', title: 'Holiday Calendar Master' },
       { path: '/mortuaryBedMaster', title: 'Mortuary Bed Master' },

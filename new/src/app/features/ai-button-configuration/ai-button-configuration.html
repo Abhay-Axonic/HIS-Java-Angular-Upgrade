@@ -1,0 +1,266 @@
+<!--
+  Rebuild of views/master/UnitMaster/organizationMaster/aiButtonConfiguration.html.
+  See ai-button-configuration.ts's class doc comment and
+  docs/ANGULAR_PENDING_FINDINGS.md (this batch) for the audited quirks
+  preserved/corrected here.
+-->
+
+<div class="selector-row">
+  <div class="radio-group">
+    <label>
+      <input
+        type="radio"
+        name="selectionMode"
+        [checked]="selectionMode() === 'doctor'"
+        (click)="selectDoctorMode()"
+      />
+      Doctor
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="selectionMode"
+        [checked]="selectionMode() === 'speciality'"
+        (click)="selectSpecialityMode()"
+      />
+      Speciality
+    </label>
+  </div>
+
+  <div class="field">
+    @if (selectionMode() === 'doctor') {
+      <label for="doctorSelect">Select Doctor</label>
+      <select
+        id="doctorSelect"
+        [ngModel]="selectedDoctorObj"
+        (ngModelChange)="selectedDoctorObj = $event; onDoctorChange($event)"
+        name="doctorSelect"
+      >
+        <option [ngValue]="null"></option>
+        @for (doctor of doctorList(); track doctor.doctorId) {
+          <option [ngValue]="doctor">{{ doctor.doctorName }}</option>
+        }
+      </select>
+    } @else {
+      <label for="specialitySelect">Select Speciality</label>
+      <select
+        id="specialitySelect"
+        [ngModel]="selectedSpecialityObj"
+        (ngModelChange)="selectedSpecialityObj = $event; onSpecialityChange($event)"
+        name="specialitySelect"
+      >
+        <option [ngValue]="null"></option>
+        @for (speciality of specialityList(); track speciality.doctorId) {
+          <option [ngValue]="speciality">{{ speciality.firstName }}</option>
+        }
+      </select>
+    }
+  </div>
+
+  <div class="field">
+    <label for="buttonSelect">Select Button</label>
+    <select
+      id="buttonSelect"
+      [ngModel]="selectedButtonObj"
+      (ngModelChange)="selectedButtonObj = $event; onButtonChange($event)"
+      name="buttonSelect"
+    >
+      <option [ngValue]="null"></option>
+      @for (button of buttonOptions(); track button.buttonId) {
+        <option [ngValue]="button">{{ button.label }}</option>
+      }
+    </select>
+  </div>
+
+  <button type="button" class="icon-btn" title="AI Configuration" (click)="openConfig()">
+    <i class="fa fa-gear" aria-hidden="true"></i>
+  </button>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search" [(ngModel)]="searchFilter" name="searchFilter" />
+    <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Configuration Name</th>
+      <th>Doctor Name</th>
+      <th>Speciality Name</th>
+      <th>Button</th>
+      <th>Status</th>
+      <th>AI Configuration</th>
+      <th>User Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of filteredConfigs(); track row.configId) {
+      <tr>
+        <!-- Faithful to legacy: this column and "Button" below both render `label`
+             (aiButtonConfiguration.html lines 264/268) -- a real, redundant-column bug. -->
+        <td>{{ row.label }}</td>
+        <td class="text-center">{{ row.doctorName || '-' }}</td>
+        <td class="text-center">{{ row.specialityName || '-' }}</td>
+        <td class="text-center">{{ row.label }}</td>
+        <td class="text-center">
+          <app-status-toggle [checked]="row.isStatus" (toggled)="onToggleStatus(row)" />
+        </td>
+        <td class="text-center">
+          <button type="button" class="icon-link" title="AI Configuration" (click)="showAiInfo(row)">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td class="text-center">
+          <button type="button" class="icon-link" (click)="editButtonMaster(row)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<!-- AI Configuration edit modal (gear icon) -->
+@if (configModalOpen()) {
+  <div class="modal-backdrop" (click)="closeConfigModal()">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        AI Configuration
+        <button type="button" (click)="closeConfigModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="prompt-row">
+          <div class="field">
+            <label for="userPrompt">User Prompt</label>
+            <textarea
+              id="userPrompt"
+              [ngModel]="userPromptField()"
+              (ngModelChange)="onUserPromptInput($event)"
+              name="userPrompt"
+            ></textarea>
+          </div>
+          <div class="field">
+            <label for="systemPrompt">System Prompt</label>
+            <textarea
+              id="systemPrompt"
+              [ngModel]="systemPromptField()"
+              (ngModelChange)="onSystemPromptInput($event)"
+              name="systemPrompt"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="config-url-row">
+          <label for="configUrl">URL:</label>
+          <input id="configUrl" type="text" [(ngModel)]="configUrl" name="configUrl" />
+          <button type="button" class="btn-primary" (click)="saveConfig()">Save</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of (configModel() | keyvalue); track entry.key; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ entry.key }}</td>
+                @if (entry.key !== 'Input_from_application') {
+                  <td>
+                    <input
+                      type="text"
+                      [ngModel]="entry.value"
+                      (ngModelChange)="updateConfigValue(entry.key, $event)"
+                      name="configValue-{{ entry.key }}"
+                    />
+                  </td>
+                } @else {
+                  <td class="tag-checkboxes">
+                    <span>
+                      <input type="checkbox" checked disabled />
+                      @Input_from_application
+                    </span>
+                    <span>
+                      <input
+                        type="checkbox"
+                        [ngModel]="tagFlags().patientName"
+                        (ngModelChange)="toggleTag('patientName')"
+                        name="tagPatientName"
+                      />
+                      @PatientName
+                    </span>
+                    <span>
+                      <input
+                        type="checkbox"
+                        [ngModel]="tagFlags().gender"
+                        (ngModelChange)="toggleTag('gender')"
+                        name="tagGender"
+                      />
+                      @Gender
+                    </span>
+                    <span>
+                      <input
+                        type="checkbox"
+                        [ngModel]="tagFlags().age"
+                        (ngModelChange)="toggleTag('age')"
+                        name="tagAge"
+                      />
+                      @Age
+                    </span>
+                    <span>
+                      <input
+                        type="checkbox"
+                        [ngModel]="tagFlags().location"
+                        (ngModelChange)="toggleTag('location')"
+                        name="tagLocation"
+                      />
+                      @Location
+                    </span>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- AI Configuration read-only info modal -->
+@if (aiInfoModalOpen()) {
+  <div class="modal-backdrop" (click)="aiInfoModalOpen.set(false)">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <header>
+        AI Configuration
+        <button type="button" (click)="aiInfoModalOpen.set(false)">&times;</button>
+      </header>
+      <div class="modal-body">
+        <input type="text" [ngModel]="aiInfoUrl()" name="aiInfoUrl" readonly />
+        <table>
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of (aiInfoModel() | keyvalue); track entry.key; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ entry.key }}</td>
+                <td>{{ entry.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
