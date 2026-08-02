@@ -19,6 +19,7 @@ import com.param.adt.master.unit.dto.BillingBedCategoryMasterDto;
 import com.param.adt.master.unit.model.BillingBedCategoryMaster;
 import com.param.adt.master.unit.model.BillingBedVisitTypeMapper;
 import com.param.global.common.GlobalCommonDateUtils;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.ServiceException;
 
@@ -28,6 +29,9 @@ import in.param.exception.ApplicationException;
 @Repository
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BillingBedCategoryMasterDaoImpl extends GenericDao<BillingBedCategoryMaster, Integer> implements IBillingBedCategoryMasterDao,ICommonConstants{
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	final static Logger logger = Logger.getLogger(BillingBedCategoryMasterDaoImpl.class);
 
@@ -179,6 +183,16 @@ public class BillingBedCategoryMasterDaoImpl extends GenericDao<BillingBedCatego
 			throws ApplicationException {
 		try {
 			BillingBedCategoryMaster billingBedCategoryMaster=findById(billingBedCategoryMasterDto.getBillingBedCategoryId());
+
+			// BR-146: cross-tenant IDOR fix -- the target row's organization must
+			// match the JWT-verified identity, never a client-supplied value.
+			// (Same VerifiedIdentityService pattern as BR-143/BR-144/BR-145.)
+			if (billingBedCategoryMaster == null || billingBedCategoryMaster.getOrganizationId() == null
+					|| !billingBedCategoryMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			billingBedCategoryMaster.setBillingBedCode(billingBedCategoryMasterDto.getBillingBedCode());
 			billingBedCategoryMaster.setBillingBedDesc(billingBedCategoryMasterDto.getBillingBedDesc());
 			billingBedCategoryMaster.setIsPeriodicBilling(billingBedCategoryMasterDto.getIsPeriodicBilling());
@@ -204,6 +218,14 @@ public class BillingBedCategoryMasterDaoImpl extends GenericDao<BillingBedCatego
 			throws ApplicationException {
 		try {
 			BillingBedCategoryMaster billingBedCategoryMaster=findById(billingBedCategoryMasterDto.getBillingBedCategoryId());
+
+			// BR-146: cross-tenant IDOR fix -- same ownership check as updateBillingBedCategoryMaster.
+			if (billingBedCategoryMaster == null || billingBedCategoryMaster.getOrganizationId() == null
+					|| !billingBedCategoryMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			billingBedCategoryMaster.setStatus(billingBedCategoryMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			billingBedCategoryMaster.setUpdatedBy(billingBedCategoryMasterDto.getUpdatedBy());
 			billingBedCategoryMaster.setUpdatedDate(
