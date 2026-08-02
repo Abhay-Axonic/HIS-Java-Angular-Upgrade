@@ -105,6 +105,7 @@ import com.param.global.service.OrderMasterServiceImpl;
 import com.param.global.unit.dto.CabinMasterDto;
 import com.param.service.global.SessionService;
 import com.param.utility.TimeZoneComponent;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
@@ -138,6 +139,9 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 
 	@Autowired
 	private IBillingDetailsDao iBillingDetailsDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response saveBillingMaster(BillingMasterDto billingMasterDto) throws ApplicationException {
@@ -2357,6 +2361,9 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 	public BillingMaster getBillById(Integer billId) throws ApplicationException {
 		try {
 			BillingMaster billingMaster = findById(billId);
+			if (billingMaster == null || !billingMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !billingMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				throw new ApplicationException("Bill does not belong to the current organization");
+			}
 			return billingMaster;
 		} catch (Exception e) {
 			
@@ -2745,6 +2752,9 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 	public BillingMaster getBillMasterObject(Integer billId) {
 		try {
 			BillingMaster billingMaster = findById(billId);
+			if (billingMaster == null || !billingMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !billingMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				throw new RuntimeException("Bill does not belong to the current organization");
+			}
 			return billingMaster;
 		} catch (Exception e) {
 			
@@ -2952,8 +2962,8 @@ public class BillingMasterDaoImpl extends GenericDao<BillingMaster, Integer> imp
 
 			SQLQuery sqlQuery = sessionFactory.getCurrentSession().createSQLQuery(query);
 			sqlQuery.setParameter("visitId", serviceMasterDto.getVisitId())
-				.setParameter("organizationId", serviceMasterDto.getOrganizationId())
-				.setParameter("unitId", serviceMasterDto.getUnitId())
+				.setParameter("organizationId", verifiedIdentityService.getVerifiedOrganizationId())
+				.setParameter("unitId", verifiedIdentityService.getVerifiedUnitId())
 				.executeUpdate();
 
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
