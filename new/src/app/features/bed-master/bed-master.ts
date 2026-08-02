@@ -221,16 +221,19 @@ export class BedMaster {
       next: (res) => {
         if (res.status === 'success') this.wardList.set(res.listObject ?? []);
       },
+      error: (err) => console.error('bed-master getActiveWardMasterList error', err),
     });
     this.api.getActiveBedCategoryList().subscribe({
       next: (res) => {
         if (res.status === 'success') this.bedCategoryList.set(res.listObject ?? []);
       },
+      error: (err) => console.error('bed-master getActiveBedCategoryList error', err),
     });
     this.api.getDialysisChair().subscribe({
       next: (res) => {
         if (res.status === 'success') this.dialysisAssetList.set(res.listObject ?? []);
       },
+      error: (err) => console.error('bed-master getDialysisChair error', err),
     });
 
     this.loadList();
@@ -257,6 +260,7 @@ export class BedMaster {
       next: (res) => {
         if (res.status === 'success' && typeof res.object === 'number') this.totalCount.set(res.object);
       },
+      error: (err) => console.error('bed-master getBedListCount error', err),
     });
   }
 
@@ -317,6 +321,7 @@ export class BedMaster {
       next: (res) => {
         if (res.status === 'success') this.roomList.set(res.listObject ?? []);
       },
+      error: (err) => console.error('bed-master getRoomByWardId error', err),
     });
   }
 
@@ -536,6 +541,7 @@ export class BedMaster {
                 this.updateFormField('billingBedCategoryId', first.billingBedCategoryId ?? null);
               }
             },
+            error: (err) => console.error('bed-master getBillingBedCategory error', err),
           });
         }
       },
@@ -590,6 +596,7 @@ export class BedMaster {
       next: (res) => {
         if (res.status === 'success' && typeof res.object === 'number') this.movingTotalCount.set(res.object);
       },
+      error: (err) => console.error('bed-master getMovingBedListCount error', err),
     });
   }
 

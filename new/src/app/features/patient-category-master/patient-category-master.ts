@@ -134,11 +134,13 @@ export class PatientCategoryMaster {
       next: (res) => {
         if (res.status === 'success') this.list.set(res.listObject ?? []);
       },
+      error: (err) => console.error('patient-category-master list error', err),
     });
     this.api.getCount(this.organizationId).subscribe({
       next: (res) => {
         if (res.status === 'success' && typeof res.object === 'number') this.totalCount.set(res.object);
       },
+      error: (err) => console.error('patient-category-master count error', err),
     });
   }
 
@@ -150,6 +152,7 @@ export class PatientCategoryMaster {
       next: (res) => {
         if (res.status === 'success') this.list.set(res.listObject ?? []);
       },
+      error: (err) => console.error('patient-category-master list error', err),
     });
   }
 
