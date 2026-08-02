@@ -188,7 +188,10 @@ export class IcuTypeMaster {
           this.list.set(res.listObject ?? []);
         }
       },
-      error: () => this.loader.stop(),
+      error: (err) => {
+        console.error('icu-type-master list load error', err);
+        this.loader.stop();
+      },
     });
     this.api.getCount(this.organizationId, this.unitId).subscribe({
       next: (res) => {
@@ -196,6 +199,7 @@ export class IcuTypeMaster {
           this.totalCount.set(res.object);
         }
       },
+      error: (err) => console.error('icu-type-master count load error', err),
     });
   }
 
@@ -290,7 +294,11 @@ export class IcuTypeMaster {
           }
           this.loadList(); // ctrl:270-276 -- unconditional, success or failure
         },
-        error: () => this.loader.stop(),
+        error: (err) => {
+          console.error('icu-type-master save error', err);
+          this.notify.error('Something went wrong...!!');
+          this.loader.stop();
+        },
       });
   }
 
@@ -325,7 +333,10 @@ export class IcuTypeMaster {
           this.notify.error('Error!!'); // ctrl:323-326, verbatim (alert("Error!!") -> growl-equivalent)
         }
       },
-      error: () => this.loader.stop(),
+      error: (err) => {
+        console.error('icu-type-master edit load error', err);
+        this.loader.stop();
+      },
     });
   }
 
@@ -358,7 +369,10 @@ export class IcuTypeMaster {
           }
           this.loadList(); // ctrl:436-441 -- unconditional, success or failure
         },
-        error: () => {},
+        error: (err) => {
+          console.error('icu-type-master update error', err);
+          this.notify.error('Something went wrong...!!');
+        },
       });
     this.loader.stop(); // ctrl:444 -- fires synchronously, NOT inside the response handler, see class doc
   }
@@ -387,7 +401,11 @@ export class IcuTypeMaster {
             this.notify.error('Something went wrong...!!'); // ctrl:363-368, verbatim
           }
         },
-        error: () => this.loader.stop(),
+        error: (err) => {
+          console.error('icu-type-master status-toggle error', err);
+          this.notify.error('Something went wrong...!!');
+          this.loader.stop();
+        },
       });
   }
 }

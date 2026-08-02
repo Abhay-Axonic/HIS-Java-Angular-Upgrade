@@ -147,8 +147,11 @@ export class ReferralTypeMaster {
       next: (res) => {
         if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
+      error: (err) => console.error('referral-type-master list load error', err),
     });
-    this.api.getReferralTypeCount(this.organizationId).subscribe();
+    this.api.getReferralTypeCount(this.organizationId).subscribe({
+      error: (err) => console.error('referral-type-master count load error', err),
+    });
   }
 
   updateField<K extends keyof ReferralTypeForm>(field: K, value: ReferralTypeForm[K]): void {
@@ -223,6 +226,10 @@ export class ReferralTypeMaster {
           // success.
           this.popupArmed = true;
         },
+        error: (err) => {
+          console.error('referral-type-master save error', err);
+          this.notify.error('Something went wrong...!!');
+        },
       });
   }
 
@@ -255,6 +262,10 @@ export class ReferralTypeMaster {
           // ctrl:359-363 -- unconditional, both success and failure.
           this.loadList();
         },
+        error: (err) => {
+          console.error('referral-type-master update error', err);
+          this.notify.error('Something went wrong...!!');
+        },
       });
   }
 
@@ -270,6 +281,7 @@ export class ReferralTypeMaster {
         const d = res.listObject[0];
         this.form.set({ id: d.id, code: d.code, desc: d.desc });
       },
+      error: (err) => console.error('referral-type-master edit load error', err),
     });
   }
 
@@ -294,6 +306,10 @@ export class ReferralTypeMaster {
           } else {
             this.notify.error('Something went wrong...!!');
           }
+        },
+        error: (err) => {
+          console.error('referral-type-master status-toggle error', err);
+          this.notify.error('Something went wrong...!!');
         },
       });
   }

@@ -180,6 +180,7 @@ export class BillingBedCategoryMaster {
       next: (res) => {
         if (res.status === 'success') this.hierarchyList.set(res.listObject ?? []);
       },
+      error: (err) => console.error('billing-bed-category-master hierarchy load error', err),
     });
   }
 
@@ -191,12 +192,16 @@ export class BillingBedCategoryMaster {
         this.loader.stop();
         if (res.status === 'success') this.list.set(res.listObject ?? []);
       },
-      error: () => this.loader.stop(),
+      error: (err) => {
+        console.error('billing-bed-category-master list load error', err);
+        this.loader.stop();
+      },
     });
     this.api.getCount(this.organizationId, this.unitId).subscribe({
       next: (res) => {
         if (res.status === 'success' && typeof res.object === 'number') this.totalCount.set(res.object);
       },
+      error: (err) => console.error('billing-bed-category-master count load error', err),
     });
   }
 
@@ -324,7 +329,11 @@ export class BillingBedCategoryMaster {
             this.popupArmed.set(true); // re-arm on failure too, see class doc
           }
         },
-        error: () => this.loader.stop(),
+        error: (err) => {
+          console.error('billing-bed-category-master save error', err);
+          this.notify.error('Something went wrong !!');
+          this.loader.stop();
+        },
       });
   }
 
@@ -403,7 +412,11 @@ export class BillingBedCategoryMaster {
             this.notify.error(res.message ?? 'Something went wrong !!');
           }
         },
-        error: () => this.loader.stop(),
+        error: (err) => {
+          console.error('billing-bed-category-master update error', err);
+          this.notify.error('Something went wrong !!');
+          this.loader.stop();
+        },
       });
   }
 
@@ -428,7 +441,11 @@ export class BillingBedCategoryMaster {
             this.notify.error(res.message ?? 'Something went wrong !!');
           }
         },
-        error: () => this.loader.stop(),
+        error: (err) => {
+          console.error('billing-bed-category-master status-toggle error', err);
+          this.notify.error('Something went wrong !!');
+          this.loader.stop();
+        },
       });
   }
 
