@@ -7,6 +7,18 @@ Produced from `docs/SME_GAP_ANALYSIS.md` Step B directive.
 
 ## How to Use This Queue
 
+**Setup (before starting review):**
+```bash
+cd /Users/axonichealth/Downloads/His_Java_Angular_Pgrade/HIS_Java_Angular_upgrade
+git checkout <batch-branch>
+cd new
+rm -rf dist .angular
+./node_modules/.bin/ng serve --port 4300 --host localhost --proxy-config proxy.conf.json
+```
+Then login at `http://localhost:8080/` (legacy app), open a new tab, and navigate to each screen.
+
+**IMPORTANT:** The Angular app uses HTML5 routing — use `http://localhost:4300/<screenPath>` (no `#/`). The `screenPath` for each screen is its route path from `app.routes.ts` (e.g., `assetIssueIndent`, `rackMaster`, `keyIngredientsMaster` — camelCase, not kebab-case). Hash-based URLs like `http://localhost:4300/#/assetIssueIndent` will silently redirect to `billingGroupMaster` — this is the HTML5 router treating the hash as a fragment, not a routing defect.
+
 1. Work in the order below — batches are ranked closest-to-main first, so conflicts are minimized.
 2. For each batch: read the branch's individual SUMMARY section, then the per-screen checklist items.
 3. Each screen needs: load the Angular rebuild live, click through every control (create, edit, toggle, search, pagination, validation), confirm parity with legacy behavior.

@@ -4861,3 +4861,5 @@ Then open `http://localhost:4300/#/assetIssueIndent`.
 **(B) Still broken:** Same silent redirect to `billingGroupMaster`. This confirms a real routing defect on the branch. Options: fix the defect first, or skip `assetIssueIndent`/`keyIngredientsMaster` and review `rackMaster` (the 3rd batch 29 screen) while the other two await a fix.
 
 **Note:** `rackMaster` route is at path `rackMaster` in the same route file — test this one too regardless of outcome.
+
+**IMPORTANT — URL format correction (2026-08-02 diagnosis):** The Angular app uses HTML5 routing (not hash-based). URLs must be `http://localhost:4300/assetIssueIndent` — NOT `http://localhost:4300/#/assetIssueIndent`. Hash-based URLs are parsed as root path `/` plus fragment, causing the empty-path redirect to `billingGroupMaster` to fire unconditionally. This affects ALL screens on every branch, not just batch 29. The `STEP6_REVIEW_QUEUE.md` has been updated to use HTML5 URLs throughout.
