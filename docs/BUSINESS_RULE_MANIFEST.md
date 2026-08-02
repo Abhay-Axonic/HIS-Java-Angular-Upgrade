@@ -2310,3 +2310,22 @@ This screen's own Save has zero client-side validation (Code/Description/Categor
 **Verified live, before and after, identical forged-target attacks, on both screens:** post-fix, every forged list/getById/getCount/dropdown call returns empty/null instead of the victim's data; the forged create landed under the caller's own real organization (`organization_id=1`) instead of the requested victim org, confirmed via `psql`, regardless of what the forged URL/body claimed. Legitimate same-tenant create-then-list round trips confirmed still working end-to-end on both screens post-fix. All test rows (`m_route_of_administration`, `m_formulation_and_roa`) deleted after verification -- both tables confirmed back to empty, their pre-test state.
 
 **Classification:** cross-tenant IDOR fix (BR-121-class stopgap, same severity tier as BR-122-126/134-138), both screens fully live-verified before and after, combined onto one branch since they share the identical root cause and one screen's data feeds the other. Held on `fix/routeofadministration-formulationtyperoa-crosstenant-idor`, not merged -- awaiting owner approval. Both screens remain excluded from any Angular rebuild work until this fix is merged, per standing precedent for every other confirmed-vulnerable screen this session.
+
+---
+
+### BR-140 — PreAuthorizationRequest schema drift (additive, local-dev-DB only)
+
+**Date found:** 2026-08-02
+**Found during:** Live-verification of the `IPreAuthorizationRequestDaoImpl` cross-tenant IDOR fix (Tier 2, 8 controllers)
+
+**Root cause:** The entity `MPreauthRequestMaster` (line 85-91, `legacy/Entity/.../model/MPreauthRequestMaster.java`) declared 2 columns absent from the local dev DB's `billing.m_preauth_request_master` table: `document_name` (VARCHAR) and `document_type_id` (INTEGER). Every call to `findById()` on this entity threw an unlogged exception (masked behind the generic "Something went wrong!!" / 501 response) regardless of tenant — the endpoint was effectively broken for all callers until fixed. This is the same defect class as BR-102-110 (entity-DB column mismatch in local dev), discovered during IDOR verification rather than Angular rebuild auditing.
+
+**Fix:** Two additive `ALTER TABLE` statements — no data migration needed, no existing data affected:
+```sql
+ALTER TABLE billing.m_preauth_request_master ADD COLUMN IF NOT EXISTS document_name VARCHAR(255);
+ALTER TABLE billing.m_preauth_request_master ADD COLUMN IF NOT EXISTS document_type_id INTEGER;
+```
+
+**Live-confirmed:** Pre-fix, all three preauth endpoints (`updateAuthorizationRequest`, `cancelNewPreAuthorizationRequestByPreAuthorizationId`, `updateIsSplitStatusByPreAuthorizationId`) returned 501 for all callers, cross-tenant and legitimate alike. Post-fix, legitimate calls succeeded (HTTP 200, `psql`-confirmed writes); cross-tenant calls were blocked by the IDOR fix. Applied immediately during live verification — no separate branch, no rollback risk (additive, column-level, no existing rows had values for these columns).
+
+**Classification:** Schema drift (local-dev-DB only, not an application bug). Same taxonomy as every other local-dev drift discovery (BR-102-110). Separate from the IDOR fix it unblocked (which will receive its own BR entry when merged).
