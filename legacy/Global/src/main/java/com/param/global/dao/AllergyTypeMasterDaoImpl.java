@@ -13,6 +13,7 @@ import org.hibernate.StatelessSession;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.param.global.common.GlobalCommonDateUtils;
@@ -20,6 +21,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.common.ServiceException;
 import com.param.global.dto.AllergyTypeMasterDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.model.AllergyTypeMaster;
 
 @Repository
@@ -28,6 +30,9 @@ public class AllergyTypeMasterDaoImpl extends GenericDao<AllergyTypeMaster, Inte
 		implements IAllergyTypeMasterDao, ICommonConstants {
 
 	private static final Logger logger = Logger.getLogger(AllergyTypeMasterDaoImpl.class);
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public AllergyTypeMasterDaoImpl() {
 		super(AllergyTypeMaster.class);
@@ -82,6 +87,15 @@ public class AllergyTypeMasterDaoImpl extends GenericDao<AllergyTypeMaster, Inte
 	public Response updateAllergyTypeMaster(AllergyTypeMasterDto allergyTypeMasterDto) throws ApplicationException {
 		try {
 			AllergyTypeMaster allergyTypeMaster = findById(allergyTypeMasterDto.getAllergyTypeId());
+
+			// BR-147: cross-tenant IDOR fix -- the target row's organization must
+			// match the JWT-verified identity, never a client-supplied value.
+			if (allergyTypeMaster == null || allergyTypeMaster.getOrganizationId() == null
+					|| !allergyTypeMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			allergyTypeMaster.setAllergyTypeDesc(allergyTypeMasterDto.getAllergyTypeDesc());
 			allergyTypeMaster.setAllergyTypeName(allergyTypeMasterDto.getAllergyTypeName());
 			allergyTypeMaster.setIsGeneric(allergyTypeMasterDto.getIsGeneric());
@@ -103,6 +117,14 @@ public class AllergyTypeMasterDaoImpl extends GenericDao<AllergyTypeMaster, Inte
 			throws ApplicationException {
 		try {
 			AllergyTypeMaster allergyTypeMaster = findById(allergyTypeMasterDto.getAllergyTypeId());
+
+			// BR-147: cross-tenant IDOR fix -- same ownership check as updateAllergyTypeMaster.
+			if (allergyTypeMaster == null || allergyTypeMaster.getOrganizationId() == null
+					|| !allergyTypeMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			allergyTypeMaster.setStatus(allergyTypeMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			allergyTypeMaster.setUpdatedBy(allergyTypeMasterDto.getUpdatedBy());
 			allergyTypeMaster.setUpdatedDate(

@@ -19,6 +19,7 @@ import com.param.global.common.Response;
 import com.param.global.common.ServiceException;
 import com.param.global.dto.global.InstructionMasterDto;
 import com.param.global.org.common.dto.DoseMasterDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.org.common.model.DoseMaster;
 
 import in.param.common.dao.GenericDao;
@@ -28,6 +29,9 @@ import in.param.exception.ApplicationException;
 public class DoseMasterDaoImpl extends GenericDao<DoseMaster, Integer> implements IDoseMasterDao, ICommonConstants {
 
 	private static final Logger logger = Logger.getLogger(DoseMasterDaoImpl.class);
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public DoseMasterDaoImpl() {
 		super(DoseMaster.class);
@@ -99,6 +103,15 @@ public class DoseMasterDaoImpl extends GenericDao<DoseMaster, Integer> implement
 	public Response updateDoseMaster(DoseMasterDto doseMasterDto) throws ApplicationException {
 		try {
 			DoseMaster doseMaster = findById(doseMasterDto.getDoseId());
+
+			// BR-148: cross-tenant IDOR fix -- the target row's organization must
+			// match the JWT-verified identity, never a client-supplied value.
+			if (doseMaster == null || doseMaster.getOrganizationId() == null
+					|| !doseMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			doseMaster.setDoseCode(doseMasterDto.getDoseCode());
 			doseMaster.setDoseDesc(doseMasterDto.getDoseDesc());
 			doseMaster.setUpdatedBy(doseMasterDto.getUpdatedBy());
@@ -118,6 +131,14 @@ public class DoseMasterDaoImpl extends GenericDao<DoseMaster, Integer> implement
 	public Response updateDoseMasterStatus(DoseMasterDto doseMasterDto) throws ApplicationException {
 		try {
 			DoseMaster doseMaster = findById(doseMasterDto.getDoseId());
+
+			// BR-148: cross-tenant IDOR fix -- same ownership check as updateDoseMaster.
+			if (doseMaster == null || doseMaster.getOrganizationId() == null
+					|| !doseMaster.getOrganizationId()
+							.equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			doseMaster.setStatus(doseMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			doseMaster.setUpdatedBy(doseMasterDto.getUpdatedBy());
 			doseMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(doseMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
