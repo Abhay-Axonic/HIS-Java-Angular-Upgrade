@@ -4863,3 +4863,42 @@ Then open `http://localhost:4300/#/assetIssueIndent`.
 **Note:** `rackMaster` route is at path `rackMaster` in the same route file — test this one too regardless of outcome.
 
 **IMPORTANT — URL format correction (2026-08-02 diagnosis):** The Angular app uses HTML5 routing (not hash-based). URLs must be `http://localhost:4300/assetIssueIndent` — NOT `http://localhost:4300/#/assetIssueIndent`. Hash-based URLs are parsed as root path `/` plus fragment, causing the empty-path redirect to `billingGroupMaster` to fire unconditionally. This affects ALL screens on every branch, not just batch 29. The `STEP6_REVIEW_QUEUE.md` has been updated to use HTML5 URLs throughout.
+
+---
+
+## bedMaster — Step 6 SIGN-OFF (2026-08-02, batch 27)
+
+Owner's manual UI verification complete on `rebuild/phase4-batch27` (rebased onto main, 189 commits). All checks confirmed:
+- Create: green "Added Successfully" toast, rows persisted (psql-confirmed) — BR-102 fix in effect ✓
+- Edit: modify, update → green toast, row updates ✓
+- Toggle: status change confirmed ✓
+- Search: filter by bed code, positive/negative ✓
+- Validation: blank fields → error messages ✓
+- Moving Bed tab: loads correctly ✓
+- Billing Ward Bed Category: deliberately disabled during Create (matching legacy), auto-populates from room data ✓
+
+Two backend bugs found and fixed during review:
+- **BR-142:** GET_BED_MASTER_LIST INNER JOIN bm.floorMaster silently excluded beds with NULL ward floor_id. Fix: LEFT JOIN, live-verified, merged to main.
+- **Data gap:** Test Ward NULL floor_id, 0 rooms/bed categories. Seeded: General Ward Bed, Room 101, floor_id→1.
+
+Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing ✓ — ALL COMPLETE
+
+---
+
+## tally-interfacing — Step 6 SIGN-OFF (2026-08-02, batch 27)
+
+Owner's manual UI review on `rebuild/phase4-batch27` (rebased onto main). All confirmed:
+- Unit dropdown populated, "Please Select Unit" on-load warning ✓
+- Search with DEMO unit loads all 4 ledger tabs (OPD/IPD/Inventory/Doctor's Share) ✓
+- Date filter updates data ✓
+- Export to XML works ✓
+- Transfer correctly shows "Tally Software is not Running!" (no real Tally server) ✓
+- 16 error callbacks applied, tsc-clean ✓
+
+No seed data or backend fixes needed — screen is inherently read-only against external Tally.
+
+Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing ✓ — ALL COMPLETE
+
+---
+
+## patientCategoryMaster — Step 6 SIGN-OFF (2026-08-02, batch 27)
