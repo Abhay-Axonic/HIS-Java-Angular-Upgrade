@@ -154,6 +154,7 @@ export class AmbulanceTarrifMaster {
           if (typeof res.object === 'number') this.totalCount.set(res.object);
         }
       },
+    error: (err) => console.error('ambulance-tarrif-master error', err),
     });
   }
 
@@ -245,6 +246,7 @@ export class AmbulanceTarrifMaster {
             this.afterSaveOrUpdate(false);
           }
         },
+      error: (err) => console.error('ambulance-tarrif-master error', err),
       });
   }
 
@@ -277,6 +279,7 @@ export class AmbulanceTarrifMaster {
             this.afterSaveOrUpdate(false);
           }
         },
+      error: (err) => console.error('ambulance-tarrif-master error', err),
       });
   }
 
@@ -316,6 +319,7 @@ export class AmbulanceTarrifMaster {
         this.activeMasterId = detail.ambulanceTarrifMasterId;
         this.saveMode.set(false);
       },
+    error: (err) => console.error('ambulance-tarrif-master error', err),
     });
   }
 

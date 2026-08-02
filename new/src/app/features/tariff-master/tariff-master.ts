@@ -244,6 +244,7 @@ export class TariffMaster {
       next: (res) => {
         if (res.status === 'success' && typeof res.object === 'number') this.totalCount.set(res.object);
       },
+    error: (err) => console.error('tariff-master error', err),
     });
   }
 
@@ -254,6 +255,7 @@ export class TariffMaster {
           this.visitTypeOptions.set((res.listObject ?? []).map((v) => ({ id: v.visitTypeId, label: v.visitTypeName })));
         }
       },
+    error: (err) => console.error('tariff-master error', err),
     });
   }
 
@@ -264,6 +266,7 @@ export class TariffMaster {
           this.patientTypeOptions.set((res.listObject ?? []).map((v) => ({ id: v.id, label: v.name })));
         }
       },
+    error: (err) => console.error('tariff-master error', err),
     });
   }
 
