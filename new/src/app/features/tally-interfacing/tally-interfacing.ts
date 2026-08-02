@@ -158,6 +158,7 @@ export class TallyInterfacing {
           this.unitList.set(res.listObject ?? []);
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
   }
 
@@ -181,6 +182,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
   }
 
@@ -205,6 +207,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
     this.api.getIpLedger(unitId, searchDate).subscribe({
       next: (res) => {
@@ -216,6 +219,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
     this.api.getOpLedger(unitId, searchDate).subscribe({
       next: (res) => {
@@ -227,6 +231,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
     this.api.getInventoryLedger(unitId, searchDate).subscribe({
       next: (res) => {
@@ -238,6 +243,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
     this.api.getDoctorShareLedger(unitId, searchDate).subscribe({
       next: (res) => {
@@ -249,6 +255,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
   }
 
@@ -273,6 +280,10 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => {
+      console.error('tally-interfacing error', err);
+      this.notify.error('Something went wrong');
+    },
     });
   }
 
@@ -303,6 +314,10 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => {
+      console.error('tally-interfacing error', err);
+      this.notify.error('Something went wrong');
+    },
     });
   }
 
@@ -335,6 +350,7 @@ export class TallyInterfacing {
                 cb({ kind: 'serverError', message: res.message ?? 'Something went wrong!!' });
               }
             },
+          error: (err) => console.error('tally-interfacing sendToTally error', err),
           });
         }
       },
@@ -380,6 +396,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
   }
 
@@ -400,6 +417,10 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => {
+      console.error('tally-interfacing error', err);
+      this.notify.error('Something went wrong');
+    },
     });
   }
 
@@ -420,6 +441,10 @@ export class TallyInterfacing {
           this.showConfirmCreateModal.set(true);
         }
       },
+    error: (err) => {
+      console.error('tally-interfacing error', err);
+      this.notify.error('Something went wrong');
+    },
     });
   }
 
@@ -446,6 +471,10 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => {
+      console.error('tally-interfacing error', err);
+      this.notify.error('Something went wrong');
+    },
     });
   }
 
@@ -483,6 +512,10 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => {
+      console.error('tally-interfacing error', err);
+      this.notify.error('Something went wrong');
+    },
     });
   }
 
@@ -496,6 +529,7 @@ export class TallyInterfacing {
           this.notify.error(res.message ?? 'Something went wrong!!');
         }
       },
+    error: (err) => console.error('tally-interfacing error', err),
     });
   }
 }
