@@ -4813,3 +4813,51 @@ Net effect: three independent things have to align for the silent success -- a n
 **Action taken:** logged here as a standing, advance disclosure. Applies automatically to each of these 5 screens' eventual Step 6 checklist/sign-off, whenever that happens — no need to re-flag Step 6b's absence screen by screen at that point, this entry already covers it.
 
 **Action taken:** logged here and in `docs/ANGULAR_REMAINING_POOL_RECONCILIATION.md` (Section 6 dated update) as the definitive, doubly-verified conclusion. No new batch proposed or forced. Next new-screen work requires either a real SME (path b) or the owner's own review backlog to clear first, per the owner's explicit direction -- not further low-risk-tier searching.
+
+---
+
+### PENDING-login-cookie-crossport-fix
+
+**Severity:** Dev-environment (not a production bug)
+**Date found:** 2026-08-02
+**Found by:** Diagnosis during Step 6 review environment setup
+**Status:** Fix applied — 4 `$cookies.putObject` calls in `loginController.js` now include `{domain: 'localhost', secure: false}`. Committed on `rebuild/phase4-batch29` branch; needs cherry-pick to `main`.
+
+**Finding:** The legacy login flow sets the `cookieObject` cookie without a `domain` attribute, making it port-scoped on `localhost:8080`. The Angular rebuild dev server runs on `:4300`, which can't see the cookie — causing "Access Denied" on every screen despite a valid login. This affects both automated testing and manual Step 6 review.
+
+**Fix:** Added `{'domain': 'localhost', 'secure': false}` to 4 `$cookies.putObject('cookieObject', ...)` calls at lines 397, 467, 1131, 1199 in `loginController.js`. Lines 369 and 1103 already had the domain parameter. Scoped to `localhost` only — zero production/staging impact.
+
+**Verified:** Live-confirmed using the login-then-navigate sequence: login on `:8080` → navigate browser to `:4300/#/assetIssueIndent` → "DEMO / Dr. Demo" appears in the Angular app nav bar, confirming the cookie is visible cross-port.
+
+**Commit:** `678838b0` on `rebuild/phase4-batch29`. Must be cherry-picked to `main` before any batch merge to ensure the fix persists.
+
+---
+
+### PENDING-batch29-routing-silent-redirect
+
+**Severity:** Medium — blocks Step 6 review for 2 of 3 batch 29 screens
+**Date found:** 2026-08-02
+**Found by:** Live diagnosis during Step 6 environment setup
+**Status:** Root cause not yet isolated — may be a stale build artifact OR a real routing defect. Owner to run clean rebuild to determine.
+
+**Finding:** On `rebuild/phase4-batch29`, navigating to `/#/assetIssueIndent` (or `/#/keyIngredientsMaster`) silently redirects to `billingGroupMaster` with no console errors. The sidebar shows both screens as navigation links, clicking them produces no route change. The route config appears correct (`path: 'assetIssueIndent'`, component file exists at `features/asset-issue-indent/asset-issue-indent.ts`, `shell-nav.data.ts` has the entry). `billingGroupMaster` loads normally on the same branch.
+
+`ng cache clean` did NOT resolve the issue. The hypothesis is a stale build artifact from an earlier session where `index.html` was inadvertently replaced with an Angular build output then restored — Vite may have cached broken module resolution state beyond what `ng cache clean` clears.
+
+**Owner's diagnostic step (before starting review):**
+```bash
+cd /Users/axonichealth/Downloads/His_Java_Angular_Pgrade/HIS_Java_Angular_upgrade
+git checkout rebuild/phase4-batch29
+cd new
+rm -rf dist .angular
+./node_modules/.bin/ng serve --port 4300 --host localhost --proxy-config proxy.conf.json
+```
+Then open `http://localhost:4300/#/assetIssueIndent`.
+
+**Two possible outcomes:**
+
+**(A) Working:** Screen loads with its own form/table (not Billing Group Master). URL shows `/#/assetIssueIndent`. The route is correct, the issue was a stale build artifact — proceed with Step 6 review.
+
+**(B) Still broken:** Same silent redirect to `billingGroupMaster`. This confirms a real routing defect on the branch. Options: fix the defect first, or skip `assetIssueIndent`/`keyIngredientsMaster` and review `rackMaster` (the 3rd batch 29 screen) while the other two await a fix.
+
+**Note:** `rackMaster` route is at path `rackMaster` in the same route file — test this one too regardless of outcome.
