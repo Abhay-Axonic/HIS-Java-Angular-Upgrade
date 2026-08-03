@@ -103,6 +103,12 @@
 
 ---
 
+## 5. `checklistItemMaster` — ✅ UI-LEVEL SIGN-OFF RECORDED 2026-08-03 (owner)
+
+**Owner confirmed through the actual UI** (`http://localhost:4310/checklistItem`, module 525): screen loads with the 3 org-1 rows (CHK1/CHK2/CI1); org-999 victim `VICTIM-CI-999` absent (BR-149's cross-tenant fix holds at the UI layer); edit/save/status-toggle all work cleanly on same-org rows. Backend fix merged+pushed as BR-149 (`69500dc1`); findings-doc entry appended.
+
+---
+
 ## 5. `checklistItemMaster`
 
 **Paths:** legacy state is `checklistItem` (not `checklistItemMaster` — confirmed directly in the route config; the rebuild's URL matches this exactly), module id 525, under "OT/Theatre" (as "Checklist Item").

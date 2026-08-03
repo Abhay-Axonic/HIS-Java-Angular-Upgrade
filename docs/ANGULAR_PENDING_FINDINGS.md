@@ -4982,3 +4982,28 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 **Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-149, held). Batch-24 screen — backend now batch-clean.
 
 ---
+
+## checklistItemMaster BR-149 — Step 6 UI-LEVEL SIGN-OFF (2026-08-03)
+
+**Context:** BR-149 (VerifiedIdentityService fix in `ChecklistItemMasterDaoImpl`) was merged into main (`69500dc1`) and pushed. Backend-level verification (forged API attacks blocked, psql victim pristine, legit same-org writes persist) was already recorded. This entry records the **UI-level confirmation** through the actual rebuilt screen (`http://localhost:4310/checklistItem`, module 525).
+
+**Owner-verified through the UI:**
+- Screen loads with the 3 org-1 rows (CHK1, CHK2, CI1) — the org-999 victim (`VICTIM-CI-999`, id 6) is **absent** from the list (org-scoped list query + session org/unit binding — the UI-visible layer of the fix holds).
+- Normal functionality intact: edit, save, status toggle all work cleanly on same-org rows (per owner's report).
+
+**Status:** ✅ SIGNED OFF (Step 6 UI verification complete, BR-149 fix confirmed through the actual UI).
+
+---
+
+
+## PENDING-standing — Batch dev-server setup pre-review checklist (environment lessons, 2026-08-03)
+
+Two environment issues hit during batch 24 Step 6 review setup. **Standing rule for ALL future batch reviews** — before starting any `ng serve` for a new batch, confirm BOTH:
+
+1. **Correct branch/worktree is actually serving the port.** Symptom: `NG04002 Cannot match any routes` on a screen that exists in the batch branch. Root cause (batch 24): the long-running `ng serve` on :4310 was started Aug 2 14:33 from `.claude/worktrees/batch25/new` (branch `rebuild/phase4-batch25`), and batch-24 screens only exist on `rebuild/phase4-batch24` — the dev server was never pointed at the new batch's code. **Pre-review check:** `lsof -iTCP:4310 -sTCP:LISTEN` → get PID → `lsof -a -p <PID> -d cwd -Fn` → confirm the cwd is the current batch's worktree; also `git branch --show-current` in that worktree. Same class of failure as the earlier main-vs-rebuild mixup.
+2. **`proxy.conf.json` exists in the worktree.** Symptom: `ng serve` compiles (Watch mode enabled) but dies with "Proxy configuration file ... does not exist". Root cause: `proxy.conf.json` is **gitignored** (it's a per-dev copy of `proxy.conf.json`'s template with a `_comment` header) — every fresh worktree needs it copied in from an existing worktree (e.g. `.claude/worktrees/batch25/new/proxy.conf.json`) before `ng serve --proxy-config proxy.conf.json` will start. **Pre-review check:** `ls <worktree>/new/proxy.conf.json` before starting the server.
+
+**Also:** `ng` is not on PATH in background shells — use `./node_modules/.bin/ng serve` (or `npx ng serve`) from the worktree's `new/` dir, not bare `ng`.
+>>>>>>> 82b45468 (docs: checklistItemMaster UI sign-off (BR-149 confirmed through UI) + standing dev-server pre-review checklist note (stale worktree + gitignored proxy.conf.json))
+
+---
