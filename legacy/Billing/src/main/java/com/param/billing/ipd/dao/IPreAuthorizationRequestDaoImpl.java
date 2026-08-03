@@ -452,6 +452,12 @@ public class IPreAuthorizationRequestDaoImpl extends GenericDao<MPreauthRequestM
 					if (mPreauthRequestMaster == null || !mPreauthRequestMaster.getOrganisationId().equals(verifiedIdentityService.getVerifiedOrganizationId()) || !mPreauthRequestMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
 					throw new BillingException("Preauthorization request does not belong to the current organization");
 					}
+						// BR-153: capture the request's previously-applied authorization state BEFORE it is
+						// overwritten below, so a re-final-submit adjusts the payee master by the delta
+						// (new - prior) instead of re-adding the full amount (silent double-add on re-submit).
+						Character priorFinalSubmit = mPreauthRequestMaster.getIsFinalSubmit();
+						Double priorAuthorizationAmount = mPreauthRequestMaster.getAuthorizationAmount() != null
+								? mPreauthRequestMaster.getAuthorizationAmount() : 0.0;
 						mPreauthRequestMaster.setAuthorizationNo(reqDto.getAuthorizationNo());
 						mPreauthRequestMaster.setAuthorizationAmount(reqDto.getAuthorizationAmount());
 						mPreauthRequestMaster.setAuthorizationDate(reqDto.getAuthorizationDate() != null ? new Date(reqDto.getAuthorizationDate()) : TimeZoneComponent.getDateByzone(reqDto.getUnitId()));
@@ -478,8 +484,15 @@ public class IPreAuthorizationRequestDaoImpl extends GenericDao<MPreauthRequestM
 						
 						if(obj!=null)
 						{
-								obj.setAuthorizedAmount(obj.getAuthorizedAmount()+reqDto.getAuthorizationAmount());
-								obj.setBalanceAmount(obj.getBalanceAmount()+reqDto.getAuthorizationAmount());
+								// BR-153: apply the delta (new - prior) when this request was already applied to the
+								// payee master, so re-final-submitting the same amount adds 0 and an edit adds only
+								// the difference. First final-submit (prior not applied) adds the full amount.
+								Double amountDelta = reqDto.getAuthorizationAmount();
+								if (priorFinalSubmit != null && priorFinalSubmit.equals('Y')) {
+									amountDelta = amountDelta - priorAuthorizationAmount;
+								}
+								obj.setAuthorizedAmount(obj.getAuthorizedAmount()+amountDelta);
+								obj.setBalanceAmount(obj.getBalanceAmount()+amountDelta);
 							sessionFactory.getCurrentSession().update(obj);
 						}else{
 							MPreauthMaster master = new MPreauthMaster();
