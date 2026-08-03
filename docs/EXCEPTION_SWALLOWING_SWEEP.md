@@ -171,7 +171,7 @@ Both cleared without code change; no BR number assigned. No fix branch created.
 
 | # | Object | Type | Blocks |
 |---|---|---|---|
-| 1 | `public.t_service_identity` | missing table (entity exists) | ALL billing/LIS tx verification (heartbeat query contaminates transactions; 45k+ errors logged) |
+| 1 | `public.t_service_identity` | missing table (entity exists) | **RESOLVED BR-155** (additive DDL applied 2026-08-03, branch fix/service-identity-schema-drift) — heartbeat SELECT verified succeeding |
 | 2 | `billing.t_company_receipts_expense.credit_note_id` | missing column | CompanyReceiptMaster/settle + saveExpense live tests |
 | 3 | `opd.t_coversheet_template_master` | missing table (entity exists) | Category 1 coversheet items (4 DAOs) |
 | 4 | `lab.t_lab_sample_dtls.icmr_id` | missing column | Serology result entry live tests |
