@@ -2474,3 +2474,35 @@ ALTER TABLE billing.m_preauth_request_master ADD COLUMN IF NOT EXISTS document_t
 `MPackageMasterDaoImpl.saveParentPackageMaster` + `MPackageMasterServiceImpl` (Global/service): all 4 package-creation endpoints (`/api/packages/ehc`, `/allInclusive`, `/multiencounter`, `/eitheror`) propagated `parentPackage.getOrgId()`/`getUnitId()` — client-supplied via the DTO — into the parent package row AND every child record (package master, services, items, group details; ~17 setter sites in the service). **Live-confirmed pre-fix:** forged `POST /api/packages/ehc` with `orgId:999,unitId:999` created `service.m_parent_package_master` id=2 with `org_id=999` (HTTP 200 "Ehc Package Created"). **Fix:** VerifiedIdentityService injected in both DAO and service; `saveParentPackageMaster` binds **verified** org/unit (DTO values ignored); each of the 4 creation service methods overrides `parentPackage.setOrgId/setUnitId` to the verified identity at method entry so every downstream child write inherits the verified tenant. **Live after:** forged ehc created the parent in org 1 (0 rows org 999). Deployed-bytecode verified (DAO 2 + service 8 getVerified refs). Category: cross-tenant IDOR (billing package data).
 
 ---
+
+## BR-160 — `multicounterPackage` status-toggle (inactivePackage) was tenant-unscoped write-by-ID (2026-08-03)
+
+`MPackageMasterDaoImpl.inactivePackage` (Global): the toggle was an UPDATE keyed only by `parent_package_id` with no org/unit in the WHERE clause — any authenticated session could deactivate any tenant's package by ID. **Live-confirmed pre-fix:** org-1 session's `POST /api/packages/inactivePackage` deactivated the org-999 victim package A→I (HTTP 200). **Fix:** VerifiedIdentityService ownership guard at method entry — the package is loaded scoped to the verified org and the toggle is rejected with an explicit error if the row isn't owned by the verified tenant. **Live after:** forged toggle on org-999 victim blocked (victim pristine A), legit org-1 toggle works (A→I persisted). Deployed-bytecode verified. Category: cross-tenant IDOR (billing package data) — sibling-endpoint finding to BR-159 (standing sibling-endpoint rule).
+
+---
+
+## BR-161 — `couponTemplateMaster`/`multicounterPackage` read paths leaked other tenants' rows (2026-08-03)
+
+`CouponTemplateMasterDaoImpl` (Global/billing) + `MPackageMasterDaoImpl` (Global): list/getById/details reads for coupons and the package filter endpoint were not scoped to the verified tenant. **Live-confirmed pre-fix:** org-1 session's `POST /api/billing/coupon/getCouponTemplateMaster` returned the org-999 victim coupon (cross-tenant read). **Fix:** coupon list/byId/details reads and the package filter now scope `WHERE organization_id=:verifiedOrg AND unit_id=:verifiedUnit` (verified identity, not session cookie). **Live after:** org-1 session reading the org-999 coupon returns empty/not-found. Deployed-bytecode verified. Category: cross-tenant IDOR (read variant).
+
+---
+
+## Auth parity — legacy login's sparse cookie write carried no authToken, so a genuine legacy login could not authenticate the rebuild cross-origin (2026-08-03)
+
+The rebuild's `authInterceptor` reads `session.authToken` from `cookieObject`; legacy's first-path login write (`loginController.js:369`) stored the token **only** in `sessionStorage.token` (origin-scoped — a `localhost:8080` login's sessionStorage is invisible to the `localhost:4310` app; cookies with `domain=localhost` cross ports, sessionStorage never does). Result: every genuine legacy login left the rebuild unauthenticated (401 → `/accessDenied?reason=sessionExpired`, rendered as the generic "You do not have permission"). **Fix (two halves):** (1) rebuild `SessionService.authToken` falls back to `sessionStorage.getItem('token')` when `cookieObject` lacks authToken (covers same-origin deployments); (2) legacy `loginController.js` sparse cookie write (L369 + L1101) now includes `authToken` (covers the cross-origin dev/review flow; mirrors the fuller write at L424). **Live-verified end-to-end:** genuine legacy login (org→unit→login) → cookie with authToken → `:4310` renders couponTemplateMaster + multicounterPackage authenticated as the logged-in user, no console workaround. Behavioral change (login/cookie), approved.
+
+---
+
+## Decimal-precision — coupon discount percentage and tax master create-validity (2026-08-03)
+
+**Coupon discount percentage:** legacy's percentage input is `type="number"` (accepts decimals like 10.5) but `billing.m_coupon_template_details.percentage` was `int4` with `Integer` entity/DTO — a genuine edit with a decimal silently truncated to 10 (billing accuracy). **Fix (approved pattern, same class as the tax rate note):** column widened additively to `numeric(5,2)` (`ALTER TABLE ... ALTER COLUMN percentage TYPE numeric(5,2)`), entity/DTO `Integer`→`Double` for `CouponTemplateDetails` + `PatientCouponTemplateMapper` + both DTOs, staging schema ref mirrored. **Live-verified:** create 7.5→7.50 persisted; edit 10.5→10.50 persisted; invalid 999.999→500, 0 rows. **Tax master:** no rate/percentage column exists on `m_tax_component` (verified end-to-end: entity/DTO/DB/form carry only `code`, `component`, status) — the "rate field" widening was correctly declined; instead the create/update paths gained validation (required fields, ≤10-char code, org-scoped duplicate-code check) returning clear messages instead of an uncaught DB-constraint 500. **Live-verified:** >10-char code → "Code must be at most 10 characters" (0 rows); duplicate → "already exists"; valid create through the real UI flow persists with org/unit. Both approved as the recurring class to pre-check on future billing-tier screens (any screen with a percentage/decimal-rate field should have its column precision verified against realistic input values as a standard pre-check, not discovered reactively).
+
+---
+
+## Step-6 review sign-off — billing-tier batch 1 (rebuild/phase4-batch27-billing-tier1) (2026-08-03)
+
+All 3 screens confirmed working in the live review environment (genuine legacy login → :4310, no console workaround):
+- **taxComponentMaster:** load, create (form-visibility bug fixed: `@if (isEdit() || record().id === 0 && record().code === '')` unmounted the form the instant a code was typed — no request ever reached the backend; fixed to `@if (isEdit() || record().id === 0)`), toggle, edit, validation messages — all confirmed.
+- **couponTemplateMaster:** load, create with discount detail row, edit (Hibernate identity collision fixed via `sessionFactory.getCurrentSession().merge()`; BR-157 ownership check surfaced the latent bug), toggle, duplicate-name check, decimal percentage edit — all confirmed.
+- **multicounterPackage:** load, search, toggle — all confirmed.
+Batch closed. Rebuild branch held for final merge decision (10 commits ahead of main after the BR-157/158/159 merge: BR-160, BR-161+rebuild, 8 Step-6 fixes).
