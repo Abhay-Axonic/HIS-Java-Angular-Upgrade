@@ -58,7 +58,7 @@
           <td>{{ row.couponTemplateDescription }}</td>
           <td>{{ row.expireDays }}</td>
           <td>
-            <app-status-toggle [active]="row.status === 'A'" (toggled)="onToggleStatus(row)" />
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="onToggleStatus(row)" />
           </td>
           <td>
             <button type="button" (click)="startEdit(row)">Edit</button>
