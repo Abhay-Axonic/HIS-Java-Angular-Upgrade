@@ -12,7 +12,7 @@ public class CouponTemplateDetailsDto {
 	
 	private Integer serviceId;
 	
-	private Integer percentage;
+	private Double percentage;
 	
 	private String createdDate;
 	
@@ -76,11 +76,11 @@ public class CouponTemplateDetailsDto {
 		this.serviceId = serviceId;
 	}
 
-	public Integer getPercentage() {
+	public Double getPercentage() {
 		return percentage;
 	}
 
-	public void setPercentage(Integer percentage) {
+	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
 	}
 

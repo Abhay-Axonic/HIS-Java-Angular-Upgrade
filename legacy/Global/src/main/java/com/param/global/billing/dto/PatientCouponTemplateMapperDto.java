@@ -18,7 +18,7 @@ public class PatientCouponTemplateMapperDto {
 	
 	private Integer serviceId;
 	
-	private Integer percentage;
+	private Double percentage;
 	
 	private String createdDate;
 	
@@ -126,11 +126,11 @@ public class PatientCouponTemplateMapperDto {
 		this.serviceId = serviceId;
 	}
 
-	public Integer getPercentage() {
+	public Double getPercentage() {
 		return percentage;
 	}
 
-	public void setPercentage(Integer percentage) {
+	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
 	}
 

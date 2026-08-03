@@ -40,7 +40,7 @@ public class PatientCouponTemplateMapper {
 	private Integer serviceId;
 	
 	@Column(name="percentage")
-	private Integer percentage;
+	private Double percentage;
 	
 	@Column(name="coupon_template_description")
 	private String couponTemplateDescription; 
@@ -148,11 +148,11 @@ public class PatientCouponTemplateMapper {
 		this.serviceId = serviceId;
 	}
 
-	public Integer getPercentage() {
+	public Double getPercentage() {
 		return percentage;
 	}
 
-	public void setPercentage(Integer percentage) {
+	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
 	}
 

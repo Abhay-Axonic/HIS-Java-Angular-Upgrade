@@ -33,7 +33,7 @@ public class CouponTemplateDetails {
 	private Integer serviceId;
 	
 	@Column(name="percentage")
-	private Integer percentage;
+	private Double percentage;
 	
 	@Column(name="created_date")
 	private Date createdDate;
@@ -99,11 +99,11 @@ public class CouponTemplateDetails {
 		this.serviceId = serviceId;
 	}
 
-	public Integer getPercentage() {
+	public Double getPercentage() {
 		return percentage;
 	}
 
-	public void setPercentage(Integer percentage) {
+	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
 	}
 
