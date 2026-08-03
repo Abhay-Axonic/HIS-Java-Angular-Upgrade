@@ -23,10 +23,10 @@ export class TaxComponentMasterService {
   private readonly http = inject(HttpClient);
   private readonly base = inject(API_BASE_URL);
 
-  getList(organizationId: number): Observable<ApiResponse<never, TaxComponentRecord>> {
-    return this.http.get<ApiResponse<never, TaxComponentRecord>>(
-      `${this.base}/api/globals/tax/components/${organizationId}`,
-    );
+  getList(organizationId: number): Observable<TaxComponentRecord[]> {
+    // NOTE: the backend returns a PLAIN JSON ARRAY for the list (not the
+    // {status,listObject} envelope) -- verified live 2026-08-03.
+    return this.http.get<TaxComponentRecord[]>(`${this.base}/api/globals/tax/components/${organizationId}`);
   }
 
   getById(organizationId: number, id: number): Observable<ApiResponse<TaxComponentRecord>> {

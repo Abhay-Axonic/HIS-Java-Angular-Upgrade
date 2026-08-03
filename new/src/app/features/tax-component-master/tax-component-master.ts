@@ -63,14 +63,11 @@ export class TaxComponentMaster {
 
   private loadList(): void {
     this.api.getList(this.organizationId).subscribe({
-      next: (res) => {
-        if (res.status === 'success') {
-          const rows = res.listObject ?? [];
-          this.list.set(rows);
-          this.totalCount.set(rows.length);
-        }
+      next: (rows) => {
+        this.list.set(rows ?? []);
+        this.totalCount.set(rows?.length ?? 0);
       },
-      error: (err) => this.notify.error('Failed to load tax components'),
+      error: () => this.notify.error('Failed to load tax components'),
     });
   }
 
