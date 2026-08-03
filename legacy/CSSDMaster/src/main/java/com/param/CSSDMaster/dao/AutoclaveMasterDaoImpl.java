@@ -17,6 +17,7 @@ import com.param.CSSDMaster.dto.AutoclaveMasterDto;
 import com.param.CSSDMaster.model.AutoclaveMaster;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -39,6 +40,9 @@ public class AutoclaveMasterDaoImpl extends GenericDao<AutoclaveMaster, Integer>
 
 	@Autowired
 	private DozerBeanMapper mapper;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response getAllAutoclaveList(Integer organizationId,Integer unitId,Integer offset,Integer noOfRecordsPerPage) throws ApplicationException {
@@ -89,7 +93,15 @@ public class AutoclaveMasterDaoImpl extends GenericDao<AutoclaveMaster, Integer>
 		try {
 			Session session=sessionFactory.getCurrentSession();
 			AutoclaveMaster autoclaveMaster=(AutoclaveMaster)session.get(AutoclaveMaster.class, masterDto.getId());
-			
+
+			// BR-150: cross-tenant IDOR fix -- verify the loaded row belongs to the JWT-verified identity
+			if (autoclaveMaster == null || autoclaveMaster.getOrganizationId() == null
+					|| !autoclaveMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| autoclaveMaster.getUnitId() == null
+					|| !autoclaveMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			autoclaveMaster.setSterilization_pressure(masterDto.getSterilization_pressure());
 			autoclaveMaster.setSterilization_temperature(masterDto.getSterilization_temperature());
 			autoclaveMaster.setSterilization_type_id(masterDto.getSterilization_type_id());
@@ -112,7 +124,15 @@ public class AutoclaveMasterDaoImpl extends GenericDao<AutoclaveMaster, Integer>
 		try {
 			Session session=sessionFactory.getCurrentSession();
 			AutoclaveMaster autoclaveMaster=(AutoclaveMaster)session.get(AutoclaveMaster.class, masterDto.getId());
-			
+
+			// BR-150: cross-tenant IDOR fix -- same ownership check as updateAutoclave
+			if (autoclaveMaster == null || autoclaveMaster.getOrganizationId() == null
+					|| !autoclaveMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| autoclaveMaster.getUnitId() == null
+					|| !autoclaveMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			autoclaveMaster.setUpdated_date(TimeZoneComponent.getDateByzone(masterDto.getUnitId()!=null ?masterDto.getUnitId() :0));
 			autoclaveMaster.setUpdated_by(masterDto.getUpdated_by());
 			autoclaveMaster.setStatus(masterDto.getStatus());

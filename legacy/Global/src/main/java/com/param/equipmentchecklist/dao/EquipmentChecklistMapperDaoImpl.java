@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.param.equipmentchecklist.Dto.EquipmentChecklistMapperDto;
@@ -11,6 +12,7 @@ import com.param.equipmentchecklist.model.EquipmentChecklistMapper;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
@@ -21,6 +23,9 @@ import com.param.global.common.ServiceException;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EquipmentChecklistMapperDaoImpl extends GenericDao<EquipmentChecklistMapper, Integer> implements IEquipmentChecklistMapperDao,ICommonConstants{
 	final static Logger logger = Logger.getLogger(EquipmentChecklistMapperDaoImpl.class);
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 
 	public EquipmentChecklistMapperDaoImpl() {
@@ -59,22 +64,36 @@ public class EquipmentChecklistMapperDaoImpl extends GenericDao<EquipmentCheckli
 				return new Response<>(ALREADY_EXIST, ALREADY_EXIST_CODE,ALREADY_EXIST, null, null);
 			} // uncomment by minesh
 			
-			EquipmentChecklistMapper mstr = new EquipmentChecklistMapper();
+			EquipmentChecklistMapper mstr = null;
+			if (equipmentChecklistMapperDto.getChecklistEquipmentMapperMasterId() != null) {
+				// BR-151: cross-tenant IDOR fix -- load the existing row (findById also fixes the
+				// pre-existing detached-entity 500: the old code built a NEW entity and called
+				// update(mstr), silently throwing after the dup-check) and verify ownership.
+				mstr = findById(equipmentChecklistMapperDto.getChecklistEquipmentMapperMasterId());
+				if (mstr == null || mstr.getOrganizationId() == null
+						|| !mstr.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+						|| mstr.getUnitId() == null
+						|| !mstr.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+				}
+			} else {
+				// create binds the JWT-verified org/unit, never a client-supplied value
+				mstr = new EquipmentChecklistMapper();
+				mstr.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+				mstr.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+				mstr.setCreatedBy(equipmentChecklistMapperDto.getCreatedBy());
+				mstr.setCreatedDate(GlobalCommonDateUtils.getDate(equipmentChecklistMapperDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
+			}
 			mstr.setChecklistEquipmentMasterId(equipmentChecklistMapperDto.getChecklistEquipmentMasterId());
 			mstr.setAssetCategoryId(equipmentChecklistMapperDto.getAssetCategoryId());
 			mstr.setProductCategoryId(equipmentChecklistMapperDto.getProductCategoryId());
 			mstr.setItemCode(equipmentChecklistMapperDto.getItemCode());
 			mstr.setItemName(equipmentChecklistMapperDto.getItemName());
-			mstr.setCreatedBy(equipmentChecklistMapperDto.getCreatedBy());
-			mstr.setCreatedDate(GlobalCommonDateUtils.getDate(equipmentChecklistMapperDto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
-			mstr.setOrganizationId(equipmentChecklistMapperDto.getOrganizationId());
 			mstr.setStatus(equipmentChecklistMapperDto.getStatus());
-			mstr.setUnitId(equipmentChecklistMapperDto.getUnitId());
 			mstr.setUpdatedBy(equipmentChecklistMapperDto.getUpdatedBy());
 			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(equipmentChecklistMapperDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
 			
 			if(equipmentChecklistMapperDto.getChecklistEquipmentMapperMasterId()!=null) {
-				mstr.setChecklistEquipmentMapperMasterId(equipmentChecklistMapperDto.getChecklistEquipmentMapperMasterId());
 				update(mstr);
 				return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, mstr);
 			}else {
@@ -110,6 +129,15 @@ public class EquipmentChecklistMapperDaoImpl extends GenericDao<EquipmentCheckli
 			throws ApplicationException {
 		try {
 			EquipmentChecklistMapper mstr = findById(equipmentChecklistMapperDto.getChecklistEquipmentMapperMasterId());
+
+			// BR-151: cross-tenant IDOR fix -- same ownership check as the save/update path
+			if (mstr == null || mstr.getOrganizationId() == null
+					|| !mstr.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| mstr.getUnitId() == null
+					|| !mstr.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			mstr.setStatus(equipmentChecklistMapperDto.getStatus());
 			mstr.setUpdatedBy(equipmentChecklistMapperDto.getUpdatedBy());
 			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(equipmentChecklistMapperDto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));

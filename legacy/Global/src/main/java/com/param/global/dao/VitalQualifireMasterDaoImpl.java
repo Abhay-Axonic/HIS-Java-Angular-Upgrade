@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.VitalQualifireMasterDto;
 import com.param.opd.coversheet.model.VitalQualifireMaster;
 
@@ -28,6 +29,9 @@ import com.param.global.common.ServiceException;
 public class VitalQualifireMasterDaoImpl extends GenericDao<VitalQualifireMaster, Integer> implements IVitalQualifireMasterDao,ICommonConstants
 {
 	final static Logger logger = Logger.getLogger(VitalQualifireMasterDaoImpl.class);
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 
 	public VitalQualifireMasterDaoImpl() {
@@ -44,8 +48,9 @@ public class VitalQualifireMasterDaoImpl extends GenericDao<VitalQualifireMaster
 			vitalQualifireMaster.setVitalQualifireCode(vitalQualifireMasterDto.getVitalQualifireCode());
 			vitalQualifireMaster.setVitalQualifireDesc(vitalQualifireMasterDto.getVitalQualifireDesc());
 			vitalQualifireMaster.setVitalCategoryId(vitalQualifireMasterDto.getVitalCategoryId());
-			vitalQualifireMaster.setOrganizationId(vitalQualifireMasterDto.getOrganizationId());
-			vitalQualifireMaster.setUnitId(vitalQualifireMasterDto.getUnitId());
+			// BR-152: create binds the JWT-verified org/unit, never a client-supplied value
+			vitalQualifireMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			vitalQualifireMaster.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			vitalQualifireMaster.setStatus(vitalQualifireMasterDto.getStatus());
 			vitalQualifireMaster.setCreatedBy(vitalQualifireMasterDto.getCreatedBy());
 			vitalQualifireMaster.setCreatedDate(GlobalCommonDateUtils.getDate(vitalQualifireMasterDto.getCreatedDate(), "dd-M-yyyy HH:mm:ss"));
@@ -68,11 +73,23 @@ public class VitalQualifireMasterDaoImpl extends GenericDao<VitalQualifireMaster
 	public Response updateVitalQualifireMaster(VitalQualifireMasterDto vitalQualifireMasterDto) throws ApplicationException{
 		try {
 				VitalQualifireMaster vitalQualifireMaster=findById(vitalQualifireMasterDto.getVitalQualifireId());
+
+				// BR-152: cross-tenant IDOR fix (ROW THEFT variant) -- verify the loaded row
+				// belongs to the JWT-verified identity, and bind verified org/unit (the old code
+				// wrote client-supplied org/unit, which live-confirmed repointed a victim's row
+				// from org 999 to org 1). Never accept client-supplied org/unit here.
+				if (vitalQualifireMaster == null || vitalQualifireMaster.getOrganizationId() == null
+						|| !vitalQualifireMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+						|| vitalQualifireMaster.getUnitId() == null
+						|| !vitalQualifireMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+				}
+
 				vitalQualifireMaster.setVitalCategoryId(vitalQualifireMasterDto.getVitalCategoryId());
 				vitalQualifireMaster.setVitalQualifireCode(vitalQualifireMasterDto.getVitalQualifireCode());
 				vitalQualifireMaster.setVitalQualifireDesc(vitalQualifireMasterDto.getVitalQualifireDesc());
-				vitalQualifireMaster.setOrganizationId(vitalQualifireMasterDto.getOrganizationId());
-				vitalQualifireMaster.setUnitId(vitalQualifireMasterDto.getUnitId());
+				vitalQualifireMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+				vitalQualifireMaster.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 				vitalQualifireMaster.setUpdatedBy(vitalQualifireMasterDto.getUpdatedBy());
 				vitalQualifireMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(vitalQualifireMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			 
@@ -92,7 +109,15 @@ public class VitalQualifireMasterDaoImpl extends GenericDao<VitalQualifireMaster
 	public Response updateVitalQualifireMasterStatus(VitalQualifireMasterDto vitalQualifireMasterDto) throws ApplicationException{
 		try {
 				VitalQualifireMaster vitalQualifireMaster=findById(vitalQualifireMasterDto.getVitalQualifireId());
-				
+
+				// BR-152: cross-tenant IDOR fix -- same ownership check as the update path
+				if (vitalQualifireMaster == null || vitalQualifireMaster.getOrganizationId() == null
+						|| !vitalQualifireMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+						|| vitalQualifireMaster.getUnitId() == null
+						|| !vitalQualifireMaster.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+				}
+
 				vitalQualifireMaster.setStatus(vitalQualifireMasterDto.getStatus());
 				vitalQualifireMaster.setUpdatedBy(vitalQualifireMasterDto.getUpdatedBy());
 				vitalQualifireMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(vitalQualifireMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
