@@ -4917,6 +4917,27 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 **Fix:** `VerifiedIdentityService` injected into the DAO (BR-135 pattern); ownership check on update/status-toggle, create bound to verified org, by-id read filtered to verified org. Merged into main (56951f8d), owner-approved; builds clean (tsc 0, `mvn -pl ADT -am` SUCCESS).
 
 **Status:** ✅ FIXED + VERIFIED + MERGED (BR-143). Deferred: the service-layer unconditional-SUCCESS masking (separate decision item).
+## PENDING-batch25-br143class-idor — 3 batch-25 screens' backends carry the BR-143-class cross-tenant write IDOR (2026-08-02, LIVE-CONFIRMED on billingBedCategory)
+
+**Severity:** SEVERITY-1 (cross-tenant data-integrity, same tier as BR-143 / BR-121-139). **Status: FLAGGED, fix NOT started — awaiting owner decision on pacing.**
+
+**Pattern (identical to BR-143, read on all three DAOs):**
+- `BillingBedCategoryMasterDaoImpl.updateBillingBedCategoryMaster` (line 181) + `updateBillingBedCategoryMasterStatus` (line 206): pure `findById(dto.getBillingBedCategoryId())` with **zero organization/unit ownership check**, then persist client fields.
+- `ICUTypeMasterDaoImpl.updateICUTypeMaster` (line 138) + `updateICUStatus` (line 161): identical zero-check `findById(dto.getICUTypeMasterId())`.
+- `ReferralTypeMasterDaoImpl.updateReferralTypeMaster` (line 157) + `updateStatusForReferralType` (line 179): identical zero-check `findById(dto.getId())`.
+- All 3 services have **0 `VerifiedIdentity` references** (grep-confirmed). Controllers are plain `@RequestBody` passthroughs. List/count/dup-check queries scope by client-supplied org/unit (so the dup-check never catches cross-tenant targets), but the write paths never verify ownership.
+
+**Live-confirmed on billingBedCategory (org-1 admin session → org-999 victim row id 5):**
+- Seeded `VICTIM-BBC-999`/`VictimOrg999 BillingBedCategory` in org 999 (updated_by=0, app-realistic).
+- Forged `POST /adt/updateBillingBedCategoryMaster` with `billingBedCategoryId:5`, `organizationId:1` → HTTP 200 "Updated Successfully."
+- psql after: row 5 code → `HACKED-BY-ORG1`, desc → `Victim BBC CORRUPTED cross-tenant`, **updated_by=1** (org-1 user). Victim data genuinely corrupted.
+- Victim row restored to pre-attack state after confirmation.
+
+**Why the dup-check doesn't save it:** the service's pre-update `getBillingBedCategoryByNameNotById` is scoped by the client-supplied org/unit — a forged request targeting another org's row passes it trivially.
+
+**Also noted (same disclosure as BR-143):** services return SUCCESS/unconditional messages masking DAO outcomes — HTTP 200 means nothing on these endpoints.
+
+**Recommended (if owner approves):** same treatment as BR-143 — dedicated branch, `VerifiedIdentityService` ownership checks in all 3 DAOs (update + status-toggle + by-id read), live before/after for all 3 screens, separate BR number(s).
 
 ---
 
@@ -5070,6 +5091,19 @@ Three batch-24 backends live-confirmed exploitable (0 VerifiedIdentityService re
 **Verdict:** BR-151 is genuinely fixed on current main — the victim's data is **not** corruptible via the toggle (or save-with-ID) endpoint. The swallowed exception operates in the opposite direction from the concern: the ownership check rejects the write **first**, so the swallow only affects error-message quality (generic "Something went wrong!!"), never masks a successful write. Original verification confirmed valid.
 
 **Cross-reference:** the DAO catch-block swallow pattern itself remains tracked as the consolidated exception-swallowing decision item (see PENDING-tracked entry) — correctness/observability, not a security regression.
+## PENDING-billingbedcategory-toggle-investigation — billingBedCategory status-toggle: verified same-tenant-correct, no cross-tenant angle post-BR-146, no silent-reactivation mechanism (2026-08-02)
+
+**Owner asked for a proper investigation** (fix-now vs faithfully-reproduce decision) into whether the billingBedCategory toggle has (a) any cross-tenant angle, and (b) any "silent reactivation" mechanism that could bill a bed under the wrong category/rate. Full empirical verification, not assumption:
+
+**1. Cross-tenant angle: NONE post-BR-146 (and BR-146 WAS the toggle's cross-tenant exposure).** The pre-fix DAO (`updateBillingBedCategoryMasterStatus`, line 206) was a pure `findById(dto.getBillingBedCategoryId())` with zero org check — the same zero-check load that made the UPDATE path exploitable. BR-146 added the `VerifiedIdentityService` ownership check to BOTH update and status-toggle. **Live-verified:** a forged org-1 status-toggle against the org-999 victim row 5 (`{"billingBedCategoryId":5,"status":"I"}`) now returns `{"status":"error","message":"Something went wrong!!"}` and psql confirms row 5 untouched (status A, `updated_by=0`). The toggle had a cross-tenant angle before BR-146; it is closed now.
+
+**2. Same-tenant toggle: verified CORRECT end-to-end.** Live: toggled org-1 row 3 I→A via the real endpoint → psql `status=A`; toggled row 1 I→A → psql `status=A` (both restored to I afterward). The service returns the DAO's response (`return res;` — no unconditional-SUCCESS masking on this method, unlike the update path).
+
+**3. "Silent reactivation" mechanism: NONE found.** The suspected path was the in-memory active-list cache (`activeBillingBedCategoryMasterCache`, keyed by unitId). Live-tested the exact scenario: warmed the cache (2× `GET /getActiveBillingBedCategoryList/orgId/1/unitId/1`), toggled row 3 I→A, then re-fetched — response says **"List Size DB"** (cache correctly invalidated by the toggle's `invalidate(unitId)` call, re-read from DB), and the reactivated row correctly appears. A deactivated category does NOT linger in the cache. The invalidation is keyed on `dto.getUnitId() != null ? dto.getUnitId() : filterId` (fallback to the loaded entity's own unitId), which matches the cache key (`bedCategoryMasterDto.getUnitId()`) for all real callers.
+
+**4. Real-world billing consequence of the toggle (what it actually gates):** `m_bed_master.billing_bed_category_id` and `t_billing_bed_visit_type_mapper` (billing_bed_category_id → visit_type_id) are consumed by admission/bed-allocation flows (`BedAllocationDaoImpl` filters the active bed list by `billingBedCategoryId`; the visit-type mapper gates which visit types a bed category admits). The category's status gates whether it appears in `getActiveBillingBedCategoryList` — i.e., whether a bed can be allocated under it. **Correctly deactivating a category removes it from new allocations** (that's the intended control). The consequence of the OLD pre-BR-146 bug was cross-tenant status flipping (an attacker could deactivate/activate another org's category — potentially pulling a victim's bed category out of or into allocation); that is closed. No mechanism found where a category silently reactivates on its own, and no mechanism where the active list serves a deactivated category.
+
+**Verdict: same-tenant toggle behavior is correct and verified; the only cross-tenant exposure was the BR-146 zero-check load, already fixed and live-verified blocked. No separate toggle bug exists to fix or faithfully-reproduce. No behavioral-change entry needed — the toggle's observable behavior is unchanged from legacy (flip + success toast + list reload).**
 
 ---
 ---

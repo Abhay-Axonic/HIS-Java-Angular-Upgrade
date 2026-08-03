@@ -1,0 +1,285 @@
+<section class="page">
+  <fieldset>
+    <div class="form-grid">
+      <div class="field">
+        <label for="billingBedCode">Code<span class="required">*</span></label>
+        <input
+          id="billingBedCode"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().billingBedCode"
+          (ngModelChange)="updateField('billingBedCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="billingBedCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="billingBedDesc">Description<span class="required">*</span></label>
+        <input
+          id="billingBedDesc"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().billingBedDesc"
+          (ngModelChange)="updateField('billingBedDesc', $event)"
+          [class.invalid]="isDescInvalid()"
+          name="billingBedDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Description is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="hierarchyId">Hierarchy<span class="required">*</span></label>
+        <select
+          id="hierarchyId"
+          [ngModel]="form().hierarchyId"
+          (ngModelChange)="updateField('hierarchyId', $event)"
+          [class.invalid]="isHierarchyInvalid()"
+          name="hierarchyId"
+        >
+          <option value="">Select Hierarchy</option>
+          @for (h of hierarchyList(); track h.hierarchyId) {
+            <option [ngValue]="h.hierarchyId">{{ h.hierarchyDesc }}</option>
+          }
+        </select>
+        @if (isHierarchyInvalid()) {
+          <p class="help-block">Hierarchy is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Visit Type</label>
+        <div class="visit-type-group">
+          @for (vt of visitTypeOptions; track vt.id) {
+            <label class="checkbox-inline">
+              <input type="checkbox" [checked]="isVisitTypeSelected(vt.id)" (change)="toggleVisitType(vt.id)" />
+              {{ vt.label }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="field field-checkbox">
+        <label for="isPeriodicBilling">
+          <input
+            id="isPeriodicBilling"
+            type="checkbox"
+            [ngModel]="form().isPeriodicBilling === 'Y'"
+            (ngModelChange)="updateField('isPeriodicBilling', $event ? 'Y' : 'N')"
+            name="isPeriodicBilling"
+          />
+          Is Periodic Billing Required
+        </label>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field field-checkbox">
+        <label for="isGstApplicable">
+          <input
+            id="isGstApplicable"
+            type="checkbox"
+            [ngModel]="form().isGstApplicable"
+            (ngModelChange)="onGstApplicableChange($event)"
+            name="isGstApplicable"
+          />
+          Is GST Applicable
+        </label>
+      </div>
+
+      @if (form().isGstApplicable) {
+        <div class="field">
+          <label for="gstAmountRange">Amount<span class="required">*</span></label>
+          <input
+            id="gstAmountRange"
+            type="number"
+            autocomplete="off"
+            [ngModel]="form().gstAmountRange"
+            (ngModelChange)="updateField('gstAmountRange', $event)"
+            [class.invalid]="isAmountInvalid()"
+            name="gstAmountRange"
+          />
+          @if (isAmountInvalid()) {
+            <p class="help-block">Amount is required</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="gstPercentage">Percentage<span class="required">*</span></label>
+          <input
+            id="gstPercentage"
+            type="number"
+            autocomplete="off"
+            [ngModel]="form().gstPercentage"
+            (ngModelChange)="updateField('gstPercentage', $event)"
+            [class.invalid]="isPercentageInvalid()"
+            name="gstPercentage"
+          />
+          @if (isPercentageInvalid()) {
+            <p class="help-block">Percentage is required</p>
+          }
+        </div>
+      }
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input type="text" autocomplete="off" class="search-box" placeholder="Search" [(ngModel)]="searchKeyword" name="searchKeyword" />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Hierarchy</th>
+        <th class="text-center">Is GST Applicable</th>
+        <th class="text-center">Visit Type</th>
+        <th class="text-center">Is Periodic Billing</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.billingBedCategoryId) {
+        <tr>
+          <td>{{ row.billingBedCode }}</td>
+          <td>{{ row.billingBedDesc }}</td>
+          <td>{{ row.hierarchyDesc }}</td>
+          <td class="text-center">
+            @if (row.isGstApplicable) {
+              Y
+              <i class="fa fa-info-circle" title="GST Details" (click)="openGstDetails(row)"></i>
+            } @else {
+              N
+              <i class="fa fa-info-circle" style="color: gray"></i>
+            }
+          </td>
+          <td class="text-center">
+            <i class="fa fa-info-circle" title="Visit Type Details" (click)="openVisitDetails(row)"></i>
+          </td>
+          <td class="text-center">{{ row.isPeriodicBilling }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="8" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      @for (page of pageNumbers(); track page) {
+        <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
+      }
+    </div>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (visitDetailRow(); as row) {
+  <div class="modal-backdrop" (click)="closeVisitDetails()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Details
+        <button type="button" (click)="closeVisitDetails()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Visit type</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (vt of row.visitTypeMasterDtosList; track vt.id) {
+              <tr>
+                <td>{{ visitTypeLabel(vt.id) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="closeVisitDetails()">Ok</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (gstDetailRow(); as row) {
+  <div class="modal-backdrop" (click)="closeGstDetails()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        GST Details
+        <button type="button" (click)="closeGstDetails()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Gst Applicable Amount</th>
+              <th>Gst Applicable Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ row.gstAmountRange }}</td>
+              <td>{{ row.gstPercentage }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

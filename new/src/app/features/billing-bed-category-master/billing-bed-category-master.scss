@@ -1,0 +1,40 @@
+// Screen-specific layout only -- shared table/pagination/toolbar/modal/field
+// styles live in src/styles.scss (see that file's header comment).
+// Status-toggle CSS is NOT here on purpose: <app-status-toggle> ships its
+// own (new/src/app/shared/status-toggle/status-toggle.scss).
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.visit-type-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .checkbox-inline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: normal;
+  }
+}
+
+td .fa-info-circle {
+  cursor: pointer;
+  margin-left: 4px;
+}

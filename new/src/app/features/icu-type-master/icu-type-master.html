@@ -1,0 +1,158 @@
+<section class="page">
+  <fieldset>
+    <legend>ICU Type Master</legend>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="icuCode">ICU Code<span class="required">*</span></label>
+        <input
+          id="icuCode"
+          type="text"
+          autocomplete="off"
+          maxlength="50"
+          [ngModel]="form().icuCode"
+          (ngModelChange)="updateField('icuCode', $event)"
+          [class.invalid]="isCodeInvalid()"
+          name="icuCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="icuType">ICU Type<span class="required">*</span></label>
+        <input
+          id="icuType"
+          type="text"
+          autocomplete="off"
+          [ngModel]="form().icuType"
+          (ngModelChange)="updateField('icuType', $event)"
+          [class.invalid]="isTypeInvalid()"
+          name="icuType"
+        />
+        @if (isTypeInvalid()) {
+          <p class="help-block">ICU Type is required</p>
+        }
+      </div>
+
+      <div class="field field-radio-group">
+        <span>
+          <input
+            id="open"
+            type="radio"
+            name="rdoResult"
+            [checked]="form().isOpen === 'open'"
+            (change)="updateField('isOpen', 'open')"
+          />
+          <label for="open">Open ICU</label>
+        </span>
+        <span>
+          <input
+            id="close"
+            type="radio"
+            name="rdoResult"
+            [checked]="form().isOpen === 'close'"
+            (change)="updateField('isOpen', 'close')"
+          />
+          <label for="close">Closed ICU</label>
+        </span>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    <label class="show-entries">
+      Show
+      <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" name="pageSize">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      entries
+    </label>
+
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search"
+      [ngModel]="searchKeyword()"
+      (ngModelChange)="searchKeyword.set($event)"
+      name="searchKeyword"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ICU Code</th>
+        <th>ICU Type</th>
+        <th class="width8">Open ICU</th>
+        <th class="width8">Closed ICU</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedRows(); track row.icutypeMasterId) {
+        <tr>
+          <td>{{ row.icutypeCode }}</td>
+          <td>{{ row.icutype }}</td>
+          <td>{{ row.isOpenICU }}</td>
+          <td>{{ row.isCloseICU }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!displayedRows().length) {
+        <tr>
+          <td colspan="6" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+    <ul class="pagination">
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(1)">First</a></li>
+      <li [class.disabled]="currentPage() === 1"><a (click)="goToPage(currentPage() - 1)">Previous</a></li>
+      @for (page of pageNumbers(); track page) {
+        <li [class.active]="currentPage() === page"><a (click)="goToPage(page)">{{ page }}</a></li>
+      }
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(currentPage() + 1)">Next</a></li>
+      <li [class.disabled]="currentPage() === totalPages()"><a (click)="goToPage(totalPages())">Last</a></li>
+    </ul>
+  }
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
