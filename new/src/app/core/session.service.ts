@@ -75,7 +75,25 @@ export class SessionService {
   }
 
   get authToken(): string | undefined {
-    return this.cached?.['authToken'] as string | undefined;
+    const fromCookie = this.cached?.['authToken'] as string | undefined;
+    if (fromCookie) return fromCookie;
+    // Fallback: legacy login writes the token to sessionStorage.token on BOTH
+    // login flows (loginController.js:365 `sessionStorage.setItem("token",
+    // response.data.object.authToken)` and :1099), but only the fuller
+    // post-login cookie write (:424/:1156) includes authToken in the cookie --
+    // the sparse cookieObject write at :369 ({organizationId, unitId, userId})
+    // does NOT. So after a real legacy login the cookie can be token-less,
+    // which left the rebuild's authInterceptor attaching no Authorization
+    // header -> backend 401 -> interceptor bounce to
+    // /accessDenied?reason=sessionExpired (rendered as the generic "You do
+    // not have permission" text). Mirrors legacy's own sessionStorage.token
+    // storage. Guarded with try/catch: sessionStorage access can throw in
+    // some privacy modes; a failure must not break the session read.
+    try {
+      return sessionStorage.getItem('token') ?? undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   get isSuperUser(): boolean {
