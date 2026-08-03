@@ -5007,3 +5007,22 @@ Two environment issues hit during batch 24 Step 6 review setup. **Standing rule 
 >>>>>>> 82b45468 (docs: checklistItemMaster UI sign-off (BR-149 confirmed through UI) + standing dev-server pre-review checklist note (stale worktree + gitignored proxy.conf.json))
 
 ---
+
+
+## Batch 24 — Step 6 UI-LEVEL SIGN-OFFS, all 5 screens (2026-08-03, owner)
+
+**Setup resolved this session (recorded above):** dev server correctly pointed at `rebuild/phase4-batch24` worktree (was serving stale batch25 worktree → NG04002); `proxy.conf.json` copied in (gitignored per-worktree file); permissions blob (525/526/553/953) + cross-port `cookieObject` cookie established on :4310.
+
+**Per-screen owner confirmation through the actual UI:**
+
+1. **checklistItemMaster** (module 525) — ✅ SIGNED OFF. BR-149 cross-tenant fix confirmed at UI layer: 3 org-1 rows render, org-999 victim `VICTIM-CI-999` **absent**; edit/save/status-toggle work cleanly. (Backend fix merged+pushed as BR-149 `69500dc1`.)
+2. **checklistEquipmentMaster** (module 526) — ✅ SIGNED OFF. 2 org-1 rows (CHKEQ-1/2); create/edit (single-upsert, no duplicate)/status-toggle/search all confirmed; no confirm-modal faithful. Backend **remediated** (service-layer VerifiedIdentityService, 9 refs) — no IDOR.
+3. **checklistEquipmentMapper** (module 526) — ✅ SIGNED OFF (functional). Rows ITEM-1/2, create/edit/toggle/search confirmed. ⚠️ Backend security status: status-toggle IDOR **live-confirmed pre-fix** (org-999 victim id 3 deactivated by org-1 session) — **fix still HELD** (see below).
+4. **autoclaveMaster** (module 553) — ✅ SIGNED OFF (functional + cosmetic fix). Required-field star spans added (cosmetic, matches legacy `.star` convention; validation logic verified unchanged, tsc-clean). ⚠️ Backend security status: update + status-toggle IDOR **live-confirmed pre-fix** (org-999 victim id 6 corrupted + deactivated) — **fix still HELD** (see below).
+5. **vitalQualifierMaster** (module 953 sidebar) — ✅ SIGNED OFF (functional + data gap). Category dropdown gap diagnosed as **genuine data gap** (API returns success+empty list; `emr.m_vital_category_master` had 0 rows; no admin screen exists — orphaned reference table), seeded `STEP6-CAT`/`Step6 Test Vital Category` (verified API returns it). Confirm-modal close-on-save fix (`fa811897`) confirmed working. ⚠️ Backend security status: IDOR + **ROW THEFT** live-confirmed pre-fix (org-999 victim id 10 org/unit repointed 999→1) — **fix still HELD** (see below).
+
+**⚠️ OPEN SECURITY ITEMS (not part of the rebuild branch — separate fix branches proposed, awaiting owner decision):** autoclaveMaster, checklistEquipmentMapper, vitalQualifierMaster backends carry live-confirmed cross-tenant IDORs (0 VerifiedIdentityService refs at DAO+Service for all 3; checklistEquipmentMaster's sibling is the only remediated one). Fixes proposed as one batch (BR-150/151/152), same full rigor as BR-149, **held — nothing fixed or merged without explicit approval**.
+
+**Batch 24 rebuild branch:** `rebuild/phase4-batch24` (batch24-review worktree) — rebased onto main (0 behind at rebase time), 28/28 subscribes error-handled (tsc-clean), seed gaps closed (3 tables), star-spans commit, all 5 screens signed off. **Held for merge approval.**
+
+---

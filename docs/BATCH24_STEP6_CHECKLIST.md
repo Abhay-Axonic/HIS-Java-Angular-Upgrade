@@ -141,3 +141,17 @@
 | checklistEquipmentMapper | N/A — none exists | Not evaluated (not this screen's audited concern) | **SEVERITY-1 DB fix**: missing `general_ledger_id` column blocking the Product Category cascade — fixed & verified | Single-endpoint upsert; custom client-side pagination (different mechanism than every sibling screen); status toggle has no reload |
 | autoclaveMaster | Create only; DOES auto-close on success | **None at all** — already-known gap, awaiting your Tier-3 decision | None | Save button never relabels to "Update" (functionally harmless); "MasterClave" toast typo on Create only; no revert-on-failure or reload after status toggle |
 | checklistItemMaster | N/A — none exists | Real, self-excluding, server-side (Code + Description, both Create AND Update) | None | Single-endpoint upsert; status toggle DOES trigger a real list reload (the one exception in this batch) |
+
+
+---
+
+## ✅ CONSOLIDATED SIGN-OFF — all 5 screens (2026-08-03, owner)
+
+All five batch-24 screens reviewed and confirmed through the actual UI:
+1. checklistItemMaster — signed off (BR-149 cross-tenant fix holds at UI layer; victim absent; same-org ops clean)
+2. checklistEquipmentMaster — signed off (create/edit upsert/status-toggle/search confirmed; backend remediated)
+3. checklistEquipmentMapper — signed off (functional); backend IDOR fix HELD (separate branch, awaiting approval)
+4. autoclaveMaster — signed off (functional + required-star cosmetic fix applied & verified); backend IDOR fix HELD (separate branch, awaiting approval)
+5. vitalQualifierMaster — signed off (functional; Category dropdown data gap seeded STEP6-CAT); backend ROW-THEFT IDOR fix HELD (separate branch, awaiting approval)
+
+Environment lessons recorded in findings doc: stale worktree serving wrong code (NG04002) + gitignored proxy.conf.json — both added as standing pre-review checklist items for future batches.
