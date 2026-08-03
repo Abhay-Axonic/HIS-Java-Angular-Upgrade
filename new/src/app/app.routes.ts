@@ -809,6 +809,38 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/referral-type-master/referral-type-master').then((m) => m.ReferralTypeMaster),
       },
+      // Phase 4 batch 27 (billing tier 1): taxComponentMaster -- legacy app.js
+      // state is commented out (no active legacy module resolve), so NO moduleId
+      // is registered, matching legacy's effectively-unreachable state (playbook
+      // rule: don't invent a stricter check than legacy actually has).
+      {
+        path: 'taxComponentMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Tax Component Master' },
+        loadComponent: () =>
+          import('./features/tax-component-master/tax-component-master').then((m) => m.TaxComponentMaster),
+      },
+      // Phase 4 batch 27 (billing tier 1): couponTemplateMaster -- module 775
+      // (legacy resolve block). The add/edit form is a separate legacy state
+      // (couponTemplate); this rebuild merges both into one routed screen.
+      {
+        path: 'couponTemplateMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 775, title: 'Coupon Template Master' },
+        loadComponent: () =>
+          import('./features/coupon-template-master/coupon-template-master').then((m) => m.CouponTemplateMaster),
+      },
+      // Phase 4 batch 27 (billing tier 1): multicounterPackage -- module 627
+      // (legacy resolve block). List/search + status toggle; the add/edit
+      // builder (legacy addNewMultiEncounter, ~70KB controller) is a flagged
+      // follow-up per the batch report's SME points.
+      {
+        path: 'multicounterPackage',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 627, title: 'Multi-Counter Package' },
+        loadComponent: () =>
+          import('./features/multicounter-package/multicounter-package').then((m) => m.MulticounterPackage),
+      },
       {
         path: 'prefixMaster',
         canActivate: [moduleAccessGuard],

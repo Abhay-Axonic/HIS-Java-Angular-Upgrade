@@ -1,0 +1,69 @@
+<div class="tax-component-master">
+  <h2>Tax Component Master</h2>
+
+  <!-- Search -->
+  <div class="toolbar">
+    <input
+      type="text"
+      placeholder="Search code or component"
+      [(ngModel)]="searchTerm"
+    />
+    <button type="button" (click)="startCreate()">Add New</button>
+  </div>
+
+  <!-- Add/Edit form -->
+  @if (isEdit() || record().id === 0 && record().code === '') {
+    @if (isEdit() || record().id === 0) {
+      <form class="record-form" (ngSubmit)="save()">
+        <h3>{{ isEdit() ? 'Edit Tax Component' : 'New Tax Component' }}</h3>
+        <label>
+          Code (max 10 chars)
+          <input type="text" maxlength="10" required [(ngModel)]="record().code" name="code" />
+        </label>
+        <label>
+          Component
+          <input type="text" required [(ngModel)]="record().component" name="component" />
+        </label>
+        <label>
+          Status
+          <select [(ngModel)]="record().status" name="status">
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </label>
+        <div class="form-actions">
+          <button type="submit">{{ isEdit() ? 'Update' : 'Save' }}</button>
+          <button type="button" (click)="record.set({ id: 0, code: '', component: '', status: true }); isEdit.set(false)">Cancel</button>
+        </div>
+      </form>
+    }
+  }
+
+  <!-- List -->
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Component</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.id) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.component }}</td>
+          <td>
+            <app-status-toggle [active]="row.status" (toggled)="onToggleStatus(row)" />
+          </td>
+          <td>
+            <button type="button" (click)="startEdit(row)">Edit</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="4">No tax components found.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,72 @@
+<div class="coupon-template-master">
+  <h2>Coupon Template Master</h2>
+
+  <div class="toolbar">
+    <input type="text" placeholder="Search coupon template name" [(ngModel)]="searchTerm" />
+    <button type="button" (click)="startCreate()">Add New</button>
+  </div>
+
+  @if (showForm()) {
+    <form class="record-form" (ngSubmit)="save()">
+      <h3>{{ isEdit() ? 'Edit Coupon Template' : 'New Coupon Template' }}</h3>
+
+      <label>
+        Coupon Template Name *
+        <input type="text" required [(ngModel)]="record().couponTemplateName" name="name" />
+      </label>
+      <label>
+        Description
+        <input type="text" [(ngModel)]="record().couponTemplateDescription" name="desc" />
+      </label>
+      <label>
+        Expire Days
+        <input type="number" min="0" [(ngModel)]="record().expireDays" name="expireDays" />
+      </label>
+
+      <h4>Discount Details (per service)</h4>
+      @for (detail of details(); track $index) {
+        <div class="detail-row">
+          <input type="number" min="0" placeholder="Service Id" [(ngModel)]="detail.serviceId" [name]="'svc' + $index" />
+          <input type="number" min="0" max="100" placeholder="Percentage %" [(ngModel)]="detail.percentage" [name]="'pct' + $index" />
+          <input type="number" min="0" placeholder="Amount" [(ngModel)]="detail.amount" [name]="'amt' + $index" />
+          <button type="button" (click)="removeDetailRow($index)">Remove</button>
+        </div>
+      }
+      <button type="button" (click)="addDetailRow()">Add Detail</button>
+
+      <div class="form-actions">
+        <button type="submit">{{ isEdit() ? 'Update' : 'Save' }}</button>
+        <button type="button" (click)="cancelForm()">Cancel</button>
+      </div>
+    </form>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Expire Days</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredList(); track row.couponTemplateMasterId) {
+        <tr>
+          <td>{{ row.couponTemplateName }}</td>
+          <td>{{ row.couponTemplateDescription }}</td>
+          <td>{{ row.expireDays }}</td>
+          <td>
+            <app-status-toggle [active]="row.status === 'A'" (toggled)="onToggleStatus(row)" />
+          </td>
+          <td>
+            <button type="button" (click)="startEdit(row)">Edit</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="5">No coupon templates found.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

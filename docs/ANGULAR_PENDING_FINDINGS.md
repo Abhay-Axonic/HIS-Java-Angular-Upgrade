@@ -5159,3 +5159,11 @@ Owner's manual UI review on `rebuild/phase4-batch25` (worktree `.claude/worktree
 **Branch state at sign-off:** `rebuild/phase4-batch25` at `1ee726e2` (on top of `d2028092`, `0382dcd2`), held, not merged, not pushed. **221 behind main** — rebase onto main is a pre-merge step for this batch.
 
 **Docs:** findings entry `PENDING-aibuttonconfiguration-org-unit-mismatch` appended; manifest + BR_INDEX gained 4 `BR-PENDING-aibuttonconfiguration-*` entries (the 3 referenced by the checklist but never previously written — repaired — plus the new org/unit-mismatch entry); SESSION_LOG.md updated. Docs changes are on main's working tree, uncommitted, awaiting the batch's merge/push decision.
+## RESOLVED-NOT-A-DEFECT — taxComponentMaster's dead legacy frontend route is NOT a rebuild defect (2026-08-03, logged per owner)
+
+**Background:** during batch-27 (billing tier 1) Step 0 pre-screening, both the `taxComponentMaster` AND the sibling `taxMaster` states in legacy `app.js` were found **fully commented out** (no live ui-router registration, no sidebar link, no module resolve). This looked like the `addItemPOCreation` dead-frontend shape.
+
+**Owner-confirmed classification (2026-08-03):** this does NOT affect taxComponentMaster's legitimacy as a rebuild candidate. The backend is real, live, and already approved: `TaxComponentController` (`/api/globals/tax/components/`) is deployed and live-verified — GET list returns 200 `[]`, POST create returns 201, PATCH update works; BR-158 fixed its org-trust (DTO-wins org on create/update). The missing legacy route means legacy itself never had this screen reachable in the UI — it exists only as controller+view files with a commented registration. The rebuild creates the route fresh in Angular (registered WITHOUT moduleId, matching legacy's effectively-unreachable state per the playbook rule "don't invent a stricter check than legacy actually has").
+
+**Do not mistake this for a rebuild defect later.** If someone audits the rebuilt `taxComponentMaster` and finds "the legacy screen has no route," that is a pre-existing legacy-state observation, not a parity gap in the rebuild.
+

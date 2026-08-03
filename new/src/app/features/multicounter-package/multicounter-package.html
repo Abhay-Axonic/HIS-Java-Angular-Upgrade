@@ -1,0 +1,45 @@
+<div class="multicounter-package">
+  <h2>Multi-Counter Package</h2>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      placeholder="Search package"
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="search()"
+    />
+    <button type="button" (click)="search()">Search</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Package</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of list(); track row.parentPackageId) {
+        <tr>
+          <td>{{ row.packageName }}</td>
+          <td>
+            <app-status-toggle [active]="row.status === 'A'" (toggled)="onToggleStatus(row)" />
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="2">No packages found.</td></tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pager">
+    <button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() <= 1">Prev</button>
+    <span>{{ currentPage() }} / {{ totalPages() }}</span>
+    <button type="button" (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() >= totalPages()">Next</button>
+    <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()">
+      @for (opt of pageSizeOptions; track opt) {
+        <option [ngValue]="opt">{{ opt }}</option>
+      }
+    </select>
+  </div>
+</div>

@@ -82,15 +82,19 @@ public class CouponTemplateMasterDaoImpl extends GenericDao<CouponTemplateMaster
 
 	@Override
 	public Response getCouponTemplateMaster(CouponTemplateMasterDto dto) throws ApplicationException {
-		try
-        {
-			List<CouponTemplateMasterDto> list = sessionFactory.getCurrentSession().createSQLQuery(
-				" select coupon_template_master_id as \"couponTemplateMasterId\" ,coupon_template_name as \"couponTemplateName\",coupon_template_description as \"couponTemplateDescription\" ,expire_days as \"expireDays\" ," + 
-				"status as \"status\" " + 
-				"from billing.m_coupon_template_master where organization_id =:organizationId and unit_id =:unitId ")
-					.setParameter("organizationId", dto.getOrganizationId())
-					.setParameter("unitId", dto.getUnitId())
-				.setResultTransformer(Transformers.aliasToBean(CouponTemplateMasterDto.class)).list();
+ 	try
+ {
+ 		// BR-161: cross-tenant read fix -- scope the list by the JWT-verified
+ 		// org/unit, never the client-supplied values.
+ 		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+ 		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+ 		List<CouponTemplateMasterDto> list = sessionFactory.getCurrentSession().createSQLQuery(
+ 			" select coupon_template_master_id as \"couponTemplateMasterId\" ,coupon_template_name as \"couponTemplateName\",coupon_template_description as \"couponTemplateDescription\" ,expire_days as \"expireDays\" ," + 
+ 			"status as \"status\" " + 
+ 			"from billing.m_coupon_template_master where organization_id =:organizationId and unit_id =:unitId ")
+ 				.setParameter("organizationId", verifiedOrgId)
+ 				.setParameter("unitId", verifiedUnitId)
+ 			.setResultTransformer(Transformers.aliasToBean(CouponTemplateMasterDto.class)).list();
 			
 				return new Response<>(SUCCESS, SUCCESS_CODE, null, list, null);
 		
@@ -136,13 +140,22 @@ public class CouponTemplateMasterDaoImpl extends GenericDao<CouponTemplateMaster
 	public Response getCouponTemplateMasterById(CouponTemplateMasterDto dto) throws ApplicationException {
 		try
         {
+			// BR-161: cross-tenant read fix -- the old query keyed ONLY by
+			// coupon_template_master_id, so any authenticated session could read any
+			// tenant's coupon master by ID (live-confirmed: org-1 session read an
+			// org-999 victim master + its details). Scope to the JWT-verified org/unit.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			CouponTemplateMasterDto couponTemplateMasterDto = (CouponTemplateMasterDto)sessionFactory.getCurrentSession().createSQLQuery(
 				" select coupon_template_master_id as \"couponTemplateMasterId\" ,coupon_template_name as \"couponTemplateName\",coupon_template_description as \"couponTemplateDescription\" ,expire_days as \"expireDays\" ," + 
 				" mctm.status as \"status\" ,service_id as \"serviceId\", msm.service_standard_name as \"serviceName\" " + 
 				"from billing.m_coupon_template_master mctm "
 				+ " left join service.m_service_master msm on msm.service_master_id = service_id  "
-				+ " where coupon_template_master_id =:couponTemplateMasterId " )
+				+ " where coupon_template_master_id =:couponTemplateMasterId "
+				+ " AND mctm.organization_id =:organizationId AND mctm.unit_id =:unitId " )
 					.setParameter("couponTemplateMasterId", dto.getCouponTemplateMasterId())
+					.setParameter("organizationId", verifiedOrgId)
+					.setParameter("unitId", verifiedUnitId)
 				.setResultTransformer(Transformers.aliasToBean(CouponTemplateMasterDto.class)).uniqueResult();
 			
 				return new Response<>(SUCCESS, SUCCESS_CODE, null, null, couponTemplateMasterDto);

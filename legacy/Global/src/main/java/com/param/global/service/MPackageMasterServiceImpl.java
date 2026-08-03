@@ -1262,13 +1262,18 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 	@Override
 	@Transactional
 	public Response getPackageListByFilter(PackageListReqDto reqDto) throws ServiceException {
-		try {
-			return iMPackageMasterDao.getPackageListByFilter(reqDto);
-		} catch (Exception e) {
+ 	try {
+ 		// BR-161: cross-tenant read fix -- the filter scoped by the client-supplied
+ 		// orgId/unitId; override with the JWT-verified identity so a forged org can
+ 		// not enumerate another tenant's packages.
+ 		reqDto.setOrgId(verifiedIdentityService.getVerifiedOrganizationId());
+ 		reqDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+ 		return iMPackageMasterDao.getPackageListByFilter(reqDto);
+ 	} catch (Exception e) {
 
-			throw e;
-		}
-	}
+ 		throw e;
+ 	}
+ }
 
 	// METHOD TO SAVE PACKGE CONSUMPTION
 	@Override

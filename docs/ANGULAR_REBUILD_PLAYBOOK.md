@@ -164,4 +164,6 @@ These are open, undecided items from Phase 2 that Phase 3 does not resolve (no a
 
 - No new screens were rebuilt.
 - No application/business-logic code was changed (the scaffold branch adds new, previously-nonexistent reusable components — it does not modify any of the 10 already-built pilot screens or their behavior).
-- Phase 4 was not started — only a sequencing *recommendation* was written, for the owner's review.
+- Phase 4 was not started — only a sequencing *recommendation* was written, for the owner's review.**STANDING SIBLING-ENDPOINT CHECK (added 2026-08-03 after BR-160):** after fixing (or verifying) a screen's PRIMARY CRUD paths, **explicitly enumerate EVERY OTHER endpoint the screen calls** — status toggles, secondary actions, related child-record operations, view/detail fetch paths — and check EACH for the same org/unit-trust pattern before declaring the screen's backend secured. BR-160 proved a screen's "done" fix can still leave an unchecked sibling endpoint: BR-159 secured `multicounterPackage`'s 4 creation endpoints + child propagation, but the screen's status-toggle path (`inActivePackage`, keyed only by `parent_package_id`) remained a live cross-tenant write-by-ID until caught during the rebuild's Step 1 re-audit. Do not infer "the other endpoints are fine" from the primary path being fixed — enumerate the screen's full endpoint surface (controller JS → all URIs → backend controllers → DAO methods) and verify org/unit scoping per endpoint. This applies to every billing-tier screen, not just this batch.
+
+
