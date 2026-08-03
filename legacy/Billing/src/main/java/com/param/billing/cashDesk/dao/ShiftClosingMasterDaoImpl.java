@@ -507,7 +507,12 @@ try {
 			shiftClosingDetailsMaster.setDifference(closingMasterDto.getDifference());
 			shiftClosingDetailsMaster.setOrganizationId(closingMasterDto.getOrganizationId());
 			shiftClosingDetailsMaster.setUnitId(closingMasterDto.getUnitId());
-			shiftClosingDetailsMaster.setStatus("A");
+			// BR-154: classify the shift-close by its computed discrepancy instead of hardcoding "A".
+			// A non-zero difference (short/excess cash) is recorded as MISMATCH for supervisor review;
+			// an exact match is MATCHED. Submission is never blocked - the discrepancy is tracked, not rejected.
+			Double closingDifference = closingMasterDto.getDifference();
+			shiftClosingDetailsMaster.setStatus(closingDifference != null && closingDifference.doubleValue() != 0.0
+					? "MISMATCH" : "MATCHED");
 			shiftClosingDetailsMaster.setHandoverTo(closingMasterDto.getHandoverTo());
 			sessionFactory.getCurrentSession().save(shiftClosingDetailsMaster);
 			
