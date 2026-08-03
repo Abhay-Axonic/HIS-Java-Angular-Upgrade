@@ -116,7 +116,12 @@ export class VitalQualifierMaster {
       next: (res) => {
         if (res.status === 'success') this.categoryOptions.set(res.listObject ?? []);
       },
-    });
+    
+        error: (err) => {
+          console.error('vital-qualifier-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   private loadList(): void {
@@ -124,8 +129,18 @@ export class VitalQualifierMaster {
       next: (res) => {
         if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
-    });
-    this.api.getCount(this.organizationId, this.unitId).subscribe();
+    
+        error: (err) => {
+          console.error('vital-qualifier-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
+    this.api.getCount(this.organizationId, this.unitId).subscribe({
+          error: (err) => {
+            console.error('vital-qualifier-master error', err);
+            this.notify.error('Something went wrong !!');
+          },
+        })
   }
 
   updateField<K extends keyof VitalQualifierForm>(field: K, value: VitalQualifierForm[K]): void {
@@ -180,6 +195,11 @@ export class VitalQualifierMaster {
           }
           this.loadList();
         },
+      
+        error: (err) => {
+          console.error('vital-qualifier-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
       });
   }
 
@@ -209,6 +229,11 @@ export class VitalQualifierMaster {
           }
           this.loadList();
         },
+      
+        error: (err) => {
+          console.error('vital-qualifier-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
       });
   }
 
@@ -229,7 +254,12 @@ export class VitalQualifierMaster {
           vitalQualifireDesc: d.vitalQualifireDesc,
         });
       },
-    });
+    
+        error: (err) => {
+          console.error('vital-qualifier-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   // mirrors updateStatus (ctrl:297-330) -- see class doc comment for the
@@ -253,6 +283,11 @@ export class VitalQualifierMaster {
           } else {
             this.notify.error(res.message ?? 'Something went wrong.');
           }
+        },
+      
+        error: (err) => {
+          console.error('vital-qualifier-master error', err);
+          this.notify.error('Something went wrong !!');
         },
       });
   }

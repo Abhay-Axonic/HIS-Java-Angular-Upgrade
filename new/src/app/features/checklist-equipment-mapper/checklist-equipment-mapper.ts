@@ -136,10 +136,20 @@ export class ChecklistEquipmentMapper {
       next: (res) => {
         if (res.status === 'success') this.checklistOptions.set((res.listObject ?? []).filter((c) => c.status === 'A'));
       },
-    });
+    
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
     this.api.getAssetCategoryOptions(this.unitId, this.organizationId).subscribe({
       next: (list) => this.assetCategoryOptions.set(list ?? []),
-    });
+    
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   private loadList(): void {
@@ -150,7 +160,12 @@ export class ChecklistEquipmentMapper {
           this.currentPage.set(1);
         }
       },
-    });
+    
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   updateField<K extends keyof ChecklistEquipmentMapperForm>(field: K, value: ChecklistEquipmentMapperForm[K]): void {
@@ -166,7 +181,12 @@ export class ChecklistEquipmentMapper {
     }
     this.api.getProductCategoryOptions(assetCategoryId, this.organizationId).subscribe({
       next: (list) => this.productCategoryOptions.set(list ?? []),
-    });
+    
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   goToPage(page: number): void {
@@ -211,6 +231,11 @@ export class ChecklistEquipmentMapper {
           }
           this.loadList();
         },
+      
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
+        },
       });
   }
 
@@ -228,7 +253,12 @@ export class ChecklistEquipmentMapper {
     });
     this.api.getProductCategoryOptions(row.assetCategoryId, this.organizationId).subscribe({
       next: (list) => this.productCategoryOptions.set(list ?? []),
-    });
+    
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   // mirrors updateStatus (ctrl:199-233) -- no list reload needed after, see
@@ -253,6 +283,11 @@ export class ChecklistEquipmentMapper {
           } else {
             this.notify.error(res.message ?? 'Error');
           }
+        },
+      
+        error: (err) => {
+          console.error('checklist-equipment-mapper error', err);
+          this.notify.error('Something went wrong !!');
         },
       });
   }

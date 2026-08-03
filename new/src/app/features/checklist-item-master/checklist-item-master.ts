@@ -80,7 +80,12 @@ export class ChecklistItemMaster {
       next: (res) => {
         if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
-    });
+    
+        error: (err) => {
+          console.error('checklist-item-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   updateField<K extends keyof ChecklistItemForm>(field: K, value: ChecklistItemForm[K]): void {
@@ -110,6 +115,11 @@ export class ChecklistItemMaster {
             this.notify.error(res.message ?? 'Error');
           }
           this.loadList();
+        },
+      
+        error: (err) => {
+          console.error('checklist-item-master error', err);
+          this.notify.error('Something went wrong !!');
         },
       });
   }
@@ -145,6 +155,11 @@ export class ChecklistItemMaster {
           } else {
             this.notify.error(res.message ?? 'Error');
           }
+        },
+      
+        error: (err) => {
+          console.error('checklist-item-master error', err);
+          this.notify.error('Something went wrong !!');
         },
       });
   }

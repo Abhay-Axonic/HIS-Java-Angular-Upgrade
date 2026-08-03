@@ -101,8 +101,18 @@ export class ChecklistEquipmentMaster {
       next: (res) => {
         if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
-    });
-    this.api.getCount(this.organizationId, this.unitId).subscribe();
+    
+        error: (err) => {
+          console.error('checklist-equipment-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
+    this.api.getCount(this.organizationId, this.unitId).subscribe({
+          error: (err) => {
+            console.error('checklist-equipment-master error', err);
+            this.notify.error('Something went wrong !!');
+          },
+        })
   }
 
   updateField<K extends keyof ChecklistEquipmentForm>(field: K, value: ChecklistEquipmentForm[K]): void {
@@ -132,6 +142,11 @@ export class ChecklistEquipmentMaster {
             this.notify.error(res.message ?? 'Error');
           }
           this.loadList();
+        },
+      
+        error: (err) => {
+          console.error('checklist-equipment-master error', err);
+          this.notify.error('Something went wrong !!');
         },
       });
   }
@@ -171,6 +186,11 @@ export class ChecklistEquipmentMaster {
           } else {
             this.notify.error(res.message ?? 'Error');
           }
+        },
+      
+        error: (err) => {
+          console.error('checklist-equipment-master error', err);
+          this.notify.error('Something went wrong !!');
         },
       });
   }

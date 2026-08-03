@@ -114,12 +114,22 @@ export class AutoclaveMaster {
       next: (res) => {
         if (res.status === 'success') this.sterilizationTypes.set(res.listObject ?? []);
       },
-    });
+    
+        error: (err) => {
+          console.error('autoclave-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
     this.api.getSterilizationColors().subscribe({
       next: (res) => {
         if (res.status === 'success') this.sterilizationColors.set(res.listObject ?? []);
       },
-    });
+    
+        error: (err) => {
+          console.error('autoclave-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   private loadList(): void {
@@ -127,8 +137,18 @@ export class AutoclaveMaster {
       next: (res) => {
         if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
-    });
-    this.api.getCount(this.organizationId).subscribe();
+    
+        error: (err) => {
+          console.error('autoclave-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
+    this.api.getCount(this.organizationId).subscribe({
+          error: (err) => {
+            console.error('autoclave-master error', err);
+            this.notify.error('Something went wrong !!');
+          },
+        })
   }
 
   updateField<K extends keyof AutoclaveForm>(field: K, value: AutoclaveForm[K]): void {
@@ -190,6 +210,11 @@ export class AutoclaveMaster {
           }
           this.loadList();
         },
+      
+        error: (err) => {
+          console.error('autoclave-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
       });
   }
 
@@ -208,7 +233,12 @@ export class AutoclaveMaster {
         }
         this.loadList();
       },
-    });
+    
+        error: (err) => {
+          console.error('autoclave-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 
   // mirrors editAutoClave (ctrl:188-200).
@@ -239,6 +269,11 @@ export class AutoclaveMaster {
           this.notify.error('Something went wrong...!!');
         }
       },
-    });
+    
+        error: (err) => {
+          console.error('autoclave-master error', err);
+          this.notify.error('Something went wrong !!');
+        },
+      });
   }
 }
