@@ -66,7 +66,16 @@ public class CouponTemplateMasterDaoImpl extends GenericDao<CouponTemplateMaster
 						return new Response<>(ERROR, ERROR_CODE, "Cross-tenant update rejected", null, null);
 					}
 					master.setCouponTemplateMasterId(dto.getCouponTemplateMasterId());
-					master = update(master);
+					// Fix (2026-08-03, live-found during Step 6 review): the edit path
+					// previously called update(master) with a NEW instance carrying the
+					// same id as the `existing` instance already attached to the session
+					// by the findById ownership check above -- Hibernate rejects two
+					// different instances with the same identifier in one session
+					// ("A different object with the same identifier value was already
+					// associated with the session"), making every edit 500 (ERR-58106042).
+					// merge() copies the detached state onto the attached instance,
+					// resolving the collision. Create path (save) is unaffected.
+					master = (CouponTemplateMaster) sessionFactory.getCurrentSession().merge(master);
 				}else {
 					master = save(master);
 				}
