@@ -41,8 +41,9 @@ public class AmbulanceTarrifServiceImpl implements IAmbulanceTarrifService, ICom
 				return new Response(ERROR, null, ALREADY_EXIST, null, null);
 
 			} else {
-				iAmbulanceTarrifDao.saveAmbulanceTarrif(ambulanceTarrifDto);
-				return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				// BR-156: propagate the DAO response -- the DAO now binds the JWT-verified
+				// org and can reject; swallowing it here would report success on a no-op.
+				return iAmbulanceTarrifDao.saveAmbulanceTarrif(ambulanceTarrifDto);
 			}
 		} catch (Exception e) {
 		logger.error("saveAmbulanceTarrif failed", e);
@@ -87,8 +88,8 @@ public class AmbulanceTarrifServiceImpl implements IAmbulanceTarrifService, ICom
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				return new Response(ERROR, null, ALREADY_EXIST, null, null);
 			} else {
-				iAmbulanceTarrifDao.updateAmbulanceTarrif(ambulanceTarrifDto);
-				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
+				// BR-156: propagate the DAO response (ownership reject must reach the caller).
+				return iAmbulanceTarrifDao.updateAmbulanceTarrif(ambulanceTarrifDto);
 			}
 		} catch (Exception e) {
 		logger.error("updateAmbulanceTarrif failed", e);
@@ -102,8 +103,8 @@ public class AmbulanceTarrifServiceImpl implements IAmbulanceTarrifService, ICom
 			Response deptResponse = iAmbulanceTarrifDao.getAmbulanceTarrifByID(ambulanceTarrifDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				
-				iAmbulanceTarrifDao.changeAmbulanceTarrifStatus(ambulanceTarrifDto);
-				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
+				// BR-156: propagate the DAO response (ownership reject must reach the caller).
+				return iAmbulanceTarrifDao.changeAmbulanceTarrifStatus(ambulanceTarrifDto);
 
 			} else {
 				return new Response(ERROR, null, ALREADY_EXIST, null, null);

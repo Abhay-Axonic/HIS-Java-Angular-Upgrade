@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.AmbulanceTarrifDto;
 import com.param.global.dto.AmbulanceTypeDto;
 import com.param.global.model.AmbulanceTarrif;
@@ -29,6 +30,9 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public AmbulanceTarrifDaoImpl() {
 		super(AmbulanceTarrif.class);
@@ -69,7 +73,9 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 			ambulanceTarrif.setAmbulanceAddMileage(ambulanceTarrifDto.getAmbulanceAddMileage());
 			ambulanceTarrif.setAmbulanceAddMileageRate(ambulanceTarrifDto.getAmbulanceAddMileageRate());
 			ambulanceTarrif.setStatus(ambulanceTarrifDto.getStatus());
-			ambulanceTarrif.setOrganizationId(ambulanceTarrifDto.getOrganizationId());
+			// BR-156: bind the JWT-verified org, never a client-supplied value (the old code
+			// wrote the DTO's organizationId, letting any caller create rows in any tenant).
+			ambulanceTarrif.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			ambulanceTarrif.setCreatedBy(ambulanceTarrifDto.getCreatedBy());
 			ambulanceTarrif.setCreatedDate(ambulanceTarrifDto.getCreatedDate().toString());
 			ambulanceTarrif.setUpdatedBy(ambulanceTarrifDto.getUpdatedBy());
@@ -179,6 +185,16 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 	public Response updateAmbulanceTarrif(AmbulanceTarrifDto ambulanceTarrifDto) throws ApplicationException {
 		try {
 			AmbulanceTarrif ambulanceTarrif = findById(ambulanceTarrifDto.getAmbulanceTarrifMasterId());
+			// BR-156: cross-tenant IDOR fix -- verify the loaded row belongs to the
+			// JWT-verified identity before writing. The old code compared nothing and
+			// wrote the DTO's organizationId, letting a forged-org request pass the
+			// service gate and rewrite another tenant's row.
+			// entity field is primitive int; VerifiedIdentityService.getVerifiedOrganizationId()
+			// throws (never returns null), so a direct != comparison is safe.
+			if (ambulanceTarrif == null
+					|| ambulanceTarrif.getOrganizationId() != verifiedIdentityService.getVerifiedOrganizationId()) {
+				return new Response<AmbulanceTarrifDto, Integer>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
 			ambulanceTarrif.setAmbulanceType(ambulanceTarrifDto.getAmbulanceType());
 			ambulanceTarrif.setAmbulanceProvider(ambulanceTarrifDto.getAmbulanceProvider());
 			ambulanceTarrif.setAmbulanceOutSrcVender(ambulanceTarrifDto.getAmbulanceOutSrcVender());
@@ -186,7 +202,7 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 			ambulanceTarrif.setAmbulanceFirstDistRate(ambulanceTarrifDto.getAmbulanceFirstDistRate().toString());
 			ambulanceTarrif.setAmbulanceAddMileage(ambulanceTarrifDto.getAmbulanceAddMileage().toString());
 			ambulanceTarrif.setAmbulanceAddMileageRate(ambulanceTarrifDto.getAmbulanceAddMileageRate().toString());
-			ambulanceTarrif.setOrganizationId(ambulanceTarrifDto.getOrganizationId());
+			ambulanceTarrif.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			ambulanceTarrif.setUpdatedBy(ambulanceTarrifDto.getUpdatedBy());
 			ambulanceTarrif.setUpdatedDate(ambulanceTarrifDto.getUpdatedDate());
 			sessionFactory.getCurrentSession().update(ambulanceTarrif);
@@ -207,6 +223,15 @@ public class AmbulanceTarrifDaoImpl extends GenericDao<AmbulanceTarrif, Integer>
 		try {
 
 			AmbulanceTarrif ambulanceTarrif = findById(ambulanceTarrifDto.getAmbulanceTarrifMasterId());
+			// BR-156: cross-tenant IDOR fix -- same ownership gate as update; the old
+			// code let a forged-org status toggle pass the service gate and rewrite
+			// another tenant's row state.
+			// entity field is primitive int; VerifiedIdentityService.getVerifiedOrganizationId()
+			// throws (never returns null), so a direct != comparison is safe.
+			if (ambulanceTarrif == null
+					|| ambulanceTarrif.getOrganizationId() != verifiedIdentityService.getVerifiedOrganizationId()) {
+				return new Response<AmbulanceTarrifDto, Integer>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
 			ambulanceTarrif.setUpdatedBy(ambulanceTarrifDto.getUpdatedBy());
 			ambulanceTarrif.setStatus(ambulanceTarrifDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			ambulanceTarrif.setUpdatedDate(ambulanceTarrifDto.getUpdatedDate());

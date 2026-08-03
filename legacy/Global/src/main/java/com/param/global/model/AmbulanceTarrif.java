@@ -100,13 +100,13 @@ public class AmbulanceTarrif {
 	private char status;
 
 	@Column(name = "created_by")
-	private int createdBy;
+	private Integer createdBy;
 
 	@Column(name = "created_date")
 	private String createdDate;
 
 	@Column(name = "updated_by")
-	private int updatedBy;
+	private Integer updatedBy;
 
 	@Column(name = "updated_date")
 	private String updatedDate;
@@ -178,11 +178,11 @@ public class AmbulanceTarrif {
 		this.status = status;
 	}
 
-	public int getCreatedBy() {
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -194,11 +194,11 @@ public class AmbulanceTarrif {
 		this.createdDate = createdDate;
 	}
 
-	public int getUpdatedBy() {
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
