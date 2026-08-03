@@ -365,7 +365,7 @@ angular
 								sessionStorage.setItem("token",response.data.object.authToken);
 								//console.log("response.data.object.roleIds",response.data.object.roleIds);
 												 sessionStorage.setItem("roleIds",response.data.object.roleIds);
-												 var cookieObject = {'organizationId':$scope.organizationId, 'unitId':$scope.unitId,'userId':response.data.object.userId}
+												 var cookieObject = {'organizationId':$scope.organizationId, 'unitId':$scope.unitId,'userId':response.data.object.userId, 'authToken':response.data.object.authToken}
 												 $cookies.putObject('cookieObject',cookieObject, {'domain': 'localhost', 'secure' : false});	
 												 //console.log(data);
 												 sessionStorage.setItem("organizationId",$scope.organizationId);
@@ -1099,7 +1099,7 @@ angular
 								sessionStorage.setItem("token",response.data.object.authToken);
 								//console.log("response.data.object.roleIds",response.data.object.roleIds);
 												 sessionStorage.setItem("roleIds",response.data.object.roleIds);
-												 var cookieObject = {'organizationId':$scope.organizationId, 'unitId':$scope.unitId,'userId':response.data.object.userId}
+												 var cookieObject = {'organizationId':$scope.organizationId, 'unitId':$scope.unitId,'userId':response.data.object.userId, 'authToken':response.data.object.authToken}
 												 $cookies.putObject('cookieObject',cookieObject, {'domain': 'localhost', 'secure' : false});	
 												// //console.log(data);
 												 sessionStorage.setItem("organizationId",$scope.organizationId);
