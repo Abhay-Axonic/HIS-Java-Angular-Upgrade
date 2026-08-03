@@ -171,38 +171,38 @@ export class AmbulanceTarrifMaster {
 
   // ---- validation (mirrors ambulanceTarrifForm.$valid over the required fields) ----
   isTariffNameInvalid(): boolean {
-    return this.submitted() && !this.ambulanceType().trim();
+    return this.submitted() && !(this.ambulanceType() ?? '').trim();
   }
 
   isProviderInvalid(): boolean {
-    return this.submitted() && !this.ambulanceProvider().trim();
+    return this.submitted() && !(this.ambulanceProvider() ?? '').trim();
   }
 
   isVendorInvalid(): boolean {
-    return this.submitted() && !this.ambulanceOutSrcVender().trim();
+    return this.submitted() && !(this.ambulanceOutSrcVender() ?? '').trim();
   }
 
   isFirstDistInvalid(): boolean {
-    return this.submitted() && !this.ambulanceFirstDist().trim();
+    return this.submitted() && !(this.ambulanceFirstDist() ?? '').trim();
   }
 
   isFirstDistRateInvalid(): boolean {
-    return this.submitted() && !this.ambulanceFirstDistRate().trim();
+    return this.submitted() && !(this.ambulanceFirstDistRate() ?? '').trim();
   }
 
   isAddMileageRateInvalid(): boolean {
-    return this.submitted() && !this.ambulanceAddMileageRate().trim();
+    return this.submitted() && !(this.ambulanceAddMileageRate() ?? '').trim();
   }
 
   private validate(): boolean {
     this.submitted.set(true);
     return (
-      !!this.ambulanceType().trim() &&
-      !!this.ambulanceProvider().trim() &&
-      !!this.ambulanceOutSrcVender().trim() &&
-      !!this.ambulanceFirstDist().trim() &&
-      !!this.ambulanceFirstDistRate().trim() &&
-      !!this.ambulanceAddMileageRate().trim()
+      !!(this.ambulanceType() ?? '').trim() &&
+      !!(this.ambulanceProvider() ?? '').trim() &&
+      !!(this.ambulanceOutSrcVender() ?? '').trim() &&
+      !!(this.ambulanceFirstDist() ?? '').trim() &&
+      !!(this.ambulanceFirstDistRate() ?? '').trim() &&
+      !!(this.ambulanceAddMileageRate() ?? '').trim()
     );
   }
 
