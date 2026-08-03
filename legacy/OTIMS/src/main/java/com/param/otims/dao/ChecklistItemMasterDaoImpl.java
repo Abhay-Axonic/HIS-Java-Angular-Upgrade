@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.param.global.common.GlobalCommonDateUtils;
@@ -12,6 +13,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.common.ServiceException;
 import com.param.global.otims.dto.ChecklistItemMasterDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.otims.model.ChecklistItemMaster;
 
 import in.param.common.dao.GenericDao;
@@ -22,6 +24,9 @@ import in.param.exception.ApplicationException;
 public class ChecklistItemMasterDaoImpl extends GenericDao<ChecklistItemMaster, Integer> implements IChecklistItemMasterDao,ICommonConstants{
 
 	private static final Logger logger = Logger.getLogger(ChecklistItemMasterDaoImpl.class);
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public ChecklistItemMasterDaoImpl() {
 		super(ChecklistItemMaster.class);
@@ -92,14 +97,30 @@ public class ChecklistItemMasterDaoImpl extends GenericDao<ChecklistItemMaster, 
 						
 				}
 			}
-			ChecklistItemMaster mstr = new ChecklistItemMaster();
+			ChecklistItemMaster mstr = null;
+			if (checklistItemMasterdto.getChecklistItemMasterId() != null) {
+				// BR-149: cross-tenant IDOR fix -- the update path must verify the existing
+				// row belongs to the JWT-verified identity BEFORE mutating, and must never
+				// accept a client-supplied org/unit (which allowed a full row theft:
+				// org/unit repointed from the victim's tenant to the attacker's).
+				mstr = findById(checklistItemMasterdto.getChecklistItemMasterId());
+				if (mstr == null || mstr.getOrganizationId() == null
+						|| !mstr.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+						|| mstr.getUnitId() == null
+						|| !mstr.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+					return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+				}
+			} else {
+				mstr = new ChecklistItemMaster();
+				// create binds the JWT-verified org/unit, never a client-supplied value
+				mstr.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+				mstr.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+			}
 			mstr.setCode(checklistItemMasterdto.getCode());
 			mstr.setDescription(checklistItemMasterdto.getDescription());
 			mstr.setCreatedBy(checklistItemMasterdto.getCreatedBy());
 			mstr.setCreatedDate(GlobalCommonDateUtils.getDate(checklistItemMasterdto.getCreatedDate(), "dd-M-yyyy HH:ss:mm"));
-			mstr.setOrganizationId(checklistItemMasterdto.getOrganizationId());
 			mstr.setStatus(checklistItemMasterdto.getStatus());
-			mstr.setUnitId(checklistItemMasterdto.getUnitId());
 			mstr.setUpdatedBy(checklistItemMasterdto.getUpdatedBy());
 			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(checklistItemMasterdto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
 			
@@ -125,6 +146,15 @@ public class ChecklistItemMasterDaoImpl extends GenericDao<ChecklistItemMaster, 
 			throws ApplicationException {
 		try {
 			ChecklistItemMaster mstr = findById(checklistItemMasterdto.getChecklistItemMasterId());
+
+			// BR-149: cross-tenant IDOR fix -- same ownership check as the update path.
+			if (mstr == null || mstr.getOrganizationId() == null
+					|| !mstr.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| mstr.getUnitId() == null
+					|| !mstr.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				return new Response(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+
 			mstr.setStatus(checklistItemMasterdto.getStatus());
 			mstr.setUpdatedBy(checklistItemMasterdto.getUpdatedBy());
 			mstr.setUpdatedDate(GlobalCommonDateUtils.getDate(checklistItemMasterdto.getUpdatedDate(), "dd-M-yyyy HH:ss:mm"));
