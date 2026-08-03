@@ -1053,10 +1053,29 @@ public class MPackageMasterDaoImpl extends GenericDao<MPackageMaster, Integer>
 	@Override
 	@Transactional
 	public Response inactivePacakge(Integer parentPackageId, Integer packageTypeId,boolean flag,int fromMethod) throws ServiceException {
-		try {
+ 	try {
 
-			Character status=flag ? 'A' : 'I'; 
-			Integer inactiveCount = 0;
+ 		// BR-160: cross-tenant IDOR fix (package status-toggle, write-by-ID
+ 		// variant) -- the UPDATEs below keyed ONLY by parent_package_id, so any
+ 		// authenticated session could deactivate ANY tenant's package + all its
+ 		// child rows (live-confirmed: org-1 session deactivated an org-999 victim
+ 		// package A->I via /api/packages/inActivePackage). Guard at entry: the
+ 		// parent package must belong to the JWT-verified org/unit, else reject.
+ 		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+ 		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+ 		Number ownerCount = (Number) sessionFactory.getCurrentSession().createSQLQuery(
+ 				"select count(*) from service.m_parent_package_master "
+ 				+ "where parent_package_id =:parentPackageId and org_id =:orgId and unit_id =:unitId")
+ 				.setParameter("parentPackageId", parentPackageId)
+ 				.setParameter("orgId", verifiedOrgId)
+ 				.setParameter("unitId", verifiedUnitId)
+ 				.uniqueResult();
+ 		if (ownerCount == null || ownerCount.longValue() == 0) {
+ 			return new Response(ERROR, ERROR_CODE, "Package not found for the verified tenant", null, null);
+ 		}
+
+ 		Character status=flag ? 'A' : 'I'; 
+ 		Integer inactiveCount = 0;
 			if(fromMethod==1){
 				
 				 inactiveCount = sessionFactory.getCurrentSession().createSQLQuery(
