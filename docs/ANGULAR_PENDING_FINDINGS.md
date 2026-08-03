@@ -5026,3 +5026,18 @@ Two environment issues hit during batch 24 Step 6 review setup. **Standing rule 
 **Batch 24 rebuild branch:** `rebuild/phase4-batch24` (batch24-review worktree) — rebased onto main (0 behind at rebase time), 28/28 subscribes error-handled (tsc-clean), seed gaps closed (3 tables), star-spans commit, all 5 screens signed off. **Held for merge approval.**
 
 ---
+
+
+## Batch 24 backend sweep (BR-150/151/152) — autoclaveMaster / checklistEquipmentMapper / vitalQualifierMaster SIGN-OFF (2026-08-03)
+
+Three batch-24 backends live-confirmed exploitable (0 VerifiedIdentityService refs at DAO+Service) and fixed on `fix/autoclave-mapper-vitalq-crosstenant-idor` (e58a1133, held):
+
+| Screen | Pre-fix live proof | Fix | Post-fix |
+|---|---|---|---|
+| autoclaveMaster | forged org-1 update corrupted org-999 victim 6 (`HACKED-BY-ORG1-AUTO`); toggle deactivated | ownership checks (update + status) | both blocked; victim pristine; legit works |
+| checklistEquipmentMapper | forged org-1 toggle deactivated victim 3; **legit save-with-ID 500'd** (detached-entity bug) | save rewritten (findById + ownership; fixes IDOR AND 500), status checked | forged blocked; **legit save-with-ID now 200+persists** |
+| vitalQualifierMaster | forged org-1 update **repointed org/unit 999→1** (ROW THEFT) | update ownership + verified org/unit bind; status checked; save bind | both blocked; victim pristine org 999 |
+
+**Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-150/151/152, held). Deployed-bytecode verified (3 DAO classes, 2x VerifiedIdentityService refs each). Batch-24 backend sweep complete: all 5 screens' backends now batch-clean (checklistEquipmentMaster was already remediated at service layer; checklistItemMaster via BR-149).
+
+---
