@@ -129,8 +129,11 @@ export class PatientSourceMaster {
       next: (res) => {
         if (res.status === 'success') this.rows.set(res.listObject ?? []);
       },
+      error: (err) => console.error('patient-source-master list load error', err),
     });
-    this.api.getPatientSourceCount(this.organizationId).subscribe();
+    this.api.getPatientSourceCount(this.organizationId).subscribe({
+      error: (err) => console.error('patient-source-master count load error', err),
+    });
   }
 
   updateField<K extends keyof PatientSourceForm>(field: K, value: PatientSourceForm[K]): void {
@@ -205,6 +208,7 @@ export class PatientSourceMaster {
           // success.
           this.popupArmed = true;
         },
+        error: (err) => console.error('patient-source-master save error', err),
       });
   }
 
@@ -235,6 +239,7 @@ export class PatientSourceMaster {
           // ctrl:359-363 -- unconditional, both success and failure.
           this.loadList();
         },
+        error: (err) => console.error('patient-source-master update error', err),
       });
   }
 
@@ -250,6 +255,7 @@ export class PatientSourceMaster {
         const d = res.listObject[0];
         this.form.set({ id: d.id, code: d.code, desc: d.desc });
       },
+      error: (err) => console.error('patient-source-master get-by-id error', err),
     });
   }
 
@@ -273,6 +279,7 @@ export class PatientSourceMaster {
             this.notify.error('Something went wrong...!!');
           }
         },
+        error: (err) => console.error('patient-source-master status toggle error', err),
       });
   }
 }
