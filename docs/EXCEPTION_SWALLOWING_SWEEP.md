@@ -151,3 +151,33 @@ as financial-correctness bugs — closed as no-action-needed:
 
 Verdict: neither candidate has a real, live-verifiable financial-correctness bug. Logged as
 closed per owner instruction — no fix, no BR number, no manifest entry.
+
+## 8. Category 2 — LIS clinical items: CLEARED (live-verified NOT masking, 2026-08-03)
+
+1. `SerologyResultDaoImpl.saveResultEntry` (POST /LIS/Serology/ResultEntry) — shape: 1 write
+   (INSERT), SUCCESS-only return, catch rethrows. Live test with nonexistent labSampleDtlsId:
+   client got real HTTP 500, no row written. Write additionally drift-blocked in dev DB
+   (`lab.t_lab_sample_dtls.icmr_id` column missing — 4th drift object). NOT masking — CLEARED.
+2. `FrozenSectionReqDaoImpl.acceptFrozensectionReq` (POST /LIS/histopathology/frozenSection/Accept)
+   — shape: detached `update()` per list item, SUCCESS-only return, catch rethrows. Live test
+   with nonexistent requestId=99999: UPDATE issued (0 rows), transaction ROLLED BACK, client
+   got real 500. The detached-update no-op concern is handled (no silent SUCCESS) — NOT masking
+   — CLEARED. The 0-row update itself is a latent correctness gap (a stale requestId silently
+   updates nothing) but the error surface is honest; noted, not fixed (low priority).
+
+Both cleared without code change; no BR number assigned. No fix branch created.
+
+## 9. Schema-drift inventory (accumulated, all additive-fixable, Expand-Migrate-Contract safe)
+
+| # | Object | Type | Blocks |
+|---|---|---|---|
+| 1 | `public.t_service_identity` | missing table (entity exists) | ALL billing/LIS tx verification (heartbeat query contaminates transactions; 45k+ errors logged) |
+| 2 | `billing.t_company_receipts_expense.credit_note_id` | missing column | CompanyReceiptMaster/settle + saveExpense live tests |
+| 3 | `opd.t_coversheet_template_master` | missing table (entity exists) | Category 1 coversheet items (4 DAOs) |
+| 4 | `lab.t_lab_sample_dtls.icmr_id` | missing column | Serology result entry live tests |
+| 5 | `public.t_cash_in_out` | missing table | CashInOut DAO |
+| 6 | `billing.m_franchise_share` | missing table | FranchiseShare DAO |
+| 7 | `billing.t_ot_service` | missing table | OTService DAO |
+
+All map to real entities/columns in source. LOW-COST, HIGH-LEVERAGE batch to apply when the
+sweep resumes — flags for a natural moment per owner instruction (2026-08-03).
