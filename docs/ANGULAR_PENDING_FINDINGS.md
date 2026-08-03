@@ -4967,3 +4967,18 @@ Batch 27 status: bedMaster ✓ | patientCategoryMaster ✓ | tallyInterfacing �
 **Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-147, BR-148, held). Disclosed not fixed: `DoseMasterServiceImpl.updateDoseMaster` unconditional-SUCCESS masking (same decision item as BR-143-146's; psql is the only truth).
 
 ---
+
+
+## checklistItemMaster backend — BR-149 Step 6 SIGN-OFF (2026-08-03)
+
+**Finding:** `ChecklistItemMasterDaoImpl` (OTIMS) — zero VerifiedIdentityService refs in DAO/Service/Controller. `saveChecklistItemMaster` update path writes client-supplied org/unit onto the loaded entity (full row theft — org/unit repointed 999→1 live-confirmed); `updateChecklistItemMasterStatus` is a pure `findById` + update (BR-143 shape).
+
+**Live before:** seeded org-999/unit-999 victim id 6 (`VICTIM-CI-999`, `updated_by=0`); forged org-1 update corrupted code/desc AND repointed org/unit to 1/1 (`HACKED-BY-ORG1-CI`, `updated_by=1`, psql-confirmed); forged toggle also succeeded.
+
+**Live after (patched, OTIMS jar rebuilt + deployed + Tomcat restarted via catalina.sh):** both forged attacks blocked — victim 6 pristine via psql (code/desc/org/unit/status/updated_by unchanged); legit same-org update persists (row 1 `LegitCIOrg1Check`, restored); legit toggle A-I-A works. Deployed-bytecode verified (javap field + byte-grep 2 refs; pre-fix backup 0).
+
+**Fix:** `VerifiedIdentityService` injected; update path verifies existing-row ownership, create binds verified org/unit, status-toggle ownership-checked. Branch `fix/checklistitemmaster-crosstenant-idor` (2f6ad0ff), held for owner approval.
+
+**Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-149, held). Batch-24 screen — backend now batch-clean.
+
+---

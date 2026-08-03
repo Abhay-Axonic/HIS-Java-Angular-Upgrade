@@ -2407,3 +2407,19 @@ ALTER TABLE billing.m_preauth_request_master ADD COLUMN IF NOT EXISTS document_t
 **Classification:** cross-tenant IDOR fix (BR-121-class, same severity tier as BR-143-146), fully live-verified before and after. Held on `fix/allergydose-crosstenant-idor` (b7bed96b) together with BR-147 (identical root cause, same branch), awaiting owner approval to merge into main.
 
 ---
+
+
+## BR-149 — `checklistItemMaster`'s update and status-toggle endpoints had zero organization ownership check -- a live-confirmed cross-tenant FULL ROW THEFT (worse than the prior IDORs) (2026-08-03)
+
+**Found during:** batch 24 Step 6 review (owner-requested live verification of the batch's confirmed IDOR pattern before proceeding). `ChecklistItemMasterDaoImpl` (OTIMS module) has **zero** `VerifiedIdentityService` references across DAO/Service/Controller. Two exploitable paths:
+
+1. **`saveChecklistItemMaster` (update path, lines 95-113):** when `checklistItemMasterId` is present, it constructs a new entity from **client-supplied `organizationId`/`unitId`** (lines 100-102) and calls `update(mstr)` -- no ownership check at all. This is worse than the BR-143-148 shape: not just a cross-tenant write, but a **cross-tenant steal** -- the attacker's org/unit values are written onto the victim's row.
+2. **`updateChecklistItemMasterStatus` (line 127):** pure `findById(dto.getChecklistItemMasterId())` + update, zero org check. Identical to the BR-143-148 shape.
+
+**Live-confirmed, before the fix, using a real seeded victim tenant (organization_id=999, unit_id=999) and the real org=1/unit=1 admin session:** seeded `VICTIM-CI-999`/`VictimOrg999 ChecklistItem` in org 999 (id 6, `updated_by=0`). A forged `POST /global/otims/saveChecklistItemMaster` from the org-1 session targeting id 6 changed the row's code/description to attacker values (`HACKED-BY-ORG1-CI`, `Victim CI CORRUPTED cross-tenant`) **and repointed the row's `organization_id`/`unit_id` from 999/999 to 1/1** -- psql-confirmed with `updated_by=1`. The victim tenant's checklist item was stolen outright. A forged status-toggle also succeeded (status flipped to I).
+
+**Fixed by injecting `VerifiedIdentityService`** into `ChecklistItemMasterDaoImpl` (BR-121-148 pattern, strongest variant): the update path loads the existing row via `findById` and verifies its org/unit against the JWT-verified identity before mutating; the create path binds verified org/unit (never client-supplied); the status-toggle gets the same ownership check. **Verified live, before and after, identical forged attacks:** post-fix, forged update and forged status-toggle both blocked (victim row 6 confirmed pristine via psql -- code/desc/org/unit/status/updated_by all unchanged); legitimate same-org update confirmed still working end-to-end (changed org-1 row 1's description, psql-verified, then restored); legitimate status-toggle works (A-I-A). Deployed-bytecode verified via javap + byte-level negative-control grep.
+
+**Classification:** cross-tenant IDOR fix, **FULL ROW THEFT variant** (BR-121-class, same severity tier as BR-143-148, arguably higher impact due to tenant repointing). Fully live-verified before and after. Held on `fix/checklistitemmaster-crosstenant-idor` (2f6ad0ff), awaiting owner approval to merge into main.
+
+---
