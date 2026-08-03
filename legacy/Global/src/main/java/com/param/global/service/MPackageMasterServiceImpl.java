@@ -153,10 +153,21 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 
 
 
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
+
 	@Override
 	@Transactional
 	public Response createEhcPackage(ParentPackageMasterDto parentPackage) throws ServiceException {
 		try {
+
+			// BR-159: cross-tenant IDOR fix -- org/unit come from the JWT-verified identity,
+			// never from the client-supplied DTO. Override the parent object here so every
+			// downstream child-record write (package master, services, items, group details)
+			// inherits the verified tenant instead of the forged one.
+			parentPackage.setOrgId(verifiedIdentityService.getVerifiedOrganizationId());
+			parentPackage.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 
 			if (parentPackage.getParentPackageId() != null && parentPackage.getParentPackageId() > 0) {
 				iMPackageMasterDao.inactivePacakge(parentPackage.getParentPackageId(),
@@ -215,6 +226,13 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 	@Transactional
 	public Response SaveAllInclusivePackage(ParentPackageMasterDto parentPackage) throws ServiceException {
 		try {
+
+			// BR-159: cross-tenant IDOR fix -- org/unit come from the JWT-verified identity,
+			// never from the client-supplied DTO. Override the parent object here so every
+			// downstream child-record write (package master, services, items, group details)
+			// inherits the verified tenant instead of the forged one.
+			parentPackage.setOrgId(verifiedIdentityService.getVerifiedOrganizationId());
+			parentPackage.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 
 			if (parentPackage.getParentPackageId() != null && parentPackage.getParentPackageId() > 0) {
 				iMPackageMasterDao.inactivePacakge(parentPackage.getParentPackageId(),
@@ -287,6 +305,13 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 	@Transactional
 	public Response createMultiencouterPackage(ParentPackageMasterDto parentPackage) throws ServiceException {
 		try {
+
+			// BR-159: cross-tenant IDOR fix -- org/unit come from the JWT-verified identity,
+			// never from the client-supplied DTO. Override the parent object here so every
+			// downstream child-record write (package master, services, items, group details)
+			// inherits the verified tenant instead of the forged one.
+			parentPackage.setOrgId(verifiedIdentityService.getVerifiedOrganizationId());
+			parentPackage.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 
 			if (parentPackage.getParentPackageId() != null && parentPackage.getParentPackageId() > 0) {
 				iMPackageMasterDao.inactivePacakge(parentPackage.getParentPackageId(),
@@ -364,6 +389,13 @@ public class MPackageMasterServiceImpl implements IMPackageMasterService, ICommo
 	@Transactional
 	public Response createEitherOrPackage(ParentPackageMasterDto parentPackage) throws ServiceException {
 		try {
+
+			// BR-159: cross-tenant IDOR fix -- org/unit come from the JWT-verified identity,
+			// never from the client-supplied DTO. Override the parent object here so every
+			// downstream child-record write (package master, services, items, group details)
+			// inherits the verified tenant instead of the forged one.
+			parentPackage.setOrgId(verifiedIdentityService.getVerifiedOrganizationId());
+			parentPackage.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 
 			if (parentPackage.getParentPackageId() != null && parentPackage.getParentPackageId() > 0) {
 				iMPackageMasterDao.inactivePacakge(parentPackage.getParentPackageId(),

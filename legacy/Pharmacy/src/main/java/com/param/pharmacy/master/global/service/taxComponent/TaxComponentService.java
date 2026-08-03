@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.param.common.dto.CommonResponse;
 import com.param.entity.model.master.TaxComponent;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.pharmacy.master.global.CustomeException;
 import com.param.pharmacy.master.global.dao.taxComponent.ITaxComponentDao;
 import com.param.pharmacy.master.global.dto.taxComponent.TaxComponentDetailsResponse;
@@ -26,6 +27,9 @@ public class TaxComponentService implements ITaxComponentService {
 
 	@Autowired
 	private SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	@Transactional
@@ -66,10 +70,16 @@ public class TaxComponentService implements ITaxComponentService {
 	@Transactional
 	public CommonResponse create(TaxComponentRequest taxComponentRequest) {
 
-		TaxComponent taxComponent = new TaxComponent();
-	//	sessionService.setEntityDefaults(taxComponent);
+		// BR-158: cross-tenant IDOR fix -- org/unit must come from the JWT-verified
+		// identity, never from the request body (the old code accepted a client-supplied
+		// organizationId with session as mere fallback, which live-confirmed let an
+		// org-1 session create a row in org 999).
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+		Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 
-		taxComponent.setCreateDefaults(taxComponentRequest.getOrganizationId()!=null ? taxComponentRequest.getOrganizationId() : sessionService.getOrganizationId(),taxComponentRequest.getUnitId() !=null ? taxComponentRequest.getUnitId() :sessionService.getUnitId() ,taxComponentRequest.getUserId()!=null ? taxComponentRequest.getUserId() : sessionService.getUserId());
+		TaxComponent taxComponent = new TaxComponent();
+
+		taxComponent.setCreateDefaults(verifiedOrgId, verifiedUnitId, taxComponentRequest.getUserId()!=null ? taxComponentRequest.getUserId() : sessionService.getUserId());
  
 		taxComponent.setCode(taxComponentRequest.getCode());
 		taxComponent.setComponent(taxComponentRequest.getComponent());
@@ -86,7 +96,12 @@ public class TaxComponentService implements ITaxComponentService {
 	@Transactional
 	public CommonResponse update(TaxComponentRequest taxComponentRequest) throws CustomeException {
 
-		TaxComponent taxComponent = TaxComponentDao.getById(taxComponentRequest.getId(), taxComponentRequest.getOrganizationId());
+		// BR-158: cross-tenant IDOR fix -- load the row scoped to the JWT-verified org
+		// (the old code passed the client-supplied organizationId to getById, so a forged
+		// org could target another tenant's row).
+		Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+
+		TaxComponent taxComponent = TaxComponentDao.getById(taxComponentRequest.getId(), verifiedOrgId);
 
 		if (taxComponent == null) {
 			throw new CustomeException(null, "Tax Component Not Found", null);
@@ -105,7 +120,7 @@ public class TaxComponentService implements ITaxComponentService {
 		Long count = Long.valueOf(0);
 		Boolean UnableToUpdateStatus = false;
 		if (taxComponentRequest.getStatus() != null && !taxComponentRequest.getStatus()) {
-			count = TaxComponentDao.getTaxComponentFromTax(taxComponentRequest.getId(),taxComponentRequest.getOrganizationId());
+			count = TaxComponentDao.getTaxComponentFromTax(taxComponentRequest.getId(), verifiedOrgId);
 		}
 		if (count <= 0) {
 			UnableToUpdateStatus = false;

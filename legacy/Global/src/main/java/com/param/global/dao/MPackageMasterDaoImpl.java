@@ -70,9 +70,21 @@ public class MPackageMasterDaoImpl extends GenericDao<MPackageMaster, Integer>
 	@Autowired
 	ITPackageConsumptionCapDetailsDao iTPackageConsumptionCapDetailsDao;
 
+	@Autowired
+	private com.param.global.service.VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response saveParentPackageMaster(ParentPackageMasterDto dto) throws ServiceException {
 		try {
+
+			// BR-159: cross-tenant IDOR fix -- org/unit must come from the JWT-verified
+			// identity, never from the client-supplied DTO. All 4 package-creation
+			// endpoints (/api/packages/ehc, /allInclusive, /multiencounter, /eitheror)
+			// funnel through this method and the old code wrote verifiedOrgId/
+			// verifiedUnitId into every child record, which live-confirmed let an
+			// org-1 session create an org-999 parent package row.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 
 			Integer parentPackageId = dto.getParentPackageId();
 			ParentPackageMaster parentPackageMaster = null;
@@ -86,14 +98,14 @@ public class MPackageMasterDaoImpl extends GenericDao<MPackageMaster, Integer>
 				versionMaster.setCreatedBy(dto.getCreatedBy());
 				versionMaster.setCreatedDate(dto.getCreatedDate() != null && !dto.getCreatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getCreatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
-				versionMaster.setOrgId(dto.getOrgId());
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
+				versionMaster.setOrgId(verifiedOrgId);
 				versionMaster.setStatus(ACTIVE);
-				versionMaster.setUnitId(dto.getUnitId());
+				versionMaster.setUnitId(verifiedUnitId);
 				versionMaster.setUpdatedBy(dto.getUpdatedBy());
 				versionMaster.setUpdatedDate(dto.getUpdatedDate() != null && !dto.getUpdatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
 				
 				sessionFactory.getCurrentSession().save(versionMaster);
 				
@@ -103,19 +115,19 @@ public class MPackageMasterDaoImpl extends GenericDao<MPackageMaster, Integer>
 				parentPackageMaster.setCreatedBy(dto.getCreatedBy());
 				parentPackageMaster.setCreatedDate(dto.getCreatedDate() != null && !dto.getCreatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getCreatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
 				parentPackageMaster.setMaxAge(dto.getMaxAge());
 				parentPackageMaster.setMinAge(dto.getMinAge());
-				parentPackageMaster.setOrgId(dto.getOrgId());
+				parentPackageMaster.setOrgId(verifiedOrgId);
 				parentPackageMaster.setPackageTypeId(dto.getPackageTypeId());
 				parentPackageMaster.setServiceId(dto.getServiceId());
 				parentPackageMaster.setSexId(dto.getSexId());
 				parentPackageMaster.setStatus(ACTIVE);
-				parentPackageMaster.setUnitId(dto.getUnitId());
+				parentPackageMaster.setUnitId(verifiedUnitId);
 				parentPackageMaster.setUpdatedBy(dto.getUpdatedBy());
 				parentPackageMaster.setUpdatedDate(dto.getUpdatedDate() != null && !dto.getUpdatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
 				parentPackageMaster
 						.setValidityFromDate(dto.getValidityFromDate() != null && !dto.getValidityFromDate().isEmpty()
 								? GlobalCommonDateUtils.getDate(dto.getValidityFromDate(), "dd-M-yyyy")
@@ -137,19 +149,19 @@ public class MPackageMasterDaoImpl extends GenericDao<MPackageMaster, Integer>
 				parentPackageMaster.setCreatedBy(dto.getCreatedBy());
 				parentPackageMaster.setCreatedDate(dto.getCreatedDate() != null && !dto.getCreatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getCreatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
 				parentPackageMaster.setMaxAge(dto.getMaxAge());
 				parentPackageMaster.setMinAge(dto.getMinAge());
-				parentPackageMaster.setOrgId(dto.getOrgId());
+				parentPackageMaster.setOrgId(verifiedOrgId);
 				parentPackageMaster.setPackageTypeId(dto.getPackageTypeId());
 				parentPackageMaster.setServiceId(dto.getServiceId());
 				parentPackageMaster.setSexId(dto.getSexId());
 				parentPackageMaster.setStatus(ACTIVE);
-				parentPackageMaster.setUnitId(dto.getUnitId());
+				parentPackageMaster.setUnitId(verifiedUnitId);
 				parentPackageMaster.setUpdatedBy(dto.getUpdatedBy());
 				parentPackageMaster.setUpdatedDate(dto.getUpdatedDate() != null && !dto.getUpdatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
 				parentPackageMaster
 						.setValidityFromDate(dto.getValidityFromDate() != null && !dto.getValidityFromDate().isEmpty()
 								? GlobalCommonDateUtils.getDate(dto.getValidityFromDate(), "dd-M-yyyy")
@@ -168,14 +180,14 @@ public class MPackageMasterDaoImpl extends GenericDao<MPackageMaster, Integer>
 				versionMaster.setCreatedBy(dto.getCreatedBy());
 				versionMaster.setCreatedDate(dto.getCreatedDate() != null && !dto.getCreatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getCreatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
-				versionMaster.setOrgId(dto.getOrgId());
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
+				versionMaster.setOrgId(verifiedOrgId);
 				versionMaster.setStatus(ACTIVE);
-				versionMaster.setUnitId(dto.getUnitId());
+				versionMaster.setUnitId(verifiedUnitId);
 				versionMaster.setUpdatedBy(dto.getUpdatedBy());
 				versionMaster.setUpdatedDate(dto.getUpdatedDate() != null && !dto.getUpdatedDate().isEmpty()
 						? GlobalCommonDateUtils.getDate(dto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss")
-						: TimeZoneComponent.getDateByzone(dto.getUnitId()));
+						: TimeZoneComponent.getDateByzone(verifiedUnitId));
 				
 				 sessionFactory.getCurrentSession().save(versionMaster);
 			}

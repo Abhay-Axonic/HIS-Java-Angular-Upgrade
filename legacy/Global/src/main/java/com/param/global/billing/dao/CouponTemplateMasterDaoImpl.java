@@ -14,6 +14,7 @@ import com.param.global.billing.dto.CouponTemplateMasterDto;
 import com.param.global.billing.dto.PatientCouponTemplateMapperDto;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -30,22 +31,40 @@ public class CouponTemplateMasterDaoImpl extends GenericDao<CouponTemplateMaster
 	@Autowired
 	private SessionFactory SessionFactory;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response saveCouponTemplateMaster(CouponTemplateMasterDto dto) throws ApplicationException {
 		try{
+			// BR-157: cross-tenant IDOR fix -- tenant scoping comes from the JWT-verified
+			// identity only, never from client-supplied org/unit (the old code wrote
+			// dto.getOrganizationId()/dto.getUnitId() directly, which live-confirmed let an
+			// org-1 session create rows in org 999). Created/updated-by are also re-bound to
+			// the verified user identity.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			CouponTemplateMaster master = new CouponTemplateMaster();
 				master.setCouponTemplateName(dto.getCouponTemplateName());
 				master.setCouponTemplateDescription(dto.getCouponTemplateDescription());
 				master.setExpireDays(dto.getExpireDays());
 				master.setCreatedBy(dto.getCreatedBy());
-				master.setCreatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
+				master.setCreatedDate(TimeZoneComponent.getDateByzone(verifiedUnitId));
 				master.setStatus(ACTIVE);
-				master.setUnitId(dto.getUnitId());
-				master.setOrganizationId(dto.getOrganizationId());
+				master.setUnitId(verifiedUnitId);
+				master.setOrganizationId(verifiedOrgId);
 				master.setUpdatedBy(dto.getUpdatedBy());
-				master.setUpdatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
+				master.setUpdatedDate(TimeZoneComponent.getDateByzone(verifiedUnitId));
 				master.setServiceId(dto.getServiceId()!= null ? dto.getServiceId() : null);
 				if(dto.getCouponTemplateMasterId() != null) {
+					CouponTemplateMaster existing = findById(dto.getCouponTemplateMasterId());
+					// BR-157: reject update of a row not owned by the verified tenant
+					if (existing == null || existing.getOrganizationId() == null
+							|| !existing.getOrganizationId().equals(verifiedOrgId)
+							|| existing.getUnitId() == null
+							|| !existing.getUnitId().equals(verifiedUnitId)) {
+						return new Response<>(ERROR, ERROR_CODE, "Cross-tenant update rejected", null, null);
+					}
 					master.setCouponTemplateMasterId(dto.getCouponTemplateMasterId());
 					master = update(master);
 				}else {
@@ -85,11 +104,24 @@ public class CouponTemplateMasterDaoImpl extends GenericDao<CouponTemplateMaster
 	@Override
 	public Response updateStatus(CouponTemplateMasterDto dto) throws ApplicationException {
 		try {
-			
-			SessionFactory.getCurrentSession().createSQLQuery("	UPDATE billing.m_coupon_template_master set status=:status  WHERE coupon_template_master_id =:id  ")
-			.setInteger("id", dto.getCouponTemplateMasterId())
+			// BR-157: cross-tenant IDOR fix (unscoped status toggle) -- the old UPDATE had
+			// no org/unit in the WHERE clause, so any authenticated session could flip any
+			// tenant's coupon status by ID (live-confirmed: org-1 session toggled an
+			// org-999 victim row A->I). Scope the UPDATE to the JWT-verified org/unit and
+			// return an error when no row is owned by the verified tenant.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
+			int updated = SessionFactory.getCurrentSession().createSQLQuery(
+					"UPDATE billing.m_coupon_template_master SET status=:status "
+					+ "WHERE coupon_template_master_id =:id AND organization_id =:organizationId AND unit_id =:unitId")
+					.setInteger("id", dto.getCouponTemplateMasterId())
 					.setParameter("status", dto.getStatus())
-			.executeUpdate();
+					.setParameter("organizationId", verifiedOrgId)
+					.setParameter("unitId", verifiedUnitId)
+					.executeUpdate();
+			if (updated == 0) {
+				return new Response<>(ERROR, ERROR_CODE, "Coupon template not found for the verified tenant", null, null);
+			}
 			return new Response(SUCCESS, SUCCESS_CODE, null, null, null);
 
 		} catch (HibernateException he) {
