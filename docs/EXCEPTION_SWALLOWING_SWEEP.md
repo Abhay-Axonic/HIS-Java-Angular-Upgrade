@@ -133,3 +133,21 @@ of them (icuType lesson). Per-instance status will be recorded here as verificat
 
 *Honest-caveat discipline: raw counts and the ~380 Category-3 estimate are informed estimates
 pending real triage, exactly like the SME-gap analysis. Verified numbers are labeled as such.*
+
+## 7. CLOSED — consultation-charge candidates: NO ACTION NEEDED (2026-08-03, owner-confirmed)
+
+Both candidates for the "updateDoctorConsultationCharge" item were investigated and ruled out
+as financial-correctness bugs — closed as no-action-needed:
+
+1. `OPConsultationConfigurationMasterDaoImpl.updateOPConsultationConfigurationMaster`
+   (Global, L135-154): updates followup/secondary visit counts + days for an OP consultation
+   config row. No charge/financial value is written; the `charges` concept lives in a different
+   table (`doctor.t_doctor_consultation_charges_master`) whose DAO is read-only (single getter).
+   No silent-revert of financial values on this path.
+2. `doctor.t_doctor_consultation_charges_master` write path: no update method exists at all —
+   the DAO exposes only `getDoctorConsultationChargesByDoctorIdAndVisitTypeAndClass`. The
+   consultation-charge *config* write is the OP-consultation-config path above. No live-verifiable
+   financial-correctness issue.
+
+Verdict: neither candidate has a real, live-verifiable financial-correctness bug. Logged as
+closed per owner instruction — no fix, no BR number, no manifest entry.
