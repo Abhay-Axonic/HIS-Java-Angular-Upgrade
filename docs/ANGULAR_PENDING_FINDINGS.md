@@ -5041,3 +5041,14 @@ Three batch-24 backends live-confirmed exploitable (0 VerifiedIdentityService re
 **Status:** ✅ CONFIRMED + FIXED + LIVE-VERIFIED (BR-150/151/152, held). Deployed-bytecode verified (3 DAO classes, 2x VerifiedIdentityService refs each). Batch-24 backend sweep complete: all 5 screens' backends now batch-clean (checklistEquipmentMaster was already remediated at service layer; checklistItemMaster via BR-149).
 
 ---
+
+
+## PENDING-tracked — Exception-swallowing class: DAO catch-blocks hide real errors from the response (consolidated tracked item, 2026-08-03)
+
+**Same underlying class as the unconditional-SUCCESS masking already tracked after BR-147/148 (DoseMasterServiceImpl.updateDoseMaster, PatientSourceMasterServiceImpl L93, etc.):** real failures are hidden from the caller — either by returning `SUCCESS` regardless (unconditional-SUCCESS masking) or by `catch { logger.error(...) }` blocks that swallow the exception and return a generic `ERROR`/`COMMON_ERROR_MESSAGE` with no trace surfaced to the client.
+
+**This session's instance (BR-151, checklistEquipmentMapper):** the DAO's `saveChecklistEquipmentMapperMaster` catch-blocks log + return generic `ERROR` — the pre-fix save-with-ID path threw (detached-entity update bug) and the client received only `{"status":"error","code":"500","message":"Something went wrong!!"}` with the real cause invisible. The underlying 500 is FIXED by the BR-151 rewrite (findById-based update, live-verified: legit edit now persists). But the **swallow pattern itself remains**: the catch-blocks still do not route to the centralized global exception handler, so any future failure in this method will again surface as a generic message with no diagnosable cause.
+
+**Decision item (consolidate when picked up):** sweep the `catch { logger.error } → generic Response` blocks (checklistEquipmentMapperDaoImpl, plus the other DAOs noted after BR-147/148: DoseMasterServiceImpl, PatientSourceMasterServiceImpl, and the 4-service unconditional-SUCCESS group) and route exceptions to the centralized global exception handler per RULES.md. This is a behavioral-correctness item, NOT a security item — the security boundary holds (psql is the truth). Tracked as ONE consolidated decision, not scattered notes.
+
+---
