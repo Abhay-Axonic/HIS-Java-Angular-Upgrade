@@ -11,9 +11,12 @@
     <button type="button" (click)="startCreate()">Add New</button>
   </div>
 
-  <!-- Add/Edit form -->
-  @if (isEdit() || record().id === 0 && record().code === '') {
-    @if (isEdit() || record().id === 0) {
+  <!-- Add/Edit form: visible when creating (fresh record, id 0) or editing an
+       existing row. NOTE: must NOT depend on record().code being empty -- that
+       unmounts the form the instant the user types a code (live-found during
+       Step 6 review: Create appeared to do nothing because the form vanished
+       mid-typing; no request ever reached the backend). -->
+  @if (isEdit() || record().id === 0) {
       <form class="record-form" (ngSubmit)="save()">
         <h3>{{ isEdit() ? 'Edit Tax Component' : 'New Tax Component' }}</h3>
         <label>
@@ -36,7 +39,6 @@
           <button type="button" (click)="record.set({ id: 0, code: '', component: '', status: true }); isEdit.set(false)">Cancel</button>
         </div>
       </form>
-    }
   }
 
   <!-- List -->
