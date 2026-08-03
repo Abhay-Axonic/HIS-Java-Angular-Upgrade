@@ -5052,3 +5052,24 @@ Three batch-24 backends live-confirmed exploitable (0 VerifiedIdentityService re
 **Decision item (consolidate when picked up):** sweep the `catch { logger.error } → generic Response` blocks (checklistEquipmentMapperDaoImpl, plus the other DAOs noted after BR-147/148: DoseMasterServiceImpl, PatientSourceMasterServiceImpl, and the 4-service unconditional-SUCCESS group) and route exceptions to the centralized global exception handler per RULES.md. This is a behavioral-correctness item, NOT a security item — the security boundary holds (psql is the truth). Tracked as ONE consolidated decision, not scattered notes.
 
 ---
+
+
+## checklistEquipmentMapper BR-151 (owner-referenced as BR-150) — RE-CONFIRMATION with psql-only evidence (2026-08-03)
+
+**Concern raised (owner):** after BR-151 merged+pushed, re-verify from scratch that the checklistEquipmentMapper toggle IDOR fix is genuinely effective — the swallowed exception could theoretically have masked a real cross-tenant write in the original verification (i.e., the write happened but the exception/error response hid it), which would mean an active unpatched vulnerability on current main.
+
+**Re-verification performed (fresh, no prior-test rows):**
+1. Deployment state confirmed: main == origin/main at `2d6afab0`; deployed Global jar's `EquipmentChecklistMapperDaoImpl.class` is the 08:03 fix build.
+2. **Bytecode-level proof** (`javap -c` on the deployed class): `updateChecklistEquipmentMapperStatus` contains the full ownership chain — `findById` → null-check → `getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())` (`ifeq` reject) → `getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())` (`ifne` pass) → only on pass does `setStatus` + `update()` execute. Reject path returns before any write.
+3. **Fresh victim seeded:** id 50, org 999/unit 999, status A, `updated_by=0` — never touched by any prior test.
+4. **Forged toggle attack** (org-1 session → `updateChecklistEquipmentMapperStatus` targeting id 50): HTTP `{"status":"error","code":"500"}`.
+5. **PSQL-ONLY TRUTH:** victim 50 completely untouched — `organization_id=999`, `unit_id=999`, `status=A`, `updated_by=0`. No corruption, no repoint, no flip.
+6. **SQL log (independent, strongest evidence):** the attack's transaction was `BEGIN → SELECT findById(50) → SELECT m_unit_master (verified unit→org lookup) → COMMIT` — **no UPDATE statement ever issued**. The write was rejected *before* reaching the DB, not written-then-rolled-back. This is the ownership-check-reject signature — NOT a swallowed-exception-after-write.
+7. Same protocol on the save-with-ID path: error response, victim pristine, **0 UPDATE statements** in the log.
+8. Re-verify victim removed after; table restored to prior state.
+
+**Verdict:** BR-151 is genuinely fixed on current main — the victim's data is **not** corruptible via the toggle (or save-with-ID) endpoint. The swallowed exception operates in the opposite direction from the concern: the ownership check rejects the write **first**, so the swallow only affects error-message quality (generic "Something went wrong!!"), never masks a successful write. Original verification confirmed valid.
+
+**Cross-reference:** the DAO catch-block swallow pattern itself remains tracked as the consolidated exception-swallowing decision item (see PENDING-tracked entry) — correctness/observability, not a security regression.
+
+---
