@@ -92,9 +92,13 @@ public class DepositMatrixConfigDaoImpl extends GenericDao<DepositMatrixConfigMa
 	@Override
 	public Response getDepositMatrixConfig(int mDepositMatrixId) throws ApplicationException {
 		try {
+			// BATCH-4 org-trust fix: the BY_ID read was unscoped — a forged victim ID returned
+			// cross-tenant config. Bind the verified org/unit.
 			DepositMatrixConfigMasterDto dto = (DepositMatrixConfigMasterDto) sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_DEPOSIT_MATRIX_CONFIG_BY_ID")
 					.setParameter("mDepositMatrixId", mDepositMatrixId)
+					.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
+					.setParameter("unitId", verifiedIdentityService.getVerifiedUnitId())
 					.setResultTransformer(Transformers.aliasToBean(DepositMatrixConfigMasterDto.class)).uniqueResult();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, dto);
 

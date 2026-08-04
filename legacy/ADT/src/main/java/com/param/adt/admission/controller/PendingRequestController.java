@@ -84,11 +84,21 @@ public class PendingRequestController implements ICommonConstants {
 	}
 
 	@RequestMapping(value = "/getAvtivePaymentEntitlementList", method = RequestMethod.GET)
-	public @ResponseBody Response getAvtivePaymentEntitlementList() {
+	public @ResponseBody Response getAvtivePaymentEntitlementList(HttpServletRequest request) {
 		try {
-
-			return iPendingRequestService.getAvtivePaymentEntitlementList();
-
+			// BATCH-4 ORG-TRUST FIX: session organizationId (mirrors the sibling getAvtivePatientCategoryList
+			// pattern) — previously the query returned ALL orgs' entitlements (victim org-999 leaked).
+			if(request.getCookies()!=null) {
+				List<Cookie> cookies = Arrays.stream(request.getCookies())
+						.filter(cookie -> cookie.getName().equals("cookieObject")).collect(Collectors.toList());
+				if (cookies.size() > 0 && cookies.get(0) != null) {
+					CookieObjectDto cookieObject = new Gson().fromJson(java.net.URLDecoder.decode(cookies.get(0).getValue(), StandardCharsets.UTF_8.name()), CookieObjectDto.class);
+					if(cookieObject != null) {
+						return iPendingRequestService.getAvtivePaymentEntitlementList(cookieObject.getOrganizationId());
+					}
+				}
+			}
+			return iPendingRequestService.getAvtivePaymentEntitlementList(sessionService.getOrganizationId());
 		} catch (Exception e) {
 			
 		}

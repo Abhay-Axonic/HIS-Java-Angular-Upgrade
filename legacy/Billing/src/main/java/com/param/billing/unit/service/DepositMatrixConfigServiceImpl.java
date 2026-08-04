@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.param.billing.common.ICommonConstants;
 import com.param.billing.common.Response;
 import com.param.billing.unit.dao.IDepositMatrixConfigDao;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.billing.unit.dto.DepositMatrixConfigMasterDto;
 import com.param.billing.unit.dto.DepositMatrixReqDto;
 import com.param.global.common.GlobalCommonDateUtils;
@@ -23,10 +24,14 @@ public class DepositMatrixConfigServiceImpl  implements IDepositMatrixConfigServ
 	@Autowired
 	private IDepositMatrixConfigDao iDepositMatrixConfigDao;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	@Transactional
-	public Response getDepositMatrixList(int orgId, int unitId, int offset, int recordPerPage)
-			throws ApplicationException {
+	public Response getDepositMatrixList(int orgId, int unitId, int offset, int recordPerPage) {
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		unitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iDepositMatrixConfigDao.getDepositMatrixList(orgId, unitId, offset, recordPerPage);
 		} catch (Exception e) {
@@ -37,8 +42,8 @@ public class DepositMatrixConfigServiceImpl  implements IDepositMatrixConfigServ
 
 	@Override
 	@Transactional
-	public Response saveDepositMatrixConfig(DepositMatrixConfigMasterDto depositMatrixConfigMasterDto)
-			throws ApplicationException {
+	public Response saveDepositMatrixConfig(DepositMatrixConfigMasterDto depositMatrixConfigMasterDto) {
+		depositMatrixConfigMasterDto.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			Response response=this.checkDepositMatrixExist(depositMatrixConfigMasterDto);
 			Date date = TimeZoneComponent.getDateByzone(depositMatrixConfigMasterDto.getUnitId());
@@ -70,8 +75,8 @@ public class DepositMatrixConfigServiceImpl  implements IDepositMatrixConfigServ
 
 	@Override
 	@Transactional
-	public Response updateDepositMatrixConfig(DepositMatrixConfigMasterDto depositMatrixConfigMasterDto)
-			throws ApplicationException {
+	public Response updateDepositMatrixConfig(DepositMatrixConfigMasterDto depositMatrixConfigMasterDto) {
+		depositMatrixConfigMasterDto.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			Response response=this.checkDepositMatrixExist(depositMatrixConfigMasterDto);
 			Date date = TimeZoneComponent.getDateByzone(depositMatrixConfigMasterDto.getUnitId());
@@ -104,7 +109,9 @@ public class DepositMatrixConfigServiceImpl  implements IDepositMatrixConfigServ
 
 	@Override
 	@Transactional
-	public Response getDepositMatrixConfigCount(int orgId, int unitId) throws ApplicationException {
+	public Response getDepositMatrixConfigCount(int orgId, int unitId) {
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		unitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iDepositMatrixConfigDao.getDepositMatrixConfigCount(orgId,unitId);
 		} catch (Exception e) {
@@ -115,8 +122,8 @@ public class DepositMatrixConfigServiceImpl  implements IDepositMatrixConfigServ
 
 	@Override
 	@Transactional
-	public Response checkDepositMatrixExist(DepositMatrixConfigMasterDto depositMatrixConfigMasterDto)
-			throws ApplicationException {
+	public Response checkDepositMatrixExist(DepositMatrixConfigMasterDto depositMatrixConfigMasterDto) {
+		depositMatrixConfigMasterDto.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			return iDepositMatrixConfigDao.checkDepositMatrixExist(depositMatrixConfigMasterDto);
 		} catch (Exception e) {
@@ -127,7 +134,8 @@ public class DepositMatrixConfigServiceImpl  implements IDepositMatrixConfigServ
 
 	@Override
 	@Transactional
-	public Response getDepositMatrixConfigList(DepositMatrixReqDto depositMatrixReqDto) throws ApplicationException {
+	public Response getDepositMatrixConfigList(DepositMatrixReqDto depositMatrixReqDto) {
+		depositMatrixReqDto.setOrgansationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			return iDepositMatrixConfigDao.getDepositMatrixConfigList(depositMatrixReqDto);
 		} catch (Exception e) {

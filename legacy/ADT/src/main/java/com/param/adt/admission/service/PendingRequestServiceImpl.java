@@ -22,6 +22,7 @@ import com.param.adt.common.DocumentUploadUtility;
 import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.global.dto.AdmissionDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.AdmissionNoteDto;
 import com.param.global.dto.AdmissionPatientDocumentsDto;
 import com.param.utility.TimeZoneComponent;
@@ -34,6 +35,9 @@ public class PendingRequestServiceImpl implements IPendingRequestService, ICommo
 
 	@Autowired
 	private IPendingRequestDao iPendingRequestDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 	@Autowired
 	private DocumentUploadUtility documentUploadUtility;
@@ -45,7 +49,7 @@ public class PendingRequestServiceImpl implements IPendingRequestService, ICommo
 	IBedAllocationService iBedAllocationService;
 
 	private Cache<Integer, List<PatientCategoryMasterDto>> patientCategoryMasterCache;
-	private Cache<String, List<PaymentEntitlementMasterDto>> activePaymentEntitlementMasterCache;
+	private Cache<Integer, List<PaymentEntitlementMasterDto>> activePaymentEntitlementMasterCache;
 
 	@PostConstruct
 	public void initCache() {
@@ -92,16 +96,19 @@ public class PendingRequestServiceImpl implements IPendingRequestService, ICommo
 	}
 
 	@Override
-	public Response getAvtivePaymentEntitlementList() throws ApplicationException {
+	public Response getAvtivePaymentEntitlementList(Integer orgId) throws ApplicationException {
 		try {
-			List<PaymentEntitlementMasterDto> responseCache = activePaymentEntitlementMasterCache.getIfPresent("paymentEntitlement");
+			// BATCH-4 ORG-TRUST FIX: rebind to verified tenant + org-keyed cache (was a constant
+			// "paymentEntitlement" key shared across all orgs — cache poisoning + cross-tenant leak).
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			List<PaymentEntitlementMasterDto> responseCache = activePaymentEntitlementMasterCache.getIfPresent(orgId);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
 			}
 
-			Response res = iPendingRequestDao.getAvtivePaymentEntitlementList();
+			Response res = iPendingRequestDao.getAvtivePaymentEntitlementList(orgId);
 			if(res.getStatus().equals(SUCCESS) && res.getListObject() != null && !res.getListObject().isEmpty()){
-				activePaymentEntitlementMasterCache.put("paymentEntitlement", res.getListObject());
+				activePaymentEntitlementMasterCache.put(orgId, res.getListObject());
 
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size DB: " +String.valueOf(res.getListObject().size()), res.getListObject(), null);
 			}

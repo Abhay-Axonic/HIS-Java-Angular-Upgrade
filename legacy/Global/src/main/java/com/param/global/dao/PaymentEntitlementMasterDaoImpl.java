@@ -40,6 +40,7 @@ public class PaymentEntitlementMasterDaoImpl extends GenericDao<PaymentEntitleme
 		try {
 			List<PaymentEntitlementMasterDto> listPaymentEntitlementMasterDto = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_ACTIVE_PAYMENT_ENTITLEMENT_LIST")
+					.setParameter("orgId", paymentEntitlementMasterDto.getOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(PaymentEntitlementMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, "", listPaymentEntitlementMasterDto, null);
 		} catch (HibernateException he) {

@@ -83,10 +83,11 @@ public class PendingRequestDaoImpl extends GenericDao<AdmissionNote, Integer>
 	}
 
 	@Override
-	public Response getAvtivePaymentEntitlementList() throws ApplicationException {
+	public Response getAvtivePaymentEntitlementList(Integer orgId) throws ApplicationException {
 		try {
 			List<PaymentEntitlementMasterDto> entitlementMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_ACTIVE_PAYMENT_ENTITLEMENT_LIST")
+					.setParameter("orgId", orgId)
 					.setResultTransformer(Transformers.aliasToBean(PaymentEntitlementMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, entitlementMasterDtosList, null);
 

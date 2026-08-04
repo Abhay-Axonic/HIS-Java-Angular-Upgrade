@@ -15,7 +15,7 @@ public interface IPendingRequestDao extends IGenericDao<AdmissionNote, Integer>
 
 	Response getAvtivePatientCategoryList(Integer orgId) throws ApplicationException;
 
-	Response getAvtivePaymentEntitlementList() throws ApplicationException;
+	Response getAvtivePaymentEntitlementList(Integer orgId) throws ApplicationException;
 
 	Response updatePendingAdmissionRequestDetails(AdmissionNoteDto admissionNoteDto) throws ApplicationException;
 

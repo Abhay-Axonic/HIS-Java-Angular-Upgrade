@@ -30,6 +30,9 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 	public Response getPaymentEntitlementMaster(PaymentEntitlementMasterDto paymentEntitlementMasterDto)
 			throws ApplicationException {
 		try {
+			// BATCH-4 sibling fix: the active-entitlement query is now org-scoped — bind the VERIFIED
+			// org (was passing client orgId → forged org returned cross-tenant rows).
+			paymentEntitlementMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iPaymentEntitlementMasterDao.getPaymentEntitlementMaster(paymentEntitlementMasterDto);
 		} catch (Exception e) {
 			logger.error("getPaymentEntitlementMaster failed", e);

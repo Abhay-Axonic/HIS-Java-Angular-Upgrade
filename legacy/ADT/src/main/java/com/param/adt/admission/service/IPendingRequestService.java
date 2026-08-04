@@ -17,7 +17,7 @@ public interface IPendingRequestService
 	Response getAvtivePatientCategoryList(Integer orgId) throws ApplicationException;
 
 	@Transactional
-	Response getAvtivePaymentEntitlementList() throws ApplicationException;
+	Response getAvtivePaymentEntitlementList(Integer orgId) throws ApplicationException;
 
 	@Transactional
 	Response updatePendingAdmissionRequestDetails(AdmissionNoteDto admissionNoteDto);
