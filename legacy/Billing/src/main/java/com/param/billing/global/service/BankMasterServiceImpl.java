@@ -19,10 +19,14 @@ import com.google.common.cache.CacheBuilder;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import com.param.global.service.VerifiedIdentityService;
 
 @Service
 @SuppressWarnings({"rawtypes","unchecked"})
 public class BankMasterServiceImpl implements IBankMasterService, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Autowired
 	private IBankMasterDao iBankMasterDao;
@@ -48,6 +52,9 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getActiveBankMaster(BankMasterDto bankMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		bankMasterDto.setOrgnisationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bankMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			List<BankMasterDto> responseCache = bankMasterCache.getIfPresent(bankMasterDto.getOrgnisationId());
 			if (responseCache != null && !responseCache.isEmpty()) {
@@ -70,6 +77,9 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 
 	@Override
 	public Response saveBankMaster(BankMasterDto bankMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		bankMasterDto.setOrgnisationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bankMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response response=iBankMasterDao.getBankMasterByName(bankMasterDto);
 			
@@ -95,6 +105,8 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 
 	@Override
 	public Response getBankMasterById(int bankId, int orgId) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org was trusted)
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iBankMasterDao.getBankMasterById(bankId, orgId);
 		} catch (Exception e) {
@@ -106,6 +118,9 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 
 	@Override
 	public Response getBankMasterList(BankMasterDto bankMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		bankMasterDto.setOrgnisationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bankMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iBankMasterDao.getBankMasterList(bankMasterDto);
 		} catch (Exception e) {
@@ -119,6 +134,9 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 	@Override
     @Transactional
 	public Response updateBankMaster(BankMasterDto bankMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		bankMasterDto.setOrgnisationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bankMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 //			Response response=iBankMasterDao.getBankMasterByNameNotId(bankMasterDto);
 //			if(response.getListObject().size()>0 && response.getListObject()!=null){
@@ -142,6 +160,9 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 
 	@Override
 	public Response updateBankMasterStatus(BankMasterDto bankMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		bankMasterDto.setOrgnisationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bankMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response res = iBankMasterDao.updateBankMasterStatus(bankMasterDto);
 			if(res.getStatus().equals(SUCCESS) && res.getObject() != null) {
@@ -158,6 +179,9 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 
 	@Override
 	public Response getBankMasterCount(BankMasterDto bankMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		bankMasterDto.setOrgnisationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bankMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iBankMasterDao.getBankMasterCount(bankMasterDto);
 		} catch (Exception e) {
