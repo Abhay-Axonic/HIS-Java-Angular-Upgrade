@@ -37,6 +37,7 @@ import com.param.global.common.Response;
 import com.param.global.dao.IOTCompletionDao;
 import com.param.global.dao.IServiceItemMapperDao;
 import com.param.global.dao.IServiceMasterDao;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.OrderDetailsDiscountDto;
 import com.param.global.dto.ServiceMasterDto;
 import com.param.global.dto.ServiceSearchResDto;
@@ -64,6 +65,9 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 
 	@Autowired
 	private ServletContext servletContext;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 	@Autowired
 	private IServiceMasterDao iserviceMasterDao;
@@ -99,6 +103,8 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	@Transactional
 	public CommonResponse saveOrganizationServiceMaster(ServiceMasterDto xServiceMasterDto) throws ApplicationException {
 		try {
+			// BR-16x-class fix: verified-tenant bind on the write path (org-trust).
+			xServiceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			CommonResponse serviceCodeResponse = iserviceMasterDao.checkForUniqueServiceCode(xServiceMasterDto);
 			if(serviceCodeResponse.getListObject()!=null && serviceCodeResponse.getListObject().size()>0) {
 				return new CommonResponse(ERROR, ALREADY_EXIST_CODE, "Service Code is Already Exist.", null, null);
@@ -143,6 +149,8 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	@Transactional
 	public Response changeOrganizationServiceMasterStatus(ServiceMasterDto xServiceMasterDto) throws ApplicationException {
 		try {
+			// BR-16x-class fix: verified-tenant bind on the write path (org-trust).
+			xServiceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iserviceMasterDao.changeOrganizationServiceMasterStatus(xServiceMasterDto);
 		}catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -155,6 +163,10 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	public Response listOrganizationServiceMasterMaster(Integer orgId, Integer offset, Integer recordPerPage)
 			throws ApplicationException {
 		try {
+			// BR-16x-class fix (2026-08-04, live-proven IDOR): the orgId was client-supplied
+			// from the URL path with no verification — forged orgId=999 returned org-999 rows
+			// (SVC-999-X) to an org-1 session. Rebind to the verified tenant identity.
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
 			return iserviceMasterDao.listOrganizationServiceMasterMaster(orgId, offset, recordPerPage);
 		}catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -166,6 +178,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	@Transactional
 	public Response getOrganizationServiceMasterTotalCount(Integer orgId) throws ApplicationException {
 		try {
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
 			return iserviceMasterDao.getOrganizationServiceMasterTotalCount(orgId);
 		}catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -177,6 +190,8 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	@Transactional
 	public Response getOrganizationServiceMasterById(ServiceMasterDto xServiceMasterDto) {
 		try {
+			// BR-161-class READ-path fix: verified-tenant rebind (reads leak too).
+			xServiceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iserviceMasterDao.getOrganizationServiceMasterById(xServiceMasterDto);
 		}catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -188,7 +203,8 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	@Transactional
 	public CommonResponse updateOrganizationServiceMaster(ServiceMasterDto xServiceMasterDto) throws ApplicationException {
 		try {
-			
+			// BR-16x-class fix: verified-tenant bind on the write path (org-trust).
+			xServiceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			CommonResponse serviceCodeResponse = iserviceMasterDao.checkForUniqueServiceCode(xServiceMasterDto);
 			if(serviceCodeResponse.getListObject()!=null && serviceCodeResponse.getListObject().size()>0) {
 				return new CommonResponse(ERROR, ALREADY_EXIST_CODE, "Service Code is Already Exist.", null, null);
@@ -235,6 +251,8 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	public Response getOrganizationServiceMasterBySpecialityAndSubSpeciality(ServiceMasterDto xServiceMasterDto)
 			throws ApplicationException {
 		try {					
+			// BR-161-class READ-path fix: verified-tenant rebind (reads leak too).
+			xServiceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iserviceMasterDao.getOrganizationServiceMasterBySpecialityAndSubSpeciality(xServiceMasterDto);
 		}catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -278,6 +296,8 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 
 	@Override
 	public Response getListOfServiceMaster(Integer orgId, Integer unitId) throws ApplicationException {
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		unitId = verifiedIdentityService.getVerifiedUnitId();
 		
 		try {
 			return iserviceMasterDao.getListOfServiceMaster(orgId,unitId);
@@ -289,6 +309,7 @@ public class ServiceMasterServiceImpl extends AbstractExcelView implements IServ
 	
 	@Override
 	public Response getAllServicesByOrgId(Integer orgId) throws ApplicationException {
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		
 		try {
 			return iserviceMasterDao.getAllServicesByOrgId(orgId);
