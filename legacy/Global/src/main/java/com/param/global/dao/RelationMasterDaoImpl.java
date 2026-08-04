@@ -20,6 +20,7 @@ import com.param.global.common.Response;
 import com.param.global.common.ServiceException;
 import com.param.global.dto.RelationMasterDto;
 import com.param.global.model.RelationMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -42,6 +43,9 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 
 	@Autowired
 	private DozerBeanMapper mapper;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response getCountryByName(RelationMasterDto relationMasterDto) throws ApplicationException {
@@ -67,6 +71,8 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		try {
 			RelationMaster relationMaster = mapper.map(relationMasterDto, RelationMaster.class,
 					"RelationMasterDto_to_RelationMaster");
+			// create binds the JWT-verified org, never a client-supplied value
+			relationMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			relationMaster.setCreatedDate(TimeZoneComponent.getDateByzone(0));
 			relationMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(0));
 			relationMaster.setStatus('A');
@@ -106,6 +112,7 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 			List<RelationMasterDto> relationMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_RELATION_LIST_BY_ID")
 					.setParameter("id", relationMasterDto.getId())
+					.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(RelationMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, relationMasterDtoList, null);
 
@@ -161,6 +168,12 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		try {
 
 			RelationMaster relationMaster = findById(relationMasterDto.getId());
+			// ownership guard: reject before any write when the target row is not
+			// owned by the JWT-verified tenant
+			if (relationMaster == null || relationMaster.getOrganizationId() == null
+					|| !relationMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<RelationMasterDto, Integer>(ERROR, ERROR_CODE, "RELATION_OWNERSHIP_DENIED", null, null);
+			}
 			relationMaster.setCode(relationMasterDto.getCode());
 			relationMaster.setDesc(relationMasterDto.getDesc());
 			relationMaster.setUpdatedBy(relationMasterDto.getUpdatedBy());
@@ -184,6 +197,12 @@ public class RelationMasterDaoImpl extends GenericDao<RelationMaster, Integer>
 		try {
 
 			RelationMaster relationMaster = findById(relationMasterDto.getId());
+			// ownership guard: reject before any write when the target row is not
+			// owned by the JWT-verified tenant
+			if (relationMaster == null || relationMaster.getOrganizationId() == null
+					|| !relationMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<RelationMasterDto, Integer>(ERROR, ERROR_CODE, "RELATION_OWNERSHIP_DENIED", null, null);
+			}
 			relationMaster.setUpdatedBy(relationMasterDto.getUpdatedBy());
 			relationMaster.setStatus(relationMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			relationMaster
