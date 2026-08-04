@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.param.billing.global.model.PatientTypeServiceWiseDetailsMaster;
 import com.param.billing.patientType.dto.PatientTypeServiceWiseDetailsDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
@@ -20,6 +21,9 @@ import in.param.common.dao.GenericDao;
 @Repository
 public class PatientTypeServiceWiseDetailsDaoImpl extends GenericDao<PatientTypeServiceWiseDetailsMaster, Integer>
 		implements IPatientTypeServiceWiseDetailsDao,ICommonConstants{
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public PatientTypeServiceWiseDetailsDaoImpl() {
 		super(PatientTypeServiceWiseDetailsMaster.class);
@@ -110,7 +114,19 @@ public class PatientTypeServiceWiseDetailsDaoImpl extends GenericDao<PatientType
 	@Override
 	public Response updatePatientTypeServiceStatus(PatientTypeServiceWiseDetailsDto patientTypeServiceWiseDetailsDto) {
 		try {
+			// BATCH-4 org-trust fix (CRUD-sibling of the batch-2 patientType toggle guard): this
+			// toggle was a bare write-by-ID (findById + update, zero org check) — same class as
+			// the live-proven unitServiceMaster cross-tenant write. Reject rows not owned by the
+			// verified tenant.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			PatientTypeServiceWiseDetailsMaster master = findById(patientTypeServiceWiseDetailsDto.getPatientTypeServiceId());
+			if (master == null || master.getOrganizationId() == null
+					|| !master.getOrganizationId().equals(verifiedOrgId)
+					|| master.getUnitId() == null
+					|| !master.getUnitId().equals(verifiedUnitId)) {
+				return new Response<>(ERROR, ERROR_CODE, "Cross-tenant update rejected", null, null);
+			}
 			master.setUpdatedBy(patientTypeServiceWiseDetailsDto.getUpdatedBy());
 			master.setUpdatedDate(GlobalCommonDateUtils.getDate(patientTypeServiceWiseDetailsDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			master.setStatus(patientTypeServiceWiseDetailsDto.getStatus().toString());

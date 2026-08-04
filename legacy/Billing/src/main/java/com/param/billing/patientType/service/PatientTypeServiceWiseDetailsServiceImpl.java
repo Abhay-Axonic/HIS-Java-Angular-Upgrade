@@ -18,6 +18,7 @@ import com.param.billing.patientType.dto.PatientTypeServiceWiseDetailsDto;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -35,6 +36,11 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Autowired
 	IPatientTypeDao iPatientTypeDao;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
+	// BATCH-4 org-trust fix: cache key was unitId-only — a unit-1 entry cached under one org was
+	// served to ANY org sharing unit id 1 (cross-org poisoning). Key is now org-scoped composite.
 	private Cache<Integer, List<PatientTypeDto>> patientTypeMasterCache;
 
 	@PostConstruct
@@ -63,7 +69,8 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Override
 	@Transactional
 	public Response getPatientTypeServiceWiseDetails(int patientTypeId,int organizationId,int unitId) {
-		
+		organizationId = verifiedIdentityService.getVerifiedOrganizationId();
+		unitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			PatientTypeDto patientTypeDto = new PatientTypeDto();
 			
@@ -85,7 +92,9 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Transactional
 	public Response savePatientType(PatientTypeDto patientTypeDto) throws Exception {
 		try {
-			
+			// BATCH-4 org-trust fix: bind verified tenant on create (client DTO org/unit were trusted)
+			patientTypeDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientTypeDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response res =  iPatientTypeDao.checkPatientType(patientTypeDto);
 			
 			if(res.getListObject()!=null && res.getListObject().size()>0) {
@@ -110,7 +119,13 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Transactional
 	public Response getPatientType(int organizationId , int unitId) {
 		try {
-			List<PatientTypeDto> responseCache = patientTypeMasterCache.getIfPresent(unitId);
+			// BATCH-4 org-trust fix (live-proven 2026-08-04): client path org/unit were trusted
+			// unverified -- forged /getPatientType/999/999 from org-1 session returned org-999
+			// victim PT-999-X. Bind verified tenant; cache key now org-scoped (was unitId-only).
+			organizationId = verifiedIdentityService.getVerifiedOrganizationId();
+			unitId = verifiedIdentityService.getVerifiedUnitId();
+			Integer cacheKey = organizationId * 10000 + unitId;
+			List<PatientTypeDto> responseCache = patientTypeMasterCache.getIfPresent(cacheKey);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
 			}
@@ -118,7 +133,7 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 			Response res = iPatientTypeDao.getPatientType(organizationId,unitId);
 
 			if(res.getStatus().equals(SUCCESS) && res.getListObject() != null && !res.getListObject().isEmpty()){
-				patientTypeMasterCache.put(unitId, res.getListObject());
+				patientTypeMasterCache.put(cacheKey, res.getListObject());
 
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size DB: " +String.valueOf(res.getListObject().size()), res.getListObject(), null);
 			}
@@ -133,7 +148,9 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Transactional
 	public Response updatePatientTypeStatus(PatientTypeDto patientTypeDto) throws Exception {
 		try {
-
+			// BATCH-4 org-trust fix: bind verified tenant on status toggle
+			patientTypeDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientTypeDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response saveRes = iPatientTypeDao.updatePatientTypeStatus(patientTypeDto);
 			if(saveRes.getStatus().equals(SUCCESS) && saveRes.getObject() != null){
 				Integer filterId = (Integer) saveRes.getObject();
@@ -150,7 +167,9 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Transactional
 	public Response updatePatientType(PatientTypeDto patientTypeDto) throws Exception {
 		try {
-
+			// BATCH-4 org-trust fix: bind verified tenant on update
+			patientTypeDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientTypeDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response res =  iPatientTypeDao.updateCheckPatientType(patientTypeDto);
 			
 			if(res.getListObject()!=null && res.getListObject().size()>0) {
@@ -175,7 +194,9 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	@Transactional
 	public Response updatePatientTypeGroupStatus(PatientTypeGroupWiseDetailsDto patientTypeGroupWiseDetailsDto) throws Exception {
 		try {
-
+			// BATCH-4 org-trust fix: bind verified tenant on group status toggle
+			patientTypeGroupWiseDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientTypeGroupWiseDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iPatientTypeGroupWiseDetailsDao.updatePatientTypeGroupStatus(patientTypeGroupWiseDetailsDto);
 
 		} catch (Exception e) {
@@ -188,7 +209,9 @@ public class PatientTypeServiceWiseDetailsServiceImpl implements IPatientTypeSer
 	public Response updatePatientTypeServiceStatus(PatientTypeServiceWiseDetailsDto patientTypeServiceWiseDetailsDto)
 			throws Exception {
 		try {
-
+			// BATCH-4 org-trust fix: bind verified tenant on service status toggle
+			patientTypeServiceWiseDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientTypeServiceWiseDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iPatientTypeServiceWiseDetailsDao.updatePatientTypeServiceStatus(patientTypeServiceWiseDetailsDto);
 
 		} catch (Exception e) {
