@@ -1772,6 +1772,28 @@ export const routes: Routes = [
         data: { moduleId: 207, title: 'Asset Issue Indent' },
         loadComponent: () => import('./features/asset-issue-indent/asset-issue-indent').then((m) => m.AssetIssueIndent),
       },
+      // Phase 4 batch 29 (billing tier 3).
+      {
+        path: 'visitTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Visit Type Master' },
+        loadComponent: () => import('./features/visit-type-master/visit-type-master').then((m) => m.VisitTypeMaster),
+      },
+      {
+        path: 'paymentEntitmentMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Payment Entitlement Master' },
+        loadComponent: () =>
+          import('./features/payment-entitlement-master/payment-entitlement-master').then(
+            (m) => m.PaymentEntitlementMaster,
+          ),
+      },
+      {
+        path: 'paymentModeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { title: 'Payment Mode Master' },
+        loadComponent: () => import('./features/payment-mode-master/payment-mode-master').then((m) => m.PaymentModeMaster),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],

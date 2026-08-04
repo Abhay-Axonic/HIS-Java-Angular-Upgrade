@@ -1,0 +1,103 @@
+<!--
+  Parity rebuild of the paymentEntitmentMaster screen (common-master
+  id/code/desc pattern, golden-traced live 2026-08-04). See
+  payment-entitlement-master.ts's class doc comment for the full wire
+  contract + secured-backend note.
+-->
+<section class="page">
+  <fieldset>
+    <div class="form-row">
+      <div class="field">
+        <label for="paymentEntitlementCode">Code</label>
+        <input
+          id="paymentEntitlementCode"
+          type="text"
+          autocomplete="off"
+          maxlength="10"
+          [ngModel]="form().code"
+          (ngModelChange)="updateField('code', $event)"
+          name="paymentEntitlementCode"
+        />
+        @if (isCodeInvalid()) {
+          <p class="help-block">Code is required</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="paymentEntitlementDesc">Payment Entitlement</label>
+        <input
+          id="paymentEntitlementDesc"
+          type="text"
+          autocomplete="off"
+          maxlength="256"
+          [ngModel]="form().desc"
+          (ngModelChange)="updateField('desc', $event)"
+          name="paymentEntitlementDesc"
+        />
+        @if (isDescInvalid()) {
+          <p class="help-block">Payment Entitlement is required</p>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar">
+    @if (saveMode()) {
+      <button type="button" class="btn-primary icon-btn" title="Save" (click)="onSaveClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn-primary icon-btn" title="Update" (click)="onUpdateClick()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Payment Entitlement</th>
+        <th class="text-center">Status(n)</th>
+        <th class="text-center">Action taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row.id) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.desc }}</td>
+          <td class="text-center">
+            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
+          </td>
+          <td class="text-center">
+            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
+          </td>
+        </tr>
+      }
+      @if (!rows().length) {
+        <tr>
+          <td colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        Confirm
+        <button type="button" (click)="closeConfirmModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <span>Are you sure you want to Save?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" (click)="confirmFromModal()">Ok</button>
+        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

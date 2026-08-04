@@ -5225,3 +5225,75 @@ Owner's manual UI review on `rebuild/phase4-batch25` (worktree `.claude/worktree
 - **Precision (verified clean, corrected 2026-08-04):** the BRANCH source (worktree, committed `f93a55eb` era) has `Double percentage` in BOTH `PatientCouponTemplateMapperDto` (L21) and `PatientCouponTemplateMapper` entity (L43), matching the `numeric(5,2)` column. Live proof: JSON `percentage:10.75` → stored **10.75** exactly (psql), echoed 10.75 — no truncation anywhere. An earlier 'Integer' reading was a stale main-checkout grep (wrong checkout path, not the branch) — corrected here explicitly. The additive DDL's numeric(5,2) column is the right type for the Double chain. **No rebuild-side precision work needed for the mapper.**
 - **DB drift note (batch-2 fixed):** table + sequence were missing (BR-155 class); additive DDL applied, table now exists with percentage numeric(5,2).
 
+
+## OPEN-ITEM batch29-3: 41-screen commonMaster org-trust sweep (DEFERRED — scoped future deliverable, NOT started)
+
+- **Trigger/scope (owner-approved 2026-08-04):** the `commonMaster` dispatcher (legacy `app.js` state `/commonMaster/:url`) fans out to **44 screens** via a JS controller selector. Fan-in counted: sampleMaster, containerMaster, techinqueMaster, prerequisitesMaster, unitMaster, reagentMaster, reportTypeMaster, bacteriaShapMaster, wtifilmStudyMasterMaster, mediaMaster, colonyMaster, organismMaster, organismGroupMaster, stainigMaster, microbiologyStainMaster, antibioticMaster, antibioticsMaster, specimanMaster, incubationTestMaster, antibioticsGroupMaster, sensitivityTypeResultMaster, slideProcedureMaster, bacteriaClassificationMaster, blockMaster, headerMaster, serologyTestFindingMaster, departmentMaster, phlebotomyMaster, storageLocationMaster, sexmaster, relationmaster, maritalstatus, religion, occupation, patientsource, referraltype, priorityMaster, visitType, paymentMode, paymentEntitment, consultantType, biochemicalTest, languageMaster, scheduleMaster.
+- **Key architectural finding:** the dispatcher is **frontend-only** — **NO shared Java backend exists** (no `MasterController` class; each of the 44 screens has its own controller→service→DAO, e.g. relationMaster → RelationMasterController → RelationMasterServiceImpl → RelationMasterDaoImpl). Verified empirically 2026-08-04. **A single-point backend fix is impossible; a per-screen audit is the only mechanism.**
+- **What batch-3 proved on 3 of the 44 (visitType, paymentEntitment, paymentMode):** all three had the BR-161-class read leak (unscoped named queries, commented-out `setParameter("orgId")`, no-WHERE list queries, cache-keyed-by-constant). Fixed per-screen via VerifiedIdentityService rebind + named-query org-scoping + DAO param re-enable; live-verified with seeded org-999 victims (0 leaked, legit counts intact). **The other 41 are presumed vulnerable until each is individually tested** — same class of pattern found on nearly every billing-tier screen checked (batch 1: 3/3, batch 2: 3/3, batch 3: 3/3).
+- **Decision (owner, 2026-08-04):** logged here as its own clearly-scoped future deliverable. **DO NOT start** — requires its own dedicated session and explicit scope approval, same treatment as the earlier Phase 2 IDOR sweep. Batch 3 continues with the 3 secured screens only.
+- **Sweep scope (when approved):** for each of the 41 remaining screens — live authenticated backend-existence check → org-trust forged-attack test (seed victim, forge, psql-confirm) → service-layer verified-identity rebind where confirmed → sibling/secondary endpoint audit (BR-160) → decimal/percentage precision check. Dedicated branch, per-screen commits, Step-7 hold.
+
+## NOTE batch29-4: sequence-desync hazard when seeding victim rows (live-proven 2026-08-04)
+
+- When seeding org-999 VICTIM rows with explicit `MAX(id)+1` IDs (the org-trust test methodology), the table's `nextval` sequence is NOT advanced — leaving `sequence < max(id)`. The next legit INSERT then collides on the PK: `duplicate key value violates unique constraint ..._pkey` → HTTP 500 "Something went wrong" on SAVE.
+- Live-hit on batch 3: payment_entitlement_master_seq=2 vs max=4, payment_mode_master_seq=7 vs max=9 → paymentEntitmentMaster + paymentModeMaster saves 500'd after the payload fix; visitTypeMaster worked (seq=8=max=8). Diagnosed via psql seq-vs-max comparison; fixed with `SELECT setval('<seq>', (SELECT MAX(<id>) FROM <table>))`.
+- RULE going forward: after seeding ANY row with an explicit ID, immediately `setval` the owning sequence to `MAX(id)`. Check before any save-verification round: `SELECT last_value FROM <seq>` vs `SELECT MAX(<id>) FROM <table>` must be equal.
+- Secondary finding (same session): paymentEntitlement rebuild save payload used `updatedDate` but the backend DAO reads `getUpdateDate()` (Global PaymentEntitlementMasterDto has BOTH `String updateDate` and `Date updatedDate`) → 400 "Invalid parameters"; corrected to legacy-exact `updateDate` in commit 72124af0.
+
+
+## NOTE batch29-5: HMR silently masks compile errors — stale module stays served (live-proven 2026-08-04, 3rd instance of the class)
+
+- Root cause chain: a fix that does NOT compile (TS2561 type mismatch — component changed to send `updateDate` but service payload type still declared `updatedDate`) is **silently NOT picked up by HMR**. The running dev server keeps serving the STALE pre-fix module; the app keeps sending the old payload (400 "Invalid parameters" on save) with NO visible error anywhere — no console error, no build failure (the build failure only shows on a FRESH server start: "Application bundle generation failed").
+- This is the same class as the tpaMaster saga (stale served bundle despite "fixed" files) — the earlier diagnosis was Vite caching; this instance proves the HMR-compile-error masking mechanism specifically.
+- Diagnostic that works: **payload discrimination test** — send both the old and new payload shapes directly to the endpoint; whichever returns success tells you what the SERVED app is actually sending. Plus: check the dev-server log for "Application bundle generation failed" after any fix.
+- RULE (strengthened): after ANY frontend fix, (1) `tsc --noEmit` clean AND (2) full dev-server restart + verify the served bundle reflects the fix (or the payload discrimination test), before claiming "fixed". HMR alone is never sufficient.
+
+
+## NOTE batch29-6: named-query / bound-parameter mismatch — "silent until real E2E" bug class #4 (live-proven 2026-08-04)
+
+- Pattern: a named query declares fewer `:params` than the DAO binds. Hibernate throws `QueryParameterException: could not locate named parameter [X]` → HTTP 500 on every call of that path — with NO SQL reaching the DB (psql log silent), so the psql-log-first diagnostic misses it. The exception only surfaces in the app log (which on this Tomcat is drowned by webresources-cache WARNING floods — must grep for `ERROR: com.param` specifically).
+- Instance: `GET_PAYMENT_ENTITLEMENT_BY_NAME_NOT_BY_ID` was missing its `paymentEntitlementId <> :paymentEntId` clause (declared :orgId + :name, DAO bound all three) → every Edit-save on paymentEntitlementMaster 500'd; Create (uses GET_PAYMENT_ENTITLEMENT_BY_NAME, binds only :name) was unaffected.
+- Sibling-check rule (fix the class, not the instance): before claiming a fix, grep the sibling screens' equivalent named queries — PaymentModeMaster's NOT_BY_ID query declares all 3 params correctly, which is why only this screen failed.
+- Lesson for the standing checklist: when a write path 500s with no psql error, check (1) the named query's declared params vs the DAO's binds, (2) commented-out setParameter lines (the orgId one here was commented out too — a BR-161-class cross-tenant leak if the query had run without it).
+
+
+# ✅ BATCH 3 — FINAL SIGN-OFF (owner, 2026-08-04)
+
+Step 6 owner review COMPLETE. All 3 screens confirmed working across the full checklist
+(Create, Edit, Toggle where applicable, org-trust isolation). Branch ready for merge decision.
+
+## Sign-off per screen
+
+| Screen | Route (served app.routes.ts) | Create | Edit | Toggle | Org-trust (org-999 victims invisible) |
+|---|---|---|---|---|---|
+| visitTypeMaster | /visitTypeMaster | ✅ | ✅ (no dup-check on path) | ✅ instant-refresh (expected) | ✅ 6 legit rows, 0 leak |
+| paymentEntitmentMaster | /paymentEntitmentMaster (typo faithful, low-risk) | ✅ | ✅ | ✅ | ✅ 3 legit rows, 0 leak |
+| paymentModeMaster | /paymentModeMaster | ✅ | ✅ | ✅ | ✅ 8 legit rows, 0 leak |
+
+## Everything found & fixed in batch 3 (consolidated)
+
+### Security (BR-161-class org-trust) — commit 14d3efd8 (7 files)
+1. **visitTypeMaster**: GET_VISIT_TYPE_LIST had NO WHERE clause; GET_ACTIVE_VISIT_TYPE_LIST status-only WHERE (both cross-tenant); cache keyed by constant (3rd leak vector). Fixed: named-query org-scoping + cache-key org-scoping + service-layer verified-identity rebind.
+2. **paymentEntitmentMaster**: GET_PAYMENT_ENTITLEMENT_LIST had NO WHERE + `setParameter("orgId")` COMMENTED OUT. Fixed: query org-scoping + DAO param re-enable + service rebind.
+3. **paymentModeMaster**: same class; fixed via service-layer verified-identity rebind + DAO.
+4. Verified: seeded org-999 victims (VT-999-X / PE-999-X / PM-999-X, left in DB as evidence) → forged reads return verified org-1 rows, 0 leaked, legit counts 6/3/8. Bytecode-verified in deployed jars; full Tomcat restarts through PIDs 84149→87731→87985→93233→93823, HTTP 200 each.
+
+### Correctness bugs surfaced by real end-to-end testing (all live-verified)
+5. **Sequence desync after victim seeding** (batch29-4): PE seq=2 vs max=4, PM seq=7 vs max=9 → PK collision → 500 on saves. visitType worked (seq aligned) — the clue. Fixed with setval; standing rule added (setval to MAX after any explicit-ID seed; check seq==max before save rounds).
+6. **PE save payload field-name mismatch** (batch29-4): rebuild sent `updatedDate`, backend DAO reads `getUpdateDate()` → 400 "Invalid parameters". Fixed in 72124af0 to legacy-exact `updateDate`.
+7. **HMR silently masks compile errors** (batch29-5): the PE service payload TYPE still declared `updatedDate` (TS2561) while the component sent `updateDate` — non-compiling fix NOT picked up by HMR, stale pre-fix module served, save kept 400ing with NO visible error. Exposed only by fresh server start ("Application bundle generation failed"). Fixed in 88ba7a31; strengthened rule: tsc clean + full restart (or payload-discrimination test) before claiming any frontend fix.
+8. **Edit-save 500** (batch29-6): GET_PAYMENT_ENTITLEMENT_BY_NAME_NOT_BY_ID declared only :orgId + :name but DAO binds :paymentEntId too — the `paymentEntitlementId <> :paymentEntId` clause was MISSING from the query → QueryParameterException → 500 on EVERY Edit. Sibling check: PaymentModeMaster's equivalent query declares all 3 params correctly — bug unique to this screen. Fixed in 5986ba74 (entity clause + DAO orgId re-enable). Live-verified: Edit TESTPE01 → 200, form cleared, psql desc="review testing EDIT-VERIFIED", updated_date=12:43:37 (non-null, ≠ created).
+
+### Process/governance
+9. **CRUD sibling-action rule** (97e4860e, owner-approved): after fixing a correctness bug on one CRUD action, check EVERY other CRUD action on that screen for the same pattern (BR-160 sibling logic extended from security to correctness). Added to RULES.md.
+10. **41-screen commonMaster org-trust sweep** (22647de6): deferred as scoped future deliverable batch29-3 — DO NOT start without dedicated session + approval. The dispatcher is frontend-only (44 screens, no shared backend); per-screen fix is the only mechanism; batch-3 proved 3/3 screens had the leak class.
+
+## Merge status
+- Branch: `rebuild/phase4-batch29-billing-tier3` (worktree batch29-wt)
+- 10 commits: 2 security-fix commits, 1 rebuild commit, 2 correctness-fix commits, 5 docs/rules commits
+- Working tree CLEAN. NOTHING merged into main, NOTHING pushed.
+- DB (his_local): pristine — 0 test rows, sequences aligned (PE=4/PM=9/VT=8), victims VT-999-X/PE-999-X/PM-999-X retained as fix evidence.
+- Servers: Tomcat PID 93823 (fresh, HTTP 200), dev server PID 92154 (batch-29 worktree, HTTP 200).
+
+## READY FOR FINAL MERGE DECISION (owner)

@@ -75,6 +75,10 @@ export const SHELL_NAV_SECTIONS: ShellNavSection[] = [
       { path: '/relationMaster', title: 'Relation Master' },
       { path: '/maritalstatusMaster', title: 'Marital Status Master' },
       { path: '/occupationMaster', title: 'Occupation Master' },
+      // Phase 4 batch 29 (billing tier 3).
+      { path: '/visitTypeMaster', title: 'Visit Type Master' },
+      { path: '/paymentEntitmentMaster', title: 'Payment Entitlement Master' },
+      { path: '/paymentModeMaster', title: 'Payment Mode Master' },
       // Phase 4 batch 24.
       { path: '/vitalQualifierMaster', title: 'Vital Observations Qualifier Master' },
       { path: '/patientSourceMaster', title: 'Patient Source of referral Master' },
