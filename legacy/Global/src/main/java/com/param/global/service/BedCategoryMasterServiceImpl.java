@@ -16,6 +16,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.dao.IBedCategoryMasterDao;
 import com.param.global.dto.BedCategoryMasterDto;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 import org.apache.log4j.Logger;
@@ -29,6 +30,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Autowired
 	private IBedCategoryMasterDao iBedCategoryDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	private Cache<Integer, List<BedCategoryMasterDto>> bedCategoryMasterCache;
 	private Cache<String, List<BedCategoryMasterDto>> bedCategoryCache;
@@ -46,6 +50,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 	
 	@Override
 	public Response addBedCategoryMaster(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response deptResponse = iBedCategoryDao.getBedCategoryByName(bedCategoryMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
@@ -74,6 +81,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Override
 	public Response getBedCategoryMasterList(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iBedCategoryDao.getBedCategoryMasterList(bedCategoryMasterDto);
 		} catch (Exception e) {
@@ -84,6 +94,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Override
 	public Response updateBedCategoryMaster(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response deptResponse = iBedCategoryDao.getBedCategoryByNameNotId(bedCategoryMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
@@ -100,7 +113,10 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 					bedCategoryCache.invalidate("bedCategory");
 				}
 
-				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
+				// BATCH-5 fix (silent-failure class): this method previously returned unconditional
+				// SUCCESS, masking the DAO's rejection (e.g. cross-tenant update blocked) as success.
+				// Propagate the DAO outcome so a blocked write is reported as an error.
+				return updateRes;
 			}
 		} catch (Exception e) {
 		logger.error("updateBedCategoryMaster failed", e);
@@ -110,6 +126,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Override
 	public Response getBedCategoryById(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iBedCategoryDao.getBedCategoryById(bedCategoryMasterDto);
 		} catch (Exception e) {
@@ -120,6 +139,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Override
 	public Response updateStatusForBedCategory(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response deptResponse = iBedCategoryDao.getBedCategoryById(bedCategoryMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
@@ -133,7 +155,8 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 					bedCategoryCache.invalidate("bedCategory");
 				}
 
-				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
+				// BATCH-5 fix (silent-failure class): was unconditional SUCCESS, masking DAO rejection.
+				return res;
 
 			} else {
 				return new Response(ERROR, null, ALREADY_EXIST, null, null);
@@ -157,6 +180,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Override
 	public Response getBedCategoryCount(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iBedCategoryDao.getCount(bedCategoryMasterDto);
 		} catch (Exception e) {
@@ -167,6 +193,9 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 
 	@Override
 	public Response getAvailableBedCategoryAccordingToVacateBeds(BedCategoryMasterDto bedCategoryMasterDto) {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			List<BedCategoryMasterDto> responseCache = bedCategoryMasterCache.getIfPresent(bedCategoryMasterDto.getUnitId());
 			List<BedCategoryMasterDto> categoryCache = bedCategoryCache.getIfPresent("bedCategory");
@@ -194,9 +223,18 @@ public class BedCategoryMasterServiceImpl implements IBedCategoryMasterService,I
 	@Override
 	@Transactional
 	public Response updateBedCategoryMasterHierarchy(BedCategoryMasterDto bedCategoryMasterDto) {
+		// BATCH-5 org-trust fix: bind verified tenant (client org/unit were trusted)
+		bedCategoryMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		bedCategoryMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 				for (BedCategoryMasterDto bedCategoryMasterDto1 : bedCategoryMasterDto.getDayCareIpBedCategoryList()) {
-					iBedCategoryDao.updateBedCategoryMasterHierarchy(bedCategoryMasterDto1);
+					// BATCH-5 org-trust fix: child DTOs carry client org — bind verified tenant on each
+					bedCategoryMasterDto1.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+					bedCategoryMasterDto1.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+					Response hierarchyRes = iBedCategoryDao.updateBedCategoryMasterHierarchy(bedCategoryMasterDto1);
+					if (hierarchyRes == null || !hierarchyRes.getStatus().equals(SUCCESS)) {
+						return hierarchyRes != null ? hierarchyRes : new Response(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+					}
 				}
 				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
 		} catch (Exception e) {

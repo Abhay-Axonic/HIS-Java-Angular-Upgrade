@@ -22,9 +22,13 @@ import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
+import com.param.global.service.VerifiedIdentityService;
 @Repository
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class RoomMasterDaoImpl extends GenericDao<RoomMaster, Integer> implements IRoomMasterDao, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -40,6 +44,11 @@ public class RoomMasterDaoImpl extends GenericDao<RoomMaster, Integer> implement
 	public Response saveRoomMasterMaster(RoomMasterDto roomMasterDto) throws ApplicationException {
 		try {
 			RoomMaster roomMaster = mapper.map(roomMasterDto, RoomMaster.class, "RoomMasterDto_to_RoomMaster");
+			// BATCH-5 org-trust fix: save previously wrote no org/unit/status (mapper doesn't carry them
+			// from the DTO) — new rooms would be NULL-org, invisible to their own tenant's scoped queries.
+			roomMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			roomMaster.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+			roomMaster.setStatus('A');
 			roomMaster.setCreatedDate(TimeZoneComponent.getDateByzone(0));
 			roomMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(0));
 			save(roomMaster);
@@ -92,6 +101,11 @@ public class RoomMasterDaoImpl extends GenericDao<RoomMaster, Integer> implement
 	public Response updateRoomMaster(RoomMasterDto roomMasterDto) throws ApplicationException {
 		try {
 			RoomMaster roomMaster=findById(roomMasterDto.getRoomId());
+			// BATCH-5 org-trust fix (write-by-ID class): reject rows not owned by the verified tenant.
+			if (roomMaster == null || roomMaster.getOrganizationId() == null
+					|| !roomMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			if(roomMasterDto.getBedCategoryId()!=null)
 			roomMaster.setBedCategoryId(roomMasterDto.getBedCategoryId());
 			if(roomMasterDto.getBillingBedCategoryId()!=null)
@@ -119,7 +133,14 @@ public class RoomMasterDaoImpl extends GenericDao<RoomMaster, Integer> implement
 	public Response updateRoomMasterStatus(RoomMasterDto roomMasterDto) throws ApplicationException {
 		try {
 			RoomMaster roomMaster=findById(roomMasterDto.getRoomId());
-			roomMaster.setStatus(roomMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
+			// BATCH-5 org-trust fix (write-by-ID class): reject rows not owned by the verified tenant.
+			if (roomMaster == null || roomMaster.getOrganizationId() == null
+					|| !roomMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+			// BATCH-5 fix: ternary wrote ACTIVE/INACTIVE into varchar(1) — toggle never worked (same
+			// pre-existing bug as bedCategory/ward). Persist the UI's 'A'/'I' directly.
+			roomMaster.setStatus(roomMasterDto.getStatus() == 'A' ? 'A' : 'I');
 			roomMaster.setUpdatedBy(roomMasterDto.getUpdatedBy());
 			roomMaster.setUpdatedDate(
 					GlobalCommonDateUtils.getDate(roomMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));

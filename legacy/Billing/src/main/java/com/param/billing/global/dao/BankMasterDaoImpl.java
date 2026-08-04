@@ -20,10 +20,14 @@ import com.param.global.dto.CommonDto;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
+import com.param.global.service.VerifiedIdentityService;
 
 @Repository
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class BankMasterDaoImpl extends GenericDao<BankMaster, Integer> implements IBankMasterDao, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -69,7 +73,14 @@ public class BankMasterDaoImpl extends GenericDao<BankMaster, Integer> implement
 	public Response updateBankMasterStatus(BankMasterDto bankMasterDto) throws ApplicationException {
 		try {
 			BankMaster bankMaster=findById(bankMasterDto.getBankId());
-			bankMaster.setStatus(bankMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
+			// BATCH-5 org-trust fix (write-by-ID class): reject rows not owned by the verified tenant.
+			if (bankMaster == null || bankMaster.getOrgnisationId() == null
+					|| !bankMaster.getOrgnisationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+			// BATCH-5 fix: ternary wrote ACTIVE/INACTIVE into varchar(1) — toggle never worked (same
+			// pre-existing bug as bedCategory/ward/room). Persist the UI's 'A'/'I' directly.
+			bankMaster.setStatus(bankMasterDto.getStatus() == 'A' ? 'A' : 'I');
 			bankMaster.setUpdatedBy(bankMasterDto.getUpdatedBy());
 			bankMaster.setUpdatedDate(
 					GlobalCommonDateUtils.getDate(bankMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
@@ -90,6 +101,11 @@ public class BankMasterDaoImpl extends GenericDao<BankMaster, Integer> implement
 		try {
 			
 			BankMaster bankMaster=findById(bankMasterDto.getBankId());
+			// BATCH-5 org-trust fix (write-by-ID class): reject rows not owned by the verified tenant.
+			if (bankMaster == null || bankMaster.getOrgnisationId() == null
+					|| !bankMaster.getOrgnisationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			
 			bankMaster.setBankAddress(bankMasterDto.getBankAddress());
 			bankMaster.setBankCode(bankMasterDto.getBankCode());
@@ -171,7 +187,7 @@ public class BankMasterDaoImpl extends GenericDao<BankMaster, Integer> implement
 			bankMaster.setCreatedBy(bankMasterDto.getCreatedBy());
 			bankMaster.setCreatedDate(GlobalCommonDateUtils.getDate(bankMasterDto.getCreatedDate(), "dd-M-yyyy HH:mm:ss"));
 			bankMaster.setOrgnisationId(bankMasterDto.getOrgnisationId());
-			bankMaster.setStatus(bankMasterDto.getStatus());
+			bankMaster.setStatus(bankMasterDto.getStatus() == 'A' ? 'A' : 'I');
 			bankMaster.setUpdatedBy(bankMasterDto.getUpdatedBy());
 			bankMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(bankMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			bankMaster.setUnitId(bankMasterDto.getUnitId());

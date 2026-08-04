@@ -21,6 +21,7 @@ import com.param.billing.global.transaction.model.TariffMaster;
 import com.param.billing.global.transaction.model.TariffPatientTypeMapper;
 import com.param.billing.global.transaction.model.TariffPaymentEntitlementMapper;
 import com.param.billing.global.transaction.model.TariffVisitTypeMapper;
+import com.param.billing.global.transaction.model.TariffBillingBedCategoryMapper;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
@@ -29,11 +30,15 @@ import com.param.global.dto.TariffMasterDto;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
+import com.param.global.service.VerifiedIdentityService;
 
 
 @Repository
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> implements ITariffMasterDao,ICommonConstants{
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	final static Logger logger = Logger.getLogger(TariffMasterDaoImpl.class);
 
@@ -359,6 +364,11 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 	public Response updateTariffMaster(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
 			TariffMaster tarriffMaster = findById(tariffMasterDto.getTariffId());
+			// BATCH-5 org-trust fix (write-by-ID class): bulk UPDATE by-ID only, zero org check.
+			if (tarriffMaster == null || tarriffMaster.getOrganizationId() == null
+					|| !tarriffMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			sessionFactory.getCurrentSession().createQuery("UPDATE TariffMaster tariff SET tariff.tariffCode =:tariffCode , "
 					+ "tariff.tariffDesc =:tariffDesc , "
 					+ "tariff.validFrom =:validFrom , "
@@ -427,6 +437,13 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			if(count<1)
 			{
 				TariffMaster tarrifMaster = findById(tariffMasterDto.getTariffId());
+				// BATCH-5 org-trust fix (write-by-ID class): the bulk status UPDATE was by-ID only,
+				// zero org check — a forged tariffId flipped any org's tariff (live-proven: forged
+				// org-1 session flipped org-999 victim TARIFF-999-X to 'I' before this guard). Verify.
+				if (tarrifMaster == null || tarrifMaster.getOrganizationId() == null
+						|| !tarrifMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+					return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+				}
 			sessionFactory.getCurrentSession().createQuery("update TariffMaster tariff "
 					+ "SET tariff.status =:status , "
 					+ "tariff.updatedBy =:updatedBy , "
@@ -457,6 +474,13 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 	@Override
 	public Response updateStatusForTariffPaymentMapper(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			// BATCH-5 org-trust fix (write-by-ID class): the bulk mapper-status UPDATE was
+			// by mapper-ID only, zero org check — a forged mapper ID flipped any org's row.
+			TariffPaymentEntitlementMapper mapper = (TariffPaymentEntitlementMapper) sessionFactory.getCurrentSession().get(TariffPaymentEntitlementMapper.class, tariffMasterDto.getTariffPaymentEntitlementMapperId());
+			if (mapper == null || mapper.getOrganizationId() == null
+					|| !mapper.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			sessionFactory.getCurrentSession().createQuery("update TariffPaymentEntitlementMapper tpem "
 					+ "SET tpem.status =:status , "
 					+ "tpem.updatedBy =:updatedBy , "
@@ -575,6 +599,13 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 	public Response updateStatusForTariffBillingBedCategoryMapper(TariffMasterDto tariffMasterDto)
 			throws ApplicationException {
 		try {
+			// BATCH-5 org-trust fix (write-by-ID class): the bulk mapper-status UPDATE was
+			// by mapper-ID only, zero org check — a forged mapper ID flipped any org's row.
+			TariffBillingBedCategoryMapper mapper = (TariffBillingBedCategoryMapper) sessionFactory.getCurrentSession().get(TariffBillingBedCategoryMapper.class, tariffMasterDto.getTariffBillingBedCategoryMapperId());
+			if (mapper == null || mapper.getOrganizationId() == null
+					|| !mapper.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			sessionFactory.getCurrentSession().createQuery("update TariffBillingBedCategoryMapper tpem "
 					+ "SET tpem.status =:status , "
 					+ "tpem.updatedBy =:updatedBy , "
@@ -619,6 +650,13 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 	public Response updateStatusForTariffPatientTypeMapper(TariffMasterDto tariffMasterDto)
 			throws ApplicationException {
 		try {
+			// BATCH-5 org-trust fix (write-by-ID class): the bulk mapper-status UPDATE was
+			// by mapper-ID only, zero org check — a forged mapper ID flipped any org's row.
+			TariffPatientTypeMapper mapper = (TariffPatientTypeMapper) sessionFactory.getCurrentSession().get(TariffPatientTypeMapper.class, tariffMasterDto.getTariffPatientTypeMapperId());
+			if (mapper == null || mapper.getOrganizationId() == null
+					|| !mapper.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			sessionFactory.getCurrentSession().createQuery("update TariffPatientTypeMapper tpem "
 					+ "SET tpem.status =:status , "
 					+ "tpem.updatedBy =:updatedBy , "
@@ -662,6 +700,13 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 	@Override
 	public Response updateStatusForTariffVisitTypeMapper(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			// BATCH-5 org-trust fix (write-by-ID class): the bulk mapper-status UPDATE was
+			// by mapper-ID only, zero org check — a forged mapper ID flipped any org's row.
+			TariffVisitTypeMapper mapper = (TariffVisitTypeMapper) sessionFactory.getCurrentSession().get(TariffVisitTypeMapper.class, tariffMasterDto.getTariffVisitTypeMapperId());
+			if (mapper == null || mapper.getOrganizationId() == null
+					|| !mapper.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			sessionFactory.getCurrentSession().createQuery("update TariffVisitTypeMapper tpem "
 					+ "SET tpem.status =:status , "
 					+ "tpem.updatedBy =:updatedBy , "

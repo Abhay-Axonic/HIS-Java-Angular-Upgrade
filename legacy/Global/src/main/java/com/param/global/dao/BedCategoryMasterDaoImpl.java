@@ -24,11 +24,15 @@ import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
+import com.param.global.service.VerifiedIdentityService;
 
 @Repository
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BedCategoryMasterDaoImpl extends GenericDao<BedCategoryMaster, Integer>
 		implements IBedCategoryMasterDao, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	private static final Logger logger = Logger.getLogger(BedCategoryMasterDaoImpl.class);
 
@@ -120,6 +124,8 @@ public class BedCategoryMasterDaoImpl extends GenericDao<BedCategoryMaster, Inte
 			List<BedCategoryMasterDto> bedCategoryMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_BED_CATEGORY_LIST_BY_ID")
 					.setParameter("bedCategoryId", bedCategoryMasterDto.getBedCategoryId())
+					.setParameter("orgId", bedCategoryMasterDto.getOrganizationId())
+					.setParameter("unitId", bedCategoryMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(BedCategoryMasterDto.class)).list();
 			if (bedCategoryMasterDtosList != null) {
 				return new Response(SUCCESS, null, null, bedCategoryMasterDtosList, null);
@@ -136,8 +142,31 @@ public class BedCategoryMasterDaoImpl extends GenericDao<BedCategoryMaster, Inte
 	public Response updateBedCategoryStatus(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
 		try {
 			BedCategoryMaster bedCategoryMaster = findById(bedCategoryMasterDto.getBedCategoryId());
-
-			bedCategoryMaster.setStatus(bedCategoryMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
+			// BATCH-5 org-trust fix: status toggle was write-by-ID with zero org check.
+			if (bedCategoryMaster == null || bedCategoryMaster.getOrganizationId() == null
+					|| !bedCategoryMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+			// BATCH-5 fix (live-proven 2026-08-04): the ternary wrote ACTIVE/INACTIVE ("ACTIVE" = 6
+			// chars) into a varchar(1) column — every toggle failed with "value too long" (pre-existing,
+			// toggle never worked). The legacy UI sends 'A'/'I'; persist that value directly.
+			// BATCH-5 referential-integrity guard (live-proven 2026-08-04, same pattern as the StorageUnit
+			// guard): deactivating a category that ACTIVE beds still reference silently orphaned those
+			// beds (3 active beds on deactivated GEN before this guard). Block deactivation with a clear
+			// message, mirroring StorageUnitService's "assigned to Items" convention.
+			char newStatus = (bedCategoryMasterDto.getStatus() != null
+					&& bedCategoryMasterDto.getStatus().charValue() == 'A') ? 'A' : 'I';
+			if (newStatus == 'I') {
+				Number bedCount = (Number) sessionFactory.getCurrentSession()
+						.createSQLQuery("select count(*) from adt.m_bed_master where bed_category_id = :catId and status = 'A'")
+						.setParameter("catId", bedCategoryMaster.getBedCategoryId())
+						.uniqueResult();
+				Long activeBeds = bedCount != null ? bedCount.longValue() : 0L;
+				if (activeBeds > 0) {
+					return new Response<>(ERROR, null, "Cannot deactivate: " + activeBeds + " active bed(s) still reference this category", null, null);
+				}
+			}
+			bedCategoryMaster.setStatus(newStatus);
 			bedCategoryMaster.setUpdatedBy(bedCategoryMasterDto.getUpdatedBy());
 			bedCategoryMaster.setUpdatedDate(
 			GlobalCommonDateUtils.getDate(bedCategoryMasterDto.getUpdatedDate(), "dd-M-yyy HH:mm:ss"));
@@ -178,6 +207,13 @@ public class BedCategoryMasterDaoImpl extends GenericDao<BedCategoryMaster, Inte
 	public Response updateBedCategoryMaster(BedCategoryMasterDto bedCategoryMasterDto) throws ApplicationException {
 		try {
 			BedCategoryMaster bedCategoryMaster = findById(bedCategoryMasterDto.getBedCategoryId());
+			// BATCH-5 org-trust fix (CRUD-sibling pattern, same class as BR-146): write-by-ID with
+			// zero org check — a forged cross-tenant ID would overwrite a victim row. Reject rows
+			// not owned by the verified tenant.
+			if (bedCategoryMaster == null || bedCategoryMaster.getOrganizationId() == null
+					|| !bedCategoryMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			bedCategoryMaster.setBedCategoryCode(bedCategoryMasterDto.getBedCategoryCode());
 			bedCategoryMaster.setBedCategoryDesc(bedCategoryMasterDto.getBedCategoryDesc());
 			bedCategoryMaster.setHierarchyId(bedCategoryMasterDto.getHierarchyId());
@@ -317,6 +353,11 @@ public class BedCategoryMasterDaoImpl extends GenericDao<BedCategoryMaster, Inte
 		try {
 			BedCategoryMasterDto bedCategoryMasterDto=bedCategoryMasterDto1;
 			BedCategoryMaster bedCategoryMaster = findById(bedCategoryMasterDto.getBedCategoryId());
+			// BATCH-5 org-trust fix: hierarchy update was write-by-ID with zero org check.
+			if (bedCategoryMaster == null || bedCategoryMaster.getOrganizationId() == null
+					|| !bedCategoryMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			bedCategoryMaster.setBedCategoryCode(bedCategoryMasterDto.getBedCategoryCode());
 			bedCategoryMaster.setBedCategoryDesc(bedCategoryMasterDto.getBedCategoryDesc());
 			bedCategoryMaster.setHierarchyId(bedCategoryMasterDto.getHierarchyId());

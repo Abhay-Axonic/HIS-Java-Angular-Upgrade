@@ -19,10 +19,14 @@ import com.param.global.dto.MultiSelectDto;
 import in.param.exception.ApplicationException;
 
 import javax.annotation.PostConstruct;
+import com.param.global.service.VerifiedIdentityService;
 
 @Service
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class WardMasterServiceImpl implements IWardMasterService, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Autowired
 	IWardMasterDao iWardMasterDao;
@@ -38,6 +42,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response saveWardMasterMaster(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 
 		Response response = iWardMasterDao.getWardMasterByName(wardMasterDto);
 
@@ -52,6 +59,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 				}
 
 				Integer wardId = (Integer) res.getObject();
+				// BATCH-5 fix (pre-existing NPE class): genderIdList absent in some callers — the
+				// unguarded for-each NPE'd AFTER a successful save, masking it as failure.
+				if (wardMasterDto.getGenderIdList() != null)
 				for(MultiSelectDto multiSelectDto : wardMasterDto.getGenderIdList())
 				{
 					WardGenderMapperDto wardGenderMapperDto = new WardGenderMapperDto();
@@ -75,6 +85,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 	@Override
 	public Response getWardMasterById(int wardId, int orgId, int unitId) throws ApplicationException {
 		try {
+			// BATCH-5 org-trust fix: bind verified tenant (client path org/unit were trusted)
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			unitId = verifiedIdentityService.getVerifiedUnitId();
 			Response res =  iWardMasterDao.getWardMasterById(wardId, orgId, unitId);
 			List<WardMasterDto> wardMasterList = res.getListObject();
 			for(WardMasterDto wardMastertr : wardMasterList)
@@ -91,6 +104,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response getWardMasterList(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response res = iWardMasterDao.getWardMasterList(wardMasterDto);
 			List<WardMasterDto> wardMasterList = res.getListObject();
@@ -108,6 +124,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response updateWardMaster(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		Response response = iWardMasterDao.getWardMasterByNameNotById(wardMasterDto);
 
 		try {
@@ -123,6 +142,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 				}
 
 				iWardMasterDao.updateWardGenderStatus(wardMasterDto.getWardId());
+				// BATCH-5 fix (pre-existing NPE class): genderIdList absent in some callers — the
+				// unguarded for-each NPE'd AFTER a successful update, masking it as failure.
+				if (wardMasterDto.getGenderIdList() != null)
 				for(MultiSelectDto multiSelectDto : wardMasterDto.getGenderIdList())
 				{
 					WardGenderMapperDto wardGenderMapperDto = new WardGenderMapperDto();
@@ -135,7 +157,15 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 						wardGenderMapperDto.setUpdatedDate(wardMasterDto.getUpdatedDate());
 					iWardMasterDao.saveWardGenderMapper(wardGenderMapperDto);
 				}
-				return new Response (SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null); 
+				// BATCH-5 fix (silent-failure class, live-proven 2026-08-04): this method returned
+				// unconditional SUCCESS — a DAO rejection (e.g. the org-ownership guard firing on a
+				// forged cross-tenant update) was reported as "Updated Successfully." while the write
+				// was actually blocked. Propagate the DAO's outcome.
+				if (updateRes != null && updateRes.getStatus().equals(SUCCESS)) {
+					return new Response (SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null);
+				}
+				return updateRes != null ? updateRes
+						: new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 			}
 		} catch (Exception e) {
 			
@@ -145,20 +175,30 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response updateWardMasterStatus(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response res = iWardMasterDao.updateWardMasterStatus(wardMasterDto);
 			if(res.getStatus().equals(SUCCESS) && res.getObject() != null) {
 					Integer filterId = (Integer) res.getObject();
 				activeWardMasterCache.invalidate(wardMasterDto.getUnitId() != null ? wardMasterDto.getUnitId() : filterId);
 			}
+			// BATCH-5 fix (silent-failure class): this method unconditionally returned ERROR,
+			// masking the DAO's actual outcome (successful toggles always reported failure).
+			// Propagate the DAO response.
+			return res;
 		} catch (Exception e) {
-			
+			// silent (legacy behavior preserved)
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
 	@Override
 	public Response getWardMasterCount(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iWardMasterDao.getWardMasterCount(wardMasterDto);
 		} catch (Exception e) {
@@ -169,6 +209,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response getActiveWardMasterList(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			List<WardMasterDto> responseCache = activeWardMasterCache.getIfPresent(wardMasterDto.getUnitId());
 			if (responseCache != null && !responseCache.isEmpty()) {
@@ -190,6 +233,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response getWardListNotMappedToNursingStation(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iWardMasterDao.getWardListNotMappedToNursingStation(wardMasterDto);
 		} catch (Exception e) {
@@ -200,6 +246,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response getActiveWardListForER(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		
 		try {
 			return iWardMasterDao.getActiveWardListForER(wardMasterDto);
@@ -222,6 +271,9 @@ public class WardMasterServiceImpl implements IWardMasterService, ICommonConstan
 
 	@Override
 	public Response getWardByVisitType(WardMasterDto wardMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		wardMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		wardMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iWardMasterDao.getWardByVisitType(wardMasterDto);
 		} catch (Exception e) {
