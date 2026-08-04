@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.param.billing.global.model.PatientTypeMaster;
 import com.param.billing.patientType.dto.PatientTypeDto;
 import com.param.global.common.GlobalCommonDateUtils;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.utility.TimeZoneComponent;
@@ -27,6 +28,9 @@ public class PatientTypeDaoImpl extends GenericDao<PatientTypeMaster,Integer> im
 	@Autowired
 	private SessionFactory SessionFactory;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response savePatientType(PatientTypeDto patientTypeDto) 
 	{
@@ -39,8 +43,9 @@ public class PatientTypeDaoImpl extends GenericDao<PatientTypeMaster,Integer> im
 			patientTypeMaster.setCreatedDate(GlobalCommonDateUtils.getDate(TimeZoneComponent.getDateByzone(patientTypeDto.getUnitId()), "dd-M-yyyy HH:mm:ss"));
 			patientTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(TimeZoneComponent.getDateByzone(patientTypeDto.getUnitId()), "dd-M-yyyy HH:mm:ss"));
 			patientTypeMaster.setUpdatedBy(patientTypeDto.getUpdatedBy());
-			patientTypeMaster.setUnitId(patientTypeDto.getUnitId());
-			patientTypeMaster.setOrganizationId(patientTypeDto.getOrganizationId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): bind JWT-verified tenant only.
+			patientTypeMaster.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+			patientTypeMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			patientTypeMaster.setStatus("A");
 			save(patientTypeMaster);
 
@@ -82,7 +87,18 @@ public class PatientTypeDaoImpl extends GenericDao<PatientTypeMaster,Integer> im
 	@Override
 	public Response updatePatientTypeStatus(PatientTypeDto patientTypeDto) throws Exception {
 		try {
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			PatientTypeMaster patientTypeMaster = findById(patientTypeDto.getPatientTypeId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): status toggle was a
+			// bare write-by-ID (findById + update, zero org check). Reject rows not
+			// owned by the verified tenant.
+			if (patientTypeMaster == null || patientTypeMaster.getOrganizationId() == null
+					|| !patientTypeMaster.getOrganizationId().equals(verifiedOrgId)
+					|| patientTypeMaster.getUnitId() == null
+					|| !patientTypeMaster.getUnitId().equals(verifiedUnitId)) {
+				return new Response<>(ERROR, ERROR_CODE, "Cross-tenant update rejected", null, null);
+			}
 			patientTypeMaster.setUpdatedBy(patientTypeDto.getUpdatedBy());
 			patientTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(patientTypeDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			patientTypeMaster.setStatus(patientTypeDto.getStatus().toString());
@@ -98,15 +114,27 @@ public class PatientTypeDaoImpl extends GenericDao<PatientTypeMaster,Integer> im
 	@Override
 	public Response updatePatientType(PatientTypeDto patientTypeDto) throws Exception {
 		try {
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			PatientTypeMaster patientTypeMaster = findById(patientTypeDto.getPatientTypeId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): update loaded by bare
+			// client id and OVERWROTE org/unit with DTO values (row-steal shape).
+			// Reject rows not owned by the verified tenant.
+			if (patientTypeMaster == null || patientTypeMaster.getOrganizationId() == null
+					|| !patientTypeMaster.getOrganizationId().equals(verifiedOrgId)
+					|| patientTypeMaster.getUnitId() == null
+					|| !patientTypeMaster.getUnitId().equals(verifiedUnitId)) {
+				return new Response<>(ERROR, ERROR_CODE, "Cross-tenant update rejected", null, null);
+			}
 			patientTypeMaster.setCode(patientTypeDto.getCode());
 			patientTypeMaster.setDescription(patientTypeDto.getDescription());
 			patientTypeMaster.setCreatedBy(patientTypeDto.getCreatedBy());
 			patientTypeMaster.setCreatedDate(GlobalCommonDateUtils.getDate(TimeZoneComponent.getDateByzone(patientTypeDto.getUnitId()), "dd-M-yyyy HH:mm:ss"));
 			patientTypeMaster.setUpdatedDate(GlobalCommonDateUtils.getDate(TimeZoneComponent.getDateByzone(patientTypeDto.getUnitId()), "dd-M-yyyy HH:mm:ss"));
 			patientTypeMaster.setUpdatedBy(patientTypeDto.getUpdatedBy());
-			patientTypeMaster.setUnitId(patientTypeDto.getUnitId());
-			patientTypeMaster.setOrganizationId(patientTypeDto.getOrganizationId());
+			// BR-batch2-org-trust fix: never write client-supplied org/unit on update.
+			patientTypeMaster.setUnitId(verifiedUnitId);
+			patientTypeMaster.setOrganizationId(verifiedOrgId);
 			patientTypeMaster.setStatus("A");
 			update(patientTypeMaster);
 			

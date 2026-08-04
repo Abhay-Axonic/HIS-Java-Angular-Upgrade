@@ -86,7 +86,12 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 		companyMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		Response res=iCompanyMasterDao.getCompanyMasterListByName(companyMasterDto);
 		try {
-			if(res.getListObject().size()>0){
+			// BR-batch2 masking fix (2026-08-03, live-proven): a genuine DB-level
+			// failure previously surfaced as a generic null-message 501 -- the DAO
+			// NPE'd on missing faxNo/emailId, returned a null listObject, and the
+			// .size() call masked the real error. Propagate the actual failure so
+			// the frontend's error toast shows a truthful message, never success.
+			if(res.getListObject()!=null && res.getListObject().size()>0){
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 			}else{
 				Response saveRes = iCompanyMasterDao.saveCompanyMaster(companyMasterDto);
@@ -98,8 +103,10 @@ public class CompanyMasterServiceImpl implements ICompanyMasterService, ICommonC
 			
 		}catch (Exception e) {
 		logger.error("saveCompanyMaster failed", e);
+		// BR-batch2 masking fix: return the real failure instead of a null-message
+		// error response -- a genuine DB failure must surface an accurate error.
+		return new Response<>(ERROR, COMMON_ERROR_CODE, e.getMessage() != null ? e.getMessage() : "Company master save failed", null, null);
 		}
-	return new Response<>(ERROR, COMMON_ERROR_CODE, null, null, null);
 	}
 
 	@Override

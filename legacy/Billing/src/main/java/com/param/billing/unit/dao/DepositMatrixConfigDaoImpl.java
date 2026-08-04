@@ -18,6 +18,7 @@ import com.param.billing.unit.dto.DepositMatrixReqDto;
 import com.param.billing.unit.dto.DepositMatrixResDto;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.common.ServiceException;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -35,6 +36,9 @@ public class DepositMatrixConfigDaoImpl extends GenericDao<DepositMatrixConfigMa
 	
 	@Autowired
 	SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response getDepositMatrixList(int orgId, int unitId, int offset, int recordPerPage)
@@ -65,8 +69,10 @@ public class DepositMatrixConfigDaoImpl extends GenericDao<DepositMatrixConfigMa
 			master.setSurgical(depositMatrixConfigMasterDto.getSurgical());
 			master.setNonSurgical(depositMatrixConfigMasterDto.getNonSurgical());
 			master.setStatus(depositMatrixConfigMasterDto.getStatus());
-			master.setOrganisationId(depositMatrixConfigMasterDto.getOrganisationId());
-			master.setUnitId(depositMatrixConfigMasterDto.getUnitId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): bind JWT-verified tenant only.
+			master.setOrganisationId(verifiedIdentityService.getVerifiedOrganizationId());
+			master.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+			// (old code wrote client-supplied org/unit -- org-1 session created org-999 row)
 			master.setCreatedBy(depositMatrixConfigMasterDto.getCreatedBy());
 			master.setCreatedDate(depositMatrixConfigMasterDto.getCreatedDate() != null && !depositMatrixConfigMasterDto.getCreatedDate().isEmpty() ? GlobalCommonDateUtils.getDate(depositMatrixConfigMasterDto.getCreatedDate(), "dd-M-yyyy HH:mm:ss") : TimeZoneComponent.getDateByzone(depositMatrixConfigMasterDto.getUnitId()));
 			master.setUpdatedBy(depositMatrixConfigMasterDto.getUpdatedBy());
@@ -105,7 +111,18 @@ public class DepositMatrixConfigDaoImpl extends GenericDao<DepositMatrixConfigMa
 	public Response updateDepositMatrixConfig(DepositMatrixConfigMasterDto dto)
 			throws ApplicationException {
 		try {
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			DepositMatrixConfigMaster master=findById(dto.getmDepositMatrixId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): reject rows not owned
+			// by the verified tenant (old code overwrote the row's org/unit with DTO
+			// values after findById -- full row-steal shape).
+			if (master == null || master.getOrganisationId() == null
+					|| !master.getOrganisationId().equals(verifiedOrgId)
+					|| master.getUnitId() == null
+					|| !master.getUnitId().equals(verifiedUnitId)) {
+				return new Response<>(ERROR, COMMON_ERROR_CODE, "Cross-tenant update rejected", null, null);
+			}
 			master.setPatientTypeId(dto.getPatientTypeId());
 			master.setPaymentEntitlementId(dto.getPaymentEntitlementId());
 			master.setBedCategoryId(dto.getBedCategoryId());
@@ -133,10 +150,15 @@ public class DepositMatrixConfigDaoImpl extends GenericDao<DepositMatrixConfigMa
 	public Response updateDepositMatrixConfigStatus(int mDepositMatrixId, char status) throws ApplicationException {
 		try {
 		      Integer count = (Integer) sessionFactory.getCurrentSession()
-		    		  						.getNamedQuery("UPDATE_DEPOSIT_MATRIX_STATUS")
-		    		  						.setParameter("mDepositMatrixId", mDepositMatrixId)
-		    		  						.setParameter("status", status)
-		    		  						.executeUpdate();
+		    		  						.// BR-batch2-org-trust fix (2026-08-03, live-proven): toggle was a write-by-ID GET
+		      // (UPDATE keyed only by id, zero org/unit in WHERE -- org-1 session flipped
+		      // org-999 victim A->I). Now scoped by the verified tenant.
+		      getNamedQuery("UPDATE_DEPOSIT_MATRIX_STATUS")
+		    	  		  			.setParameter("mDepositMatrixId", mDepositMatrixId)
+		    	  		  			.setParameter("status", status)
+		    	  		  			.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
+		    	  		  			.setParameter("unitId", verifiedIdentityService.getVerifiedUnitId())
+		    	  		  			.executeUpdate();
 		      if (count>0)
 		      {
 		        return new Response(SUCCESS, SUCCESS_CODE, COMMON_STATUS_SUCCESS, null,count);

@@ -279,9 +279,9 @@ public class CompanyMasterDaoImpl extends GenericDao<CompanyMaster, Integer>
 					.getNamedQuery("GET_COMPANY_MASTER_LIST_BY_NAME")
 					.setParameter("unitId", companyMasterDto.getUnitId())
 					.setParameter("orgId",companyMasterDto.getOrganizationId())
-					.setParameter("companyName",companyMasterDto.getCompanyDesc().toLowerCase())
+					.setParameter("companyName",companyMasterDto.getCompanyDesc()!=null ? companyMasterDto.getCompanyDesc().toLowerCase() : null)
 					.setParameter("faxNo",companyMasterDto.getFaxNo())
-					.setParameter("emailId",companyMasterDto.getEmailId().toLowerCase())
+					.setParameter("emailId",companyMasterDto.getEmailId()!=null ? companyMasterDto.getEmailId().toLowerCase() : null)
 					.setResultTransformer(Transformers.aliasToBean(CompanyMasterDto.class)).list();
 			return new Response(SUCCESS, SUCCESS_CODE, null, listCompanyMasterDto, null);
 		} catch (HibernateException he) {
@@ -299,9 +299,9 @@ public class CompanyMasterDaoImpl extends GenericDao<CompanyMaster, Integer>
 					.getNamedQuery("GET_COMPANY_MASTER_LIST_BY_NAME_NOT_BY_ID")
 					.setParameter("unitId", companyMasterDto.getUnitId())
 					.setParameter("orgId",companyMasterDto.getOrganizationId())
-					.setParameter("companyName",companyMasterDto.getCompanyDesc().toLowerCase())
+					.setParameter("companyName",companyMasterDto.getCompanyDesc()!=null ? companyMasterDto.getCompanyDesc().toLowerCase() : null)
 					.setParameter("faxNo",companyMasterDto.getFaxNo())
-					.setParameter("emailId",companyMasterDto.getEmailId().toLowerCase())
+					.setParameter("emailId",companyMasterDto.getEmailId()!=null ? companyMasterDto.getEmailId().toLowerCase() : null)
 					.setParameter("companyId",companyMasterDto.getCompanyId())
 					.setResultTransformer(Transformers.aliasToBean(CompanyMasterDto.class)).list();
 			return new Response(SUCCESS, SUCCESS_CODE, null, listCompanyMasterDto, null);

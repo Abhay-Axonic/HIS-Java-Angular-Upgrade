@@ -80,6 +80,7 @@ import com.param.global.model.PaymentEntitlementMaster;
 			query = "UPDATE DepositMatrixConfigMaster "
 					+ " SET status =:status"
 					+ " WHERE mDepositMatrixId =:mDepositMatrixId "
+					+ " AND organisationId =:orgId AND unitId =:unitId"
 					)
 	})
 

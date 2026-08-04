@@ -6,9 +6,11 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.param.global.common.GlobalCommonDateUtils;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.dto.AccountPayableMasterDto;
@@ -23,6 +25,9 @@ public class AccountPayableMasterDaoImpl extends GenericDao<AccountPayableMaster
 		super(AccountPayableMaster.class);
 		
 	}
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response saveAccountPayable(AccountPayableMasterDto accountPayableMasterDto) throws Exception {
@@ -74,8 +79,11 @@ public class AccountPayableMasterDaoImpl extends GenericDao<AccountPayableMaster
 			mstr.setCreatedBy(accountPayableMasterDto.getCreatedBy());
 			mstr.setDeptId(accountPayableMasterDto.getDeptId());
 			mstr.setOrderId(accountPayableMasterDto.getOrderId());
-			mstr.setOrgId(accountPayableMasterDto.getOrgId());
-			mstr.setOrgUnitId(accountPayableMasterDto.getOrgUnitId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): save previously wrote
+			// client-supplied org/unit (org-1 session created an org-999 row). Bind
+			// the JWT-verified tenant only.
+			mstr.setOrgId(verifiedIdentityService.getVerifiedOrganizationId());
+			mstr.setOrgUnitId(verifiedIdentityService.getVerifiedUnitId());
 			mstr.setStatus(accountPayableMasterDto.getStatus());
 			mstr.setSubDeptId(accountPayableMasterDto.getSubDeptId());
 			mstr.setUpdatedBy(accountPayableMasterDto.getUpdatedBy());
@@ -141,7 +149,18 @@ public class AccountPayableMasterDaoImpl extends GenericDao<AccountPayableMaster
 	@Override
 	public Response updateAccountPayableStatus(AccountPayableMasterDto accountPayableMasterDto) throws Exception {
 		try {
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			AccountPayableMaster mstr = findById(accountPayableMasterDto.getAccPayableMstId());
+			// BR-batch2-org-trust fix (2026-08-03, live-proven): status toggle was a
+			// bare write-by-ID (findById + update, zero org check -- org-1 session
+			// flipped an org-999 victim A->I). Reject rows not owned by the verified tenant.
+			if (mstr == null || mstr.getOrgId() == null
+					|| !mstr.getOrgId().equals(verifiedOrgId)
+					|| mstr.getOrgUnitId() == null
+					|| !mstr.getOrgUnitId().equals(verifiedUnitId)) {
+				return new Response<>(ERROR, COMMON_ERROR_CODE, "Cross-tenant update rejected", null, null);
+			}
 			mstr.setStatus(accountPayableMasterDto.getStatus());
 			mstr = update(mstr);
 			
