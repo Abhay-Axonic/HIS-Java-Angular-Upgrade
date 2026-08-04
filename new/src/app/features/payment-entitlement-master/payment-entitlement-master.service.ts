@@ -44,7 +44,7 @@ export class PaymentEntitlementMasterService {
 
   // ctrl visitTypeObj -- POST { paymentEntitlementCode,
   // paymentEntitlementDesc, createdBy, updatedBy, createdDate, status:'A',
-  // organizationId, updatedDate }.
+  // organizationId, updateDate } (legacy-exact: the DAO reads getUpdateDate()).
   savePaymentEntitlement(payload: {
     paymentEntitlementCode: string;
     paymentEntitlementDesc: string;
@@ -53,7 +53,7 @@ export class PaymentEntitlementMasterService {
     updatedBy: number;
     organizationId: number;
     createdDate: string;
-    updatedDate: string;
+    updateDate: string;
   }): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.base}/global/savePaymententitlement`, payload);
   }
