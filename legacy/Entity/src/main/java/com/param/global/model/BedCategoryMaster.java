@@ -114,7 +114,9 @@ import com.param.service.global.model.TPackageBedCategoryDetail;
  			+ "bc.billingBedCategoryId as billingBedCategoryId, "
  			+ "bc.status as status, bc.serviceId as serviceId "
  			+ "FROM BedCategoryMaster bc "
- 			+ "WHERE bc.bedCategoryId=:bedCategoryId"),
+ 			+ "WHERE bc.bedCategoryId=:bedCategoryId"
+					+ " AND bc.organizationId=:orgId"
+					+ " AND bc.unitId=:unitId"),
  	
  	@NamedQuery(name="GET_BED_CATEGORY_LIST_BY_NAME",query="SELECT bc.bedCategoryId as bedCategoryId, "
  			+ "bc.bedCategoryDesc as bedCategoryDesc "
