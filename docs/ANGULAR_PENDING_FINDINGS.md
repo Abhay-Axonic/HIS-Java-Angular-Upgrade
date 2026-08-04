@@ -5256,3 +5256,44 @@ Owner's manual UI review on `rebuild/phase4-batch25` (worktree `.claude/worktree
 - Instance: `GET_PAYMENT_ENTITLEMENT_BY_NAME_NOT_BY_ID` was missing its `paymentEntitlementId <> :paymentEntId` clause (declared :orgId + :name, DAO bound all three) → every Edit-save on paymentEntitlementMaster 500'd; Create (uses GET_PAYMENT_ENTITLEMENT_BY_NAME, binds only :name) was unaffected.
 - Sibling-check rule (fix the class, not the instance): before claiming a fix, grep the sibling screens' equivalent named queries — PaymentModeMaster's NOT_BY_ID query declares all 3 params correctly, which is why only this screen failed.
 - Lesson for the standing checklist: when a write path 500s with no psql error, check (1) the named query's declared params vs the DAO's binds, (2) commented-out setParameter lines (the orgId one here was commented out too — a BR-161-class cross-tenant leak if the query had run without it).
+
+
+# ✅ BATCH 3 — FINAL SIGN-OFF (owner, 2026-08-04)
+
+Step 6 owner review COMPLETE. All 3 screens confirmed working across the full checklist
+(Create, Edit, Toggle where applicable, org-trust isolation). Branch ready for merge decision.
+
+## Sign-off per screen
+
+| Screen | Route (served app.routes.ts) | Create | Edit | Toggle | Org-trust (org-999 victims invisible) |
+|---|---|---|---|---|---|
+| visitTypeMaster | /visitTypeMaster | ✅ | ✅ (no dup-check on path) | ✅ instant-refresh (expected) | ✅ 6 legit rows, 0 leak |
+| paymentEntitmentMaster | /paymentEntitmentMaster (typo faithful, low-risk) | ✅ | ✅ | ✅ | ✅ 3 legit rows, 0 leak |
+| paymentModeMaster | /paymentModeMaster | ✅ | ✅ | ✅ | ✅ 8 legit rows, 0 leak |
+
+## Everything found & fixed in batch 3 (consolidated)
+
+### Security (BR-161-class org-trust) — commit 14d3efd8 (7 files)
+1. **visitTypeMaster**: GET_VISIT_TYPE_LIST had NO WHERE clause; GET_ACTIVE_VISIT_TYPE_LIST status-only WHERE (both cross-tenant); cache keyed by constant (3rd leak vector). Fixed: named-query org-scoping + cache-key org-scoping + service-layer verified-identity rebind.
+2. **paymentEntitmentMaster**: GET_PAYMENT_ENTITLEMENT_LIST had NO WHERE + `setParameter("orgId")` COMMENTED OUT. Fixed: query org-scoping + DAO param re-enable + service rebind.
+3. **paymentModeMaster**: same class; fixed via service-layer verified-identity rebind + DAO.
+4. Verified: seeded org-999 victims (VT-999-X / PE-999-X / PM-999-X, left in DB as evidence) → forged reads return verified org-1 rows, 0 leaked, legit counts 6/3/8. Bytecode-verified in deployed jars; full Tomcat restarts through PIDs 84149→87731→87985→93233→93823, HTTP 200 each.
+
+### Correctness bugs surfaced by real end-to-end testing (all live-verified)
+5. **Sequence desync after victim seeding** (batch29-4): PE seq=2 vs max=4, PM seq=7 vs max=9 → PK collision → 500 on saves. visitType worked (seq aligned) — the clue. Fixed with setval; standing rule added (setval to MAX after any explicit-ID seed; check seq==max before save rounds).
+6. **PE save payload field-name mismatch** (batch29-4): rebuild sent `updatedDate`, backend DAO reads `getUpdateDate()` → 400 "Invalid parameters". Fixed in 72124af0 to legacy-exact `updateDate`.
+7. **HMR silently masks compile errors** (batch29-5): the PE service payload TYPE still declared `updatedDate` (TS2561) while the component sent `updateDate` — non-compiling fix NOT picked up by HMR, stale pre-fix module served, save kept 400ing with NO visible error. Exposed only by fresh server start ("Application bundle generation failed"). Fixed in 88ba7a31; strengthened rule: tsc clean + full restart (or payload-discrimination test) before claiming any frontend fix.
+8. **Edit-save 500** (batch29-6): GET_PAYMENT_ENTITLEMENT_BY_NAME_NOT_BY_ID declared only :orgId + :name but DAO binds :paymentEntId too — the `paymentEntitlementId <> :paymentEntId` clause was MISSING from the query → QueryParameterException → 500 on EVERY Edit. Sibling check: PaymentModeMaster's equivalent query declares all 3 params correctly — bug unique to this screen. Fixed in 5986ba74 (entity clause + DAO orgId re-enable). Live-verified: Edit TESTPE01 → 200, form cleared, psql desc="review testing EDIT-VERIFIED", updated_date=12:43:37 (non-null, ≠ created).
+
+### Process/governance
+9. **CRUD sibling-action rule** (97e4860e, owner-approved): after fixing a correctness bug on one CRUD action, check EVERY other CRUD action on that screen for the same pattern (BR-160 sibling logic extended from security to correctness). Added to RULES.md.
+10. **41-screen commonMaster org-trust sweep** (22647de6): deferred as scoped future deliverable batch29-3 — DO NOT start without dedicated session + approval. The dispatcher is frontend-only (44 screens, no shared backend); per-screen fix is the only mechanism; batch-3 proved 3/3 screens had the leak class.
+
+## Merge status
+- Branch: `rebuild/phase4-batch29-billing-tier3` (worktree batch29-wt)
+- 10 commits: 2 security-fix commits, 1 rebuild commit, 2 correctness-fix commits, 5 docs/rules commits
+- Working tree CLEAN. NOTHING merged into main, NOTHING pushed.
+- DB (his_local): pristine — 0 test rows, sequences aligned (PE=4/PM=9/VT=8), victims VT-999-X/PE-999-X/PM-999-X retained as fix evidence.
+- Servers: Tomcat PID 93823 (fresh, HTTP 200), dev server PID 92154 (batch-29 worktree, HTTP 200).
+
+## READY FOR FINAL MERGE DECISION (owner)
