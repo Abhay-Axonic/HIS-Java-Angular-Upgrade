@@ -20,10 +20,14 @@ import com.param.global.dto.TariffMasterDto;
 import in.param.exception.ApplicationException;
 
 import java.util.List;
+import com.param.global.service.VerifiedIdentityService;
 
 @Service
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TariffMasterServiceImpl implements ITariffMasterService, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	final static Logger logger = Logger.getLogger(TariffMasterServiceImpl.class);
 
@@ -43,6 +47,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Transactional
 	@Override
 	public Response saveTariffMaster(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			
 			Response response = iTariffMasterDao.getTariffListByName(tariffMasterDto);
@@ -73,6 +80,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response getTariffMasterList(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iTariffMasterDao.getTariffMasterList(tariffMasterDto);
 		} catch (Exception e) {
@@ -83,6 +93,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response getPaymentEntitlementListByTariffid(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iTariffMasterDao.getPaymentEntitlementListByTariffid(tariffMasterDto);
 		} catch (Exception e) {
@@ -93,6 +106,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response getTariffListById(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iTariffMasterDao.getTariffListById(tariffMasterDto);
 		} catch (Exception e) {
@@ -103,6 +119,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response updateTariffMaster(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			Response response = iTariffMasterDao.getTariffListByNameNotId(tariffMasterDto);
 			if (response.getObject() != null) {
@@ -147,6 +166,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response updateStatusForTariff(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 				Response res = iTariffMasterDao.updateStatusForTariff(tariffMasterDto);
 				if(res.getStatus().equals(SUCCESS) && res.getObject() != null) {
@@ -173,6 +195,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response getActiveTariffMasterList(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			List<TariffMasterDto> responseCache = tarriffMasterCache.getIfPresent(tariffMasterDto.getUnitId());
 			if (responseCache != null && !responseCache.isEmpty()) {
@@ -297,6 +322,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 
 	@Override
 	public Response tariffMasterCount(TariffMasterDto tariffMasterDto) throws ApplicationException {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iTariffMasterDao.tariffMasterCount(tariffMasterDto);
 		} catch (Exception e) {
@@ -308,6 +336,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	@Transactional
 	public Response getTariffMasterListOpdBilling(TariffMasterDto tariffMasterDto) {
+		// BATCH-5 org-trust fix: bind verified tenant
+		tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iTariffMasterDao.getTariffMasterListOpdBilling(tariffMasterDto);
 		} catch (Exception e) {

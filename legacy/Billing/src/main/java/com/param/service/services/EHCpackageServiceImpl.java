@@ -13,10 +13,14 @@ import com.param.global.dto.ServiceForPackageReqDto;
 import com.param.service.dao.IEHCpackageDao;
 
 import in.param.exception.ApplicationException;
+import com.param.global.service.VerifiedIdentityService;
 
 @Service
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EHCpackageServiceImpl implements  IEHCpackageService, ICommonConstants, IError {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	 @Autowired
 	  IEHCpackageDao iEHCpackageDao;
@@ -76,6 +80,12 @@ public class EHCpackageServiceImpl implements  IEHCpackageService, ICommonConsta
 	public Response getPatientTypeByTariffId(Integer orgId, Integer orgUnitId, Integer tariffId)
 			throws ApplicationException {
 		try {
+			// BATCH-5 org-trust fix (Pattern A read, live-leaked 2026-08-04): client-supplied
+			// org/unit path params were trusted — a forged 999/999/99 call from an org-1 session
+			// returned the org-999 victim's t_tariff_patient_type_mapper row (proven via a unique
+			// victim marker). Bind the verified tenant.
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 			return iEHCpackageDao.getPatientTypeByTariffId(orgId, orgUnitId,tariffId);
 		} catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
