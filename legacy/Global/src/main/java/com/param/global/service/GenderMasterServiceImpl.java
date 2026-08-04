@@ -14,6 +14,7 @@ import com.param.global.common.Response;
 import com.param.global.dao.IGenderMasterDao;
 import com.param.global.dto.GenderMasterDto;
 import com.param.global.model.GenderMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.rabbitmq.dto.base.Payload;
 import com.param.rabbitmq.dto.base.Request;
 import com.param.rabbitmq.service.EmrService.IEmrService;
@@ -39,6 +40,9 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	@Autowired
 	IEmrService EmrService;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	private Cache<String, List<GenderMasterDto>> genderMasterCache;
 
 	@PostConstruct
@@ -52,6 +56,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	public Response getGenderMasterList(GenderMasterDto genderMasterDto) throws ApplicationException {
 		
 		try {
+			genderMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iGenderMasterDao.getGenderMasterList(genderMasterDto);
 		} catch (Exception e) {
 		logger.error("getGenderMasterList failed", e);
@@ -64,6 +69,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	public Response addGenderMaster(GenderMasterDto genderMasterDto) {
 		// TODO Auto-generated method stub
 		try {
+			genderMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 
 			Response deptResponse = iGenderMasterDao.getGenderByName(genderMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
@@ -114,6 +120,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	@Override
 	public Response updateGenderMaster(GenderMasterDto genderMasterDto) {
 		try {
+			genderMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iGenderMasterDao.getGenderByNameNotId(genderMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -148,6 +155,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	@Override
 	public Response updateStatusForGender(GenderMasterDto genderMasterDto) throws ApplicationException {
 		try {
+			genderMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iGenderMasterDao.getGenderByID(genderMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				/*genderMasterDto.setUpdatedDate(GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(unitId), "dd-M-yyyy HH:mm:ss"););*/

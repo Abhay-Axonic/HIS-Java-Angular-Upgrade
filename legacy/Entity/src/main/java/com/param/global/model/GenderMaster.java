@@ -26,7 +26,7 @@ import com.param.service.global.model.MPackageMaster;
 			+ "genderMaster.desc as desc, "
 			+ "genderMaster.status as status "
 			+ "FROM GenderMaster as genderMaster "
-			//+ "WHERE genderMaster.organizationId=:orgId "
+			+ "WHERE genderMaster.organizationId=:orgId "
 			+ "ORDER BY genderMaster.id DESC "),
 	@NamedQuery(name = "GET_GENDER_BY_NAME", query = "SELECT genderMaster.id as id, "
 			+ "genderMaster.code as code "
@@ -37,7 +37,7 @@ import com.param.service.global.model.MPackageMaster;
 			+ "genderMaster.desc as desc, "
 			+ "genderMaster.code as code, "
 			+ "genderMaster.status as status "
-			+ "FROM GenderMaster as genderMaster WHERE genderMaster.id=:id"),
+			+ "FROM GenderMaster as genderMaster WHERE genderMaster.id=:id AND genderMaster.organizationId=:orgId"),
 	@NamedQuery(name = "GET_GENDER_BY_NAME_NOT_ID", query = "SELECT genderMaster.id as id, "
 			+ "genderMaster.code as code, "
 			+ "genderMaster.status as status "
