@@ -16,6 +16,7 @@ import com.param.rabbitmq.dto.base.Payload;
 import com.param.rabbitmq.dto.base.Request;
 import com.param.rabbitmq.service.EmrService.IEmrService;
 import com.param.rabbitmq.util.constants.MasterKeyConstants;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -32,6 +33,9 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Autowired
 	IEmrService EmrService;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	private Cache<Integer, List<MaritalStatusDto>> maritalMasterCache;
 
 	@PostConstruct
@@ -45,6 +49,7 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	public Response addMaritalStatusMaster(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
 
+			maritalStatusDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iMaritalStatusMasterDao.getMaritalStatusByName(maritalStatusDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -73,7 +78,11 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 					request.setPayload(payload);
 					//EmrService.publish(request);
 				}
-				return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				// propagate DAO status — do not mask a failed save as SUCCESS
+				if (res.getStatus() != null && res.getStatus().equals(SUCCESS)) {
+					return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				}
+				return new Response(ERROR, null, null, null, null);
 			}
 		} catch (Exception e) {
 			
@@ -84,6 +93,7 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Override
 	public Response getMaritalById(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
+			maritalStatusDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iMaritalStatusMasterDao.getMaritalStatusByID(maritalStatusDto);
 		} catch (Exception e) {
 			
@@ -94,6 +104,7 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Override
 	public Response updateMaritalStatusMaster(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
+			maritalStatusDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iMaritalStatusMasterDao.getMaritalStatusByNameNotId(maritalStatusDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -109,6 +120,9 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 					MaritalStatusMaster master = (MaritalStatusMaster) updateRes.getObject();
 					Integer orgId = master.getOrganizationId();
 					maritalMasterCache.invalidate(orgId);
+				} else {
+					// propagate DAO status — do not mask a rejected/failed update as SUCCESS
+					return updateRes;
 				}
 
 				maritalStatusDto.setCreatedBy(maritalStatusDto.getUpdatedBy());
@@ -132,6 +146,7 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Override
 	public Response updateStatusForMarital(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
+			maritalStatusDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iMaritalStatusMasterDao.getMaritalStatusByID(maritalStatusDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				/*maritalStatusDto
@@ -140,6 +155,9 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 				if(res.getStatus().equals(SUCCESS) && res.getObject() != null){
 					Integer filterId = (Integer) res.getObject();
 					maritalMasterCache.invalidate(maritalStatusDto.getOrganizationId() != null ? maritalStatusDto.getOrganizationId() : filterId);
+				} else {
+					// propagate DAO status — do not mask a rejected/failed toggle as SUCCESS
+					return res;
 				}
 				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
 
@@ -156,6 +174,8 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Override
 	public Response getActiveMaritalStatusList(Integer orgId) throws ApplicationException {
 		try {
+			// active-list reads bind the JWT-verified org, never the client param
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
 			List<MaritalStatusDto> responseCache = maritalMasterCache.getIfPresent(orgId);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
@@ -177,6 +197,7 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Override
 	public Response getMaritalStatusMasterList(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
+			maritalStatusDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iMaritalStatusMasterDao.getMaritalStatusMasterList(maritalStatusDto);
 		} catch (Exception e) {
 			
@@ -187,6 +208,7 @@ public class MaritalStatusMasterServiceImpl implements IMaritalStatusMasterServi
 	@Override
 	public Response getMaritalStatusCount(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
+			maritalStatusDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iMaritalStatusMasterDao.getCount(maritalStatusDto);
 		} catch (Exception e) {
 			

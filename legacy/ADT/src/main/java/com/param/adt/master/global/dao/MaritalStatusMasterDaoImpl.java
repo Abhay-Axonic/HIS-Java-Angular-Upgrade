@@ -18,6 +18,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.adt.master.global.dto.MaritalStatusDto;
 import com.param.adt.master.global.model.MaritalStatusMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -33,6 +34,9 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public MaritalStatusMasterDaoImpl() {
 		super(MaritalStatusMaster.class);
@@ -64,6 +68,8 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		try {
 			MaritalStatusMaster maritalStatusMaster = mapper.map(maritalStatusDto, MaritalStatusMaster.class,
 					"maritalStatusDto_to_maritalStatusMaster");
+			// create binds the JWT-verified org, never a client-supplied value
+			maritalStatusMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			maritalStatusMaster.setCreatedDate(TimeZoneComponent.getDateByzone(0));
 			maritalStatusMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(0));
 			maritalStatusMaster.setStatus('A');
@@ -100,6 +106,12 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 	public Response updateMaritalStatus(MaritalStatusDto maritalStatusDto) throws ApplicationException {
 		try {
 			MaritalStatusMaster maritalMaster = findById(maritalStatusDto.getId());
+			// ownership guard: reject before any write when the target row is not
+			// owned by the JWT-verified tenant
+			if (maritalMaster == null || maritalMaster.getOrganizationId() == null
+					|| !maritalMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<MaritalStatusDto, Integer>(ERROR, null, "MARITAL_OWNERSHIP_DENIED", null, null);
+			}
 			maritalMaster.setUpdatedBy(maritalStatusDto.getUpdatedBy());
 			maritalMaster.setStatus(maritalStatusDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			maritalMaster
@@ -123,6 +135,7 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 			List<MaritalStatusDto> maritalMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_MARITAL_STATUS_BY_ID")
 					.setParameter("id", maritalStatusDto.getId())
+					.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(MaritalStatusDto.class)).list();
 			return new Response(SUCCESS, null, null, maritalMasterDtoList, null);
 
@@ -179,6 +192,12 @@ public class MaritalStatusMasterDaoImpl extends GenericDao<MaritalStatusMaster, 
 		try {
 
 			MaritalStatusMaster maritalMaster = findById(maritalStatusDto.getId());
+			// ownership guard: reject before any write when the target row is not
+			// owned by the JWT-verified tenant
+			if (maritalMaster == null || maritalMaster.getOrganizationId() == null
+					|| !maritalMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<MaritalStatusDto, Integer>(ERROR, null, "MARITAL_OWNERSHIP_DENIED", null, null);
+			}
 			maritalMaster.setDesc(maritalStatusDto.getDesc());
 			maritalMaster.setCode(maritalStatusDto.getCode());
 			maritalMaster.setUpdatedBy(maritalStatusDto.getUpdatedBy());
