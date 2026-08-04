@@ -13,6 +13,7 @@ import com.param.lis.global.common.ICommonConstants;
 import com.param.lis.global.common.IError;
 import com.param.lis.global.common.Response;
 import com.param.lis.global.dto.SelectedAntibioticListDto;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -25,11 +26,16 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	final static Logger logger = Logger.getLogger(CommonListServiceImpl.class);
 
 	@Override
 	@Transactional
 	public Response getSampleStatusList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getSampleStatusList(orgId);
 		} catch (Exception e) {
@@ -41,6 +47,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getRejectionReasonList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getRejectionReasonList(orgId);
 		} catch (Exception e) {
@@ -52,6 +60,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getDeparmentList(Integer orgId ,Integer unitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		unitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getDeparmentList(orgId,unitId);
 		} catch (Exception e) {
@@ -63,6 +74,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getSampleTypeList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getSampleTypeList(orgId);
 		} catch (Exception e) {
@@ -74,6 +87,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getUnitList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getUnitList(orgId);
 		} catch (Exception e) {
@@ -85,6 +100,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getContainerList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getContainerList(orgId);
 		} catch (Exception e) {
@@ -96,6 +113,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getReportTypeList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getReportTypeList(orgId);
 		} catch (Exception e) {
@@ -107,6 +126,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getTechniqueList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getTechniqueList(orgId);
 		} catch (Exception e) {
@@ -118,6 +139,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getPrerequisitesList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getPrerequisitesList(orgId);
 		} catch (Exception e) {
@@ -129,6 +152,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getHeaderList(Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getHeaderList(orgId, orgUnitId);
 		} catch (Exception e) {
@@ -140,6 +166,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getParameterList(Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getParameterList(orgId, orgUnitId);
 		} catch (Exception e) {
@@ -151,6 +180,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getAgeGroupList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getAgeGroupList(orgId);
 		} catch (Exception e) {
@@ -162,6 +193,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getGenderList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getGenderList(orgId);
 		} catch (Exception e) {
@@ -173,6 +206,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getDayList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getDayList(orgId);
 		} catch (Exception e) {
@@ -184,6 +219,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getTrunAroundTime(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getTrunAroundTime(orgId);
 		} catch (Exception e) {
@@ -196,6 +233,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Transactional
 	public Response getAutoCompleteServices(Integer orgId, Integer orgUnitId, Integer deptId, String serviceName)
 			throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getAutoCompleteServices(orgId, orgUnitId, deptId, serviceName);
 		} catch (Exception e) {
@@ -207,6 +247,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getMediaList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getMediaList(orgId);
 		} catch (Exception e) {
@@ -218,6 +260,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getColonyList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getColonyList(orgId);
 		} catch (Exception e) {
@@ -229,6 +273,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getAntibioticGroupList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getAntibioticGroupList(orgId);
 		} catch (Exception e) {
@@ -240,6 +286,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getOrganismGroupList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getOrganismGroupList(orgId);
 		} catch (Exception e) {
@@ -251,6 +299,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getMediaListBySampleType(Integer sampleId, Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getMediaListBySampleType(sampleId, orgId);
 		} catch (Exception e) {
@@ -262,6 +312,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getIncubationPeriodList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getIncubationPeriodList(orgId);
 		} catch (Exception e) {
@@ -273,6 +325,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getIncubationTimeList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getIncubationTimeList(orgId);
 		} catch (Exception e) {
@@ -284,6 +338,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getStainingListByOrgId(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getStainingListByOrgId(orgId);
 		} catch (Exception e) {
@@ -295,6 +351,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getMicroOrganismByGroup(Integer organismGroupId, Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getMicroOrganismByGroup(organismGroupId, orgId);
 		} catch (Exception e) {
@@ -306,6 +364,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getOrganismList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getOrganismList(orgId);
 		} catch (Exception e) {
@@ -330,6 +390,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Transactional
 	public Response getAutoCompleteServicesForAntibiotic(Integer orgId, String antibioticName)
 			throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getAutoCompleteServicesForAntibiotic(orgId, antibioticName);
 		} catch (Exception e) {
@@ -341,6 +403,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getMicrolabPriorityList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getMicrolabPriorityList(orgId);
 		} catch (Exception e) {
@@ -352,6 +416,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getAntibioticsByOrganismIdList(Integer orgId, Integer organismId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getAntibioticsByOrganismIdList(orgId, organismId);
 		} catch (Exception e) {
@@ -363,6 +429,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getSpecimanTypeList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getSpecimanTypeList(orgId);
 		} catch (Exception e) {
@@ -374,6 +442,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getAccountPayableList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getAccountPayableList(orgId);
 		} catch (Exception e) {
@@ -385,6 +455,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getRackList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getRackList(orgId);
 		} catch (Exception e) {
@@ -396,6 +468,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getRackListByShelfId(Integer shelfId, Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getRackListByShelfId(shelfId, orgId);
 		} catch (Exception e) {
@@ -407,6 +481,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getSampleStatus(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getSampleStatus(orgId);
 		} catch (Exception e) {
@@ -418,6 +494,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getTestParameters(Integer testId, Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getTestParameters(testId, orgId, orgUnitId);
 		} catch (Exception e) {
@@ -429,6 +508,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getRefRangeTypeList(Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getRefRangeTypeList(orgId, orgUnitId);
 		} catch (Exception e) {
@@ -440,6 +522,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getTextualReferenceRanges(Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getTextualReferenceRanges(orgId, orgUnitId);
 		} catch (Exception e) {
@@ -462,6 +547,8 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getMicrobiologyStainingList(Integer orgId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iCommonListDao.getMicrobiologyStainingList(orgId);
 		} catch (Exception e) {
@@ -506,6 +593,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getSerologyFindings(Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getSerologyFindings(orgId, orgUnitId);
 		} catch (Exception e) {
@@ -517,6 +607,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Override
 	@Transactional
 	public Response getMultiTestParameterList(Integer orgId, Integer orgUnitId) throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getMultiTestParameterList(orgId, orgUnitId);
 		} catch (Exception e) {
@@ -529,6 +622,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Transactional
 	public Response getTypeHeadSearchHeaderList(Integer orgId, Integer orgUnitId, String label)
 			throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getTypeHeadSearchHeaderList(orgId, orgUnitId,label);
 		} catch (Exception e) {
@@ -541,6 +637,9 @@ public class CommonListServiceImpl implements ICommonListService, ICommonConstan
 	@Transactional
 	public Response getTypeHeadSearchParameterList(Integer orgId, Integer orgUnitId, String label)
 			throws ApplicationException {
+
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
+		orgUnitId = verifiedIdentityService.getVerifiedUnitId();
 		try {
 			return iCommonListDao.getTypeHeadSearchParameterList(orgId, orgUnitId,label);
 		} catch (Exception e) {

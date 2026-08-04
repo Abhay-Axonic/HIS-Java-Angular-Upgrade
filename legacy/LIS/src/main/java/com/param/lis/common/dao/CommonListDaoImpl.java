@@ -38,7 +38,7 @@ public class CommonListDaoImpl  implements ICommonListDao, ICommonConstants, IEr
 		try
 		{
 			listSampleStatusDto = (List<SampleStatusDto>) sessionFactory.getCurrentSession()
-					.getNamedQuery("GET_SAMPLE_STATUS_LIST")//.setParameter("orgId", orgId)
+					.getNamedQuery("GET_SAMPLE_STATUS_LIST").setParameter("orgId", orgId)
                     .setResultTransformer(Transformers.aliasToBean(SampleStatusDto.class)).list();					
 			return new Response(SUCCESS, SUCCESS_200, SUCCESS_200_MESSAGE, listSampleStatusDto, null);
 
@@ -369,9 +369,9 @@ public class CommonListDaoImpl  implements ICommonListDao, ICommonConstants, IEr
 							+ " FROM "
 							+ " m_gender_master genderMst "
 							+ " WHERE "
-							+ " genderMst.status = 'A' ")
-							//+ " AND genderMst.organization_id=:orgId ")
-					//.setParameter("orgId", orgId)
+							+ " genderMst.status = 'A' "
+							+ " AND genderMst.organization_id=:orgId ")
+					.setParameter("orgId", orgId)
                     .setResultTransformer(Transformers.aliasToBean(CommonDto.class)).list();					
 			return new Response(SUCCESS, SUCCESS_200, SUCCESS_200_MESSAGE, listGenderList, null);
 
@@ -394,8 +394,9 @@ public class CommonListDaoImpl  implements ICommonListDao, ICommonConstants, IEr
 									+ " FROM "
 									+ " lab.m_day_master daymst "
 									+ " WHERE "
-									+ " daymst.status = 'A' ")
-				//	.setParameter("orgId", orgId) 	+ " AND daymst.org_id =:orgId
+									+ " daymst.status = 'A' "
+									+ " AND daymst.org_id =:orgId ")
+					.setParameter("orgId", orgId)
                     .setResultTransformer(Transformers.aliasToBean(CommonDto.class)).list();					
 			return new Response(SUCCESS, SUCCESS_200, SUCCESS_200_MESSAGE, listDayList, null);
 
@@ -420,8 +421,9 @@ public class CommonListDaoImpl  implements ICommonListDao, ICommonConstants, IEr
 							+ " lab.m_tat_time_master tatTimeMst "
 							+ " WHERE  "
 							+ " tatTimeMst.tat_time_status = 'A' "
+							+ " AND tatTimeMst.org_id =:orgId "
 							+ " ORDER BY tatTimeMst.tat_time_name ASC ")
-				//	.setParameter("orgId", orgId) 	+ " AND tatTimeMst.org_id =:orgId "
+					.setParameter("orgId", orgId)
                     .setResultTransformer(Transformers.aliasToBean(CommonDto.class)).list();					
 			return new Response(SUCCESS, SUCCESS_200, SUCCESS_200_MESSAGE, listTrunAroundTime, null);
 
@@ -750,7 +752,9 @@ public class CommonListDaoImpl  implements ICommonListDao, ICommonConstants, IEr
 							+ "  FROM  "
 							+ "   lab.m_microlab_priority_master micro_priority_mst"
 							+ "  WHERE "
-							+ "   micro_priority_mst.status = 'A' ")
+							+ "   micro_priority_mst.status = 'A' "
+							+ "   AND micro_priority_mst.org_id = :orgId ")
+                    .setParameter("orgId", orgId)
                     .setResultTransformer(Transformers.aliasToBean(CommonDto.class)).list();					
 			return new Response(SUCCESS, SUCCESS_200, SUCCESS_200_MESSAGE, listMicroPriorityMstList, null);
 
