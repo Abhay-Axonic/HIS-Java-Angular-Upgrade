@@ -48,8 +48,12 @@ public class CompanyMasterController implements ICommonConstants{
 			return iCompanyMasterService.saveCompanyMaster(companyMasterDto);
 		}catch (Exception e) {
 			logger.error("Error while saving the company master", e);
+			// BR-batch2 masking fix (2026-08-03, live-proven): a commit-time DB
+			// failure (e.g. FK violation) surfaced here as a null-message error.
+			// Propagate the real failure so the user sees an accurate error.
+			return new Response(ERROR, COMMON_ERROR_CODE,
+					e.getMessage() != null ? e.getMessage() : "Company master save failed", null, null);
 		}
-		return new Response(ERROR, COMMON_ERROR_CODE, null, null, null);
 	}
 
 	@RequestMapping(value="/getCompanyMasterList", method=RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
