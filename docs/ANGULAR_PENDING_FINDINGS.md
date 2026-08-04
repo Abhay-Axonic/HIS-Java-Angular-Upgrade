@@ -5297,3 +5297,42 @@ Step 6 owner review COMPLETE. All 3 screens confirmed working across the full ch
 - Servers: Tomcat PID 93823 (fresh, HTTP 200), dev server PID 92154 (batch-29 worktree, HTTP 200).
 
 ## READY FOR FINAL MERGE DECISION (owner)
+
+---
+
+## BATCH-4 (billing-tier4) FINDINGS — added 2026-08-04
+
+### Entry — unitServiceMaster list query: pre-existing DTO char/Character vs JDBC String coercion failure (DEFERRED — separate from security work)
+
+**Status:** PRE-EXISTING, confirmed NOT introduced by batch-4 changes. Logged for a future session; does not block the batch-4 security fixes (which are verified independently).
+
+**What it is, plainly:** the list endpoint `GET /api/global/UnitServiceMasterDetails/org/{orgId}/unit/{unitId}/{offset}/{recordPerPage}` returns HTTP 200 with `{"status":"error","code":"501","message":"Something went wrong!!"}` whenever any row exists, for ANY org. Root cause (log-verified, `HHH000091`): `UnitServiceMasterDetailsDto` declares 8 fields as primitive `char` (`isOutsourceJob`, `isOutsource`, `isPackage`, `isRateEditable`, `isTaxApplicable`, `isRefDoctorShare`, `isDiscount`, `status`) with hand-written `setX(char)` accessors, but the PG JDBC driver returns `java.lang.String` for `character(1)` columns, and Hibernate's `aliasToBean` (used by `GET_PAGINATED_UNIT_SERVICE_MASTER_DETAILS_LIST` and `GET_SERVICE_MASTER_DETAILS_BY_ID`) does a raw reflection set — String cannot be set into char/Character without conversion.
+
+**Why it's pre-existing (evidence):**
+- Step-0 pre-screening (before ANY code change) showed the legacy unitServiceMaster table EMPTY.
+- The FIRST list call tonight (original DTO, untouched) failed with `Expected type: char, actual value: java.lang.String`.
+- Experiment: converting the 8 fields + 108 hand-written accessors to `Character` did NOT fix it (`Expected type: java.lang.Character, actual value: java.lang.String` — Hibernate does no String→Character conversion in aliasToBean); the mystery of why serviceMaster's `Character status` works while this DTO's fails is UNRESOLVED. DTO changes reverted to original.
+
+**Investigation notes for the future session (what was tried):**
+1. Primitive `char` + char accessor → fails (String→char)
+2. Boxed `Character` field + Character accessor → fails (String→Character)
+3. Hypothesis not yet tried: `String` fields (would accept JDBC String directly) — deferred because retyping 8 fields + 16 accessors on a shared DTO (used by save/update/list/getById across many endpoints) carries regression risk and the security fix does not depend on it.
+4. `ServiceMasterDto.status` is `Character` and works — the discriminating difference is unidentified; candidate hypotheses: query result-column metadata, Hibernate version behavior on specific column types, or the DTO field ordering in the transformer.
+
+**Schema-drift sibling note (fixed, not deferred):** the list query also referenced columns missing from the dev DB — 9 columns were added additively during this batch: `is_outsource_job`, `is_doc_share_per_wise`, `is_form_f_applicable`, `is_ref_share_per_wise`, `surgery_grade_id`, `is_admin_service`, `lab_auto_mail_exclusion`, `pre_requisite`, `pre_requisite_details`, `ventilator_requiered`. All 52 entity-mapped columns now exist.
+
+### Entry — unitServiceMaster: pre-existing hardcoded `setStatus('A')` in the update path (FIXED in batch-4, recorded for completeness)
+
+**Status:** FIXED + live-verified (commit `1bb6b0a3`). The DAO's `updateUnitServiceMasterDetails` unconditionally called `unitServiceMasterDetails.setStatus('A')` — deactivation via the update path was impossible (toggles silently re-activated). Fix: persist the actual status with a `\u0000`→'A' NUL-guard. Verified via psql: status 'I' persists (18:52:24), status 'A' persists (18:58:29).
+
+### Entry — unitServiceMaster: save path 100% commented out (FIXED in batch-4, recorded for completeness)
+
+**Status:** FIXED + live-verified (commit `1bb6b0a3`). The DAO's `saveUnitServiceMasterDetails` implementation was entirely commented out — every Create returned a generic error. Restored with: duplicate (serviceMasterId+unitId+orgId) check, status default 'A', NUL-guards on the is_* fields. Verified: legit create persists row 8 (org 1) via psql; forged create (org-999 payload) blocked by verified-identity rebind.
+
+### Entry — unitServiceMaster: cross-tenant WRITE via update-by-ID (FIXED in batch-4, the security-critical one)
+
+**Status:** LIVE-PROVEN + FIXED (commit `1bb6b0a3`). Pre-fix: an org-1 session sending `unitServiceMasterDetailsId: 5` (a victim org-999 row) with a forged payload **overwrote the victim row** — psql showed row 5's service_master_id/org/unit/status all changed (cross-tenant write, the most severe class). The DAO's `session.update()` writes by ID with no org/unit WHERE. Fix: the DAO now loads the existing row and verifies org+unit match the verified identity before updating (with `evict()` to avoid NonUniqueObjectException); mismatch → blocked. Post-fix psql: forged update on victim → rejected; victim pristine (service 4, org 999, unit 999, status A); legit update on own row → works.
+
+### Entry — visitTypeMasterProcedure: NOT A SCREEN (excluded; documented to prevent future confusion)
+
+**Status:** EXCLUDED. Exhaustive search (app.js states, frontend controllers, views, Java) returned ZERO hits for `visitTypeMasterProcedure` and all variants. The only "ProcedureMaster" hits in app.js are the `slideProcedureMaster` commonMaster dispatcher branches (LIS screens, part of the 41-screen sweep). Batch-3's screen is registered as `url === "visitType"` → `visitTypeMasterController`. No referent exists — do not investigate in future batches.
