@@ -529,6 +529,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_PAYMENT_ENTITLEMENT_LIST_BY_TARIFF_ID_LIST")
 					.setParameterList("tariffIdList", tariffMasterDto.getTariffIdList())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 
@@ -547,6 +549,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_VISIT_TYPE_LIST_BY_TARIFF_ID_LIST")
 					.setParameterList("tariffIdList", tariffMasterDto.getTariffIdList())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 
@@ -565,6 +569,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_PATIENT_TYPE_LIST_BY_TARIFF_ID_LIST")
 					.setParameterList("tariffIdList", tariffMasterDto.getTariffIdList())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 
@@ -583,6 +589,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_BILLING_BED_CATEGORY_BY_TARIFFID_LIST")
 					.setParameterList("tariffIdList", tariffMasterDto.getTariffIdList())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 
@@ -634,6 +642,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_BILLING_BED_CATEGORY_LIST_BY_TARIFF_ID")
 					.setParameter("tariffId", tariffMasterDto.getTariffId())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 
@@ -685,6 +695,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_PATIENT_TYPE_LIST_BY_TARIFF_ID")
 					.setParameter("tariffId", tariffMasterDto.getTariffId())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 
@@ -735,6 +747,8 @@ public class TariffMasterDaoImpl extends GenericDao<TariffMaster, Integer> imple
 			List<TariffMasterDto> tariffMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_VISIT_TYPE_LIST_BY_TARIFF_ID")
 					.setParameter("tariffId", tariffMasterDto.getTariffId())
+					.setParameter("orgId", tariffMasterDto.getOrganizationId())
+					.setParameter("orgUnitId", tariffMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(TariffMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, tariffMasterDtosList, null);
 

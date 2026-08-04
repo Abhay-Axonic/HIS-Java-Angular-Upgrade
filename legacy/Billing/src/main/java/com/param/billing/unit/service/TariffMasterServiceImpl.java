@@ -221,6 +221,8 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	public Response getPaymentEntitlementListByTariffIdList(TariffMasterDto tariffMasterDto)
 			throws ApplicationException {
 		try {
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getPaymentEntitlementListByTariffIdList(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -231,6 +233,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	public Response getVisitTypeListByTariffIdList(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getVisitTypeListByTariffIdList(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -241,6 +246,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	public Response getPatientTypeListByTariffIdList(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getPatientTypeListByTariffIdList(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -251,6 +259,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	public Response getBillingBedCategoryByTariffIdList(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getBillingBedCategoryByTariffIdList(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -261,6 +272,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	public Response getVisitTypeListByTariffId(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getVisitTypeListByTariffId(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -281,6 +295,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	public Response getPatientTypeListByTariffId(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getPatientTypeListByTariffId(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -302,6 +319,9 @@ public class TariffMasterServiceImpl implements ITariffMasterService, ICommonCon
 	@Override
 	public Response getBillingBedCategoryListByTariffId(TariffMasterDto tariffMasterDto) throws ApplicationException {
 		try {
+			
+			tariffMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			tariffMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iTariffMasterDao.getBillingBedCategoryListByTariffId(tariffMasterDto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -57,6 +57,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffPaymentEntitlementMapper tariffPayment "
 			+ "INNER JOIN tariffPayment.paymentEntitlementMaster paymentEntitlement "
 			+ "WHERE tariffPayment.tariffId=:tariffId "
+			+ "AND tariffPayment.organizationId=:orgId "
+			+ "AND tariffPayment.unitId=:orgUnitId "
 			+ "AND tariffPayment.status='A' "),
 	
 	@NamedQuery(name="GET_PAYMENT_ENTITLEMENT_LIST_BY_TARIFF_ID_LIST",query="SELECT tariffPayment.tariffPaymentEntitlementMapperId as tariffPaymentEntitlementMapperId, "
@@ -67,6 +69,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffPaymentEntitlementMapper tariffPayment "
 			+ "INNER JOIN tariffPayment.paymentEntitlementMaster paymentEntitlement "
 			+ "WHERE tariffPayment.tariffId IN (:tariffIdList) "
+			+ "AND tariffPayment.organizationId=:orgId "
+			+ "AND tariffPayment.unitId=:orgUnitId "
 			+ "AND tariffPayment.status='A' "),
 	
 	@NamedQuery(name="GET_TARIFF_MASTER_LIST_BY_ID",query="SELECT tariff.tariffDesc as tariffDesc,"
@@ -114,6 +118,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffVisitTypeMapper tariffVisit "
 			+ "INNER JOIN tariffVisit.visitTypeMaster visitTypeMstr "
 			+ "WHERE tariffVisit.tariffId IN (:tariffIdList) "
+			+ "AND tariffVisit.organizationId=:orgId "
+			+ "AND tariffVisit.unitId=:orgUnitId "
 			+ "AND tariffVisit.status='A' "
 			+ " ORDER BY visitTypeMstr.visitTypeCode ASC "
 		 ),
@@ -127,6 +133,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffPatientTypeMapper tariffPatientMpper "
 			+ "INNER JOIN tariffPatientMpper.patientCategoryMaster patientCategoryMstr "
 			+ "WHERE tariffPatientMpper.tariffId IN (:tariffIdList) "
+			+ "AND tariffPatientMpper.organizationId=:orgId "
+			+ "AND tariffPatientMpper.unitId=:orgUnitId "
 			+ "AND tariffPatientMpper.status='A' "),
 	
 	@NamedQuery(name="GET_BILLING_BED_CATEGORY_BY_TARIFFID_LIST",
@@ -138,6 +146,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffBillingBedCategoryMapper tariffBillingBedMpper "
 			+ "INNER JOIN tariffBillingBedMpper.billingBedCategoryMaster billingBedCatMstr "
 			+ "WHERE tariffBillingBedMpper.tariffId IN (:tariffIdList) "
+			+ "AND tariffBillingBedMpper.organizationId=:orgId "
+			+ "AND tariffBillingBedMpper.unitId=:orgUnitId "
 			+ "AND tariffBillingBedMpper.status='A' "),
 	
 	@NamedQuery(name="GET_VISIT_TYPE_LIST_BY_TARIFF_ID",
@@ -149,6 +159,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffVisitTypeMapper tariffVisit "
 			+ "INNER JOIN tariffVisit.visitTypeMaster visitMstr "
 			+ "WHERE tariffVisit.tariffId=:tariffId "
+			+ "AND tariffVisit.organizationId=:orgId "
+			+ "AND tariffVisit.unitId=:orgUnitId "
 			+ "AND tariffVisit.status='A' "),
 	
 	@NamedQuery(name="GET_PATIENT_TYPE_LIST_BY_TARIFF_ID",
@@ -160,6 +172,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffPatientTypeMapper tariffPatientType "
 			+ "INNER JOIN tariffPatientType.patientCategoryMaster patientCatMstr "
 			+ "WHERE tariffPatientType.tariffId=:tariffId "
+			+ "AND tariffPatientType.organizationId=:orgId "
+			+ "AND tariffPatientType.unitId=:orgUnitId "
 			+ "AND tariffPatientType.status='A' "),
 	
 	@NamedQuery(name="GET_BILLING_BED_CATEGORY_LIST_BY_TARIFF_ID",
@@ -171,6 +185,8 @@ import com.param.service.global.model.MPackageMaster;
 			+ "FROM TariffBillingBedCategoryMapper tariffBillingBed "
 			+ "INNER JOIN tariffBillingBed.billingBedCategoryMaster billingBedMstr "
 			+ "WHERE tariffBillingBed.tariffId=:tariffId "
+			+ "AND tariffBillingBed.organizationId=:orgId "
+			+ "AND tariffBillingBed.unitId=:orgUnitId "
 			+ "AND tariffBillingBed.status='A' ")
 	
 	
