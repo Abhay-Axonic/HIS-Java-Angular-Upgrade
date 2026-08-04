@@ -15,6 +15,7 @@ import com.param.rabbitmq.dto.base.Payload;
 import com.param.rabbitmq.dto.base.Request;
 import com.param.rabbitmq.service.EmrService.IEmrService;
 import com.param.rabbitmq.util.constants.MasterKeyConstants;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -31,6 +32,9 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Autowired
 	IEmrService EmrService;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	private Cache<Integer, List<OccupationMasterDto>> occupationMasterCache;
 
 	@PostConstruct
@@ -43,6 +47,7 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Override
 	public Response getOccupationMasterList(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
+			occupationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iOccupationMasterDao.getOccupationMasterList(occupationMasterDto);
 		} catch (Exception e) {
 			
@@ -54,6 +59,7 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	public Response addOccupationMaster(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
 
+			occupationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iOccupationMasterDao.getOccupationByName(occupationMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -85,7 +91,11 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 				}
 				
 				
-				return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				// propagate DAO status — do not mask a failed save as SUCCESS
+				if (res.getStatus() != null && res.getStatus().equals(SUCCESS)) {
+					return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				}
+				return new Response(ERROR, null, null, null, null);
 			}
 		} catch (Exception e) {
 			
@@ -96,6 +106,7 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Override
 	public Response getOccupationById(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
+			occupationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iOccupationMasterDao.getOccupationByID(occupationMasterDto);
 		} catch (Exception e) {
 			
@@ -106,6 +117,7 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Override
 	public Response updateOccupationMaster(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
+			occupationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iOccupationMasterDao.getOccupationByNameNotId(occupationMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -120,6 +132,9 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 					OccupationMaster master = (OccupationMaster) updateRes.getObject();
 					Integer orgId = master.getOrganizationId();
 					occupationMasterCache.invalidate(orgId);
+				} else {
+					// propagate DAO status — do not mask a rejected/failed update as SUCCESS
+					return updateRes;
 				}
 
 				occupationMasterDto.setCreatedBy(occupationMasterDto.getUpdatedBy());
@@ -143,6 +158,7 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Override
 	public Response updateStatusForOccupation(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
+			occupationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iOccupationMasterDao.getOccupationByID(occupationMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 			/*	occupationMasterDto
@@ -151,6 +167,9 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 				if(res.getStatus().equals(SUCCESS) && res.getObject() != null) {
 					Integer filterId = (Integer) res.getObject();
 					occupationMasterCache.invalidate(occupationMasterDto.getOrganizationId() != null ? occupationMasterDto.getOrganizationId() : filterId);
+				} else {
+					// propagate DAO status — do not mask a rejected/failed toggle as SUCCESS
+					return res;
 				}
 				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
 
@@ -167,6 +186,10 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Override
 	public Response getActiveMaritalStatusList(Integer orgId) throws ApplicationException {
 		try {
+			// active-list reads bind the JWT-verified org, never the client param
+			// NOTE: method name is a copy-paste from MaritalStatusMasterServiceImpl
+			// (occupation's active list) — flagged as a QA finding, name left intact.
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
 			List<OccupationMasterDto> responseCache = occupationMasterCache.getIfPresent(orgId);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
@@ -188,6 +211,7 @@ public class OccupationMasterServiceImpl implements IOccupationMasterService, IC
 	@Override
 	public Response getOccupationCount(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
+			occupationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iOccupationMasterDao.getCount(occupationMasterDto);
 		} catch (Exception e) {
 			

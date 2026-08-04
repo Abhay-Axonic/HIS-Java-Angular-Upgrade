@@ -35,7 +35,7 @@ import javax.persistence.Table;
 	@NamedQuery(name = "GET_OCCUPATION_BY_ID", query = "SELECT occupationMaster.id as id, "
 			+ "occupationMaster.code as code, " + "occupationMaster.desc as desc, "
 			+ "occupationMaster.status as status "
-			+ "FROM OccupationMaster as occupationMaster WHERE occupationMaster.id=:id"),
+			+ "FROM OccupationMaster as occupationMaster WHERE occupationMaster.id=:id AND occupationMaster.organizationId=:orgId"),
 
 	@NamedQuery(name = "GET_OCCUPATION_BY_NAME_NOT_ID", query = "SELECT occupationMaster.id as id, "
 			+ "occupationMaster.code as code, " + "occupationMaster.desc as desc, "
