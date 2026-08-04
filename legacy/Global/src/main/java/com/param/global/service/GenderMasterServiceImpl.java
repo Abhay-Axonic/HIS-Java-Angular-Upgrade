@@ -110,6 +110,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	@Override
 	public Response getGenderById(GenderMasterDto genderMasterDto) throws ApplicationException {
 		try {
+			genderMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iGenderMasterDao.getGenderByID(genderMasterDto);
 		} catch (Exception e) {
 			
