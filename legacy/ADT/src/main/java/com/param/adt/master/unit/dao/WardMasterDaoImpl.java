@@ -28,10 +28,14 @@ import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
 import in.param.exception.ApplicationException;
+import com.param.global.service.VerifiedIdentityService;
 
 @Repository
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implements IWardMasterDao, ICommonConstants {
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public WardMasterDaoImpl() {
 		super(WardMaster.class);
@@ -46,6 +50,10 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 	public Response saveWardMasterMaster(WardMasterDto wardMasterDto) throws ApplicationException {
 		try {
 			WardMaster wardMaster = mapper.map(wardMasterDto, WardMaster.class, "UnitWardMasterDto_to_UnitWardMaster");
+			// BATCH-5 org-trust fix: save previously wrote no org/unit (mapper doesn't carry them from
+			// the DTO) — new wards would be NULL-org, invisible to their own tenant's scoped queries.
+			wardMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			wardMaster.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			wardMaster.setCreatedDate(TimeZoneComponent.getDateByzone(wardMasterDto.getUnitId() != null ? wardMasterDto.getUnitId() :0));
 			wardMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(wardMasterDto.getUnitId() != null ? wardMasterDto.getUnitId() :0));
 			wardMaster.setStatus('A');
@@ -55,8 +63,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			save(wardMaster);
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, wardMaster.getWardId());
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -73,8 +82,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, WardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -91,8 +101,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.setResultTransformer(Transformers.aliasToBean(WardMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -101,17 +112,27 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 	public Response updateWardMaster(WardMasterDto wardMasterDto) throws ApplicationException {
 		try {
 			WardMaster wardMaster = findById(wardMasterDto.getWardId());
+			// BATCH-5 org-trust fix (write-by-ID class, same as BR-146/bedCategoryMaster): reject rows
+			// not owned by the verified tenant.
+			if (wardMaster == null || wardMaster.getOrganizationId() == null
+					|| !wardMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			wardMaster.setFloorId(wardMasterDto.getFloorId());
 			wardMaster.setWardCode(wardMasterDto.getWardCode());
 			wardMaster.setWardName(wardMasterDto.getWardName());
 			wardMaster.setGenderId(wardMasterDto.getGenderId());
-			wardMaster.setIsEr(wardMasterDto.getIsEr());
-			wardMaster.setIsIcu(wardMasterDto.getIsIcu());
+			// BATCH-5 fix (pre-existing NUL-crash class, sibling of the save's guards): the update
+			// copied DTO primitive-char fields raw — omitted fields default to '\u0000', and Hibernate
+			// binds the NUL into char(1) columns → 'invalid byte sequence 0x00' (live-proven). Apply the
+			// same NUL-guards the save already has.
+			wardMaster.setIsEr(wardMasterDto.getIsEr() == '\u0000' ? 'N' : wardMasterDto.getIsEr());
+			wardMaster.setIsIcu(wardMasterDto.getIsIcu() == '\u0000' ? 'N' : wardMasterDto.getIsIcu());
 			wardMaster.setIcuTypeId(wardMasterDto.getIcuTypeId());
-			wardMaster.setIsDayCare(wardMasterDto.getIsDayCare());
-			wardMaster.setIsIpWard(wardMasterDto.getIsIpWard());
-			wardMaster.setIslaborWard(wardMasterDto.getIslaborWard());
-			wardMaster.setIshemodialysisward(wardMasterDto.getIshemodialysisward());
+			wardMaster.setIsDayCare(wardMasterDto.getIsDayCare() == '\u0000' ? 'N' : wardMasterDto.getIsDayCare());
+			wardMaster.setIsIpWard(wardMasterDto.getIsIpWard() == null || wardMasterDto.getIsIpWard() == '\u0000' ? 'N' : wardMasterDto.getIsIpWard());
+			wardMaster.setIslaborWard(wardMasterDto.getIslaborWard() == null || wardMasterDto.getIslaborWard() == '\u0000' ? 'N' : wardMasterDto.getIslaborWard());
+			wardMaster.setIshemodialysisward(wardMasterDto.getIshemodialysisward() == null || wardMasterDto.getIshemodialysisward() == '\u0000' ? 'N' : wardMasterDto.getIshemodialysisward());
 //			wardMaster.setStoreId(wardMasterDto.getStoreId());
 			wardMaster.setUpdatedBy(wardMasterDto.getUpdatedBy());
 			wardMaster.setUpdatedDate(
@@ -119,8 +140,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			update(wardMaster);
 			return new Response<>(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, wardMaster);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -129,15 +151,23 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 	public Response updateWardMasterStatus(WardMasterDto wardMasterDto) throws ApplicationException {
 		try {
 			WardMaster wardMaster = findById(wardMasterDto.getWardId());
-			wardMaster.setStatus(wardMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
+			// BATCH-5 org-trust fix (write-by-ID class): reject rows not owned by the verified tenant.
+			if (wardMaster == null || wardMaster.getOrganizationId() == null
+					|| !wardMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
+			// BATCH-5 fix: ternary wrote ACTIVE/INACTIVE into varchar(1) — toggle never worked (same
+			// pre-existing bug as bedCategoryMaster). Persist the UI's 'A'/'I' directly.
+			wardMaster.setStatus(wardMasterDto.getStatus() == 'A' ? 'A' : 'I');
 			wardMaster.setUpdatedBy(wardMasterDto.getUpdatedBy());
 			wardMaster.setUpdatedDate(
 					GlobalCommonDateUtils.getDate(wardMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			update(wardMaster);
 			return new Response<>(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, wardMaster.getUnitId());
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -153,8 +183,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			Long count = (Long) c.uniqueResult();
 			return new Response(SUCCESS, null, null, null, count);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -170,8 +201,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.setResultTransformer(Transformers.aliasToBean(WardMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -187,10 +219,7 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.setParameter("unitId", wardMasterDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(WardMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
-		} catch (HibernateException he) {
-		} catch (Exception e) {
-			
-		}
+		} catch (HibernateException he) { he.printStackTrace(); } catch (Exception e) { e.printStackTrace(); }
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
@@ -204,8 +233,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.setResultTransformer(Transformers.aliasToBean(WardMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -221,8 +251,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.setResultTransformer(Transformers.aliasToBean(WardMasterDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -236,8 +267,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			sessionFactory.getCurrentSession().save(wardGenderMapper);
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -251,8 +283,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 					.setResultTransformer(Transformers.aliasToBean(MultiSelectDto.class)).list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -264,8 +297,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			.setParameter("wardId",wardId)
 			.executeUpdate();
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -295,8 +329,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			}
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, wardMasterDtoList, null);
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -341,8 +376,9 @@ public class WardMasterDaoImpl extends GenericDao<WardMaster, Integer> implement
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, WardMasterDtoList, null);
 		
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
@@ -402,8 +438,9 @@ try {
 
 			
 		} catch (HibernateException he) {
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return new Response(ERROR, null, null, null, null);
 	}
