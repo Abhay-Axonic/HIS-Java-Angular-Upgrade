@@ -223,7 +223,12 @@ public class PaymentEntitlementMasterDaoImpl extends GenericDao<PaymentEntitleme
 		try {
 			List<PaymentEntitlementMasterDto> paymentEntitlementMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_PAYMENT_ENTITLEMENT_BY_NAME_NOT_BY_ID")
-					//.setParameter("orgId", paymentEntitlementMasterDto.getOrganizationId())
+					// BR-161-class + update-path fix (2026-08-04, live-proven): the orgId
+					// parameter was COMMENTED OUT, but the query requires :orgId --
+					// every update's duplicate-name check threw QueryParameterException
+					// (HTTP 500) before reaching the DAO update. Re-enabled; the org is
+					// now the verified tenant (service-layer rebind in the caller).
+					.setParameter("orgId", paymentEntitlementMasterDto.getOrganizationId())
 					.setParameter("paymentEntId", paymentEntitlementMasterDto.getPaymentEntitlementId())
 					.setString("name", paymentEntitlementMasterDto.getPaymentEntitlementDesc().toLowerCase())
 					.setResultTransformer(Transformers.aliasToBean(PaymentEntitlementMasterDto.class))

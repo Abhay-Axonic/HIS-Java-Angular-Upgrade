@@ -57,7 +57,8 @@ import com.param.service.global.model.MPackageMaster;
 	  query="SELECT pem.paymentEntitlementId as paymentEntitlementId "
 		+ " FROM PaymentEntitlementMaster as pem "
 		+ " WHERE pem.organizationId =:orgId "
-		+ " AND LOWER(pem.paymentEntitlementDesc)=:name"),
+		+ " AND LOWER(pem.paymentEntitlementDesc)=:name"
+		+ " AND pem.paymentEntitlementId <> :paymentEntId"),
 	
 	@NamedQuery(name="GET_PAYMENT_ENTITLEMENT_BY_NAME", 
 	  query="SELECT pem.paymentEntitlementId as paymentEntitlementId "
