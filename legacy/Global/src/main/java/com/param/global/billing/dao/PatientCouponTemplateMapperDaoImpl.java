@@ -15,6 +15,7 @@ import com.param.global.billing.controller.BillingException;
 import com.param.global.billing.dto.CouponTemplateConsumeDetailsDto;
 import com.param.global.billing.dto.PatientCouponTemplateMapperDto;
 import com.param.global.common.GlobalCommonDateUtils;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.utility.TimeZoneComponent;
@@ -32,6 +33,9 @@ public class PatientCouponTemplateMapperDaoImpl extends GenericDao<PatientCoupon
 	
 	@Autowired
 	private SessionFactory SessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response savePatientCouponTemplateMapper(List<PatientCouponTemplateMapperDto> list) {
@@ -54,8 +58,10 @@ public class PatientCouponTemplateMapperDaoImpl extends GenericDao<PatientCoupon
 				masterD.setCouponTemplateDescription(dto.getCouponTemplateDescription());
 				masterD.setCreatedBy(dto.getCreatedBy());
 				masterD.setCreatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
-				masterD.setUnitId(dto.getUnitId());
-				masterD.setOrganizationId(dto.getOrganizationId());
+				// BR-batch2-org-trust fix (2026-08-03): save previously wrote client-supplied
+				// org/unit (DTO-trust). Bind the JWT-verified tenant only.
+				masterD.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+				masterD.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 				masterD.setUpdatedBy(dto.getUpdatedBy());
 				masterD.setExpireDays(dto.getExpireDays());
 				masterD.setUpdatedDate(TimeZoneComponent.getDateByzone(dto.getUnitId()));
@@ -79,8 +85,14 @@ public class PatientCouponTemplateMapperDaoImpl extends GenericDao<PatientCoupon
 	public Response forceStopPatientCouponTemplate(PatientCouponTemplateMapperDto dto) throws ApplicationException {
 		try {
 			
-			SessionFactory.getCurrentSession().createSQLQuery("UPDATE billing.t_patient_coupon_template_mapper set status='"+dto.getStatus()+"' WHERE patient_coupon_template_mapper_id =:id  ")
+			// BR-batch2-org-trust fix (2026-08-03): forceStop was a raw write-by-ID
+			// UPDATE with zero org/unit scoping (BR-160 class). Scope by the verified
+			// tenant so a cross-tenant mapper row can never be force-stopped.
+			SessionFactory.getCurrentSession().createSQLQuery("UPDATE billing.t_patient_coupon_template_mapper set status=:status WHERE patient_coupon_template_mapper_id =:id AND organization_id =:orgId AND unit_id =:unitId")
+			.setParameter("status", dto.getStatus())
 			.setParameter("id", dto.getPatientCouponTemplateMapperId())
+			.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
+			.setParameter("unitId", verifiedIdentityService.getVerifiedUnitId())
 			.executeUpdate();
 			return new Response(SUCCESS, SUCCESS_CODE, null, null, null);
 
