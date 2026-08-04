@@ -74,7 +74,9 @@ import com.param.global.model.PaymentEntitlementMaster;
 					+ " depositMatrixConfigMaster.nonSurgical as nonSurgical,"
 					+ " depositMatrixConfigMaster.status as status"
 					+ " FROM DepositMatrixConfigMaster depositMatrixConfigMaster"
-					+ " WHERE depositMatrixConfigMaster.mDepositMatrixId =:mDepositMatrixId"),
+					+ " WHERE depositMatrixConfigMaster.mDepositMatrixId =:mDepositMatrixId"
+					+ " AND depositMatrixConfigMaster.organisationId =:orgId"
+					+ " AND depositMatrixConfigMaster.unitId =:unitId"),
 			
 	@NamedQuery(name = "UPDATE_DEPOSIT_MATRIX_STATUS",
 			query = "UPDATE DepositMatrixConfigMaster "

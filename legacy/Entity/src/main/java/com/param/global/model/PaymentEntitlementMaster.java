@@ -28,7 +28,7 @@ import com.param.service.global.model.MPackageMaster;
 	@NamedQuery(name="GET_ACTIVE_PAYMENT_ENTITLEMENT_LIST", query="SELECT pem.paymentEntitlementId as paymentEntitlementId, "
 			+ "pem.paymentEntitlementDesc as paymentEntitlementDesc "
 			+ "FROM PaymentEntitlementMaster as pem "
-			+ "WHERE pem.status='A' "
+			+ "WHERE pem.status='A' AND pem.organizationId=:orgId "
 			+ " ORDER BY pem.paymentEntitlementDesc ASC "),
 	
 	@NamedQuery(name="GET_PAYMENT_ENTITLEMENT_LIST_BY_ORG", 

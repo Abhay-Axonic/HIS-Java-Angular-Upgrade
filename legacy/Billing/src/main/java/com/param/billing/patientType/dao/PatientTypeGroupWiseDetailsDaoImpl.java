@@ -17,10 +17,14 @@ import com.param.global.common.Response;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
+import com.param.global.service.VerifiedIdentityService;
 
 @SuppressWarnings({"rawtypes","unchecked","unused"})
 @Repository
 public class PatientTypeGroupWiseDetailsDaoImpl extends GenericDao<PatientTypeGroupWiseDetailsMaster,Integer> implements IPatientTypeGroupWiseDetailsDao,ICommonConstants{
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public PatientTypeGroupWiseDetailsDaoImpl() {
 		super(PatientTypeGroupWiseDetailsMaster.class);
@@ -241,7 +245,18 @@ public class PatientTypeGroupWiseDetailsDaoImpl extends GenericDao<PatientTypeGr
 	@Override
 	public Response updatePatientTypeGroupStatus(PatientTypeGroupWiseDetailsDto patientTypeGroupWiseDetailsDto) {
 		try {
+			// BATCH-4 org-trust fix (CRUD-sibling of the batch-2 patientType toggle guard): this
+			// toggle was a bare write-by-ID (findById + update, zero org check). Reject rows not
+			// owned by the verified tenant.
+			Integer verifiedOrgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer verifiedUnitId = verifiedIdentityService.getVerifiedUnitId();
 			PatientTypeGroupWiseDetailsMaster master = findById(patientTypeGroupWiseDetailsDto.getPatientTypeGroupId());
+			if (master == null || master.getOrganizationId() == null
+					|| !master.getOrganizationId().equals(verifiedOrgId)
+					|| master.getUnitId() == null
+					|| !master.getUnitId().equals(verifiedUnitId)) {
+				return new Response<>(ERROR, ERROR_CODE, "Cross-tenant update rejected", null, null);
+			}
 			master.setUpdatedBy(patientTypeGroupWiseDetailsDto.getUpdatedBy());
 			master.setUpdatedDate(GlobalCommonDateUtils.getDate(patientTypeGroupWiseDetailsDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));
 			master.setStatus(patientTypeGroupWiseDetailsDto.getStatus().toString());
