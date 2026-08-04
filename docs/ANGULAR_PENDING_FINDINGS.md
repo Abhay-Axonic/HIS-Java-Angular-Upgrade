@@ -5248,3 +5248,11 @@ Owner's manual UI review on `rebuild/phase4-batch25` (worktree `.claude/worktree
 - This is the same class as the tpaMaster saga (stale served bundle despite "fixed" files) — the earlier diagnosis was Vite caching; this instance proves the HMR-compile-error masking mechanism specifically.
 - Diagnostic that works: **payload discrimination test** — send both the old and new payload shapes directly to the endpoint; whichever returns success tells you what the SERVED app is actually sending. Plus: check the dev-server log for "Application bundle generation failed" after any fix.
 - RULE (strengthened): after ANY frontend fix, (1) `tsc --noEmit` clean AND (2) full dev-server restart + verify the served bundle reflects the fix (or the payload discrimination test), before claiming "fixed". HMR alone is never sufficient.
+
+
+## NOTE batch29-6: named-query / bound-parameter mismatch — "silent until real E2E" bug class #4 (live-proven 2026-08-04)
+
+- Pattern: a named query declares fewer `:params` than the DAO binds. Hibernate throws `QueryParameterException: could not locate named parameter [X]` → HTTP 500 on every call of that path — with NO SQL reaching the DB (psql log silent), so the psql-log-first diagnostic misses it. The exception only surfaces in the app log (which on this Tomcat is drowned by webresources-cache WARNING floods — must grep for `ERROR: com.param` specifically).
+- Instance: `GET_PAYMENT_ENTITLEMENT_BY_NAME_NOT_BY_ID` was missing its `paymentEntitlementId <> :paymentEntId` clause (declared :orgId + :name, DAO bound all three) → every Edit-save on paymentEntitlementMaster 500'd; Create (uses GET_PAYMENT_ENTITLEMENT_BY_NAME, binds only :name) was unaffected.
+- Sibling-check rule (fix the class, not the instance): before claiming a fix, grep the sibling screens' equivalent named queries — PaymentModeMaster's NOT_BY_ID query declares all 3 params correctly, which is why only this screen failed.
+- Lesson for the standing checklist: when a write path 500s with no psql error, check (1) the named query's declared params vs the DAO's binds, (2) commented-out setParameter lines (the orgId one here was commented out too — a BR-161-class cross-tenant leak if the query had run without it).
