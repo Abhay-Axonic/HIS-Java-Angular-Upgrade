@@ -25,14 +25,16 @@ import javax.persistence.Table;
 			+ "pc.status as status  "
 			+ "FROM PriorityMaster as pc "
 			+ "WHERE pc.priorityId=:priorityId " 
-			+ "AND pc.organizationId=:orgId "),
+			+ "AND pc.organizationId=:orgId "
+			+ "AND pc.unitId=:unitId "),
 	@NamedQuery(name = "GET_PRIORITY_MASTER_LIST", 
 	query = "SELECT pc.priorityId as id, "
 			+ "pc.priorityDesc as desc, " 
 			+ "pc.status as status, " 
 			+ "pc.priorityCode as code "
 			+ "FROM PriorityMaster as pc  "
-			/*+ " WHERE pc.organizationId=:orgId "*/
+			+ " WHERE pc.organizationId=:orgId "
+			+ " AND pc.unitId=:unitId "
 			+ " ORDER BY pc.priorityDesc ASC"),
 	@NamedQuery(name = "GET_PRIORITY_MASTER_BY_NAME", 
 	query = "SELECT pc.priorityId as priorityId, "
@@ -41,7 +43,8 @@ import javax.persistence.Table;
 			+ "pc.status as status "
 			+ "FROM PriorityMaster as pc  "
 			+ " WHERE LOWER(pc.priorityDesc)=:priorityDesc " 
-			+ "AND pc.organizationId=:orgId"),
+			+ "AND pc.organizationId=:orgId "
+			+ "AND pc.unitId=:unitId "),
 	@NamedQuery(name = "GET_PRIORITY_MASTER_BY_NAME_NOT_BY_ID",
 	query = "SELECT pc.priorityId as priorityId, "
 			+ "pc.priorityDesc as priorityDesc, " 
@@ -49,7 +52,8 @@ import javax.persistence.Table;
 			+ "FROM PriorityMaster as pc  "
 			+ "WHERE LOWER(pc.priorityDesc)=:priorityDesc "
 			+ "AND pc.priorityId !=:priorityId "
-			+ "AND pc.organizationId=:orgId")
+			+ "AND pc.organizationId=:orgId "
+			+ "AND pc.unitId=:unitId")
 })
 
 

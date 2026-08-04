@@ -7,6 +7,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.org.common.dao.IPriorityMasterDao;
 import com.param.global.org.common.dto.PriorityMasterDto;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -24,11 +25,17 @@ public class PriorityMasterServiceImpl implements IPriorityMasterService, ICommo
 	@Autowired
 	private IUnknownPatientRegistrationService iUnknownPatientRegistrationService;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response savePriorityMasterMaster(PriorityMasterDto priorityMasterDto) throws ApplicationException {
+		// DTO org/unit are never trusted — bind the JWT-verified tenant first
+		priorityMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		priorityMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		Response response = iPriorityMasterDao.getPriorityMasterByName(priorityMasterDto);
 		try {
-			if (response.getListObject().size() > 0 && response.getListObject() != null) {
+			if (response.getListObject() != null && response.getListObject().size() > 0) {
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 			} else {
 				Response saveRes = iPriorityMasterDao.savePriorityMasterMaster(priorityMasterDto);
@@ -46,7 +53,10 @@ public class PriorityMasterServiceImpl implements IPriorityMasterService, ICommo
 	@Override
 	public Response getPriorityMasterById(int priorityId, int orgId) throws ApplicationException {
 		try {
-			return iPriorityMasterDao.getPriorityMasterById(priorityId, orgId);
+			// by-id read binds the JWT-verified org AND unit, never the client params
+			return iPriorityMasterDao.getPriorityMasterById(priorityId,
+					verifiedIdentityService.getVerifiedOrganizationId(),
+					verifiedIdentityService.getVerifiedUnitId());
 		} catch (Exception e) {
 		logger.error("getPriorityMasterById failed", e);
 		}
@@ -56,6 +66,8 @@ public class PriorityMasterServiceImpl implements IPriorityMasterService, ICommo
 	@Override
 	public Response getPriorityMasterList(PriorityMasterDto priorityMasterDto) throws ApplicationException {
 		try {
+			priorityMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			priorityMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iPriorityMasterDao.getPriorityMasterList(priorityMasterDto);
 		} catch (Exception e) {
 		logger.error("getPriorityMasterList failed", e);
@@ -65,10 +77,12 @@ public class PriorityMasterServiceImpl implements IPriorityMasterService, ICommo
 
 	@Override
 	public Response updatePriorityMaster(PriorityMasterDto priorityMasterDto) throws ApplicationException {
+		priorityMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		priorityMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		Response response = iPriorityMasterDao.getPriorityMasterByNameNotById(priorityMasterDto);
 
 		try {
-			if (response.getListObject().size() > 0 && response.getListObject() != null) {
+			if (response.getListObject() != null && response.getListObject().size() > 0) {
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 			} else {
 				Response res = iPriorityMasterDao.updatePriorityMaster(priorityMasterDto);
@@ -87,6 +101,8 @@ public class PriorityMasterServiceImpl implements IPriorityMasterService, ICommo
 	@Override
 	public Response updatePriorityMasterStatus(PriorityMasterDto priorityMasterDto) throws ApplicationException {
 		try {
+			priorityMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			priorityMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response saveRes = iPriorityMasterDao.updatePriorityMasterStatus(priorityMasterDto);
 			if(saveRes.getStatus().equals(SUCCESS)){
 				iUnknownPatientRegistrationService.invalidatePriorityMasterCache();
@@ -101,6 +117,8 @@ public class PriorityMasterServiceImpl implements IPriorityMasterService, ICommo
 	@Override
 	public Response getPriorityMasterCount(PriorityMasterDto priorityMasterDto) throws ApplicationException {
 		try {
+			priorityMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			priorityMasterDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iPriorityMasterDao.getPriorityMasterCount(priorityMasterDto);
 		} catch (Exception e) {
 		logger.error("getPriorityMasterCount failed", e);
