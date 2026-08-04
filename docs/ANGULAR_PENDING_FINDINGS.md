@@ -5240,3 +5240,11 @@ Owner's manual UI review on `rebuild/phase4-batch25` (worktree `.claude/worktree
 - Live-hit on batch 3: payment_entitlement_master_seq=2 vs max=4, payment_mode_master_seq=7 vs max=9 → paymentEntitmentMaster + paymentModeMaster saves 500'd after the payload fix; visitTypeMaster worked (seq=8=max=8). Diagnosed via psql seq-vs-max comparison; fixed with `SELECT setval('<seq>', (SELECT MAX(<id>) FROM <table>))`.
 - RULE going forward: after seeding ANY row with an explicit ID, immediately `setval` the owning sequence to `MAX(id)`. Check before any save-verification round: `SELECT last_value FROM <seq>` vs `SELECT MAX(<id>) FROM <table>` must be equal.
 - Secondary finding (same session): paymentEntitlement rebuild save payload used `updatedDate` but the backend DAO reads `getUpdateDate()` (Global PaymentEntitlementMasterDto has BOTH `String updateDate` and `Date updatedDate`) → 400 "Invalid parameters"; corrected to legacy-exact `updateDate` in commit 72124af0.
+
+
+## NOTE batch29-5: HMR silently masks compile errors — stale module stays served (live-proven 2026-08-04, 3rd instance of the class)
+
+- Root cause chain: a fix that does NOT compile (TS2561 type mismatch — component changed to send `updateDate` but service payload type still declared `updatedDate`) is **silently NOT picked up by HMR**. The running dev server keeps serving the STALE pre-fix module; the app keeps sending the old payload (400 "Invalid parameters" on save) with NO visible error anywhere — no console error, no build failure (the build failure only shows on a FRESH server start: "Application bundle generation failed").
+- This is the same class as the tpaMaster saga (stale served bundle despite "fixed" files) — the earlier diagnosis was Vite caching; this instance proves the HMR-compile-error masking mechanism specifically.
+- Diagnostic that works: **payload discrimination test** — send both the old and new payload shapes directly to the endpoint; whichever returns success tells you what the SERVED app is actually sending. Plus: check the dev-server log for "Application bundle generation failed" after any fix.
+- RULE (strengthened): after ANY frontend fix, (1) `tsc --noEmit` clean AND (2) full dev-server restart + verify the served bundle reflects the fix (or the payload discrimination test), before claiming "fixed". HMR alone is never sufficient.
