@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.param.global.common.ICommonConstants;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.common.Response;
 import com.param.global.common.ServiceException;
 import com.param.global.dao.IPaymentEntitlementMasterDao;
@@ -16,6 +17,9 @@ import com.param.global.dto.PaymentEntitlementMasterDto;
 @Service
 @SuppressWarnings("rawtypes")
 public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementMasterService, ICommonConstants {
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 
 	final static Logger logger = Logger.getLogger(PaymentEntitlementMasterServiceImpl.class);
 
@@ -35,6 +39,8 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 
 	@Override
 	public Response getPaymentEntitlementListByOrgId(int orgId) throws ApplicationException {
+		// BR-161-class fix: orgId was client-supplied (path param).
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 
 		try {
 			return iPaymentEntitlementMasterDao.getPaymentEntitlementListByOrgId(orgId);
@@ -46,6 +52,8 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 
 	@Override
 	public Response getPaymententitlementById(int orgId, int paymentEntId) throws ApplicationException {
+		// BR-161-class fix: orgId was client-supplied (path param).
+		orgId = verifiedIdentityService.getVerifiedOrganizationId();
 		try {
 			return iPaymentEntitlementMasterDao.getPaymententitlementById(orgId, paymentEntId);
 		} catch (Exception e) {
@@ -57,6 +65,10 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 	@Override
 	public Response getPaymententitlementList(PaymentEntitlementMasterDto paymentEntitlementMasterDto)
 			throws ApplicationException {
+		// BR-161-class read fix (2026-08-04, live-proven): GET_PAYMENT_ENTITLEMENT_LIST
+		// had NO WHERE clause at all -- forged org-999 returned the same rows as org-1.
+		// Bind the verified tenant; the DAO named query is patched to scope by org.
+		paymentEntitlementMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			return iPaymentEntitlementMasterDao.getPaymententitlementList(paymentEntitlementMasterDto);
 		} catch (Exception e) {
@@ -68,6 +80,8 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 	@Override
 	public Response savePaymententitlement(PaymentEntitlementMasterDto paymentEntitlementMasterDto)
 			throws ApplicationException {
+		// BR-161-class fix: rebind verified tenant on the write path.
+		paymentEntitlementMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 		Response res = iPaymentEntitlementMasterDao.getPaymententitlementByName(paymentEntitlementMasterDto);
 		try {
 			if (res.getListObject().size() > 0 && res.getListObject() != null) {
@@ -85,6 +99,8 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 	@Override
 	public Response updatePaymententitlement(PaymentEntitlementMasterDto paymentEntitlementMasterDto)
 			throws ApplicationException {
+		// BR-161-class fix: rebind verified tenant on the write path.
+		paymentEntitlementMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 		Response res = iPaymentEntitlementMasterDao.getPaymententitlementByNameNotById(paymentEntitlementMasterDto);
 		try {
 			if (res.getListObject().size() > 0 && res.getListObject() != null) {
@@ -101,6 +117,8 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 	@Override
 	public Response updatePaymententitlementStatus(PaymentEntitlementMasterDto paymentEntitlementMasterDto)
 			throws ApplicationException {
+		// BR-161-class fix: rebind verified tenant on the status-toggle path.
+		paymentEntitlementMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			return iPaymentEntitlementMasterDao.updatePaymententitlementStatus(paymentEntitlementMasterDto);
 		} catch (Exception e) {
@@ -112,6 +130,8 @@ public class PaymentEntitlementMasterServiceImpl implements IPaymentEntitlementM
 	@Override
 	public Response getPaymententitlementCount(PaymentEntitlementMasterDto paymentEntitlementMasterDto)
 			throws ApplicationException {
+		// BR-161-class fix: rebind verified tenant on the count read.
+		paymentEntitlementMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 		try {
 			return iPaymentEntitlementMasterDao.getPaymententitlementCount(paymentEntitlementMasterDto);
 		} catch (Exception e) {

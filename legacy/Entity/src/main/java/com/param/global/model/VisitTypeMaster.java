@@ -30,7 +30,7 @@ import com.param.service.global.model.MPackageMaster;
 						+ " visitTypeMaster.visitTypeCode as visitTypeName,"
 						+ " visitTypeMaster.visitTypeCode as visitTypeCode "
 						+ " FROM VisitTypeMaster visitTypeMaster"
-						+ " WHERE visitTypeMaster.status = 'A'"
+						+ " WHERE visitTypeMaster.status = 'A' AND visitTypeMaster.organizationId = :orgId"
 						+ " ORDER BY visitTypeMaster.visitTypeCode ASC "),
 	
 	@NamedQuery(name="GET_VISIT_TYPE_LIST",
@@ -38,7 +38,8 @@ import com.param.service.global.model.MPackageMaster;
 					+ " visitTypeMaster.visitTypeName as desc,"
 					+ " visitTypeMaster.visitTypeCode as code ,"
 					+ " visitTypeMaster.status AS status "
-					+ " FROM VisitTypeMaster visitTypeMaster"),
+					+ " FROM VisitTypeMaster visitTypeMaster"
+						+ " WHERE visitTypeMaster.organizationId = :orgId"),
 
 	@NamedQuery(name="GET_VISIT_TYPE_BY_ID",
 				query =" SELECT visitTypeMaster.visitTypeId as id,"

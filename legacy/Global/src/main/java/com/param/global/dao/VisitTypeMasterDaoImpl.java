@@ -37,6 +37,10 @@ public class VisitTypeMasterDaoImpl extends GenericDao<VisitTypeMaster, Integer>
 		try {
 			List<VisitTypeMasterDto> listVisitTypeMasterDto = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_ACTIVE_VISIT_TYPE_LIST")
+					// BR-161-class fix (2026-08-04, live-proven): the query previously had
+					// NO org filter AND bound no params -- every org's rows were returned
+					// (forged org-999 saw org-1 rows + victims). Now org-scoped.
+					.setParameter("orgId", orgId)
 					.setResultTransformer(Transformers.aliasToBean(VisitTypeMasterDto.class)).list();
 			return new Response(SUCCESS, SUCCESS_CODE, null, listVisitTypeMasterDto, null);
 		} catch (HibernateException he) {
@@ -52,6 +56,8 @@ public class VisitTypeMasterDaoImpl extends GenericDao<VisitTypeMaster, Integer>
 		try {
 			List<VisitTypeMasterDto> listVisitTypeMasterDto = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_VISIT_TYPE_LIST")
+					// BR-161-class fix: org-scoped (the query had no org filter).
+					.setParameter("orgId", visitTypeMasterDto.getOrganizationId())
 					.setFirstResult(visitTypeMasterDto.getOffset() != null ? visitTypeMasterDto.getOffset() : 0)
 					.setMaxResults(visitTypeMasterDto.getNoOfRecordsPerPage() != null ? visitTypeMasterDto.getNoOfRecordsPerPage() : 10)
 					.setResultTransformer(Transformers.aliasToBean(VisitTypeMasterDto.class)).list();

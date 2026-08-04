@@ -93,7 +93,11 @@ public class PaymentEntitlementMasterDaoImpl extends GenericDao<PaymentEntitleme
 		try {
 			List<PaymentEntitlementMasterDto> paymentEntitlementMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_PAYMENT_ENTITLEMENT_LIST")
-					//.setParameter("orgId", paymentEntitlementMasterDto.getOrganizationId())
+					// BR-161-class fix (2026-08-04, live-proven): the org parameter was
+					// COMMENTED OUT, so the list returned every row for every tenant
+					// (forged org-999 returned org-1 rows). Re-enabled + the named query
+					// now filters WHERE organizationId=:orgId.
+					.setParameter("orgId", paymentEntitlementMasterDto.getOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(PaymentEntitlementMasterDto.class))
 					.list();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, paymentEntitlementMasterDtoList, null);
