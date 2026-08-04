@@ -50,7 +50,11 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 	@Override
 	public Response saveUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)
 			throws ApplicationException {
-		/*try {
+		try {
+			// BATCH-4 CORRECTNESS FIX (2026-08-04): the original implementation was entirely
+			// commented out — every Create returned ERROR (COMMON_ERROR_CODE). Restored with:
+			//  (a) duplicate (serviceMasterId+unitId+orgId) check, (b) status default 'A',
+			//  (c) same NUL-guards as the update path.
 			StringBuilder sb = new StringBuilder();
 			sb.append("SELECT COUNT(*) FROM UnitServiceMasterDetails service WHERE service.serviceMasterId = :serviceMasterId AND service.unitId =:unitId AND service.organizationId =:orgId");
 			Long count = (Long) sessionFactory.getCurrentSession().createQuery(sb.toString())
@@ -62,15 +66,23 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 			if(exist) {
 				return new Response(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);
 			}else {
-				UnitServiceMasterDetails unitServiceMasterDetails = mapper.map(unitServiceMasterDetailsDto, UnitServiceMasterDetails.class, "global_UnitServiceMasterDetailsDto_to_UnitServiceMasterDetails"); 
+				UnitServiceMasterDetails unitServiceMasterDetails = mapper.map(unitServiceMasterDetailsDto, UnitServiceMasterDetails.class, "global_UnitServiceMasterDetailsDto_to_UnitServiceMasterDetails");
+				unitServiceMasterDetails.setStatus(unitServiceMasterDetails.getStatus()=='\u0000'?'A':unitServiceMasterDetails.getStatus());
+				unitServiceMasterDetails.setIsOutsource(unitServiceMasterDetails.getIsOutsource()=='\u0000'?'I':unitServiceMasterDetails.getIsOutsource());
+				unitServiceMasterDetails.setIsOutsourceJob(unitServiceMasterDetails.getIsOutsourceJob()=='\u0000'?'N':unitServiceMasterDetails.getIsOutsourceJob());
+				unitServiceMasterDetails.setIsPackage(unitServiceMasterDetails.getIsPackage()=='\u0000'?'I':unitServiceMasterDetails.getIsPackage());
+				unitServiceMasterDetails.setIsRateEditable(unitServiceMasterDetails.getIsRateEditable()=='\u0000'?'I':unitServiceMasterDetails.getIsRateEditable());
+				unitServiceMasterDetails.setIsTaxApplicable(unitServiceMasterDetails.getIsTaxApplicable()=='\u0000'?'I':unitServiceMasterDetails.getIsTaxApplicable());
+				unitServiceMasterDetails.setIsRefDoctorShare(unitServiceMasterDetails.getIsRefDoctorShare()=='\u0000'?'I':unitServiceMasterDetails.getIsRefDoctorShare());
+				unitServiceMasterDetails.setIsDiscount(unitServiceMasterDetails.getIsDiscount()=='\u0000'?'I':unitServiceMasterDetails.getIsDiscount());
 				save(unitServiceMasterDetails);
 				return new Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
 			}
 		}catch (HibernateException he) {
-			h
+			logger.error("saveUnitServiceMasterDetails failed", he);
 		} catch (Exception e) {
-			
-		} */
+			logger.error("saveUnitServiceMasterDetails failed", e);
+		}
 		return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
@@ -142,7 +154,10 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 			UnitServiceMasterDetails unitServiceMasterDetails = mapper.map(unitServiceMasterDetailsDto, UnitServiceMasterDetails.class, "global_UnitServiceMasterDetailsDto_to_UnitServiceMasterDetails"); 
 			unitServiceMasterDetails.setIsPackage(unitServiceMasterDetailsDto.getIsPackage());
 
-			unitServiceMasterDetails.setStatus('A');
+			// BATCH-4 CORRECTNESS FIX (2026-08-04): the update path hardcoded setStatus('A'),
+			// making it impossible to deactivate a row — toggles silently re-activated.
+			// Persist the actual status now (with the same NUL-guard pattern as the is_* fields).
+			unitServiceMasterDetails.setStatus(unitServiceMasterDetails.getStatus()=='\u0000'?'A':unitServiceMasterDetails.getStatus());
 			unitServiceMasterDetails.setIsOutsource(unitServiceMasterDetails.getIsOutsource()=='\u0000'?'I':unitServiceMasterDetails.getIsOutsource());
 			unitServiceMasterDetails.setIsOutsourceJob(unitServiceMasterDetails.getIsOutsourceJob()=='\u0000'?'N':unitServiceMasterDetails.getIsOutsourceJob());
 			unitServiceMasterDetails.setIsPackage(unitServiceMasterDetails.getIsPackage()=='\u0000'?'I':unitServiceMasterDetails.getIsPackage());
@@ -153,12 +168,13 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 			if(unitServiceMasterDetailsDto.getIsCyclicFlag()!=null) {
 				unitServiceMasterDetails.setIsCyclicFlag(unitServiceMasterDetailsDto.getIsCyclicFlag());
 			}
-			if(unitServiceMasterDetails.getIsDocReq().equals('N'))
+			// BATCH-4 null-safety fix: isDocReq/isRefDoctorShare can be null (mapper gap) — guard before compare
+			if(unitServiceMasterDetails.getIsDocReq()!=null && unitServiceMasterDetails.getIsDocReq().equals('N'))
 				unitServiceMasterDetails.setDocRefPer(null);
 			if(unitServiceMasterDetails.getIsRefDoctorShare()=='N')
 				unitServiceMasterDetails.setRefSharePer(null);
 			
-			if(unitServiceMasterDetails.getIsDocReq().equals('Y') && unitServiceMasterDetails.getDocRefPer()==null)
+			if(unitServiceMasterDetails.getIsDocReq()!=null && unitServiceMasterDetails.getIsDocReq().equals('Y') && unitServiceMasterDetails.getDocRefPer()==null)
 				unitServiceMasterDetails.setDocRefPer(BigDecimal.ZERO);
 			if(unitServiceMasterDetails.getIsRefDoctorShare()=='Y' && unitServiceMasterDetails.getRefSharePer()==null)
 				unitServiceMasterDetails.setRefSharePer(BigDecimal.ZERO);
@@ -168,6 +184,19 @@ public class UnitServiceMasterDetailsDaoImpl extends GenericDao<UnitServiceMaste
 			unitServiceMasterDetails.setIsFormFApplicable(unitServiceMasterDetailsDto.getIsFormFApplicable());
 			unitServiceMasterDetails.setIsAdminService(unitServiceMasterDetailsDto.getIsAdminService());
 
+			// BATCH-4 ORG-TRUST FIX (live-proven 2026-08-04): session.update() writes by ID with no
+			// org/unit WHERE — a forged update with a cross-tenant ID overwrote the victim row.
+			// Guard: the row being updated must belong to the verified org+unit.
+			UnitServiceMasterDetails existing = (UnitServiceMasterDetails) sessionFactory.getCurrentSession()
+					.get(UnitServiceMasterDetails.class, unitServiceMasterDetailsDto.getUnitServiceMasterDetailsId());
+			if(existing == null || existing.getOrganizationId() != unitServiceMasterDetails.getOrganizationId()
+					|| existing.getUnitId() != unitServiceMasterDetails.getUnitId()) {
+				logger.error("updateUnitServiceMasterDetails failed: cross-tenant update blocked (id="
+						+ unitServiceMasterDetailsDto.getUnitServiceMasterDetailsId() + ")");
+				return new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
+			// evict the loaded copy so the mapper-built entity can be updated (NonUniqueObjectException guard)
+			sessionFactory.getCurrentSession().evict(existing);
 			update(unitServiceMasterDetails);
 			return new Response(SUCCESS, SUCCESS_CODE, COMMON_UPDATE, null, null);
 		}catch (HibernateException he) {

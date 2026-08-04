@@ -15,6 +15,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.dao.IUnitServiceMasterDetailsDao;
 import com.param.global.dto.UnitServiceMasterDetailsDto;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -28,6 +29,9 @@ public class UnitServiceMasterDetailsServiceImpl implements IUnitServiceMasterDe
 
 	@Autowired
 	private IUnitServiceMasterDetailsDao iUnitServiceMasterDetailsDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 	@Autowired
 	IServiceBasePriceMasterDao iServiceBasePriceMasterDao;
@@ -37,6 +41,8 @@ public class UnitServiceMasterDetailsServiceImpl implements IUnitServiceMasterDe
 	public Response saveUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)
 			throws ApplicationException {
 		try {
+			unitServiceMasterDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			unitServiceMasterDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iUnitServiceMasterDetailsDao.saveUnitServiceMasterDetails(unitServiceMasterDetailsDto);
 		} catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -49,6 +55,8 @@ public class UnitServiceMasterDetailsServiceImpl implements IUnitServiceMasterDe
 	public Response getPaginatedUnitServiceMasterDetailsList(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)
 			throws ApplicationException {
 		try {
+			unitServiceMasterDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			unitServiceMasterDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iUnitServiceMasterDetailsDao.getPaginatedUnitServiceMasterDetailsList(unitServiceMasterDetailsDto);
 		} catch (Exception e) {
 		throw new ApplicationException(e.getMessage(), e);
@@ -60,6 +68,8 @@ public class UnitServiceMasterDetailsServiceImpl implements IUnitServiceMasterDe
 	@Transactional
 	public Response getUnitServiceMasterDetailsCount(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)
 			throws ApplicationException {
+		unitServiceMasterDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		unitServiceMasterDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iUnitServiceMasterDetailsDao.getUnitServiceMasterDetailsCount(unitServiceMasterDetailsDto);
 		} catch (Exception e) {
@@ -72,6 +82,8 @@ public class UnitServiceMasterDetailsServiceImpl implements IUnitServiceMasterDe
 	@Transactional
 	public Response getUnitServiceMasterDetailsById(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)
 			throws ApplicationException {
+		unitServiceMasterDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+		unitServiceMasterDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 		try {
 			return iUnitServiceMasterDetailsDao.getUnitServiceMasterDetailsById(unitServiceMasterDetailsDto);
 		} catch (Exception e) {
@@ -85,6 +97,8 @@ public class UnitServiceMasterDetailsServiceImpl implements IUnitServiceMasterDe
 	public Response updateUnitServiceMasterDetails(UnitServiceMasterDetailsDto unitServiceMasterDetailsDto)
 			throws ApplicationException {
 		try {
+			unitServiceMasterDetailsDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			unitServiceMasterDetailsDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response res =  iUnitServiceMasterDetailsDao.updateUnitServiceMasterDetails(unitServiceMasterDetailsDto);
 			if(res.getStatus().equals(SUCCESS))
 			{
