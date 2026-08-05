@@ -1118,4 +1118,39 @@ THE THREE NO-CLEAN-RULE RESOLUTIONS:
 - The remaining ALLOWs (INTEGRATION 22 with external callers, PUBLIC 47, the confirmed-pre-login
   kiosk ~16-18) keep their named callers.
 
+## QF-2026-08-05-AJ — owner review of the 108: six decisions applied. FINAL ALLOW COUNT: 83.
+
+- APPLIED (owner, 2026-08-05):
+  1. DENY /api/billing/unit/bill/Report — billing data, config-file caller only; the same evidence
+     shape the geo masters were demoted on. Re-ALLOW only with a named pre-login caller.
+  2. DENY /Report — the QF-AH resolution applied: the family enumerated individually and DENYed:
+     /LIS/ReportHandOver, /LIS/ReportHandOver/ReportHandOverList/Search,
+     /LIS/BioChemistry/ReportReleaseWorkList/Type/Search, /api/billing/unit/bill/Report/MIS,
+     /api/billing/unit/bill/Report/file (+ /pathology/report, already its own entry) — all DENY;
+     the reports ride the staff token check.
+  3. DENY /QR, /RIS/RADIOLOGY, /pathology/report, /generateToken, generateTokenForWebUser — no
+     named caller, no demonstrated pre-login need; UNCONFIRMED defaults to DENY (the getDailySlots
+     rule).
+- CONFIRMED KEPT:
+  4. /token/Doctor ALLOW — twilio-video.js:30732 is the raw-fetch no-token path (the /checkParti/
+     class); the twilio participant check needs it pre-login.
+  5. /checkEmailAvailability, /otpVerification, /forgotPasswordGeneration ALLOW — pre-login by
+     design (the account-existence oracle + the credential-reset paths). PHASE 6 REQUIREMENT
+     (recorded): rate limiting on all three — the reset/verify paths are brute-force targets.
+  6. The 8 external INTEGRATION callbacks ALLOW (ABDM x4, MyLife x3, the payment callbacks
+     /resultUrl + /validationResultResponse, Twilio /api/saveTwilioMsg + the misc) — the caller is
+     a partner system, no repo caller by design. PHASE 6 REQUIREMENT (recorded): a real partner
+     gate — shared secret, signature verification, or IP allowlist — because unauthenticated is
+     the wrong answer for a partner callback; the structural change leaves them ALLOW, Phase 6
+     closes them properly.
+- THE MATH: 108 - 18 (kiosk reclassified DENY: getDoctors, getNationalityByCountryId, getDailySlots,
+  getAvailableDoctorBySpeciality, the 11 geo/address masters, the 2 prefix masters,
+  getSpecialityListByDoctorIdByOrg) - 7 (owner 1-3) = 83 FINAL ALLOW.
+- The 83 = 47 PUBLIC (incl. the login/static/swagger) + 22 INTEGRATION (Phase-6-gated) + ~14
+  confirmed-pre-login kiosk (selfRegistration/bookAppointment/bookView/webAppointment/feedback/
+  /token/Doctor + /adt/br + the pre-login siblings) + the 3 login-adjacent PHI (Phase-6 rate-limited).
+- NEXT GATE: the owner authorises the Phase-2 rewrite from this number. The 83 exact-URL allowlist
+  is the artifact the rewrite matches against (normalization: host-strip, query-strip,
+  trailing-slash-strip; the pattern rule for the two feedback path-variable GETs).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
