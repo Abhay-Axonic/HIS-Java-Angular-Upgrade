@@ -303,4 +303,30 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
 - All endpoints checked: NOT on the JWT whitelist (authenticated). Effort anchors: five-screen batch
   00:28-06:05 (+merge 09:51) ~= 5.6h for 5 B-class screens (~35 methods); sex screen ~1h fix (forensics one-off).
 
+## QF-2026-08-05-I — PHI-leak chain traces + patient-safety finding (3b-revised tasks 1-3)
+
+- GET_DIAGNOSIS_BY_GENDER_ID chain RESOLVED: DiagnosisMapperController POST /getDiagnosisByGenderId
+  (JSON DTO) -> DiagnosisMapperServiceImpl -> DiagnosisMapperDaoImpl; **WHITELISTED (auth-exempt) at
+  JwtTokenFilter:98+389** — silent + unauthenticated read of the diagnosis dictionary (reference, not PHI)
+  — the BR-171 unauthenticated class. Frontend callers: radiologyResultValidationController.js,
+  medicalHistoryTabController.js, IPDCoverSheetController.js. All other clinical endpoints: NOT whitelisted.
+- GET_VITAL_MASTER_TO_SYNC_BY_ID chain RESOLVED: NO live caller — interface
+  IAppointmentVitalMapperDAOForSync + impl getVitalForSyncById(recordId) (binds only id; org/unit
+  predicates commented) — the only injection is ScheduledLogsScheduler:77 (declared, NEVER invoked).
+  DEAD SYNC PATH — latent id-keyed unscoped defect, NOT a running leak (the earlier "callers=1" was the
+  DAO's own internal query call). Reversal: 2 of the 3 named PHI leaks are live running leaks; vitals is not.
+- GET_CONSULT_DOCTOR_LIST_BY_ADMISSION_ID: LIVE — ConsultDoctorController POST /consultDoctorListByAdmission
+  (frontend: patientOrdersWorkbench.js, updateDischargeSummaryController.js, masterDischargeSummaryController.js)
+  — silent (org+unit predicates commented, no bind), authenticated, admissionId-keyed. RUNNING PHI leak.
+- CHECK_ALREADY_EXIST_REG: LIVE — MortuaryController POST /saveDeathRegistation — silent, authenticated,
+  name-keyed dup-check on death registrations. RUNNING PHI (names) cross-tenant oracle.
+- PATIENT-SAFETY FINDING (medication history): MedicationHistoryDaoImpl.getMedicationHistoryList:229
+  calls getNamedQuery("GET_MEDICATION_HISTORY_LIST") which THROWS ("No query defined" — entire query
+  commented) — the empty catch blocks (243-249) swallow it into a NULL return; the coversheet save
+  SUCCEEDS without the medication-history section; the frontend (medicalHistoryTabController.js:6065-6075)
+  then() has NO error callback — completeConsultation runs. Net: a clinician completes the consultation
+  with the medication-history section silently absent — the exact incomplete-information scenario.
+  Same method also builds raw SQL via getQueryString->createSQLQuery (params ARE setParameter-bound —
+  not currently injectable, fragile shape).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
