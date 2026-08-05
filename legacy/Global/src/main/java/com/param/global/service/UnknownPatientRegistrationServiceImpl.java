@@ -29,6 +29,7 @@ import in.param.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 import com.param.global.common.ServiceException;
+import com.param.global.service.VerifiedIdentityService;
 @Service
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class UnknownPatientRegistrationServiceImpl
@@ -57,6 +58,9 @@ public class UnknownPatientRegistrationServiceImpl
 	@Autowired
 	IMedicolegalDao iMedicolegalDao;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	private Cache<String, List<PriorityMasterDto>> priorityMasterCache;
 
 	@PostConstruct
@@ -67,21 +71,27 @@ public class UnknownPatientRegistrationServiceImpl
 	}
 
 	public void invalidatePriorityMasterCache() {
-		priorityMasterCache.invalidate("PriorityMaster");
+		// write-side invalidation clears every tenant's cached copy — the cache is
+		// org+unit-keyed, so a stale cross-tenant entry must never survive a write
+		priorityMasterCache.invalidateAll();
 	}
 
 
 	@Override
 	public Response getPriorityMasterList() throws ApplicationException {
 		try {
-			List<PriorityMasterDto> responseCache = priorityMasterCache.getIfPresent("PriorityMaster");
+			// active-list reads bind the JWT-verified org AND unit, never all tenants
+			Integer orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			Integer unitId = verifiedIdentityService.getVerifiedUnitId();
+			String cacheKey = "PriorityMaster:" + orgId + ":" + unitId;
+			List<PriorityMasterDto> responseCache = priorityMasterCache.getIfPresent(cacheKey);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
 			}
 
-			Response res = iUnknownPatientRegistrationDao.getPriorityMasterList();
+			Response res = iUnknownPatientRegistrationDao.getPriorityMasterList(orgId, unitId);
 			if(res.getStatus().equals(SUCCESS) && res.getListObject() != null && !res.getListObject().isEmpty()){
-				priorityMasterCache.put("PriorityMaster", res.getListObject());
+				priorityMasterCache.put(cacheKey, res.getListObject());
 
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size DB: " +String.valueOf(res.getListObject().size()), res.getListObject(), null);
 			}

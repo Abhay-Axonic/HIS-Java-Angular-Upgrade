@@ -14,7 +14,7 @@ public interface IUnknownPatientRegistrationDao extends IGenericDao<UnknownPatie
 	
 	Response saveUnknownPatient(AdmissionDto unAdmissionDto) throws ApplicationException;
 
-	Response getPriorityMasterList() throws ApplicationException;
+	Response getPriorityMasterList(Integer orgId, Integer unitId) throws ApplicationException;
 
 	Response saveERPatientAdmission(AdmissionDto unAdmissionDto)throws ApplicationException;
 
