@@ -1040,4 +1040,48 @@ was coincidence, not a pattern.
   query-strip; the 30 individual entries need their sibling-endpoint exact-forms added to the
   allowlist (or the sibling URLs explicitly listed) BEFORE the rewrite, or they 401.
 
+## QF-2026-08-05-AH — PROPOSED ALLOWLIST (the Phase-2 artifact) + the three no-clean-rule resolutions
+
+TOOL: tools/allowlist_proposal.py (re-runnable; full 199-row table in its output). Method: every
+extracted entry + every census sibling form -> the exact post-normalization URL (host-strip,
+query-strip, trailing-slash-strip) -> named callers (file:line + screen family) -> constant-trace for
+config-file hits (the GETACTIVECOUNTRYLIST-class usages) -> verdict. Rule 10: an ALLOW needs a named
+pre-login caller or the bucket's public-by-design basis; the first two passes over-ALLOWed the KIOSK
+bucket (unconditional) and under-detected the masters (config-file callers are constant definitions,
+not screens) and the pre-login siblings (/adt/br, the OTP/forgot-password flows) — all corrected
+before the artifact was fixed.
+- TOTALS: 199 exact URLs = 108 ALLOW + 91 DENY.
+- ALLOW composition: PUBLIC 47 (login/static/swagger/masters), INTEGRATION 22 (mylife/abdm/twilio),
+  KIOSK public ~30 (kiosk writes incl. saveAndPay/patientRegistration/feedbacks, the pre-login
+  appointment/registration forms, the masters/ref-data via the constant trace), siblings 9 (/adt/br,
+  the feedback save + path-variable GETs, the ForBookView/ListForBookView siblings, saveAndPay/future,
+  the NurseCheckIn sibling).
+- DENY composition: STALE 29 (authenticated-only — works through the token check), UNEXPLAINED 8,
+  KIOSK-internal 15 (post-login-only or no-caller), siblings 39 (no pre-login caller — the LIS/billing
+  report URLs, the /api/unit/clinical/ siblings, the glablServiceMaster siblings, the
+  checkEmailAvailability/otpVerification/forgotPasswordGeneration siblings, the
+  getComplaintAppointmentByPatientId etc.).
+- GROWTH (honest): 199 vs the 154 extracted = +45 (29%). The sibling enumeration is the whole growth;
+  it is the decision list the user reframed — every sibling was public by accident of string matching,
+  and 39 of them resolve to DENY (authenticated-only, no reason to be public).
+
+THE THREE NO-CLEAN-RULE RESOLUTIONS:
+1. /Report: the fragment currently exempts ~6-8 distinct endpoints across LIS (/LIS/ReportHandOver,
+   /LIS/ReportHandOver/ReportHandOverList/Search, /LIS/BioChemistry/ReportReleaseWorkList/Type/Search),
+   Billing (/api/billing/unit/bill/Report + the MIS + /file siblings), and Pathology (/pathology/report,
+   a separate entry). All callers are staff-facing (post-login). PROPOSAL: enumerate the distinct
+   endpoints individually (6-8 exact forms) and DENY each — the reports work through the staff token
+   check; the broad /Report substring dies with the rewrite.
+2. The feedback path-variable GETs (/api/outPatientFeedback/{unitId}/{organizationId}/{patientId}/
+   {visitType}/{visitTypeId}/{encounterId}, same shape for inPatient): PROPOSAL — a narrow pattern
+   rule for these two (bounded 6-variable shape) rather than a redesign. Cost: matching complexity is
+   linear per request (one anchored regex, no backtracking on these shapes) and the rules add two
+   entries to maintain; the redesign (query-param GETs) costs frontend URI changes across the feedback
+   callers plus deployment coordination. The pattern rule is the cheaper step; the redesign stays an
+   option if the pattern set grows beyond these two.
+3. deleteParticipants: RECOMMENDATION — DENY the family (the bare substring + the /HIS-WAR variants +
+   /api/deleteParticipants, ~5 exact forms). The allowlist's DENY resolves the QF-Z hold structurally:
+   the family leaves the allowlist, the unauthenticated POST to the live /api/deleteParticipants
+   controller 401s, and the bare entry becomes irrelevant without a separate removal branch.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
