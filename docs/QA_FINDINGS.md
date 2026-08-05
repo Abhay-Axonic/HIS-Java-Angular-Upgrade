@@ -401,4 +401,22 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
 - The org-scoped-unit-unscoped state of the 12 IS a cross-tenant security defect (same-org cross-unit
   patient reads + client-sourced org values) — the org-trust Pattern A class — now precisely enumerated.
 
+## QF-2026-08-05-M — Correction verified end-to-end (vitals trace) + the lesson
+
+- Verification trace (GET_LIST_OF_VITALS_BY_PATIENT_ID_FOR_COVERSHEET, the least-confident LIVE label):
+  query effective WHERE = organizationId=:organizationId AND patientId=:patientId AND status='A' AND
+  value!='' AND isEnteredInError='N' (NO unit predicate; org also in the JOIN's `with ...` clause);
+  DAO AppointmentVitalMapperDaoImpl.getListOfAppointmentVitalMapper binds organizationId+patientId
+  (both live predicates bound) -> the query RUNS. Catch: rethrows HibernateException (honest); generic
+  catch falls to a `Response(SUCCESS, null)` tail — a false-success shape that only fires for the method's
+  OTHER queries (the formDate/toDate/vitalId groups — latent, not the coversheet query). Gate: the
+  "Vital Assessment" LABEL renders unconditionally; data rows ng-repeat per-encounter. Endpoint:
+  POST /api/opd/getListOfVitalsByPatientIdForCoversheet (IPDCoverSheetController.js:10900-10919).
+  VERDICT: LIVE org-scoped unit-unscoped — the corrected picture stands (12 LIVE + 1 DEAD medication history).
+- LESSON (recorded): a classification derived from a pattern pass is a HYPOTHESIS until a single instance
+  is traced end to end — query text, effective WHERE, every bind in the DAO method, catch shape, gate,
+  and what renders. The 13-section coversheet failure never existed; the allergy + vitals end-to-end
+  traces are what caught it. Two passes produced two wrong classifications (11 CRASH then 2 DEAD+11 CRASH);
+  the end-to-end trace is the arbiter, not another pass.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
