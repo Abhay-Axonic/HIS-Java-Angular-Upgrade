@@ -216,4 +216,43 @@ The JWT this app issues has an **8-hour TTL** (`JWT_EXPIRATION = 8 * 60 * 60 * 1
 
 Fix applied in the harness touch (2026-08-05): the auth probe now captures the HTTP status (`-w ###HTTP###%{http_code}`) and reports `http=401 ... TOKEN EXPIRED OR REJECTED` explicitly, versus `http=200 EMPTY RESPONSE` (server-side error) — no more generic empty-body failures. Lesson: any assertion that reports "empty" without the transport status cannot distinguish auth failure from server failure; transport codes belong in every live check's failure detail. Second lesson: a token shared across a multi-hour session will expire — the harness should treat a 401 on the auth probe as "re-pull the token" and fail fast rather than cascading empty-response failures through every attack.
 
+## QF-2026-08-05-F — SCOPE CORRECTION: BR closure = endpoint-level verification, NOT screen-level coverage
+
+Stage 3a's per-screen method audit (Class 4) established that the closed-BR ledger overstates
+what is fixed. For every BR 121-171, the fix + verification covered the ATTACKED ENDPOINTS
+(list, by-id, update, toggle, save, active-list where exercised) — never the full screen.
+Gender and religion were not two exceptions; they are the two that got caught. The honest
+claim: **the attacked endpoints are fixed and verified; the screens are not.**
+
+Per-screen residual (service methods that read/write tenant data, NOT covered by the BR's
+fix, NOT DAO-guarded; Stage 3a, 2026-08-05):
+
+| screen | total public svc methods | VIS-covered | uncovered | residual after DAO-guard discount |
+|---|---|---|---|---|
+| BR-134 userMaster | 52 | 0 | 8 | 3 (generateToken, userLogin, userLoginForVitalUploader — login family, Category C) |
+| BR-159 mPackage | 51 | 5 | 7 | 7 (incl. getExistingActivePackageByPatientEncounter) |
+| BR-135 userRoleMapper | 30 | 1 | 6 | 3 (getUserRoleMapperById, getUserIdById, getRoleNameByRoleTypeId) |
+| BR-136 unitAppBillingConfig | 17 | 0 | 4 | 3 (count, getOPDBillingBedCatagory, getSelfPayeeList) |
+| BR-146 billingBedCategory | 13 | 0 | 3 | 3 (by-id, by-visitType, ACTIVE list) |
+| BR-143 patientSource | 8 | 3 | 3 | 1 (getPatientSourceByName dup-check) — writes DAO-guarded (sweep 8 VIS refs) |
+| BR-144 referralType | 8 | 0 | 3 | 2 (by-name dup-check, add) — update/status DAO-guarded |
+| BR-150 autoclave | 7 | 0 | 2 | 2 (getAllAutoclaveList, ACTIVE list) |
+| BR-152 vitalQualifier | 10 | 0 | 2 | 2 (by-id, ACTIVE list) |
+| BR-127 productCategory | 4 | 1 | 2 | 2 (getAll, getById — DAO call shape unresolved) |
+| BR-158 taxComponent | 4 | 2 | 2 | 2 (getAll, getById — DAO call shape unresolved) |
+| BR-147 allergy | 7 | 0 | 1 | 1 (getAllergyTypeMasterListById) |
+| BR-148 dose | 7 | 0 | 1 | 1 (getDoseMasterListById) |
+| BR-170 priorityActive | 32 | 1 | 1 | 1 (getListOfEncounterIdByPatientId) |
+| BR-166 priority / BR-167 religion / BR-171 gender | 6 / 7 / 8 | 6 / 7 / 6 | 0 / 0 / 2 | 0 / 0 / 0 (uncovered don't read tenant data) |
+
+RESIDUAL TOTAL: **26 service methods** across 13 screens after the DAO-guard discount (raw 31).
+Of the 26: the query-org-filtered-but-client-valued reads (allergy/dose by-id, vital/bedCategory/
+autoclave active+by-id) are Pattern-A siblings pending the live forged-org proof; the login
+family (BR-134) is Category C (org from credentials — needs judgment, NOT a blind rebind);
+BR-127/158's DAO call shapes are unresolved (possible false positives). 5 methods were
+discounted because DAO-level VIS guards cover them (patientSource writes x3, referralType
+update/status x2) — service-level VIS absence does not imply uncovered.
+
+NO BRs were reopened or renumbered; the fixes are real. The scope claim was wrong.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

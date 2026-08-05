@@ -1,5 +1,12 @@
 # Business Rule Manifest
 
+> **SCOPE STATEMENT (2026-08-05, per Stage 3a Class-4 audit):** BR entries below certify
+> that the ATTACKED ENDPOINTS were fixed and verified (list/by-id/update/toggle/save/active-list
+> where exercised), NOT that the whole screen is org-trust-clean. The per-screen method-coverage
+> residual (26 uncovered tenant-reading service methods across 13 screens after the DAO-guard
+> discount) is in QA_FINDINGS QF-2026-08-05-F. Gender and religion were not exceptions; they are
+> the two that got caught. No BR is reopened; the endpoint-level fixes are real and verified.
+
 Living log of every explicit business rule discovered in the legacy code, and every proposed change. Reviewed every Friday by the owner. Nothing marked "Behavioral Change" is allowed to ship until the owner marks it Approved.
 
 > **Note:** BR-088 through BR-094 in this manifest are unrelated to the same-numbered findings (BR-088 through BR-102) referenced in MANUAL_QA_DEFECT_REPORT.md, a manual QA report from 2026-07-12/13 that was never committed to this git repository. The manifest's BR-088–094 range was assigned fresh on 2026-07-13 for a different, though related, set of fixes (error-handling and frontend crash fixes) — do not assume these numbers refer to the same findings as any external/uploaded copy of that QA report.
