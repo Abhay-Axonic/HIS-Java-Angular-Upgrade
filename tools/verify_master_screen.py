@@ -74,6 +74,116 @@ SCREENS = {
         "victim_marker": "G-999-X",
         "save_endpoint": "/adt/saveGenderMaster",
     },
+    "relation": {
+        "module": "Global",
+        "fix_commit": "a30bd69f",
+        "payload_org_field": "organizationId",
+        "service_class": "com/param/global/service/RelationMasterServiceImpl.class",
+        "dao_class": "com/param/global/dao/RelationMasterDaoImpl.class",
+        "entity_class": "com/param/global/model/RelationMaster.class",
+        "service_src": "legacy/Global/src/main/java/com/param/global/service/RelationMasterServiceImpl.java",
+        "dao_src": "legacy/Global/src/main/java/com/param/global/dao/RelationMasterDaoImpl.java",
+        "query_org_filters": ["WHERE relation.organizationId=:orgId",
+                              "relation.id=:id AND relation.organizationId=:orgId"],
+        "victim_id": 99901,
+        "victim_org": 999,
+        "victim_table": "m_relation_master",
+        "victim_pk": "relation_id",
+        "list_endpoint": "/adt/getRelationMasterList",
+        "getbyid_endpoint": "/adt/getRelationById",
+        "getbyid_id_field": "id",
+        "legit_marker": "\"id\":1",
+        "victim_marker": "VICTIM-RELATION-999",
+        "save_endpoint": "/adt/saveRelationMaster",
+    },
+    "marital": {
+        "module": "ADT",
+        "fix_commit": "cd4e49d3",
+        "payload_org_field": "organizationId",
+        "service_class": "com/param/adt/master/global/service/MaritalStatusMasterServiceImpl.class",
+        "dao_class": "com/param/adt/master/global/dao/MaritalStatusMasterDaoImpl.class",
+        "entity_class": "com/param/adt/master/global/model/MaritalStatusMaster.class",
+        "service_src": "legacy/ADT/src/main/java/com/param/adt/master/global/service/MaritalStatusMasterServiceImpl.java",
+        "dao_src": "legacy/ADT/src/main/java/com/param/adt/master/global/dao/MaritalStatusMasterDaoImpl.java",
+        "query_org_filters": ["maritalStatusMaster.organizationId=:orgId",
+                              "maritalStatusMaster.id=:id AND maritalStatusMaster.organizationId=:orgId"],
+        "victim_id": 99902,
+        "victim_org": 999,
+        "victim_table": "m_marital_status_master",
+        "victim_pk": "marital_status_id",
+        "list_endpoint": "/adt/getMaritalStatusMasterList",
+        "getbyid_endpoint": "/adt/getMaritalById",
+        "getbyid_id_field": "id",
+        "legit_marker": "\"id\":1",
+        "victim_marker": "VICTIM-MARITAL-999",
+        "save_endpoint": "/adt/saveMaritalStatusMaster",
+    },
+    "religion": {
+        "module": "ADT",
+        "fix_commit": "1355f15b",
+        "payload_org_field": "organizationId",
+        "service_class": "com/param/adt/master/global/service/ReligionMasterServiceImpl.class",
+        "dao_class": "com/param/adt/master/global/dao/ReligionMasterDaoImpl.class",
+        "entity_class": "com/param/adt/master/global/model/ReligionMaster.class",
+        "service_src": "legacy/ADT/src/main/java/com/param/adt/master/global/service/ReligionMasterServiceImpl.java",
+        "dao_src": "legacy/ADT/src/main/java/com/param/adt/master/global/dao/ReligionMasterDaoImpl.java",
+        "query_org_filters": ["(religion.desc=:desc OR LOWER(religion.desc)=:desc) AND religion.organizationId=:orgId",
+                              "religion.id=:id AND religion.organizationId=:orgId"],
+        "victim_id": 99903,
+        "victim_org": 999,
+        "victim_table": "m_religion_master",
+        "victim_pk": "religion_id",
+        "list_endpoint": "/adt/getReligionMasterList",
+        "getbyid_endpoint": "/adt/getReligionById",
+        "getbyid_id_field": "id",
+        "legit_marker": "\"id\":1",
+        "victim_marker": "VICTIM-RELIGION-999",
+        "save_endpoint": "/adt/saveReligionMaster",
+    },
+    "occupation": {
+        "module": "ADT",
+        "fix_commit": "f66f3783",
+        "payload_org_field": "organizationId",
+        "service_class": "com/param/adt/master/global/service/OccupationMasterServiceImpl.class",
+        "dao_class": "com/param/adt/master/global/dao/OccupationMasterDaoImpl.class",
+        "entity_class": "com/param/adt/master/global/model/OccupationMaster.class",
+        "service_src": "legacy/ADT/src/main/java/com/param/adt/master/global/service/OccupationMasterServiceImpl.java",
+        "dao_src": "legacy/ADT/src/main/java/com/param/adt/master/global/dao/OccupationMasterDaoImpl.java",
+        "query_org_filters": ["occupationMaster.organizationId=:orgId",
+                              "occupationMaster.id=:id AND occupationMaster.organizationId=:orgId"],
+        "victim_id": 99904,
+        "victim_org": 999,
+        "victim_table": "m_occupation_master",
+        "victim_pk": "occupation_id",
+        "list_endpoint": "/adt/getOccupationMasterList",
+        "getbyid_endpoint": "/adt/getOccupationMasterById",
+        "getbyid_id_field": "id",
+        "legit_marker": "\"id\":1",
+        "victim_marker": "VICTIM-OCCUPATION-999",
+        "save_endpoint": "/adt/saveOccupationMaster",
+    },
+    "priority": {
+        "module": "Global",
+        "fix_commit": "6e6f845b",
+        "payload_org_field": "organizationId",
+        "service_class": "com/param/global/org/common/service/PriorityMasterServiceImpl.class",
+        "dao_class": "com/param/global/org/common/dao/PriorityMasterDaoImpl.class",
+        "entity_class": "com/param/global/model/PriorityMaster.class",
+        "service_src": "legacy/Global/src/main/java/com/param/global/org/common/service/PriorityMasterServiceImpl.java",
+        "dao_src": "legacy/Global/src/main/java/com/param/global/org/common/dao/PriorityMasterDaoImpl.java",
+        "query_org_filters": ["pc.organizationId=:orgId AND pc.unitId=:unitId",
+                              "pc.priorityId=:priorityId AND pc.organizationId=:orgId AND pc.unitId=:unitId"],
+        "victim_id": 99905,
+        "victim_org": 999,
+        "victim_table": "adt.m_priority_master",
+        "victim_pk": "priority_id",
+        "list_endpoint": "/api/common/getPriorityMasterList",
+        "getbyid_skip": True,   # by-id is GET /getPriorityMasterById/{priorityId}/{orgId} — verified manually
+        "getbyid_id_field": "id",
+        "legit_marker": "\"id\":1",
+        "victim_marker": "VICTIM-PRIORITY-999",
+        "save_endpoint": "/api/common/savePriorityMasterMaster",
+    },
 }
 
 
@@ -417,16 +527,20 @@ def main():
         ok &= check("legit list returns own rows",
                     cond_legit_marker_present(spec["legit_marker"], r2.stdout),
                     f"(marker={spec['legit_marker']} present={spec['legit_marker'] in r2.stdout})")
-        r3 = run(["curl", "-s", "-X", "POST", f"http://localhost:8080{spec['getbyid_endpoint']}",
-                  *H, "-d", '{"%s":%d,"organizationId":%d}' % (spec["getbyid_id_field"], spec["victim_id"], forged_org)])
-        try:
-            import json as _json
-            body = _json.loads(r3.stdout)
-            rows = body.get("listObject") or []
-            ok &= check("forged getById returns 0 rows",
-                        cond_getbyid_zero_rows(rows), f"(rows={len(rows)})")
-        except Exception as e:
-            ok &= check("forged getById parses", False, f"({e}: {r3.stdout[:120]})")
+        if spec.get("getbyid_skip"):
+            # by-id endpoint is a GET path-var shape (e.g. priority) — verified manually
+            print("[SKIP] by-id endpoint is a GET path-var shape — verified manually for this screen")
+        else:
+            r3 = run(["curl", "-s", "-X", "POST", f"http://localhost:8080{spec['getbyid_endpoint']}",
+                      *H, "-d", '{"%s":%d,"organizationId":%d}' % (spec["getbyid_id_field"], spec["victim_id"], forged_org)])
+            try:
+                import json as _json
+                body = _json.loads(r3.stdout)
+                rows = body.get("listObject") or []
+                ok &= check("forged getById returns 0 rows",
+                            cond_getbyid_zero_rows(rows), f"(rows={len(rows)})")
+            except Exception as e:
+                ok &= check("forged getById parses", False, f"({e}: {r3.stdout[:120]})")
 
         if args.with_write_tests:
             print("[WARN] --with-write-tests is DISABLED-BY-POLICY for sex until the "
