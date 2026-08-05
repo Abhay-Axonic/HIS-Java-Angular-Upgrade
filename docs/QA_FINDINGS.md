@@ -817,4 +817,46 @@ The earlier 'absent entirely' claim came from a tuple-membership check bug (in e
 tuple checks exact equality, not substring). QF-AB's other claims stand (3 entries missing —
 /views/, /resources/, deleteParticipants — variant spellings, list hand-curated).
 
+## QF-2026-08-05-AD — KIOSK bucket audit (47 entries; analysis only; tools/kiosk_bucket_audit.py)
+
+- Method: per entry — caller search (JS/HTML/config, exact-fragment; named file:line), call shape
+  (serviceAction vs RAW vs ?), controller mapping verb from the REAL annotation (first pass misread
+  the mappings — the annotation-less lines mislabeled saveAndPay as read; corrected to the
+  annotation-based verb), Rule-10 spot-checks on the 0-caller claims (scheduleAppointment's
+  identifier hits are function-name noise, not endpoint calls). All 47 spellings match the extracted
+  list (the curated KIOSK bucket is spelling-clean).
+- WRITES (8): saveTemplateListDataForNewEMR (6 coversheet callers, ALL serviceAction — an
+  AUTHENTICATED internal screen misplaced in the bucket); outPatientFeedback + inPatientFeedback
+  (feedback controllers:201/227 + 295[?] — anonymous-feedback surfaces, serviceAction-without-token);
+  saveAnalyzedReport (0 callers — the mylife external push); the two patientTypeHeadSearch*
+  self-registration searches (POST-shaped but SEMANTIC READS — PHI-search, 0 callers);
+  saveAndPay (kiosk — selfRegistration/appointmentScheduling/bookAppointment callers — the QF-S
+  shape); patientRegistration (selfRegistration:2003/4574 — the self-registration create).
+- THE FLAG — write AND no authenticated caller (the saveMedication/saveAndPay shape): FIVE writes —
+  api/billing/kiosk/saveAndPay (kiosk no-login surface; config-dependent: tariff/OPD-category +
+  bill-prefix, dev-blocked, would persist in a configured environment — QF-S), api/opd/patientDoc/
+  saveAnalyzedReport (0-caller write; config unknown), the two feedback endpoints (anonymous
+  surfaces; config unknown), api/global/patientRegistration (self-registration create; config
+  unknown). PLUS the two patientTypeHeadSearch* POST-reads (a separate no-auth PHI-READ class, not
+  the write shape). The tool's shape-based flag caught only saveAnalyzedReport + the searches —
+  the kiosk/feedback/registration writes carry serviceAction TEXT but no login, so they needed the
+  surface-level judgment.
+- PUBLIC BY DESIGN (kiosk/web-appointment/registration/feedback surfaces): saveAndPay, feedbacks,
+  patientRegistration, the patientTypeHeadSearches, scheduleAppointment/getDailySlots,
+  the webappointment family (getDetailsForBookAppointment, getDoctors, getActivePrefixList/,
+  doctorApp/getApplicationConfig, appointments/doctors*), the getActive* masters + address/ref-data
+  reads used by the public registration forms.
+- INTERNAL SCREENS MISPLACED IN THE BUCKET (authenticated internal callers): saveTemplateListDataForNewEMR
+  (6 coversheet screens), patientDoc/details (NABH/incident reporting), growthMilestones/patient
+  (coversheet + growth chart), getListOfDocumentForBookView + getInvestigationsListForBookView
+  (bookView), getPatientDetailsForWorklistForWebPage (AdmittedPatientList), getCookieDataForNewEMR,
+  getUserListForStore, getAppointmentsByPatientId, getLastEncounterDataOfPatientForWebAPP,
+  preBilling/orderedServicesByMobileNoForWebUser, growthMilestones/detail, scheduleAppointment,
+  getAvailableDoctorBySpeciality — 0-exact-fragment-caller entries, mostly internal, not patient-
+  facing public surfaces.
+- Config-dependency check: only saveAndPay is KNOWN config-dependent (QF-S trace); the other writes'
+  config dependencies are NOT traced — each needs its own trace before any removal/decision.
+- KIOSK-bucket conclusion: ~15 genuinely public, ~10 internal misplacements, ~22 masters/ref-data;
+  the flag set (5 writes + 2 PHI-reads) is the decision surface for the next branch.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
