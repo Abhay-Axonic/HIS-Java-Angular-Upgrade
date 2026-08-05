@@ -655,4 +655,31 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   the config-constant callers). The removal branch must confirm the per-entry callers (Rule 10) before
   each removal — the audit is the triage, not the proof.
 
+## QF-2026-08-05-V — whitelist Phase-1 re-confirmation (fix/whitelist-stale-removal; no removals yet)
+
+- METHOD (tools/whitelist_phase1_reconfirm.py, independent of the QF-U audit): Rule-10 control FIRST
+  (the known positive GET_MEDICATION_HISTORY_LIST caller found with serviceAction context — CONTROL
+  PASS); whole-tree search (js/html/java/xml/properties/json, target/ excluded) with the
+  JwtTokenFilter's own lines, commented lines, and @RequestMapping/definition sites excluded; the
+  URL-constant config dir searched separately; variant forms checked (ForIcon/ForMedicalHistory
+  lesson). Per the Rule-10 standing note, this pass already differs from the audit's first pass in
+  three ways (target-dir exclusion, the config-dir pass, the definition-site exclusions).
+- 49 NO_CALLER -> **45 CONFIRMED DEAD + 4 REVIVED (has a caller after all)**:
+  - /api/billing/bill/service/cancel — callers: IPDCoverSheetController.js:12372 + :21254,
+    dayCareNurshingCoversheetController.js:9862 — all serviceAction (authenticated) — the entry has
+    real callers (the QF-U audit missed them) — NOT a dead exemption; removal-safe only as an
+    authenticated-caller entry (screen-verify in Phase 2 if approved).
+  - /api/opd/medicationUpdate — callers: IPDCoverSheetController.js:18903,
+    dayCareNurshingCoversheetController.js:16555, nursingCoverSheetController.js:17508 —
+    serviceAction — same shape as above.
+  - /br/ — caller: selfRegistrationController.js:5173 builds $scope.qrUrl = ... + "/adt/br/" + uniqueId
+    (the QR endpoint; a browser/image load without a token) — the exemption is genuinely used.
+  - /checkParti/ — caller: twilio-video.js:31032 — fetch(BASE_URL + ROOT_URL + '/checkParti/' + id) —
+    a RAW fetch, no token — the exemption is genuinely needed.
+- 30 SAFE -> all 30 have NAMED callers, all through GenericService.serviceAction (the wrapper attaches
+  the token). The named-caller list is in the tool output (tools/whitelist_phase1_reconfirm.py,
+  re-runnable). The 3 NOT_STALE entries untouched.
+- CONFIRMED-REMOVABLE LIST (Phase 2, pending owner approval): the 45 dead + (if approved) the 30
+  authenticated-caller entries — the 4 revived are NOT removable.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
