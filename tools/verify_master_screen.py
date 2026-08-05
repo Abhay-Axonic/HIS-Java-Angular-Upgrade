@@ -274,16 +274,34 @@ def cond_no_leak(leaked):
     return not leaked
 
 
-def cond_auth_json(resp):
+def cond_auth_json(body):
     """Live responses must be authenticated JSON (a token rejection returns an
     empty/HTML body — this check is what stops the leak-check from passing
     vacuously on a dead session)."""
     try:
         import json as _json
-        j = _json.loads(resp)
+        j = _json.loads(body)
         return isinstance(j, dict) and "status" in j
     except Exception:
         return False
+
+
+def auth_probe_detail(raw, cond_auth_json):
+    """Parse a curl body+status output (body + '\n###HTTP###<code>' suffix).
+    Return (auth_ok, failure_detail). Distinguishes 401 (token expired/rejected)
+    from 200-empty (server error) from other codes — QF-2026-08-05-E: a bare 401
+    surfaces as an empty body, which previously read as a generic empty failure."""
+    m = re.search(r"###HTTP###(\d+)\s*$", raw)
+    code = m.group(1) if m else "?"
+    body = raw[:m.start()] if m else raw
+    if cond_auth_json(body):
+        return True, f"(http={code} raw_head={body[:60]!r})"
+    if code == "401":
+        return False, (f"(http=401 raw_head={body[:60]!r} — TOKEN EXPIRED OR REJECTED; "
+                       f"re-pull a fresh JWT from the browser session)")
+    if code == "200" and body.strip() == "":
+        return False, "(http=200 EMPTY RESPONSE — server-side error, not an auth failure)"
+    return False, f"(http={code} raw_head={body[:60]!r})"
 
 
 def cond_legit_marker_present(marker, resp):
@@ -326,6 +344,14 @@ SELF_TESTS = [
     (cond_no_leak, "forged list leaks no victim row", (False,), (True,)),
     (cond_auth_json, "live responses authenticated JSON", ('{"status":"success"}',), ("",)),
     (cond_auth_json, "live responses authenticated JSON (html body)", ('{"status":"success"}',), ("<html>401</html>",)),
+    (lambda raw: auth_probe_detail(raw, cond_auth_json)[0],
+     "auth-probe: 200+JSON accepted", ('{"status":"success","data":{}}\n###HTTP###200',), ("\n###HTTP###401",)),
+    (lambda raw: "TOKEN EXPIRED OR REJECTED" in auth_probe_detail(raw, cond_auth_json)[1],
+     "auth-probe: 401 -> token expired/rejected", ("\n###HTTP###401",), ("\n###HTTP###200",)),
+    (lambda raw: "EMPTY RESPONSE" in auth_probe_detail(raw, cond_auth_json)[1],
+     "auth-probe: 200+empty -> server error", ("\n###HTTP###200",), ("{} \n###HTTP###500",)),
+    (lambda raw: "http=500" in auth_probe_detail(raw, cond_auth_json)[1],
+     "auth-probe: other code in detail", ("{} \n###HTTP###500",), ("\n###HTTP###200",)),
     (cond_legit_marker_present, "legit list returns own rows", ("Male", '{"Male":1}'), ("Male", "{}")),
     (cond_getbyid_zero_rows, "forged getById returns 0 rows", ([],), ([{"id": 99}],)),
     (cond_victim_pristine, "victim pristine after run", ("A|B", "A|B"), ("A|B", "A|MUTATED")),
@@ -517,20 +543,7 @@ def main():
         r = run(["curl", "-s", "-w", "\n###HTTP###%{http_code}", "-X", "POST",
                  f"http://localhost:8080{spec['list_endpoint']}",
                  *H, "-d", '{"organizationId":%d,"offset":0,"noOfRecordsPerPage":50}' % forged_org])
-        raw = r.stdout
-        m = re.search(r"###HTTP###(\d+)\s*$", raw)
-        code = m.group(1) if m else "?"
-        _body = raw[:m.start()] if m else raw
-        _auth_ok = cond_auth_json(_body)
-        if _auth_ok:
-            _detail = f"(http={code} raw_head={_body[:60]!r})"
-        elif code == "401":
-            _detail = (f"(http=401 raw_head={_body[:60]!r} — TOKEN EXPIRED OR REJECTED; "
-                       f"re-pull a fresh JWT from the browser session)")
-        elif code == "200" and _body.strip() == "":
-            _detail = "(http=200 EMPTY RESPONSE — server-side error, not an auth failure)"
-        else:
-            _detail = f"(http={code} raw_head={_body[:60]!r})"
+        _auth_ok, _detail = auth_probe_detail(r.stdout, cond_auth_json)
         ok &= check("live responses authenticated JSON (token accepted)", _auth_ok, _detail)
         leaked = spec["victim_marker"] in r.stdout
         ok &= check("forged list leaks no victim row", cond_no_leak(leaked),
