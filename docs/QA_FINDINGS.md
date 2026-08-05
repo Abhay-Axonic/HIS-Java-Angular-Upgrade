@@ -279,4 +279,28 @@ NO BRs were reopened or renumbered; the fixes are real. The scope claim was wron
   **B dominant** (137 org+unit pairs + ≥10 org-only + the controller-layer sites' service hops), C = login family + cross-DTO
   (lower bound). The 3,659 entity-copy setter sites are dropped from the headline population (server-side copies, noise).
 
+## QF-2026-08-05-H — Clinical-set triage: three query states (Stage 3b-revised)
+
+The "clinical" Class-2 candidates split into THREE states (declaration-level read, not regex):
+- **SILENT (live query, org/unit predicate commented, no bind — currently returns ALL tenants' rows):**
+  CHECK_ALREADY_EXIST_REG (death-registration dup-check — PHI names, patient-identity oracle),
+  GET_CONSULT_DOCTOR_LIST_BY_ADMISSION_ID (consult doctors — PHI-adjacent, admissionId-keyed),
+  GET_VITAL_MASTER_TO_SYNC_BY_ID (appointment-vital mapper — PHI vitals, appointmentVitalMapperId-keyed),
+  GET_DIAGNOSIS_BY_GENDER_ID (reference), GET_DISCHARGE_SUMMARY_FIELD_MASTER_BY_ID/BY_NAME/BY_NAME_NOT_ID
+  (reference config + dup-check oracles), GET_ACTIVE_DISCHARGE_TYPE_LIST (reference, VALIDATED),
+  + GET_DISCOUNT_CATEGORY_BY_ID, GET_HELP_VALUE_BY_PARAMETER, GET_LIST_APPOINTMENT_STATUS_MASTER,
+  GET_LIST_SEVERITY_MASTER, GET_TEXTUAL_RANGE_MASTER_BY_ID = 13 total.
+- **DEAD (entire @NamedQuery commented — caller 500s "No query defined"; broken feature, not a leak):**
+  GET_MEDICATION_HISTORY_LIST (coversheet medication history — PHI-bearing feature dead),
+  DIAGNOSIS_AUTO_FILL_SEARCH (diagnosis autofill), GET_ACTIVE_DISCHARGE_SUMMARY_FIELD_MASTER,
+  GET_ALL_ASSET_SCHEDULED_LIST, GET_BABY_DETAILS_BY_ID, GET_DETAILED_SERVICE_LIST,
+  GET_ICPC_TEMPLATE_MAPPING_COUNT, GET_ROUTE_OF_ADMINISTRATION_LIST, GET_SPARE_CONSUMPTION_LIST_BY_PMS_ID = 9.
+- **CRASH (live predicate, caller binds nothing — param-not-found 500):**
+  GET_DISCHARGE_SUMMARY_FIELD_MASTER_LIST, GET_ACTIVE_TEXTUAL_RANGE_MASTER_LIST, GET_DESIGNATION_MASTER_LIST,
+  GET_LIST_OF_CATEGORY_WISE_QUALIFIERS, GET_SLIDE_LIST_FOR_RE_SLIDE_CREATION = 5 (org-22 set).
+- Verdict on the clinical 11: NONE are legitimately cross-unit (all unit-scoped by design). The legitimate
+  cross-unit class (patient-identity search) is in the unit-97 set (GET_PATIENT_LIST_LIKE family) — judgment pending.
+- All endpoints checked: NOT on the JWT whitelist (authenticated). Effort anchors: five-screen batch
+  00:28-06:05 (+merge 09:51) ~= 5.6h for 5 B-class screens (~35 methods); sex screen ~1h fix (forensics one-off).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
