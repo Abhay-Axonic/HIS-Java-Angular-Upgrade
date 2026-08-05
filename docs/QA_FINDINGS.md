@@ -154,3 +154,24 @@ A "no record found" verdict was reported for five merge approvals after searchin
 ### Scope statement — the round-6/7 governance finding (2026-08-05)
 
 The unrecorded-status merges (BR-147/148, 153, 154, 156, 160/161) do **not** invalidate the fixes themselves. Deployed content is proven by bytecode inspection; the security boundaries are proven by live re-verification under the corrected forged-org methodology (forged org 999 ≠ session org 1, real seeded victims, full pre/post psql diffs). What is damaged is the *guarantee about how HEAD moves*: the ledger and SESSION_LOG cannot be read as a faithful record of merge state — they lag reality. Future readers must treat BR statuses and SESSION_LOG merge claims as unverified until checked against git (merge-base / first-parent / reflog), and must not infer either "unmerged" (from stale "held" text) or "ungated" (from missing status updates) from the record alone. Remediation landed 2026-08-05: RULES.md rule 9 (post-merge record step, verbatim approval timestamps, --no-ff, ledger check at session close) + `tools/check_ledger_merge_state.py` (two-direction assertions; run PASS 32/32).
+
+## Precedence census — OR-adjacent org/unit predicates (2026-08-05)
+
+Scan of all 1054 @NamedQuery definitions in legacy/ for a top-level OR sharing an unparenthesized AND-chain with an org/unit predicate (depth-tracking token analysis; quoted literals stripped). **2 UNSCOPED-BY-PRECEDENCE, both ORIGINAL (never touched by any fix):**
+
+1. **UnitICUTypeMapper.GET_UNIT_ICU_TYPE_LIST** (legacy/Entity/.../adt/master/unit/model/UnitICUTypeMapper.java): `WHERE uicu.status='A' OR uicu.status='I' AND uicu.unitId=:unitId AND uicu.organizationId=:orgId` — precedence binds unitId+orgId only to the status='I' branch; the **status='A' branch is unconditional** — every tenant's active ICU-type mappings are readable by every session. Org+unit table. NOT fixed (census only).
+2. **DischargeTypeMaster.GET_DISCHARGE_TYPE_LIST_BY_NAME** (legacy/Entity/.../adt/master/global/model/DischargeTypeMaster.java): `WHERE dt.dischargeTypeName=:dischargeTypeName OR LOWER(dt.dischargeTypeName)=:dischargeTypeName AND dt.organizationId=:orgId` — org binds only to the LOWER branch; the **exact-match branch is unscoped** (cross-tenant existence oracle on exact matches). Identical shape to the religion defect (1355f15b) — but original, not introduced. NOT fixed (census only).
+
+All other queries with top-level ORs are either parenthesized (EFFECTIVE) or carry no org/unit predicate in the query at all (a distinct class — the by-name queries there are existence-oracle candidates for the Stage-3 population census, not precedence defects). NOTE: the census ran against main — the five-screen branch fixes (incl. religion/relation by-name parens) are not in the scanned tree.
+
+## Stage 3 classification implication — "org filter present" is not "org filter effective" (2026-08-05)
+
+The religion parenthesization defect (1355f15b, caught by deployed-artifact verification) proves that **substring presence of an org predicate in query text is not evidence of scoping**: `WHERE desc=:desc OR LOWER(desc)=:desc AND organizationId=:orgId` contains the org filter verbatim while leaving the exact-match branch unscoped by operator precedence — every static substring check (the harness's query_org_filters included) passes it. Two consequences for Stage 3: (a) scripted application of the rebind pattern reproduces this defect wherever the OR shape appears (it already did once — in the 2c religion fix); (b) Category A ("org-scoped") cannot be defined by substring presence — it needs a parse-level (depth-tracking) or reviewed check of the WHERE clause. The precedence census above is the parse-level tool.
+
+## Harness gap — token-absent path silently skips attacks (2026-08-05)
+
+During the 2d religion run, the HIS_TOK env var vanished mid-session and the harness printed `[SKIP] no token provided — live attack checks skipped` while reporting PASS — the authenticated-JSON assertion does not cover a token-absent path, so an empty --token silently degrades the run to static checks only. Logged for the next harness touch: add a fail-on-missing-token guard (exit non-zero when --token is empty and attacks are expected). No action taken now (2d runs re-executed with the token re-exported; all five screens' attacks fired authenticated).
+
+## Known weak assertion — '"id":' legit marker (2026-08-05)
+
+The five-screen legit marker `'"id":'` (any-row marker, replacing the absent '"id":1') has low discriminating power: it only proves the legit list returned at least one row. It is carried into 2e as a known weak assertion — the legit-list guarantee is bounded by the authenticated-JSON check, the count before/after equality, and the leak-marker absence on the forged call. Not a blocker: a non-empty org-1 list with zero rows would fail it.
