@@ -582,4 +582,40 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   Razorpay mode is the one designed protection (server-side verification); cash/card/cheque are
   unverified by design.
 
+## QF-2026-08-05-T — BR-173 scoping analysis (no code): history, 196-entry intent, options, payment flag
+
+- HISTORY (why is the Spring Security block commented out?): rest-dispatcher-servlet-security.xml's ONLY
+  commit is the baseline (96b75c49 "Baseline before upgrade", 2026-07-15). The commented-out
+  <http pattern="/**"> block PREDATES the baseline; no commit message, doc, or in-file comment explains
+  it. The upstream history before the baseline is not in the repo. Re-enabling is NOT a config flip: the
+  block enforces OAuth2 access tokens (resourceServerFilter + InMemoryTokenStore + the clinivantage
+  client), while the app's real auth is the custom JWT (userId/unitId headers + JwtTokenFilter) — the
+  app has drifted away from the OAuth2 design; a re-enabled block would reject every request (the JWTs
+  are not OAuth2 tokens) unless a token-compat adapter is built.
+- 196-ENTRY INTENT (tools/whitelist_intent_classification.py): PUBLIC 45 (login/token/forgot-password/
+  static/swagger/Report), INTEGRATION 22 (ABDM, MyLife, Razorpay callbacks, Twilio, webhooks — these
+  need auth of a different kind, not none), KIOSK 47 (webappointment/self-service/ForWebPage/geo/vital
+  uploader — public-facing by product design, but includes the kiosk billing WRITES + patient
+  registration), STALE 63 (the diagnosis-by-gender class: every caller is an authenticated screen —
+  the entries only remove auth), UNEXPLAINED 19 (update/service, opd/saveMedication,
+  api/global/patientRegistration, /br/, unit/org/, /decrypt, resultUrl, validationResultResponse,
+  deleteParticipants family, roomRent, getSerivceRateGlobalList, glablServiceMaster, updateNABH,
+  checkParti/, a hardcoded external URL, a hardcoded dataroom_41015 path, /api/refreshAllCaches).
+  Defensible-ish 114 (45+22+47, with the caveats: integration needs secrets; kiosk includes writes);
+  accidents 82 (63 stale + 19 unexplained) = 42% of the list.
+- OPTIONS (analysis only, no recommendation): (A) exact/anchor-pattern matching instead of substring —
+  fixes the broad fragments; risks the parameterized/trailing-slash entries (needs an Ant-style matcher);
+  verify via a live per-endpoint sweep; medium. (B) re-enable the Spring Security chain — framework-grade
+  enforcement; risks total breakage (token-format incompatibility) without an OAuth2-JWT adapter; verify
+  via the full harness; HIGH. (C) split the list by auth type (anonymous / integration-with-secret /
+  kiosk-rate-limited / nothing) — the integration callbacks get real auth, the stale entries disappear;
+  risks partner-callback breakage (secret deployment); medium-high. (D) default-deny with an explicit,
+  per-entry-owned allowlist — the structural inversion; risks any missed entry breaking a screen; verify
+  via the full Step-6 + harness sweep; medium.
+- PAYMENT DESIGN FLAG (design question for the billing owner, NOT a defect): the in-code comment makes
+  cash/card/cheque deliberately unverified while Razorpay gets server-side verification — coherent for an
+  AUTHENTICATED kiosk operator, incoherent on an UNAUTHENTICATED endpoint (the kiosk saveAndPay is
+  whitelisted). Whoever owns the billing flow should decide the kiosk payment-trust model (verify all
+  modes server-side, or authenticate the kiosk device).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
