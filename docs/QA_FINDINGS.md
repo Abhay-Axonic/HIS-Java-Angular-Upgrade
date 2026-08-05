@@ -866,12 +866,27 @@ stop-condition was not triggered):
 1. api/global/patientRegistration (PatientRegistrationController.java:83 POST) -> the service's
    dup-check (CHECK_UNIQUE_PATIENT) + insert: patient.t_patient_registration + t_patient_details
    (session.save x2, patient.patient_registration_seq). Config-deps: the UHID prefix is HARD-CODED
-   ("PC-18-"/"PR-18-"/"O-18-") — NO config row blocks the write. LIVE PROOF: 9 payload attempts, all
-   blocked at the dozer's dob String->Date parse (the app's date format not identified in the budget:
-   yyyy-MM-dd, dd/MM/yyyy, MM/dd/yyyy, dd-MM-yyyy, dd-MM-yyyy HH:mm:ss, dd-M-yyyy, dd-M-yyyy HH:mm:ss
-   all threw ParseException at the dozer DateConverter). Counts unchanged (2/1, seq 1). The write is
-   NOT PROVEN on this box but there is NO config-block visible — the dozer-format is the remaining
-   blocker, not a design block. The registration would persist wherever the format matches the app's.
+   ("PC-18-"/"PR-18-"/"O-18-") — NO config row blocks the write. LIVE PROOF — PAYLOAD CRACKED (the mechanism, not a guess):
+   - The dob's real format: the frontend builds it as moment(...).format('DD-MM-YYYY HH:mm:ss')
+     (selfRegistrationController.js:1838) — the app's dozer date-format is "dd-M-yyyy HH:mm:ss"
+     (global/dozer-bean-mappings.xml + the DAO's own GlobalCommonDateUtils usage). CONTROL (Rule 10):
+     the feedback flow's createdDate with the same shape reached its INSERT (the 500 came at the
+     sequence, after the parse); and the patientRegistration's own sequence advanced on every
+     well-formed attempt — the parse and the INSERT's ID-generation demonstrably ran.
+   - The flow's required fields in order: dob (String, dd-M-yyyy HH:mm:ss) -> appointmentDate (the
+     isFromSelf='Y' branch's appointment — NPE "getAppointmentDate() is null" when absent, its
+     substring(0,10) feeds getTokenNumber at PatientRegistrationServiceImpl:604) -> the INSERT's SQL.
+   - THE BLOCK: the INSERT into t_patient_details fails on
+     "ERROR: column "family_id" of relation "t_patient_details" does not exist" — a SCHEMA DRIFT
+     in the dev DB (the entity expects the column; the dev schema lacks it) -> PSQLException ->
+     "current transaction is aborted" -> rollback. Pre (2/1/seq4) -> Post (2/1/seq5): no row
+     persisted; the sequence's non-rolled-back advance is the insert-attempt evidence.
+   - VERDICT: the write-path is REAL (no config dependency anywhere — the UHID prefix is hard-coded;
+     the payload is fully known) and is blocked ONLY by the dev DB's schema drift — the same
+     drift-class as the feedbacks' missing sequences and t_message_queue's absence. It would persist
+     in a schema-complete environment. This is the same class as saveAndPay/saveMedication in
+     outcome (env-blocked) but NOT in mechanism: those were blocked by missing CONFIG rows the flow
+     needs to do business; this one is blocked by a schema column the flow never configures.
 2. api/opd/patientDoc/saveAnalyzedReport (EncounterController.java:1578 POST) -> UPDATE
    opd.t_encounter_doc_details (document_analyzed_path/date/json WHERE encounter_doc_id). LIVE PROOF:
    no-token POST -> 500 (Internal Server Error); the table has 0 rows -> the UPDATE can match nothing;
