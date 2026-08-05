@@ -465,4 +465,36 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   "update/service" and "opd/saveMedication", the GEO cache endpoints (auth-exempt + org-blind geo caches),
   and "/api/refreshAllCaches". None of the four branch items' endpoints are in either list.
 
+## QF-2026-08-05-P — Class-2 census UNVERIFIED correction + whitelist write-path exposure + twin cross-ref (analysis, no fixes)
+
+- CORRECTION (explicit): the 55-twin finding invalidates 10 distinct Class-2 classifications (6 of the
+  org-22 list + 9 of the unit-97 list, 5 overlap). **The remaining 22-org / 97-unit counts are UNVERIFIED,
+  not merely un-invalidated** — the census method (query-block scan + caller-bind pass) demonstrably
+  misreads the twin shape (it classifies the commented HQL block while runtime resolves getNamedQuery to
+  the live native twin), so NO Class-2 count may be trusted until each finding is re-checked against the
+  twin sweep. Cross-ref (tools/class2_twin_crossref.py): org-commented 5 twin-hit + 11 standing;
+  unit-commented 9 twin-hit + 87 standing; 0 findings fall in the 18 live-duplicate pairs. The 10
+  twin-hit names need per-instance Rule-10 traces (NOT authorised yet). Standing hypotheses remain
+  hypotheses, but the twin shape does not invalidate them.
+- WHITELIST CORRECTION: JwtTokenFilter has ONE auth-exempt list — a 196-entry requestUrl.contains(...)
+  condition (the else-if at :365), with the first ~11 entries duplicated in the line-76 auth-block
+  condition. Earlier "second auth-exempt list" framing = the same list's tail; corrected here.
+- WHITELIST WRITE-PATH EXPOSURE (tools/whitelist_fragment_matches.py): ALL 196 entries are SUBSTRING
+  matches (contains). The list exempts WRITE endpoints from auth (a no-header POST passes through):
+  POST /kiosk/saveAndPay + /kiosk/saveAndPay/future + /kiosk/saveAndPayAppointment (kiosk billing —
+  mission-critical billing path), POST /update/service (service-master write), POST /patientRegistration
+  (PHI write), /api/opd/saveMedication + saveMedication* family (PHI write), POST /deleteParticipants +
+  /api/deleteParticipants, POST /createOrganizationFromWeb, POST /updatePatientRegistrationFromMyLife,
+  POST /patientDoc/saveAnalyzedReport, POST /saveMyLatestMedicalSummaryCallBack, POST /saveAIAppointmentInQueue,
+  POST /glablServiceMaster + speciality variants (typo'd paths), POST /getSerivceRateGlobalList (typo'd),
+  POST /updateNABH, POST /api/saveTwilioMsg, GET /refreshAllCaches (side-effect write), POST /resultUrl,
+  POST /validationResultResponse, POST /getBillNoByPatient. Broad-substring entries with
+  unintended-match potential: "opd/saveMedication" (prefix-matches the saveMedication* family),
+  "patientRegistration" (matches the whole controller family), "/br/", "unit/org/", "/decrypt".
+  **Severity: WORSE than diagnosis-by-gender (which was a read)** — the kiosk billing + service-master
+  writes are unauthenticated WRITE paths on the mission-critical billing surface. Re-prioritisation
+  recommended. GEO endpoints (158-167): auth-exempt AND backed by the org-blind geo caches — combined
+  exposure = unauthenticated, tenant-blind reads of org-specific geo reference data (states/districts/
+  cities/areas) — reference data, not PHI; the tenant-blind cache serves any org's rows to any caller.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
