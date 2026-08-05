@@ -881,7 +881,11 @@ stop-condition was not triggered):
      in the dev DB (the entity expects the column; the dev schema lacks it) -> PSQLException ->
      "current transaction is aborted" -> rollback. Pre (2/1/seq4) -> Post (2/1/seq5): no row
      persisted; the sequence's non-rolled-back advance is the insert-attempt evidence.
-   - VERDICT: the write-path is REAL (no config dependency anywhere — the UHID prefix is hard-coded;
+   - PROOF-COMPLETENESS STATEMENT (owner): the sequence advance (4->5) is the insert-execution
+evidence; validation did not stop it, a missing column did. The proof is COMPLETE WITHOUT adding
+family_id. Adding the column was deliberately DECLINED — it would make an unauthenticated patient
+insert live on this box, which is not authorised. The drift remains documented, not repaired.
+VERDICT: the write-path is REAL (no config dependency anywhere — the UHID prefix is hard-coded;
      the payload is fully known) and is blocked ONLY by the dev DB's schema drift — the same
      drift-class as the feedbacks' missing sequences and t_message_queue's absence. It would persist
      in a schema-complete environment. This is the same class as saveAndPay/saveMedication in
