@@ -179,3 +179,35 @@ The five-screen legit marker `'"id":'` (any-row marker, replacing the absent '"i
 ## Stage 3 classification implication — caller-tracing surfaces what query-pattern scanning misses (2026-08-05)
 
 BR-170 was found by a blast-radius trace (grep for the query name's callers), NOT by the sweep that was supposed to enumerate this population — the precedence census and the pattern scans both missed it because the defect is a MISSING predicate, not a mis-bound one. Consequences for the Stage-3 population estimate: (a) the Phase 1 figure of ~2,000-2,400 is a floor, not a total; (b) the classification criteria must include caller-tracing as a first-class discovery method, not just query-pattern scanning; (c) a "no callers" conclusion requires the full main tree with a correct exclusion pattern — the earlier 'no callers' finding for GET_PRIORITY_LIST was an artifact of `grep -v 'NamedQuery'` also filtering `getNamedQuery(...)` call sites; the corrected trace found exactly one live caller (UnknownPatientRegistrationDaoImpl:96).
+
+
+## Cache census — 45 Guava cache sites, classification (2026-08-05)
+
+Scan of all CacheBuilder sites in legacy/ (Guava only; 0 Spring @Cacheable, 0 Ehcache; ConcurrentHashMap x2 in RateLimitFilter = per-IP rate limiting, NOT-TENANT-DATA; 8 static Maps = timezone/currency constants, NOT-TENANT-DATA). **45 cache fields: 31 TENANT-KEYED, 13 ORG-BLIND (12 unfixed incl. the unit-keyed-only bed-category cache, 1 fixed on branch = BR-170), 1 NOT-TENANT-DATA.** The ORG-BLIND count is non-trivial -> the cache track is its own track alongside the query sweep for Stage 3.
+
+ORG-BLIND (key lacks org; cached data IS tenant-scoped):
+- DocumentTypeMasterServiceImpl.documentTypeMasterCache — key literal "DocumentTypeMaster" — data org-scoped (mirrors BR-162 query defect)
+- AdmissionTypeMasterServiceImpl.admissionTypeMasterCache — key literal "admissionTypeList" — data org-scoped (mirrors BR-163)
+- GenderMasterServiceImpl.genderMasterCache — key literal "genderMaster" — data org-scoped; GET_ACTIVE_GENDER_LIST query also unscoped -> **BR-171 LIVE leak captured**
+- BedAllocationServiceImpl.bedStatusMasterCache — key literal "bedStatusList" — table HAS org but query unscoped (bed statuses likely identical per org — low practical impact, still ORG-BLIND)
+- NationalityServiceImpl.nationalityByCountryCache — key countryId — query unscoped, table org-scoped
+- BedCategoryMasterServiceImpl.bedCategoryMasterCache — key unitId (unit-keyed, ORG-BLIND) — bed categories org+unit scoped
+- DistrictMasterServiceImpl.stateByCountryMasterCache — key countryId — query org-scoped (Criteria) -> cache mixes orgs under one geo key
+- CountryMasterServiceImpl.countryByIdMasterCache — key countryId — query org-scoped -> cache mixes orgs
+- CityMasterServiceImpl.districtListByStateCache — key stateId — geo data, org-scoped queries
+- ReferralMasterServiceImpl.areaByCityPaginationCache + areaByCityCache — key cityId
+- AreaMasterServiceImpl.cityListByDistrictCache — key districtId
+- UnknownPatientRegistrationServiceImpl.priorityMasterCache — key literal "PriorityMaster" — **FIXED on branch (BR-170): org+unit key + invalidateAll**
+
+NOT-TENANT-DATA (1): BedCategoryMasterServiceImpl.bedCategoryCache — key literal "bedCategory" — stores dto.getDayCareIpBedCategoryList() (static day-care/IP classification, not tenant query results).
+
+TENANT-KEYED (32): keys carry org and/or unit (e.g. visitTypeMaster:orgId:unitId, cardType getOrgnisationId, gender list by org, priority org+unit...). NOTE: unit-only keys (org absent) exist within this group — flagged for Stage 3's cross-unit dimension.
+
+Census pitfalls: nested generics broke naive Cache<...> regexes; misspelled getOrgnisationId defeated an org-token regex (reclassified manually); variable cacheKeys (cacheKey = "x:"+org+":"+unit) need the assignment read, not just the get/put line.
+
+## Stage 3 lessons — caches + negative findings (2026-08-05)
+
+1. Caches are a defect class invisible to query-text scanning and to the current harness (the harness checks entity queries + service rebinds; a literal-keyed cache serves tenant A's rows to tenant B with both layers perfect). Population size unknown until the census — now counted: 12 ORG-BLIND caches, 1 with a captured live leak (BR-171).
+2. The 2c "no callers" conclusion was a grep-exclusion artifact (`grep -v 'NamedQuery'` also filtered `getNamedQuery(...)`). Negative findings from pattern matching need the pattern itself verified against a known-positive sample before the conclusion is recorded — the corrected trace found exactly one live caller (BR-170).
+
+<!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
