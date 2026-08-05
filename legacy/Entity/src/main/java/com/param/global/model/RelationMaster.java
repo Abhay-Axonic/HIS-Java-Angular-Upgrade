@@ -33,7 +33,7 @@ import javax.persistence.Table;
 			+ "relation.code as code, "
 			+ "relation.desc as desc, "
 			+ "relation.status as status "
-			+ "FROM RelationMaster as relation WHERE relation.id=:id"),
+			+ "FROM RelationMaster as relation WHERE relation.id=:id AND relation.organizationId=:orgId"),
 	
 	/*@NamedQuery(name="GET_RELATION_LIST_BY_NAME_NOT_ID", query="SELECT relation.id as id, "
 			+ "relation.code as code, "

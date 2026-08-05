@@ -13,6 +13,7 @@ import com.param.rabbitmq.dto.base.Payload;
 import com.param.rabbitmq.dto.base.Request;
 import com.param.rabbitmq.service.EmrService.IEmrService;
 import com.param.rabbitmq.util.constants.MasterKeyConstants;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -26,11 +27,15 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Autowired
 	IEmrService EmrService;   
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 
 	@Override
 	public Response addReligionMaster(ReligionMasterDto religionMasterDto) throws ApplicationException {
 		try {
 
+			religionMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iReligionDao.getReligionByName(religionMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -55,7 +60,11 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 					request.setPayload(payload);
 					//EmrService.publish(request);
 				}
-				return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				// propagate DAO status — do not mask a failed save as SUCCESS
+				if (res.getStatus() != null && res.getStatus().equals(SUCCESS)) {
+					return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				}
+				return new Response(ERROR, null, null, null, null);
 			}
 		} catch (Exception e) {
 			
@@ -66,6 +75,7 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Override
 	public Response getReligionMasterList(ReligionMasterDto religionMasterDto) throws ApplicationException {
 		try {
+			religionMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iReligionDao.getReligionMasterList(religionMasterDto);
 		} catch (Exception e) {
 			
@@ -76,6 +86,7 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Override
 	public Response updateReligionMaster(ReligionMasterDto religionMasterDto) throws ApplicationException {
 		try {
+			religionMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iReligionDao.getReligionByNameNotId(religionMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -84,7 +95,11 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 			} else {
 				/*religionMasterDto
 						.setUpdatedDate(GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(unitId), "dd-M-yyyy HH:mm:ss"););*/
-				 iReligionDao.updateReligionMaster(religionMasterDto);
+				Response updateRes = iReligionDao.updateReligionMaster(religionMasterDto);
+				if (updateRes.getStatus() == null || !updateRes.getStatus().equals(SUCCESS)) {
+					// propagate DAO status — do not mask a rejected/failed update as SUCCESS
+					return updateRes;
+				}
 				
 				religionMasterDto.setCreatedBy(religionMasterDto.getUpdatedBy());
 				religionMasterDto.setCreatedDate(religionMasterDto.getUpdatedDate());
@@ -107,6 +122,7 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Override
 	public Response getReligionById(ReligionMasterDto religionMasterDto) throws ApplicationException {
 		try {
+			religionMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iReligionDao.getReligionById(religionMasterDto);
 		} catch (Exception e) {
 			
@@ -117,11 +133,16 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Override
 	public Response updateStatusForReligion(ReligionMasterDto religionMasterDto) throws ApplicationException {
 		try {
+			religionMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iReligionDao.getReligionById(religionMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				/*religionMasterDto
 						.setUpdatedDate(GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(unitId), "dd-M-yyyy HH:mm:ss"););*/
-				iReligionDao.updateReligionStatus(religionMasterDto);
+				Response res = iReligionDao.updateReligionStatus(religionMasterDto);
+				if (res.getStatus() == null || !res.getStatus().equals(SUCCESS)) {
+					// propagate DAO status — do not mask a rejected/failed toggle as SUCCESS
+					return res;
+				}
 				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
 
 			} else {
@@ -137,7 +158,8 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Override
 	public Response getActiveReligionList() throws ApplicationException {
 		try {
-			return iReligionDao.getActiveReligionList();
+			// active-list reads bind the JWT-verified org, never all tenants
+			return iReligionDao.getActiveReligionList(verifiedIdentityService.getVerifiedOrganizationId());
 		} catch (Exception e) {
 			
 		}
@@ -147,6 +169,7 @@ public class ReligionMasterServiceImpl implements IReligionMasterService, ICommo
 	@Override
 	public Response getReligionCount(ReligionMasterDto religionMasterDto) throws ApplicationException {
 		try {
+			religionMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iReligionDao.getCount(religionMasterDto);
 		} catch (Exception e) {
 			

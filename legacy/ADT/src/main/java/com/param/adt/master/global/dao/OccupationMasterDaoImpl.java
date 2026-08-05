@@ -18,6 +18,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.adt.master.global.dto.OccupationMasterDto;
 import com.param.adt.master.global.model.OccupationMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -32,6 +33,9 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 	public OccupationMasterDaoImpl() {
 		super(OccupationMaster.class);
@@ -82,6 +86,8 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 	public Response addOccupationMaster(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try{
 			OccupationMaster occupationMaster = mapper.map(occupationMasterDto, OccupationMaster.class,"occupationDto_to_occupationMaster");
+			// create binds the JWT-verified org, never a client-supplied value
+			occupationMaster.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			occupationMaster.setCreatedDate(TimeZoneComponent.getDateByzone(0));
 			occupationMaster.setUpdatedDate(TimeZoneComponent.getDateByzone(0));
 			occupationMaster.setStatus('A');
@@ -100,6 +106,7 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 			List<OccupationMasterDto> occupationMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_OCCUPATION_BY_ID")
 					.setParameter("id", occupationMasterDto.getId())
+					.setParameter("orgId", verifiedIdentityService.getVerifiedOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(OccupationMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, occupationMasterDtoList, null);
 
@@ -137,6 +144,12 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 	public Response updateOccupationMaster(OccupationMasterDto occupationMasterDto) throws ApplicationException {
 		try {
 			OccupationMaster occupationMaster = findById(occupationMasterDto.getId());
+			// ownership guard: reject before any write when the target row is not
+			// owned by the JWT-verified tenant
+			if (occupationMaster == null || occupationMaster.getOrganizationId() == null
+					|| !occupationMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<OccupationMasterDto, Integer>(ERROR, null, "OCCUPATION_OWNERSHIP_DENIED", null, null);
+			}
 			occupationMaster.setDesc(occupationMasterDto.getDesc());
 			occupationMaster.setCode(occupationMasterDto.getCode());
 			occupationMaster.setUpdatedBy(occupationMasterDto.getUpdatedBy());
@@ -160,6 +173,12 @@ public class OccupationMasterDaoImpl  extends GenericDao<OccupationMaster, Integ
 		try {
 
 			OccupationMaster occupationMaster = findById(occupationMasterDto.getId());
+			// ownership guard: reject before any write when the target row is not
+			// owned by the JWT-verified tenant
+			if (occupationMaster == null || occupationMaster.getOrganizationId() == null
+					|| !occupationMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<OccupationMasterDto, Integer>(ERROR, null, "OCCUPATION_OWNERSHIP_DENIED", null, null);
+			}
 			occupationMaster.setUpdatedBy(occupationMasterDto.getUpdatedBy());
 			occupationMaster.setStatus(occupationMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
 			

@@ -10,7 +10,7 @@ public interface IPriorityMasterDao {
 
 	Response savePriorityMasterMaster(PriorityMasterDto priorityMasterDto) throws ApplicationException;
 
-	Response getPriorityMasterById(int priorityId, int orgId) throws ApplicationException;
+	Response getPriorityMasterById(int priorityId, int orgId, int unitId) throws ApplicationException;
 
 	Response getPriorityMasterList(PriorityMasterDto priorityMasterDto) throws ApplicationException;
 

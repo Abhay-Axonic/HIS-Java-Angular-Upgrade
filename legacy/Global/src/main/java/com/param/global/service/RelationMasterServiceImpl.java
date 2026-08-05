@@ -38,6 +38,9 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Autowired
 	IEmrService EmrService;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	private Cache<Integer, List<RelationMasterDto>> relationCache;
 
 	@PostConstruct
@@ -51,6 +54,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	public Response getRelationMasterList(RelationMasterDto relationMasterDto) throws ApplicationException {
 
 		try {
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iRelationDao.getRelationMasterList(relationMasterDto);
 		} catch (Exception e) {
 		logger.error("getRelationMasterList failed", e);
@@ -62,6 +66,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	public Response addRelationMaster(RelationMasterDto relationMasterDto) throws ApplicationException {
 		try {
 
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iRelationDao.getCountryByName(relationMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				
@@ -90,7 +95,11 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 					//EmrService.publish(request);
 				}
 				
-				return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				// propagate DAO status — do not mask a failed save as SUCCESS
+				if (res.getStatus() != null && res.getStatus().equals(SUCCESS)) {
+					return new Response(SUCCESS, null, COMMON_SUCCESS, null, null);
+				}
+				return new Response(ERROR, null, null, null, null);
 			}
 		} catch (Exception e) {
 		logger.error("addRelationMaster failed", e);
@@ -101,6 +110,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Override
 	public Response getRelationById(RelationMasterDto relationMasterDto) throws ApplicationException {
 		try {
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iRelationDao.getRelationById(relationMasterDto);
 		} catch (Exception e) {
 		logger.error("getRelationById failed", e);
@@ -111,6 +121,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Override
 	public Response updateRelationMaster(RelationMasterDto relationMasterDto) throws ApplicationException {
 		try {
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iRelationDao.getRelationByNameNotId(relationMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 
@@ -125,6 +136,9 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 					RelationMaster master = (RelationMaster) updateRes.getObject();
 					Integer orgId = master.getOrganizationId();
 					relationCache.invalidate(orgId);
+				} else {
+					// propagate DAO status — do not mask a rejected/failed update as SUCCESS
+					return updateRes;
 				}
 
 				relationMasterDto.setCreatedBy(relationMasterDto.getUpdatedBy());
@@ -149,6 +163,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Override
 	public Response updateStatusForRelation(RelationMasterDto relationMasterDto) throws ApplicationException {
 		try {
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			Response deptResponse = iRelationDao.getRelationById(relationMasterDto);
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				/*relationMasterDto
@@ -157,6 +172,9 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 				if(res.getStatus().equals(SUCCESS) && res.getObject() != null) {
 					Integer filterId = (Integer) res.getObject();
 					relationCache.invalidate(relationMasterDto.getOrganizationId() != null ? relationMasterDto.getOrganizationId() : filterId);
+				} else {
+					// propagate DAO status — do not mask a rejected/failed toggle as SUCCESS
+					return res;
 				}
 				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
 
@@ -172,6 +190,8 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Override
 	public Response getActiveRelationList(Integer orgId) throws ApplicationException {
 		try {
+			// active-list reads bind the JWT-verified org, never the client param
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
 			List<RelationMasterDto> responseCache = relationCache.getIfPresent(orgId);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, null, responseCache, null);
@@ -192,6 +212,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Override
 	public Response getRelationCount(RelationMasterDto relationMasterDto) throws ApplicationException {
 		try {
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iRelationDao.getCount(relationMasterDto);
 		} catch (Exception e) {
 		logger.error("getRelationCount failed", e);
@@ -202,6 +223,7 @@ public class RelationMasterServiceImpl implements IRelationMasterService, ICommo
 	@Override
 	public Response getActiveRelationListForWebPage(RelationMasterDto relationMasterDto) throws ApplicationException {
 		try {
+			relationMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iRelationDao.getActiveRelationListForWebPage(relationMasterDto);
 		} catch (Exception e) {
 		logger.error("getActiveRelationListForWebPage failed", e);

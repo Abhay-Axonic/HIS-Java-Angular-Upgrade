@@ -27,24 +27,26 @@ import javax.persistence.Table;
 	@NamedQuery(name="GET_RELIGION_LIST_BY_NAME", query="SELECT religion.id as id, "
 			+ "religion.desc as desc "
 			+ "FROM ReligionMaster as religion "
-			+ "WHERE religion.desc=:desc OR LOWER(religion.desc)=:desc"),
+			+ "WHERE (religion.desc=:desc OR LOWER(religion.desc)=:desc) "
+			+ "AND religion.organizationId=:orgId"),
 	
 	@NamedQuery(name="GET_RELIGION_LIST_BY_ID", query="SELECT religion.id as id, "
 			+ "religion.code as code, "
 			+ "religion.desc as desc, "
 			+ "religion.status as status "
 			+ "FROM ReligionMaster as religion "
-			+ "WHERE religion.id=:id"),
+			+ "WHERE religion.id=:id AND religion.organizationId=:orgId"),
 	
 	@NamedQuery(name="GET_RELIGION_LIST_BY_NAME_NOT_ID", query="SELECT religion.id as id, "
 			+ "religion.desc as desc "
 			+ "FROM ReligionMaster as religion "
-			+ "WHERE religion.id!=:id AND (religion.desc=:desc OR LOWER(religion.desc)=:desc)"),
+			+ "WHERE religion.id!=:id AND (religion.desc=:desc OR LOWER(religion.desc)=:desc) "
+			+ "AND religion.organizationId=:orgId"),
 	
 	@NamedQuery(name="GET_ACTIVE_RELIGION_LIST", query="SELECT religion.id as id, "
 			+ "religion.desc as desc "
 			+ "FROM ReligionMaster as religion "
-			+ "WHERE religion.status='A'")
+			+ "WHERE religion.status='A' AND religion.organizationId=:orgId")
 })
 @Entity
 @Table(name = "m_religion_master", schema = "public")

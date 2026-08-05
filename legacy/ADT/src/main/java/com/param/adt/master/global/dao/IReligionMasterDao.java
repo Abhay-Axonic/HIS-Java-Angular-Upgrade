@@ -18,7 +18,7 @@ public interface IReligionMasterDao extends IGenericDao<ReligionMaster, Integer>
 
 	Response getReligionById(ReligionMasterDto religionMasterDto)throws ApplicationException;
 
-	Response getActiveReligionList() throws ApplicationException;
+	Response getActiveReligionList(Integer orgId) throws ApplicationException;
 
 	Response getReligionByNameNotId(ReligionMasterDto religionMasterDto) throws ApplicationException;
 

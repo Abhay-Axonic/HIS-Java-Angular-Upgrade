@@ -35,7 +35,7 @@ import javax.persistence.Table;
 	@NamedQuery(name = "GET_MARITAL_STATUS_BY_ID", query = "SELECT maritalStatusMaster.id as id, "
 			+ "maritalStatusMaster.code as code, " + "maritalStatusMaster.desc as desc, "
 			+ "maritalStatusMaster.status as status "
-			+ "FROM MaritalStatusMaster as maritalStatusMaster WHERE maritalStatusMaster.id=:id"),
+			+ "FROM MaritalStatusMaster as maritalStatusMaster WHERE maritalStatusMaster.id=:id AND maritalStatusMaster.organizationId=:orgId"),
 
 	@NamedQuery(name = "GET_MARITAL_STATUS_BY_NAME_NOT_ID", query = "SELECT maritalStatusMaster.id as id, "
 			+ "maritalStatusMaster.code as code, " + "maritalStatusMaster.desc as desc, "
