@@ -329,4 +329,25 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   Same method also builds raw SQL via getQueryString->createSQLQuery (params ARE setParameter-bound —
   not currently injectable, fragile shape).
 
+## QF-2026-08-05-J — Coversheet patient-safety finding: THIRTEEN sections, not one (medication-history establishment)
+
+- Section visibility: ipd-CoverSheet-new.html:742 — the "Drug History" section (label + content) is gated
+  `ng-show="detailedMedicationsHistory.length>0"` — **vanishes entirely when empty; no label, no placeholder,
+  no "none" marker**. A clinician cannot distinguish "no medications" from "query dead". Same shape for the
+  other history sections (ng-if/ng-show on list length).
+- Query history: GET_MEDICATION_HISTORY_LIST is commented in the repo BASELINE (96b75c49 — the file has no
+  other history) — the disable predates this repo; cannot confirm deliberate vs accidental from git.
+- Coversheet-DAO sweep (the 13 patient-history read queries): **2 DEAD (medication history, personal history)
+  + 11 CRASH (live org/unit predicates, NO bind -> Hibernate param-not-found 500)** — all 11 have exactly one
+  live caller file (the coversheet DAOs). The house catch shape is FALSE-SUCCESS MASKING, worse than null:
+  error -> `Response(SUCCESS, COMMON_SUCCESS, null)` — the frontend sees success + empty and hides the section.
+- Net: the coversheet's patient-history read path is silent-blank across drug/medical/surgical/treatment/
+  travel/family/personal history, allergies, vitals, habits, old-encounters, resolved sets — a clinician can
+  sign off on a largely blank clinical summary. THIS IS THE PATIENT-SAFETY FINDING (larger than one query).
+- Diagnosis-by-gender whitelist (item 4): all three frontend callers (radiologyResultValidation,
+  medicalHistoryTab, IPDCoverSheet) use GenericService.serviceAction — GenericService.js attaches
+  `Authorization: Bearer <authToken>` (lines 12/61/190/257) — **all authenticated internal screens; the
+  /api/opd/getDiagnosisByGenderId whitelist entry (JwtTokenFilter:98+389) is STALE — removal is the fix,
+  BR-171 pattern**. Not fixed (report only).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
