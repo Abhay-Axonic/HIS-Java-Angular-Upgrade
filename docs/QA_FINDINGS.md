@@ -377,4 +377,28 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   (includes void-method catches where fallthrough is normal + nested-brace truncation); the meaningful subset is the
   Response-typed DAO reads (coversheet family confirmed); a Response-typed refinement is the next census pass.
 
+## QF-2026-08-05-L — CORRECTION: coversheet 13 re-classified (both traces overturn the fear)
+
+- The earlier "2 DEAD + 11 CRASH" (QF-J) was WRONG — my caller-bind pass botched the multi-line
+  createQuery chains (reported "no bind" when the DAOs DO bind organizationId/patientId/created_date).
+  Corrected per-query predicate-vs-bind read: **12 of 13 coversheet queries are LIVE (org-scoped,
+  unit-UNSCOPED — all live predicates bound, queries run); 1 is DEAD (GET_MEDICATION_HISTORY_LIST,
+  entirely commented).** The personal-history DEAD label was also wrong (live block).
+- Consequence: the coversheet sections are NOT crash-blank — they render org-scoped data. The
+  silent-blank safety defect is the SINGLE Drug History section (dead query -> DAO null fallthrough ->
+  ng-show gate hides the section). The vanish-without-placeholder ambiguity remains for all length-gated
+  sections but only Drug History is actually broken-empty.
+- Item 2 allergy trace: the Allergies section is LIVE (org-scoped, unit-unscoped; binds patientId+org+
+  created_date) — NOT crash-blank. The alert icon path is a separate query (GET_PATIENT_ALLERGY_LIST_FOR_ICON,
+  fully org+unit+patient scoped, all bound) via GET /getPatientAllergyListForIcon — unitId from
+  @RequestHeader (client-supplied, unverified vs token — the carried VIS-risk class; not whitelisted,
+  authenticated). The clinician sees the allergy icon + section data; the defect is the unit-unscoping +
+  client-org (security class), not a blank section.
+- Item 1 discharge-summary trace: history sections populate from the SAVED template grid
+  (dischargeSummaryTemplateListdata, tableTypeId-keyed) — NOT the coversheet read path. Discharge summary
+  does NOT share the Drug-History blank; it shares the consult-doctors PHI leak + the discharge-field
+  config silent leaks (BY_ID/BY_NAME/BY_NAME_NOT_ID) + the CRASH LIST query.
+- The org-scoped-unit-unscoped state of the 12 IS a cross-tenant security defect (same-org cross-unit
+  patient reads + client-sourced org values) — the org-trust Pattern A class — now precisely enumerated.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
