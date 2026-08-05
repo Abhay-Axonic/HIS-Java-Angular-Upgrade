@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.adt.master.global.dao.IPatientServiceMasterDao;
 import com.param.adt.master.global.dto.PatientSourceMasterDto;
 
@@ -23,6 +24,9 @@ import java.util.List;
 public class PatientSourceMasterServiceImpl implements IPatientSourceMasterService, ICommonConstants {
 	@Autowired
 	private IPatientServiceMasterDao iPatientSourceMasterDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	private Cache<Integer, List<PatientSourceMasterDto>> patientSourceMasterCache;
 
@@ -64,6 +68,7 @@ public class PatientSourceMasterServiceImpl implements IPatientSourceMasterServi
 	@Override
 	public Response getPatientSourceMasterList(PatientSourceMasterDto patientSourceMasterDto) throws ApplicationException {
 		try {
+			patientSourceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iPatientSourceMasterDao.getPatientSourceMasterList(patientSourceMasterDto);
 		} catch (HibernateException e) {
 			
@@ -138,6 +143,7 @@ public class PatientSourceMasterServiceImpl implements IPatientSourceMasterServi
 	@Override
 	public Response getActivePatientSourceList(Integer organizationId) throws ApplicationException {
 		try {
+			organizationId = verifiedIdentityService.getVerifiedOrganizationId();
 			List<PatientSourceMasterDto> responseCache = patientSourceMasterCache.getIfPresent(organizationId);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
@@ -160,6 +166,7 @@ public class PatientSourceMasterServiceImpl implements IPatientSourceMasterServi
 	@Override
 	public Response getPatientSourceCount(PatientSourceMasterDto patientSourceMasterDto) {
 		try {
+			patientSourceMasterDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 			return iPatientSourceMasterDao.getCount(patientSourceMasterDto);
 		} catch (HibernateException e) {
 			

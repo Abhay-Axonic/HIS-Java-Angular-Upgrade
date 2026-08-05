@@ -18,6 +18,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.dto.GenderMasterDto;
 import com.param.global.model.GenderMaster;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.service.global.SessionService;
 import com.param.utility.TimeZoneComponent;
 
@@ -41,6 +42,9 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 	
 	@Autowired
 	SessionService sessionService;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public GenderMasterDaoImpl() {
 		super(GenderMaster.class);
@@ -119,6 +123,7 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 			List<GenderMasterDto> genderyMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_GENDER_BY_ID")
 					.setParameter("id", genderMasterDto.getId())
+					.setParameter("orgId", genderMasterDto.getOrganizationId())
 					.setResultTransformer(Transformers.aliasToBean(GenderMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, genderyMasterDtoList, null);
 
@@ -154,6 +159,10 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 	public Response updateGenderMaster(GenderMasterDto genderMasterDto) throws ApplicationException {
 		try {
 			GenderMaster genderMaster = findById(genderMasterDto.getId());
+			if (genderMaster == null || genderMaster.getOrganizationId() == null
+					|| !genderMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<GenderMasterDto, Integer>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			genderMaster.setDesc(genderMasterDto.getDesc());
 			genderMaster.setCode(genderMasterDto.getCode());
 			genderMaster.setUpdatedBy(genderMasterDto.getUpdatedBy());
@@ -178,8 +187,12 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 		try {
 
 			GenderMaster genderMaster = findById(genderMasterDto.getId());
+			if (genderMaster == null || genderMaster.getOrganizationId() == null
+					|| !genderMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				return new Response<GenderMasterDto, Integer>(ERROR, null, COMMON_ERROR_MESSAGE, null, null);
+			}
 			genderMaster.setUpdatedBy(genderMasterDto.getUpdatedBy());
-			genderMaster.setStatus(genderMasterDto.getStatus() == ACTIVE ? ACTIVE : INACTIVE);
+			genderMaster.setStatus(genderMasterDto.getStatus() == 'A' ? 'A' : 'I');
 
 			genderMaster
 					.setUpdatedDate(GlobalCommonDateUtils.getDate(genderMasterDto.getUpdatedDate(), "dd-M-yyyy HH:mm:ss"));

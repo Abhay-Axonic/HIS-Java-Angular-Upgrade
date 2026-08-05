@@ -115,11 +115,8 @@ import com.param.entity.lis.common.LocalTimeConverter;
 		+"	lab.m_sample_status_master samplestausmast "
 		+"WHERE "
 		+"	samplestausmast.status = 'A' "
-		+ " ORDER BY samplestausmast.status_name ASC ")
-/*
-samplestausmast.org_id = :orgId "
-		+"	AND 
-*/})
+		+"	AND samplestausmast.org_id = :orgId "
+		+ " ORDER BY samplestausmast.status_name ASC ")})
 
 @Entity
 @Table(name = "m_sample_master", schema = "lab")

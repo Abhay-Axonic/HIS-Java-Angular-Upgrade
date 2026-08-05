@@ -195,6 +195,8 @@ public class BankMasterServiceImpl implements IBankMasterService, ICommonConstan
 	@Transactional
 	public Response getHospitalBank(Integer orgId, Integer unitId) throws ApplicationException {
 		try {
+			orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			unitId = verifiedIdentityService.getVerifiedUnitId();
 			List<CommonDto> responseCache = hospitalBankMasterCache.getIfPresent(unitId);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
