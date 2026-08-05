@@ -24,7 +24,9 @@ import com.param.adt.admission.model.MedicoLeagal;
 	@NamedQuery(name="GET_PRIORITY_LIST",query="SELECT priority.priorityId as priorityId, "
 			+ "priority.priorityCode as priorityCode "
 			+ "FROM PriorityMaster priority "
-			+ "WHERE priority.status='A'"
+			+ "WHERE priority.status='A' "
+			+ "AND priority.organizationId=:orgId "
+			+ "AND priority.unitId=:unitId "
 			+ "ORDER BY priority.priorityCode ASC")
 })
 
@@ -62,6 +64,9 @@ public class PriorityMaster {
 
 	@Column(name = "organization_id")
 	private Integer organizationId;
+
+	@Column(name = "unit_id")
+	private Integer unitId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "organization_id", insertable = false, updatable = false)
@@ -144,6 +149,14 @@ public class PriorityMaster {
 
 	public void setOrganizationId(Integer organizationId) {
 		this.organizationId = organizationId;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
 	}
 
 	public OrganizationMaster getOrganizationMaster() {

@@ -16,7 +16,9 @@ import javax.persistence.Table;
 	@NamedQuery(name="GET_PRIORITY_LIST",query="SELECT priority.priorityId as priorityId, "
 			+ "priority.priorityCode as priorityCode "
 			+ "FROM PriorityMaster priority "
-			+ "WHERE priority.status='A'"
+			+ "WHERE priority.status='A' "
+			+ "AND priority.organizationId=:orgId "
+			+ "AND priority.unitId=:unitId "
 			+ "ORDER BY priority.priorityCode ASC"),
 	@NamedQuery(name = "GET_PRIORITY_MASTER_BY_ID",
 	query = "SELECT pc.priorityId as id, "

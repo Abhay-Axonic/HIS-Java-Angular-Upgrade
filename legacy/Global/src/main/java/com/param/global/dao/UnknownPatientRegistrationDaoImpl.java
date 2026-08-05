@@ -90,10 +90,12 @@ public class UnknownPatientRegistrationDaoImpl extends GenericDao<UnknownPatient
 	}
 
 	@Override
-	public Response getPriorityMasterList() throws ApplicationException {
+	public Response getPriorityMasterList(Integer orgId, Integer unitId) throws ApplicationException {
 		try {
 			List<PriorityMasterDto> priorityMasterDtosList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_PRIORITY_LIST")
+					.setParameter("orgId", orgId)
+					.setParameter("unitId", unitId)
 					.setResultTransformer(Transformers.aliasToBean(PriorityMasterDto.class)).list();
 			if (priorityMasterDtosList != null) {
 				return new Response(SUCCESS, null, null, priorityMasterDtosList, null);
