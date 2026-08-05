@@ -120,7 +120,7 @@ SCREENS = {
     },
     "religion": {
         "module": "ADT",
-        "fix_commit": "1355f15b",
+        "fix_commit": "567a59d2",   # app-code commit; entity-only parens fix 1355f15b verified via entity-filter assertion
         "payload_org_field": "organizationId",
         "service_class": "com/param/adt/master/global/service/ReligionMasterServiceImpl.class",
         "dao_class": "com/param/adt/master/global/dao/ReligionMasterDaoImpl.class",
