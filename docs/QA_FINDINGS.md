@@ -175,3 +175,7 @@ During the 2d religion run, the HIS_TOK env var vanished mid-session and the har
 ## Known weak assertion — '"id":' legit marker (2026-08-05)
 
 The five-screen legit marker `'"id":'` (any-row marker, replacing the absent '"id":1') has low discriminating power: it only proves the legit list returned at least one row. It is carried into 2e as a known weak assertion — the legit-list guarantee is bounded by the authenticated-JSON check, the count before/after equality, and the leak-marker absence on the forged call. Not a blocker: a non-empty org-1 list with zero rows would fail it.
+
+## Stage 3 classification implication — caller-tracing surfaces what query-pattern scanning misses (2026-08-05)
+
+BR-170 was found by a blast-radius trace (grep for the query name's callers), NOT by the sweep that was supposed to enumerate this population — the precedence census and the pattern scans both missed it because the defect is a MISSING predicate, not a mis-bound one. Consequences for the Stage-3 population estimate: (a) the Phase 1 figure of ~2,000-2,400 is a floor, not a total; (b) the classification criteria must include caller-tracing as a first-class discovery method, not just query-pattern scanning; (c) a "no callers" conclusion requires the full main tree with a correct exclusion pattern — the earlier 'no callers' finding for GET_PRIORITY_LIST was an artifact of `grep -v 'NamedQuery'` also filtering `getNamedQuery(...)` call sites; the corrected trace found exactly one live caller (UnknownPatientRegistrationDaoImpl:96).
