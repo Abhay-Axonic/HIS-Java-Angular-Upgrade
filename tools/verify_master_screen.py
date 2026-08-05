@@ -514,11 +514,24 @@ def main():
         H = ["-H", "Content-Type: application/json",
              "-H", f"Authorization: Bearer {args.token}",
              "-H", "userId: 1", "-H", "unitId: 1", "-H", "Origin: http://localhost:8080"]
-        r = run(["curl", "-s", "-X", "POST", f"http://localhost:8080{spec['list_endpoint']}",
+        r = run(["curl", "-s", "-w", "\n###HTTP###%{http_code}", "-X", "POST",
+                 f"http://localhost:8080{spec['list_endpoint']}",
                  *H, "-d", '{"organizationId":%d,"offset":0,"noOfRecordsPerPage":50}' % forged_org])
-        _auth_ok = cond_auth_json(r.stdout)
-        ok &= check("live responses authenticated JSON (token accepted)",
-                    _auth_ok, f"(raw_head={r.stdout[:80]!r})")
+        raw = r.stdout
+        m = re.search(r"###HTTP###(\d+)\s*$", raw)
+        code = m.group(1) if m else "?"
+        _body = raw[:m.start()] if m else raw
+        _auth_ok = cond_auth_json(_body)
+        if _auth_ok:
+            _detail = f"(http={code} raw_head={_body[:60]!r})"
+        elif code == "401":
+            _detail = (f"(http=401 raw_head={_body[:60]!r} — TOKEN EXPIRED OR REJECTED; "
+                       f"re-pull a fresh JWT from the browser session)")
+        elif code == "200" and _body.strip() == "":
+            _detail = "(http=200 EMPTY RESPONSE — server-side error, not an auth failure)"
+        else:
+            _detail = f"(http={code} raw_head={_body[:60]!r})"
+        ok &= check("live responses authenticated JSON (token accepted)", _auth_ok, _detail)
         leaked = spec["victim_marker"] in r.stdout
         ok &= check("forged list leaks no victim row", cond_no_leak(leaked),
                     f"(payload org={forged_org}; victim_marker_in_response={leaked})")
