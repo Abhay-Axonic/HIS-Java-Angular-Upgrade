@@ -48,10 +48,9 @@ import com.param.service.global.model.MPackageMaster;
 	@NamedQuery(name = "GET_ACTIVE_GENDER_LIST", query = "SELECT genderMaster.id as id, "
 			+ "genderMaster.desc as desc "
 			+ "FROM GenderMaster as genderMaster WHERE genderMaster.status='A' "
+			+ "AND genderMaster.organizationId=:orgId "
 			+ "ORDER BY genderMaster.desc ASC"),
 	        
-			//+ "AND genderMaster.organizationId=:orgId ")
-	
 	@NamedQuery(name = "GET_ACTIVE_GENDER_LIST_FOR_ICPC_MAPPER", query = "SELECT genderMaster.id as id, "
 			+ "genderMaster.desc as desc "
 			+ "FROM GenderMaster as genderMaster WHERE genderMaster.status='A' "

@@ -25,7 +25,7 @@ public interface IGenderMasterDao extends IGenericDao<GenderMaster, Integer> {
 
 	Response updateGenderStatus(GenderMasterDto genderMasterDto) throws ApplicationException;
 
-	Response getActiveGenderList() throws ApplicationException;
+	Response getActiveGenderList(Integer orgId) throws ApplicationException;
 	
 	Response getCount(GenderMasterDto genderMasterDto)throws ApplicationException;
 
