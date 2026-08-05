@@ -553,4 +553,33 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   "/br/", "/decrypt") + auth-exempt WRITE endpoints (kiosk/saveAndPay, update/service,
   patientRegistration, deleteParticipants, ...) — see QF-2026-08-05-P.
 
+## QF-2026-08-05-S — kiosk saveAndPay unauthenticated-write TRACE (Rule 10, end to end) — write does NOT persist on the dev DB
+
+- FILTER PATH (no-token POST /api/billing/kiosk/saveAndPay): identical to QF-Q — the whitelist's
+  "api/billing/kiosk/saveAndPay" entry matches the URI (context path "") -> chain.doFilter. PROVEN LIVE:
+  the controller responded (400/500), never a 401.
+- WHAT IT WRITES: BillingMasterController.saveBillFromKiosk -> (a) Razorpay verification ONLY for
+  paymentModeId==8 (server-side verifyRazorpayPayment — a DESIGNED protection for that mode; the other
+  modes cash/card/cheque are trusted as-is — a deliberate choice per the in-code comment), (b)
+  iBillingMasterService.saveBillFromKiosk -> patient registration (patientId 0 only) -> markArrival ->
+  saveEncounterMaster (opd.t_encounter_master) -> the bill save (billing.m_billing_master) ->
+  collectPayment. NONE of the writes reached.
+- CONFIG DEPENDENCIES: (1) the encounter service's unit-application-billing-config lookup
+  (EncounterMasterServiceImpl:296-307 — ERROR "Default tariff is not defined !!" / "Opd Billing Category
+  Id is not defined !!" when the config is absent — a DESIGNED flow requirement), (2) the bill-number
+  generation (getGeneratedNo -> public.m_prefix_configuration — the dev DB has ZERO prefix-config rows
+  for unit 1). Both are config-row dependencies; the dev DB satisfies neither — ENVIRONMENT.
+- LIVE PROOF: pre-counts billing.m_billing_master=2 (pre-existing), opd.t_encounter_master=0 -> no-token
+  POST (minimal + DTO-correct payloads; encounterDate is a Long — epoch millis) -> 500
+  "Something went wrong. Reference: ERR-7f32ae29" — the stack: BillingException "Cannot invoke
+  EncounterMasterDto.getEncounterId() because encResObj is null" at BillingMasterServiceImpl:2933 (the
+  encounter save returned an error/null object — the config check failed) -> post-counts UNCHANGED (2/0)
+  — NO INSERT, no sequence advance.
+- VERDICT: same class as saveMedication (QF-Q): unauthenticated REACHABILITY real; the write is blocked
+  by ENVIRONMENT (missing billing-config rows + missing prefix-config rows), not by design; in a
+  configured environment (any real deployment — the app cannot bill without these rows) the same
+  no-token POST would persist. REAL VULNERABILITY WITH A COINCIDENTAL MITIGATION on this dev DB. The
+  Razorpay mode is the one designed protection (server-side verification); cash/card/cheque are
+  unverified by design.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
