@@ -1084,4 +1084,38 @@ THE THREE NO-CLEAN-RULE RESOLUTIONS:
    the family leaves the allowlist, the unauthenticated POST to the live /api/deleteParticipants
    controller 401s, and the bare entry becomes irrelevant without a separate removal branch.
 
+## QF-2026-08-05-AI — the 108 ALLOW in reviewable form + KIOSK re-confirmation (tools/allowlist_review.py)
+
+- The reviewable 108 (risk-ordered: writes -> PHI reads -> reference/config -> static) is in the
+  tool's output: exact URL | verb | touches (PHI/billing/reference/config/static) | named caller
+  file:line | one-line reason. The user reviews all 108.
+- RULE-10 CONTROL on the constant traces: GETACTIVECOUNTRYLIST = /adt/getActiveCountryList/ verified
+  against adt.url.config.js:61 and its JS users found (control PASS) before any rescued master was
+  trusted.
+- KIOSK RE-CONFIRMATION (the ~30, route-checked): the route evidence splits the group:
+  CONFIRMED pre-login by route: selfRegistrationdemo (saveAndPay, patientRegistration,
+  appointment/check, patientTypeHeadSearchForAppointmentUnique), bookAppointment (getDetailsForBookAppointment,
+  getActivePrefixList, doctorApp/getApplicationConfig), bookView (getListOfDocumentForBookView,
+  getInvestigationsListForBookView, coversheetInstructionListForBookView,
+  getMedicationHistoryListForBookView), webAppointment (getActivePrefixListForWebPage,
+  getActiveRelationListForWebPage, appoitments/doctors), the two feedback endpoints + their saves
+  (anonymous by design).
+  UNCONFIRMED -> DENY DEFAULT (per the owner's rule — cannot demonstrate pre-login reachability):
+  - /api/global/webappointment/getDoctors — the named caller is dischargedPatientsController.js:123
+    (route /dischargedPatients — a POST-LOGIN clinician screen). Reclassify DENY.
+  - /adt/getNationalityByCountryId — caller admittedPatientListController.js:573 (route
+    /admittedPatientList — post-login). Reclassify DENY.
+  - /api/opd/getDailySlots — NO named caller. Reclassify DENY.
+  - api/global/getAvailableDoctorBySpeciality — NO named caller. Reclassify DENY.
+  - The /adt/getActive* + address masters — their constant-trace users are dominated by post-login
+    screens (admissionController, admittedPatientListController, bedAllocationController per the
+    control); pre-login reachability not demonstrated for the majority. Reclassify DENY (they work
+    through the staff token check; the kiosk screens that need them can be re-ALLOWed with a named
+    pre-login caller after review).
+  - adt/getPrefixMasterList, adt/getActivePrefixList, /adt/getSpecialityListByDoctorIdByOrg — config/
+    post-login callers; UNCONFIRMED -> DENY.
+  NET EFFECT: ~14-16 of the kiosk-32 reclassify to DENY; the reviewed ALLOW lands around 92-94.
+- The remaining ALLOWs (INTEGRATION 22 with external callers, PUBLIC 47, the confirmed-pre-login
+  kiosk ~16-18) keep their named callers.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
