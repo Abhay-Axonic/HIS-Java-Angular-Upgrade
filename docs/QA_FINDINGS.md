@@ -924,4 +924,76 @@ PART 2 — THE INTERNAL-MISPLACEMENT CONFIRMATION (14 candidates from QF-AD; the
   identifier hits for scheduleAppointment = function-name noise, not endpoint calls).
 - All spellings verified against the extracted list.
 
+## QF-2026-08-05-AF — BR-173 STRUCTURAL PROPOSAL (decision-ready; analysis only)
+
+GROUNDING (all from this session's extracted list): 154 unique entries = PUBLIC 47 + INTEGRATION 22 +
+KIOSK 47 + STALE 29 + UNEXPLAINED 9; drift 2 (copy2-only: /resources/, deleteParticipants); the bare
+deleteParticipants; 2 unauthenticated writes blocked only by env artifacts (patientRegistration:
+family_id drift; saveAnalyzedReport: empty table); the config-mitigation on saveMedication/saveAndPay
+was coincidence, not a pattern.
+
+1. RECOMMENDATION — D (default-deny + explicit exact-matched allowlist).
+   The filter becomes: URL in the exact-matched allowlist -> pass; else -> the EXISTING token-check
+   (the JwtTokenFilter's own logic, fail-closed); else 401. D subsumes A (exact-match is D's matching
+   mode) and C (the split by auth type IS the allowlist's composition). A alone only changes the
+   matching of a list that still cannot be enumerated reliably by hand; C alone still leaves the
+   gate's default as pass-for-anything-in-the-list.
+   B (re-enable Spring Security) is NOT viable as a flip: the commented block enforces the OAuth2
+   resource-server while the app uses custom JWTs with header-derived userId/unitId — re-enabling
+   rejects everything until the custom-JWT validator is built into the security chain, which is a
+   rewrite of the app's entire auth surface (the filter's logic + the identity plumbing + every
+   session) at 2-3x D's effort with the whole app's login at risk. It is viable only as a later
+   consolidation after D holds, and only if the custom-JWT/header model is migrated first.
+
+2. SEQUENCE.
+   Gate 0 (done): the extraction-based list (QF-AC's tools) — the real 154, control-verified.
+   Phase 1 (the structure): the filter's rewrite — default-deny + exact-match against the extracted
+   allowlist (~84 = PUBLIC 47 + INTEGRATION 22 + KIOSK-public ~15) + URL normalization BEFORE the
+   match (query-strip, trailing-slash trim, case) + the token-check unchanged. GATES: bytecode
+   verification, the per-entry sweep (every non-allowlisted entry -> 401 no-token; every allowlisted
+   entry -> not-401), regression, six harness specs.
+   Phase 2 (the allowlist's validation): caller-audit the ~84 (PUBLIC's masters/static quick;
+   INTEGRATION's callbacks' signature checks; the KIOSK-public's protections per item 3). GATE: the
+   audits recorded per entry.
+   Phase 3 (the fold-in): the 3 confirmed misplacements + the 30 SAFE are NOT a separate removal
+   branch — they are the default-deny's automatic effect (their endpoints leave the allowlist, their
+   authenticated callers pass the token-check). Verification per screen: the coversheet family, NABH/
+   incident reporting, growth chart, bookView, medication, service-master. GATE: each calling screen
+   works + the endpoint 401s without a token.
+   Phase 4 (the kiosk protection — item 3).
+   Phase 5 (the decommissioning): physically delete the now-unreachable list entries (the 45-style
+   removal, both copies, count-verified) so the allowlist and the filter agree; final regression +
+   harness + ledger.
+
+3. THE KIOSK PROBLEM (~15 public entries, 5 of them writes: saveAndPay, saveAnalyzedReport, the two
+   feedbacks, patientRegistration).
+   Recommended package, in order: (a) KIOSK DEVICE TOKEN — the kiosk is enrolled with a device
+   identifier + shared secret; the filter validates a kiosk-device header for the public writes, so
+   the writes are no longer anonymous (accountability + revocation). (b) RATE LIMITING — per-IP +
+   per-device (registration spam, appointment flooding). (c) SERVER-SIDE VALIDATION as the backstop —
+   the flows' existing dup-checks (CHECK_UNIQUE_PATIENT, the already-exist guards) stay and are the
+   real protection against forged duplicates. (d) CAPTCHA — optional, only on patientRegistration if
+   abuse appears; it adds friction to a surface designed for fast self-service. No single item solves
+   it; (a)+(b)+(c) together do, and all three are independent of the allowlist.
+
+4. VERIFICATION STRATEGY.
+   Granularity, three layers: (1) per-entry — every allowlisted entry: no-token call not-401 +
+   token'd call works; every non-allowlisted entry: no-token 401 (the QF-W 45-sweep pattern,
+   extended to all 154); (2) per-screen — the calling screens' flows (coversheet, NABH, growth chart,
+   bookView, medication, service-master, kiosk self-registration/bookAppointment/feedback);
+   (3) the standing regression (verify_deployed_regressions.py) + the six harness specs. The harness
+   carries the authenticated screens today; the kiosk screens need NEW specs (pre-login flows —
+   public-reachability + the protections), which is new harness work, not a harness extension.
+
+5. EFFORT AND RISK (calibrated to this session's actuals: the 45-removal with 3 corrections ~ one
+   session; per-entry traces ~0.5-1h; the extraction ~1 session).
+   Phases 1-5: roughly 6-9 focused sessions (Phase 1 ~1-2 + verification, Phase 2 ~1-2, Phase 3
+   ~1-2, Phase 4 ~1, Phase 5 ~1) — vs ~2-3 for the removal branches that do not fix the structure.
+   THE SINGLE MOST-LIKELY-TO-BREAK: the exact-match against the frontend's URL VARIANTS — the
+   contains()-slack currently absorbs trailing slashes (/api/opd/getActiveCountryList/), query
+   strings, and assembled-URL differences; exact-match exposes every variant as a 401. Mitigation:
+   URL normalization before the match + Phase 1's per-screen verification as the gate. Rule-10
+   caveat: every caller-behaviour assertion in this plan traces to the session's named-caller audits
+   (QF-U, QF-AC, QF-AD, QF-AE); each Phase-3 screen gets its own end-to-end re-confirmation.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
