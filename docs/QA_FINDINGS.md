@@ -255,4 +255,28 @@ update/status x2) — service-level VIS absence does not imply uncovered.
 
 NO BRs were reopened or renumbered; the fixes are real. The scope claim was wrong.
 
+## QF-2026-08-05-G — Class 2 SILENT variant dominates; active-list census (Stage 3a)
+
+- Unit-commented predicates: **103 distinct named queries; 97 NO-BIND (silent) / 6 NO-CALLER / 0 orphaned-bind** —
+  the same inversion as the org set, worse. All 97 callers also bind NO org → the queries run fully unscoped.
+  Includes patient-facing/clinical reads (GET_PATIENT_DETAILS, GET_PATIENT_*_HISTORY x12, GET_LIST_ALLERGY_PATIENT_MAPPER,
+  GET_LIST_OF_VITALS_BY_PATIENT_ID_*, GET_MEDICATION_HISTORY_LIST, GET_CONSULT_DOCTOR_LIST_BY_ADMISSION_ID) and master
+  reads (GET_ALLERGY_TYPE_MASTER_LIST + by-id/by-name variants, GET_ACTIVE_BANK_MASTER, GET_VITAL_QUALIFIRE_MASTER_BY_NAME,
+  GET_BED_CATEGORY_LIST_BY_ORG_UNIT). Sub-classification (silent vs crash-variant vs intentional-global patient reads)
+  requires the per-query text org-state pass — pending. NOT fixed.
+- 22-org ranking: 18 live callers / 4 NO-CALLER; ~12 on patient-facing/clinical paths (validated: GET_ACTIVE_DISCHARGE_TYPE_LIST;
+  high: CHECK_ALREADY_EXIST_REG registration oracle, GET_MEDICATION_HISTORY_LIST, GET_CONSULT_DOCTOR_LIST_BY_ADMISSION_ID,
+  DIAGNOSIS_AUTO_FILL_SEARCH, GET_DIAGNOSIS_BY_GENDER_ID, GET_ROUTE_OF_ADMINISTRATION_LIST, GET_DISCHARGE_SUMMARY_FIELD_MASTER x4,
+  GET_VITAL_MASTER_TO_SYNC_BY_ID, GET_ACTIVE_DISCHARGE_SUMMARY_FIELD_MASTER). NOT fixed.
+- Active-list direct census (the converging shape as its own population): **643 active-list-shaped named queries**
+  (ACTIVE in name or status='A' predicate): 547 org-scoped / **87 NO org predicate** (needs the table-column check —
+  the LIS 5 global-ref tables are correctly unscoped) / **9 commented-org** (the sibling class: GET_ACTIVE_DISCHARGE_TYPE_LIST
+  [validated], GET_ACTIVE_DISCHARGE_SUMMARY_FIELD_MASTER, GET_LIST_APPOINTMENT_STATUS_MASTER, GET_CONSULT_DOCTOR_LIST_BY_ADMISSION_ID,
+  DIAGNOSIS_AUTO_FILL_SEARCH, GET_DIAGNOSIS_BY_GENDER_ID, GET_ACTIVE_TEXTUAL_RANGE_MASTER_LIST, GET_LIST_SEVERITY_MASTER,
+  GET_DESIGNATION_MASTER_LIST).
+- Class 1 method-level correction: org-only client-sourced methods = **266, not 39** (earlier dedup keyed on signature
+  suffixes collided — undercount). A/B/C: **A ≈ 0** (0/10 resolved org-only methods have an org-capable DAO signature),
+  **B dominant** (137 org+unit pairs + ≥10 org-only + the controller-layer sites' service hops), C = login family + cross-DTO
+  (lower bound). The 3,659 entity-copy setter sites are dropped from the headline population (server-side copies, noise).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
