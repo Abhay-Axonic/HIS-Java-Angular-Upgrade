@@ -682,4 +682,28 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
 - CONFIRMED-REMOVABLE LIST (Phase 2, pending owner approval): the 45 dead + (if approved) the 30
   authenticated-caller entries — the 4 revived are NOT removable.
 
+## QF-2026-08-05-W — Phase-2 verification STOP-AND-REPORT (45 removed, 35/45 -> 401, 10 exempted by OTHER rules)
+
+- REMOVAL: 45 confirmed-dead entries deleted from BOTH copies (217/220 -> 167/170 contains-count,
+  verified; 0 fragments remaining; argument-level line rebuild kept /br/ and /resultUrl which shared
+  lines with removed entries). Deployed; bytecode check: 0 removed fragments in the deployed class.
+- 401 VERIFICATION (tools/whitelist_phase2_verify.py): 35/45 no-token -> 401. The 10 non-401s are NOT
+  removal failures (the fragments are gone) — each is exempted by ANOTHER rule:
+  1. /api/opd/coversheetInstructionList/1 (405) — kept SAFE entry /api/opd/coversheetInstruction is a
+     substring of the URL; endpoint exists (POST-only).
+  2. /api/opd/saveJustificationForMedicationDeleteMultipleMedication (405) — kept SAFE entry
+     /api/opd/saveJustificationForMedicationDelete is a substring; endpoint exists.
+  3. deleteParticipants family (5 URLs: /HIS-WAR/deleteParticipants + /* + /** + /Patient/dataroom_41015
+     -> 404, /api/deleteParticipants -> 405) — the BARE entry requestUrl.contains("deleteParticipants")
+     at JwtTokenFilter:455 SURVIVED: it was never in the phase-1 lists (the 196-extraction dedup missed
+     it — ninth pattern-pass miss; the classification's UNEXPLAINED bucket had the /HIS-WAR/ variants and
+     /api/deleteParticipants but NOT the bare fragment). Its substring exempts the whole family; the
+     /api/deleteParticipants controller EXISTS (POST) — an unauthenticated POST would reach it. Needs its
+     own decision (follow-on removal or the later branch).
+  4. /decrypt, /updateNABH, /roomRent (404) — the short-URL pass-through (else-if splitUrl.length <= 2 —
+     1-segment URLs pass the filter by design) + the endpoints DO NOT EXIST (404) — removal had no
+     observable effect (dead URLs either way).
+- The regression checker, six harness specs, and the remaining spot-checks are PAUSED pending the owner's
+  response to this report (per the stop-and-report instruction).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
