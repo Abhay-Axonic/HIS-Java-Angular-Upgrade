@@ -497,4 +497,41 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   exposure = unauthenticated, tenant-blind reads of org-specific geo reference data (states/districts/
   cities/areas) — reference data, not PHI; the tenant-blind cache serves any org's rows to any caller.
 
+## QF-2026-08-05-Q — saveMedication unauthenticated-write TRACE (Rule 10, end to end) — write does NOT persist
+
+- FILTER PATH (no-token POST /api/opd/saveMedication, line by line): entry (doFilterInternal:43) ->
+  authorizationHeader null (:47) -> requestUrl "/api/opd/saveMedication" (:49, context path "" — ROOT
+  deployment — the URI is the full path) -> splitUrl length 4 (:50) -> domain check passes (:52-62) ->
+  origin skipped (no Origin header) -> userId=0/unitId=null (:69-70) -> the auth block SKIPPED (unitId
+  null, :76) -> the else-if (:365): splitUrl>2, no /resources/, no /views/ ->
+  requestUrl.contains("opd/saveMedication") — "/api/opd/saveMedication" CONTAINS it (the whitelist is a
+  196-entry contains() list DUPLICATED in the line-76 condition AND the else-if; the entry at :590) ->
+  chain.doFilter (:620). The request reaches the controller with NO auth. PROVEN LIVE: the responses were
+  the controller's (400/200), never a 401.
+- DOWNSTREAM AUTH: NONE. rest-dispatcher-servlet-security.xml — the ONLY enforcing <http pattern="/**">
+  block (intercept-url + resourceServerFilter) is COMMENTED OUT; the security="none" declarations are
+  no-ops without it; the controllers carry no @PreAuthorize (global-method-security has nothing to
+  enforce); the other filters (rateLimit, CORS) do not auth.
+- WHAT THE ENDPOINT DOES WITH NO SESSION: MedicationController.saveMedication(@RequestBody
+  PrescriptionDto) -> iMedicationService.saveMedication -> the DTO carries unitId/organizationId/
+  patientId/doctorId (ATTACKER-CHOSEN — the endpoint needs no filter-derived userId/unitId). The
+  isFromOP branch: the service's response is DISCARDED (controller lines 75/82) + a HARD-CODED
+  Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE) is returned (:86) — "Added Successfully." REGARDLESS.
+- LIVE PROOF: no-token POST (no Authorization/userId/unitId headers) with the DTO-correct payload ->
+  HTTP 200 "Added Successfully." -> pharmacy.t_prescription 0 rows, pharmacy.t_prescription_detail 0
+  rows, BOTH sequences still at 1 (the INSERT NEVER RAN). The service's new-prescription path exits at
+  the prescription-number generation (iGlobalUnitMasterDao.getGeneratedNo(0, unitId, PRES_NO) -> if
+  null/empty -> ERROR "Prescription Prefix is Not Configured", MedicationServiceImpl:204-206; the dev
+  DB's unit 1 has no configured prefix/encounter) — the ERROR return is DISCARDED by the controller,
+  which returns the hard-coded SUCCESS. No exception logged today (the last "saveMedication failed" in
+  catalina.out is 2026-07-21) — the exit was the ERROR return, not a crash.
+- VERDICT: the unauthenticated WRITE does NOT persist on the dev DB. The protection is NOT security —
+  it is (1) the per-flow prefix-configuration dependency (a configured unit WOULD generate the number
+  and the INSERT would persist — the write is real in a configured environment) and (2) the false-success
+  masking (the controller's hard-coded SUCCESS — a Shape-A instance at the controller level — the
+  response lies). This protection does NOT cover the other 196-list write fragments (kiosk/saveAndPay,
+  update/service, patientRegistration, ...) — each has its own flow; the fragment scan conflated
+  unauthenticated REACHABILITY (real for all 196) with write PERSISTENCE (per-flow-dependent). The
+  realistic-write candidates (the app's daily flows — kiosk billing) need their own Rule-10 traces.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
