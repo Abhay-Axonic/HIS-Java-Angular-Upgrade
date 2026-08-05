@@ -59,4 +59,13 @@ Seeded on `his_local` for pre-fix leak capture + re-runnable verification:
   post-fix verification (the check passed with no same-tenant match, the save inserted, the downstream
   errored). It is what makes a same-name dup-check call return 409 — correct same-tenant duplicate detection.
 - `patient.t_death_registration` id 4, 5, …: org 1 — test artifacts from subsequent verification runs
+
+- `opd.t_medication_history` ids 800001-800003: org 1 / unit 1, **patient_id 1** ("Test Patient"),
+  Paracetamol 500mg / Amoxicillin 250mg / Pantoprazole 40mg (+ generic names, frequency 1, status 'A'),
+  seq `opd.t_medication_history_seq` setval to 800000 — **Step-6 seeding (2026-08-05)** so the coversheet
+  Drug History section is visually verifiable (the coversheet loads them via POST
+  /api/opd/getMedicationHistoryList). Idempotent (explicit ids + ON CONFLICT DO NOTHING). To see the
+  empty state again: `DELETE FROM opd.t_medication_history WHERE medication_history_id BETWEEN 800001 AND 800003;`
+  (re-run the INSERT to restore).
+
   (unique-name checks; each run's save inserts before the downstream error).

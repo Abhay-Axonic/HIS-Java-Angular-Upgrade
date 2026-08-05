@@ -441,4 +441,28 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   (relation does not exist) until repaired.
 - Regression checker PASS pre- and post-deploy (all closed BRs intact).
 
+## QF-2026-08-05-O — NamedNativeQuery twin population + JwtTokenFilter throw-reach (analysis, no fixes)
+
+- TWIN POPULATION (sweep tools/twin_sweep_analysis.py): **55 query names appear in BOTH a commented block
+  and a LIVE declaration** (the MedicationHistory GET_MEDICATION_HISTORY_LIST shape — commented HQL twin +
+  live native twin). Every pattern pass that read the commented block concluded dead/wrong. Plus **18
+  live-duplicate names** across file pairs (incl. the known BR-170 GET_PRIORITY_LIST entity twins).
+- Class-2 census impact: **6 of the 22-org findings + 9 of the 97-unit findings (10 distinct) carry a live
+  twin → their 'DEAD (entire query commented)' classifications are invalidated** (the name resolves to the
+  live twin, which RUNS): DIAGNOSIS_AUTO_FILL_SEARCH, GET_ACTIVE_DISCHARGE_SUMMARY_FIELD_MASTER,
+  GET_DETAILED_SERVICE_LIST, GET_MEDICATION_HISTORY_LIST (confirmed live), GET_ROUTE_OF_ADMINISTRATION_LIST,
+  GET_ICPC_TEMPLATE_MAPPING_COUNT (org-22) + GET_BED_CATEGORY_LIST_BY_ORG_UNIT,
+  GET_CURRENT_PATIENT_PERSONAL_HISTORY_DEATILS_FOR_COVERSHEET,
+  GET_PATIENT_DIAGNOSIS_BY_PATIENT_ID_FOR_MEDICAL_HISTORY, GET_PATIENT_PERSONAL_HISTORY_DEATILS (unit-97).
+  Each twin's own scoping state is the follow-on (Rule 10: per-instance trace).
+- FILTER THROW-REACH (JwtTokenFilter, pre-auth): ALL throw paths FAIL CLOSED — (a) non-numeric userId/unitId
+  headers -> NumberFormatException -> generic catch -> 401; (b) domain/Origin rejection -> ApplicationException
+  -> 502; (c) malformed token -> JwtException in extractUsername/validateToken -> 401; (d) missing headers
+  short-circuit to the final block -> 401 (post null-header fix; pre-fix the null Authorization header NPE'd
+  into a 200-error-JSON). The unitId/userId headers must match the token's claims (validateToken compares),
+  so a forged header is rejected. The ONLY pass-throughs are the two intentional auth-exempt lists — the
+  second list carries fail-open-relevant entries to review before any merge: broad substrings
+  "update/service" and "opd/saveMedication", the GEO cache endpoints (auth-exempt + org-blind geo caches),
+  and "/api/refreshAllCaches". None of the four branch items' endpoints are in either list.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
