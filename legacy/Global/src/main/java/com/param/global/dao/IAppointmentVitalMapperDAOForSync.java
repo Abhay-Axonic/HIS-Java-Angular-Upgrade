@@ -9,6 +9,6 @@ public interface IAppointmentVitalMapperDAOForSync extends IGenericDao<Appointme
 
 	Response getVitalByPatientIdAndVitalIdForSync(Integer recordId);
 
-	Response getVitalForSyncById(Integer recordId);
+	Response getVitalForSyncById(Integer recordId, Integer organizationId, Integer unitId);
 
 }

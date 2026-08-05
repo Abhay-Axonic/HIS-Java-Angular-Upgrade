@@ -64,9 +64,9 @@ import com.param.global.common.InstantConverterAppoVital;
 		+ " 			appVitalMapp.roleId as roleId, appVitalMapp.isReviewedFlag as isReviewedFlag "
 		+ " FROM 		AppointmentVitalMapper appVitalMapp"
 		+ " INNER JOIN 	appVitalMapp.vitalMaster vitalMst"
-		/*+ " WHERE 		appVitalMapp.unitId=:unitId"
-		+ " AND			appVitalMapp.organizationId=:organizationId"*/
-		+ " WHERE 		appVitalMapp.appointmentVitalMapperId=:id"
+		+ " WHERE 		appVitalMapp.unitId=:unitId"
+		+ " AND			appVitalMapp.organizationId=:organizationId"
+		+ " AND appVitalMapp.appointmentVitalMapperId=:id"
 	),
 	
 	@NamedQuery(name="GET_LIST_APPOINTMENT_VITAL_MAPPER",

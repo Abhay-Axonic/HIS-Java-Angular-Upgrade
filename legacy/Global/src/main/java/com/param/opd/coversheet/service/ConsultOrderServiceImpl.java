@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.opd.coversheet.dao.IConsultDoctorDao;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.opd.coversheet.dto.ConsultDoctorDto;
 
 import in.param.exception.ApplicationException;
@@ -29,6 +30,9 @@ public class ConsultOrderServiceImpl implements IConsultDoctorService,ICommonCon
 	
 	@Autowired
 	private IConsultDoctorDao iConsultDoctorDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response saveConsultDoctor(List<ConsultDoctorDto> consultDoctorDtoList) throws ApplicationException {
@@ -81,6 +85,8 @@ public class ConsultOrderServiceImpl implements IConsultDoctorService,ICommonCon
 	@Override
 	public Response consultDoctorListByAdmission(ConsultDoctorDto consultDoctorDto) throws ApplicationException {
 		try {
+			consultDoctorDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			consultDoctorDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iConsultDoctorDao.consultDoctorListByAdmission(consultDoctorDto);
 		} catch (Exception e) {
 		logger.error("consultDoctorListByAdmission failed", e);

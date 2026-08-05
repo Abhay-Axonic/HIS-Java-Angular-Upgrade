@@ -297,6 +297,9 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 				medicationHistoryDto.setPatientId(coversheetTemplateMasterDto.getPatientId());
 				medicationHistoryDto.setCreatedDate(coversheetTemplateMasterDto.getCreatedDate());
 				Response detailedMedicationsHistory = iMedicationHistoryDao.getMedicationHistoryList(medicationHistoryDto);
+				if (detailedMedicationsHistory.getStatus() != null && detailedMedicationsHistory.getStatus().equalsIgnoreCase(ERROR)) {
+					return detailedMedicationsHistory;
+				}
 				if(detailedMedicationsHistory.getListObject() != null && detailedMedicationsHistory.getListObject().size() > 0){
 					List<MedicationHistoryDto> list=detailedMedicationsHistory.getListObject();
 					iMedicationHistoryDao.saveCurrentMedicationHistory(list, resDto);
@@ -980,6 +983,9 @@ public class CoversheetTemaplateServiceImpl implements ICoversheetTemaplateServi
 				medicationHistoryDto.setPatientId(coversheetTemplateMasterDto.getPatientId());
 				medicationHistoryDto.setCreatedDate(coversheetTemplateMasterDto.getCreatedDate());
 				Response detailedMedicationsHistory = iMedicationHistoryDao.getMedicationHistoryList(medicationHistoryDto);
+				if (detailedMedicationsHistory.getStatus() != null && detailedMedicationsHistory.getStatus().equalsIgnoreCase(ERROR)) {
+					return detailedMedicationsHistory;
+				}
 				if(detailedMedicationsHistory.getListObject() != null && detailedMedicationsHistory.getListObject().size() > 0){
 					List<MedicationHistoryDto> list=detailedMedicationsHistory.getListObject();
 					iMedicationHistoryDao.updateCovTempCurrentMedicationHistory(list, coversheetTemplateMasterDto);

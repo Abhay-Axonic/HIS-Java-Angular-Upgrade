@@ -419,4 +419,240 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   traces are what caught it. Two passes produced two wrong classifications (11 CRASH then 2 DEAD+11 CRASH);
   the end-to-end trace is the arbiter, not another pass.
 
+## QF-2026-08-05-N — BR-172 + clinical-leak branch: verification results + two more premise corrections
+
+- BR-172 premise REVOKED (third overturn, same direction): GET_MEDICATION_HISTORY_LIST is LIVE via its
+  @NamedNativeQuery twin (the HQL twin is commented; getNamedQuery resolves to the native — org+unit+patient
+  scoped, all binds matched). The Drug History section was never dead; the local DB simply has 0 medication-history
+  rows. Fixed: raw createSQLQuery shape -> direct named query; coversheet service error-drop propagated (both
+  save+update). Frontend empty-state = PROPOSED only (own gate).
+- Pre-fix live captures (BR-170/171 pattern, org-1 token, victims seeded org 999):
+  (1) consult-doctors: POST /api/opd/consultDoctorListByAdmission {admissionId:999999} -> 200 + victim consult row
+  incl. patientName 'PRE_01 Victim Consult999' (org 999) — LIVE cross-tenant clinical read.
+  (2) death-reg: POST /adt/saveDeathRegistation {Victim/DeathReg999/45/1} -> 409 'Already Exists.' — the org-999
+  registration matched cross-tenant — LIVE existence oracle.
+- Post-fix: (1) -> listObject [] (0 rows); (2) -> NOT 409 (the check no longer matches the org-999 victim; the
+  scoped query returns only same-tenant rows; a subsequent 409 was the dup-check correctly catching a same-tenant
+  duplicate the first post-fix call inserted — cleaned). Diagnosis-by-gender: no-token -> 401 (after the filter
+  null-header hardening — pre-hardening it NPE'd into a 200-error-JSON); authenticated -> org-scoped success.
+  Vitals sync: bytecode-verified (deployed query carries org+unit predicates; 3-param DAO signature).
+- Local-DB drift repaired (BR-155 class, additive per HIS-DDL-20211019): t_outside_hospital_doctor_mapper missing
+  (created) + opd.t_consult_doctor missing outside_hos_doc_id (added) — the consult-doctors endpoint 501'd
+  (relation does not exist) until repaired.
+- Regression checker PASS pre- and post-deploy (all closed BRs intact).
+
+## QF-2026-08-05-O — NamedNativeQuery twin population + JwtTokenFilter throw-reach (analysis, no fixes)
+
+- TWIN POPULATION (sweep tools/twin_sweep_analysis.py): **55 query names appear in BOTH a commented block
+  and a LIVE declaration** (the MedicationHistory GET_MEDICATION_HISTORY_LIST shape — commented HQL twin +
+  live native twin). Every pattern pass that read the commented block concluded dead/wrong. Plus **18
+  live-duplicate names** across file pairs (incl. the known BR-170 GET_PRIORITY_LIST entity twins).
+- Class-2 census impact: **6 of the 22-org findings + 9 of the 97-unit findings (10 distinct) carry a live
+  twin → their 'DEAD (entire query commented)' classifications are invalidated** (the name resolves to the
+  live twin, which RUNS): DIAGNOSIS_AUTO_FILL_SEARCH, GET_ACTIVE_DISCHARGE_SUMMARY_FIELD_MASTER,
+  GET_DETAILED_SERVICE_LIST, GET_MEDICATION_HISTORY_LIST (confirmed live), GET_ROUTE_OF_ADMINISTRATION_LIST,
+  GET_ICPC_TEMPLATE_MAPPING_COUNT (org-22) + GET_BED_CATEGORY_LIST_BY_ORG_UNIT,
+  GET_CURRENT_PATIENT_PERSONAL_HISTORY_DEATILS_FOR_COVERSHEET,
+  GET_PATIENT_DIAGNOSIS_BY_PATIENT_ID_FOR_MEDICAL_HISTORY, GET_PATIENT_PERSONAL_HISTORY_DEATILS (unit-97).
+  Each twin's own scoping state is the follow-on (Rule 10: per-instance trace).
+- FILTER THROW-REACH (JwtTokenFilter, pre-auth): ALL throw paths FAIL CLOSED — (a) non-numeric userId/unitId
+  headers -> NumberFormatException -> generic catch -> 401; (b) domain/Origin rejection -> ApplicationException
+  -> 502; (c) malformed token -> JwtException in extractUsername/validateToken -> 401; (d) missing headers
+  short-circuit to the final block -> 401 (post null-header fix; pre-fix the null Authorization header NPE'd
+  into a 200-error-JSON). The unitId/userId headers must match the token's claims (validateToken compares),
+  so a forged header is rejected. The ONLY pass-throughs are the two intentional auth-exempt lists — the
+  second list carries fail-open-relevant entries to review before any merge: broad substrings
+  "update/service" and "opd/saveMedication", the GEO cache endpoints (auth-exempt + org-blind geo caches),
+  and "/api/refreshAllCaches". None of the four branch items' endpoints are in either list.
+
+## QF-2026-08-05-P — Class-2 census UNVERIFIED correction + whitelist write-path exposure + twin cross-ref (analysis, no fixes)
+
+- CORRECTION (explicit): the 55-twin finding invalidates 10 distinct Class-2 classifications (6 of the
+  org-22 list + 9 of the unit-97 list, 5 overlap). **The remaining 22-org / 97-unit counts are UNVERIFIED,
+  not merely un-invalidated** — the census method (query-block scan + caller-bind pass) demonstrably
+  misreads the twin shape (it classifies the commented HQL block while runtime resolves getNamedQuery to
+  the live native twin), so NO Class-2 count may be trusted until each finding is re-checked against the
+  twin sweep. Cross-ref (tools/class2_twin_crossref.py): org-commented 5 twin-hit + 11 standing;
+  unit-commented 9 twin-hit + 87 standing; 0 findings fall in the 18 live-duplicate pairs. The 10
+  twin-hit names need per-instance Rule-10 traces (NOT authorised yet). Standing hypotheses remain
+  hypotheses, but the twin shape does not invalidate them.
+- WHITELIST CORRECTION: JwtTokenFilter has ONE auth-exempt list — a 196-entry requestUrl.contains(...)
+  condition (the else-if at :365), with the first ~11 entries duplicated in the line-76 auth-block
+  condition. Earlier "second auth-exempt list" framing = the same list's tail; corrected here.
+- WHITELIST WRITE-PATH EXPOSURE (tools/whitelist_fragment_matches.py): ALL 196 entries are SUBSTRING
+  matches (contains). The list exempts WRITE endpoints from auth (a no-header POST passes through):
+  POST /kiosk/saveAndPay + /kiosk/saveAndPay/future + /kiosk/saveAndPayAppointment (kiosk billing —
+  mission-critical billing path), POST /update/service (service-master write), POST /patientRegistration
+  (PHI write), /api/opd/saveMedication + saveMedication* family (PHI write), POST /deleteParticipants +
+  /api/deleteParticipants, POST /createOrganizationFromWeb, POST /updatePatientRegistrationFromMyLife,
+  POST /patientDoc/saveAnalyzedReport, POST /saveMyLatestMedicalSummaryCallBack, POST /saveAIAppointmentInQueue,
+  POST /glablServiceMaster + speciality variants (typo'd paths), POST /getSerivceRateGlobalList (typo'd),
+  POST /updateNABH, POST /api/saveTwilioMsg, GET /refreshAllCaches (side-effect write), POST /resultUrl,
+  POST /validationResultResponse, POST /getBillNoByPatient. Broad-substring entries with
+  unintended-match potential: "opd/saveMedication" (prefix-matches the saveMedication* family),
+  "patientRegistration" (matches the whole controller family), "/br/", "unit/org/", "/decrypt".
+  **Severity: WORSE than diagnosis-by-gender (which was a read)** — the kiosk billing + service-master
+  writes are unauthenticated WRITE paths on the mission-critical billing surface. Re-prioritisation
+  recommended. GEO endpoints (158-167): auth-exempt AND backed by the org-blind geo caches — combined
+  exposure = unauthenticated, tenant-blind reads of org-specific geo reference data (states/districts/
+  cities/areas) — reference data, not PHI; the tenant-blind cache serves any org's rows to any caller.
+
+## QF-2026-08-05-Q — saveMedication unauthenticated-write TRACE (Rule 10, end to end) — write does NOT persist
+
+- FILTER PATH (no-token POST /api/opd/saveMedication, line by line): entry (doFilterInternal:43) ->
+  authorizationHeader null (:47) -> requestUrl "/api/opd/saveMedication" (:49, context path "" — ROOT
+  deployment — the URI is the full path) -> splitUrl length 4 (:50) -> domain check passes (:52-62) ->
+  origin skipped (no Origin header) -> userId=0/unitId=null (:69-70) -> the auth block SKIPPED (unitId
+  null, :76) -> the else-if (:365): splitUrl>2, no /resources/, no /views/ ->
+  requestUrl.contains("opd/saveMedication") — "/api/opd/saveMedication" CONTAINS it (the whitelist is a
+  196-entry contains() list DUPLICATED in the line-76 condition AND the else-if; the entry at :590) ->
+  chain.doFilter (:620). The request reaches the controller with NO auth. PROVEN LIVE: the responses were
+  the controller's (400/200), never a 401.
+- DOWNSTREAM AUTH: NONE. rest-dispatcher-servlet-security.xml — the ONLY enforcing <http pattern="/**">
+  block (intercept-url + resourceServerFilter) is COMMENTED OUT; the security="none" declarations are
+  no-ops without it; the controllers carry no @PreAuthorize (global-method-security has nothing to
+  enforce); the other filters (rateLimit, CORS) do not auth.
+- WHAT THE ENDPOINT DOES WITH NO SESSION: MedicationController.saveMedication(@RequestBody
+  PrescriptionDto) -> iMedicationService.saveMedication -> the DTO carries unitId/organizationId/
+  patientId/doctorId (ATTACKER-CHOSEN — the endpoint needs no filter-derived userId/unitId). The
+  isFromOP branch: the service's response is DISCARDED (controller lines 75/82) + a HARD-CODED
+  Response(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE) is returned (:86) — "Added Successfully." REGARDLESS.
+- LIVE PROOF: no-token POST (no Authorization/userId/unitId headers) with the DTO-correct payload ->
+  HTTP 200 "Added Successfully." -> pharmacy.t_prescription 0 rows, pharmacy.t_prescription_detail 0
+  rows, BOTH sequences still at 1 (the INSERT NEVER RAN). The service's new-prescription path exits at
+  the prescription-number generation (iGlobalUnitMasterDao.getGeneratedNo(0, unitId, PRES_NO) -> if
+  null/empty -> ERROR "Prescription Prefix is Not Configured", MedicationServiceImpl:204-206; the dev
+  DB's unit 1 has no configured prefix/encounter) — the ERROR return is DISCARDED by the controller,
+  which returns the hard-coded SUCCESS. No exception logged today (the last "saveMedication failed" in
+  catalina.out is 2026-07-21) — the exit was the ERROR return, not a crash.
+- VERDICT: the unauthenticated WRITE does NOT persist on the dev DB. The protection is NOT security —
+  it is (1) the per-flow prefix-configuration dependency (a configured unit WOULD generate the number
+  and the INSERT would persist — the write is real in a configured environment) and (2) the false-success
+  masking (the controller's hard-coded SUCCESS — a Shape-A instance at the controller level — the
+  response lies). This protection does NOT cover the other 196-list write fragments (kiosk/saveAndPay,
+  update/service, patientRegistration, ...) — each has its own flow; the fragment scan conflated
+  unauthenticated REACHABILITY (real for all 196) with write PERSISTENCE (per-flow-dependent). The
+  realistic-write candidates (the app's daily flows — kiosk billing) need their own Rule-10 traces.
+
+## QF-2026-08-05-R — saveMedication verdict restated + BR-173 structural security finding
+
+- saveMedication TRACE VERDICT (restated per owner): unauthenticated reachability PROVEN (the whitelist
+  pass-through; the request reached the controller, never a 401); the write is blocked by ENVIRONMENT
+  (the dev unit's unconfigured prescription-number prefix), NOT by design — on a unit where the prefix
+  is configured, the same unauthenticated POST PERSISTS (the INSERT would run), and the controller
+  returns SUCCESS either way, so it would land silently. REAL VULNERABILITY WITH A COINCIDENTAL
+  MITIGATION on this dev DB.
+- BR-173 — AUTHENTICATION-GATE STRUCTURAL FINDING (own BR): rest-dispatcher-servlet-security.xml's
+  ONLY enforcing block — <http pattern="/**"> with intercept-url + resourceServerFilter — is COMMENTED
+  OUT; every security="none" declaration in that file is a NO-OP without it; the controllers carry no
+  @PreAuthorize; the sole authentication gate for ALL of /api/** (and every other path) is JwtTokenFilter
+  plus its 196-entry requestUrl.contains(...) substring whitelist (the list duplicated in the line-76
+  condition AND the else-if). Unauthenticated reachability of any whitelisted endpoint is PROVEN
+  (QF-2026-08-05-Q: saveMedication). The gate's effectiveness is exactly the whitelist's precision —
+  substring matching with broad fragments ("update/service", "opd/saveMedication", "patientRegistration",
+  "/br/", "/decrypt") + auth-exempt WRITE endpoints (kiosk/saveAndPay, update/service,
+  patientRegistration, deleteParticipants, ...) — see QF-2026-08-05-P.
+
+## QF-2026-08-05-S — kiosk saveAndPay unauthenticated-write TRACE (Rule 10, end to end) — write does NOT persist on the dev DB
+
+- FILTER PATH (no-token POST /api/billing/kiosk/saveAndPay): identical to QF-Q — the whitelist's
+  "api/billing/kiosk/saveAndPay" entry matches the URI (context path "") -> chain.doFilter. PROVEN LIVE:
+  the controller responded (400/500), never a 401.
+- WHAT IT WRITES: BillingMasterController.saveBillFromKiosk -> (a) Razorpay verification ONLY for
+  paymentModeId==8 (server-side verifyRazorpayPayment — a DESIGNED protection for that mode; the other
+  modes cash/card/cheque are trusted as-is — a deliberate choice per the in-code comment), (b)
+  iBillingMasterService.saveBillFromKiosk -> patient registration (patientId 0 only) -> markArrival ->
+  saveEncounterMaster (opd.t_encounter_master) -> the bill save (billing.m_billing_master) ->
+  collectPayment. NONE of the writes reached.
+- CONFIG DEPENDENCIES: (1) the encounter service's unit-application-billing-config lookup
+  (EncounterMasterServiceImpl:296-307 — ERROR "Default tariff is not defined !!" / "Opd Billing Category
+  Id is not defined !!" when the config is absent — a DESIGNED flow requirement), (2) the bill-number
+  generation (getGeneratedNo -> public.m_prefix_configuration — the dev DB has ZERO prefix-config rows
+  for unit 1). Both are config-row dependencies; the dev DB satisfies neither — ENVIRONMENT.
+- LIVE PROOF: pre-counts billing.m_billing_master=2 (pre-existing), opd.t_encounter_master=0 -> no-token
+  POST (minimal + DTO-correct payloads; encounterDate is a Long — epoch millis) -> 500
+  "Something went wrong. Reference: ERR-7f32ae29" — the stack: BillingException "Cannot invoke
+  EncounterMasterDto.getEncounterId() because encResObj is null" at BillingMasterServiceImpl:2933 (the
+  encounter save returned an error/null object — the config check failed) -> post-counts UNCHANGED (2/0)
+  — NO INSERT, no sequence advance.
+- VERDICT: same class as saveMedication (QF-Q): unauthenticated REACHABILITY real; the write is blocked
+  by ENVIRONMENT (missing billing-config rows + missing prefix-config rows), not by design; in a
+  configured environment (any real deployment — the app cannot bill without these rows) the same
+  no-token POST would persist. REAL VULNERABILITY WITH A COINCIDENTAL MITIGATION on this dev DB. The
+  Razorpay mode is the one designed protection (server-side verification); cash/card/cheque are
+  unverified by design.
+
+## QF-2026-08-05-T — BR-173 scoping analysis (no code): history, 196-entry intent, options, payment flag
+
+- HISTORY (why is the Spring Security block commented out?): rest-dispatcher-servlet-security.xml's ONLY
+  commit is the baseline (96b75c49 "Baseline before upgrade", 2026-07-15). The commented-out
+  <http pattern="/**"> block PREDATES the baseline; no commit message, doc, or in-file comment explains
+  it. The upstream history before the baseline is not in the repo. Re-enabling is NOT a config flip: the
+  block enforces OAuth2 access tokens (resourceServerFilter + InMemoryTokenStore + the clinivantage
+  client), while the app's real auth is the custom JWT (userId/unitId headers + JwtTokenFilter) — the
+  app has drifted away from the OAuth2 design; a re-enabled block would reject every request (the JWTs
+  are not OAuth2 tokens) unless a token-compat adapter is built.
+- 196-ENTRY INTENT (tools/whitelist_intent_classification.py): PUBLIC 45 (login/token/forgot-password/
+  static/swagger/Report), INTEGRATION 22 (ABDM, MyLife, Razorpay callbacks, Twilio, webhooks — these
+  need auth of a different kind, not none), KIOSK 47 (webappointment/self-service/ForWebPage/geo/vital
+  uploader — public-facing by product design, but includes the kiosk billing WRITES + patient
+  registration), STALE 63 (the diagnosis-by-gender class: every caller is an authenticated screen —
+  the entries only remove auth), UNEXPLAINED 19 (update/service, opd/saveMedication,
+  api/global/patientRegistration, /br/, unit/org/, /decrypt, resultUrl, validationResultResponse,
+  deleteParticipants family, roomRent, getSerivceRateGlobalList, glablServiceMaster, updateNABH,
+  checkParti/, a hardcoded external URL, a hardcoded dataroom_41015 path, /api/refreshAllCaches).
+  Defensible-ish 114 (45+22+47, with the caveats: integration needs secrets; kiosk includes writes);
+  accidents 82 (63 stale + 19 unexplained) = 42% of the list.
+- OPTIONS (analysis only, no recommendation): (A) exact/anchor-pattern matching instead of substring —
+  fixes the broad fragments; risks the parameterized/trailing-slash entries (needs an Ant-style matcher);
+  verify via a live per-endpoint sweep; medium. (B) re-enable the Spring Security chain — framework-grade
+  enforcement; risks total breakage (token-format incompatibility) without an OAuth2-JWT adapter; verify
+  via the full harness; HIGH. (C) split the list by auth type (anonymous / integration-with-secret /
+  kiosk-rate-limited / nothing) — the integration callbacks get real auth, the stale entries disappear;
+  risks partner-callback breakage (secret deployment); medium-high. (D) default-deny with an explicit,
+  per-entry-owned allowlist — the structural inversion; risks any missed entry breaking a screen; verify
+  via the full Step-6 + harness sweep; medium.
+- PAYMENT DESIGN FLAG (design question for the billing owner, NOT a defect): the in-code comment makes
+  cash/card/cheque deliberately unverified while Razorpay gets server-side verification — coherent for an
+  AUTHENTICATED kiosk operator, incoherent on an UNAUTHENTICATED endpoint (the kiosk saveAndPay is
+  whitelisted). Whoever owns the billing flow should decide the kiosk payment-trust model (verify all
+  modes server-side, or authenticate the kiosk device).
+
+## QF-2026-08-05-U — 82-entry caller audit (BR-173 next-branch prep; analysis only, no removals)
+
+- RULE 10 CONTROL (tools/whitelist_caller_audit.py): the search pattern validated against the known
+  positive FIRST — GET_MEDICATION_HISTORY_LIST's caller found at IPDCoverSheetController.js:23415 with
+  serviceAction in the context window. CONTROL PASS — the negatives are trustworthy.
+- AUDIT (82 = 63 STALE + 19 UNEXPLAINED): verdicts — **30 SAFE TO REMOVE + 3 NOT STALE + 49 NO CALLER
+  (dead)**. Per-entry callers + shapes in the tool output (tools/whitelist_caller_audit.py, re-runnable).
+- SAFE (30) — every frontend caller goes through GenericService.serviceAction (token-attached): the
+  coversheet/medication family (getMedicationHistoryList, getListOfVitalsByPatientIdForCoversheet,
+  saveMedication + opd/saveMedication, getFrequencyList, saveInvestigation, saveFreeTexPatientDiagnosis,
+  savePatientCancelledDiagnosis, getComplaintAppointment, coversheetInstruction,
+  updateCoversheetInstructionStatus, updateComplaintAppointmentStatusToRemoveComplaint,
+  getMasterListOfICPCSystemForCoversheet, getCoversheetAsTemaplateList, getTemplateDataByCovTempId,
+  updateFollowUpDateOfPatient, getActiveInspectionMasterList, /api/globals/frequency,
+  getOPDMedicationListById, saveJustificationForMedicationDelete, getCurrentPatientFamilyHistory/
+  Allergy/SurgicalHistoryForCoversheet, searchFreeTextComplaint, serchFreeTexPatientDiagnosis) +
+  UNEXPLAINED-with-real-serviceAction-callers (update/service, /global/serviceMaster,
+  /api/global/glablServiceMaster, /getSerivceRateGlobalList, /unit/org/).
+- NOT STALE (3) — reclassified, caller token-behaviour unverified: /adt/discharge/dischargeSummaryCard
+  (6 callers in the discharge controllers, unverified shapes), /unit/subcription (5 callers —
+  serviceAction at hospitalMasterController x4 + selfRegistrationController:4704 unverified),
+  /api/unit/clinical/getDoctorFavouriteMedicationForCoversheet (the only hit is a URL-constant
+  definition in global.url.config.js — the real callers use the constant; needs the constant-trace).
+- NO CALLER (49) — dead exemptions: the search (exact fragment in JS/HTML + Java non-mapping, the
+  JwtTokenFilter's own lines and commented lines excluded) found no caller. Misnaming check (Rule 10):
+  the NewEMR-family entries' STEMS are used by the frontend under DIFFERENT URI forms —
+  getPatientDiagnosisByPatientIdForIcon x32 / ForMedicalHistory x11 / ForBookView x1 (the ForNewEMR
+  form never called), getInvestigationsListForCoversheet x19, getMedicationDetailsByDoctorId x13 —
+  so the entries are dead exemptions (the variant callers are token-authenticated; removal does not
+  affect them). The unexplained dead ones: /br/, /decrypt, /updateNABH, /checkParti/, the
+  deleteParticipants family (5), the hardcoded generateFlipbook URL, /global/getPopUpDataWithId,
+  /roomRent (the only java ref = the controller's own @RequestMapping + a commented call), and
+  /api/refreshAllCaches.
+- CAVEAT: the audit's shapes are the hypothesis layer (the window-based serviceAction/raw detection +
+  the config-constant callers). The removal branch must confirm the per-entry callers (Rule 10) before
+  each removal — the audit is the triage, not the proof.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

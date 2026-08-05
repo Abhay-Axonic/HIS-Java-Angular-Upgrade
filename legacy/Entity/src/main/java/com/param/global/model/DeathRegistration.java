@@ -22,8 +22,8 @@ import javax.persistence.Table;
 					+ "	FROM DeathRegistration deathRegistration "
 					+ " WHERE (LOWER(deathRegistration.firstName)=:firstName OR deathRegistration.firstName=:firstName) "
 					+ " AND (LOWER(deathRegistration.lastName)=:lastName OR deathRegistration.lastName=:lastName) "
-					//+ " AND deathRegistration.unitId=:unitId "
-					//+ " AND deathRegistration.organizationId=:organizationId "
+					+ " AND deathRegistration.unitId=:unitId "
+					+ " AND deathRegistration.organizationId=:organizationId "
 					+ " AND deathRegistration.age=:age "
 					+ " AND deathRegistration.genderId=:genderId "
 					),

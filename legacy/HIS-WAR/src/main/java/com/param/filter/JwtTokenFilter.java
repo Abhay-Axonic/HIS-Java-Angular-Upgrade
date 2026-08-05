@@ -95,7 +95,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 					|| requestUrl.contains("/api/opd/updateComplaintAppointmentStatusToRemoveComplaint")
 					|| requestUrl.contains("/api/opd/getPatientDiagnosisByPatientIdForNewEMR")
 					|| requestUrl.contains("/api/opd/savePatientDiagnosisForNewEMR")
-					|| requestUrl.contains("/api/opd/getDiagnosisByGenderId")
 					|| requestUrl.contains("/api/opd/saveFreeTexPatientDiagnosis")
 					|| requestUrl.contains("/api/opd/savePatientCancelledDiagnosis")
 					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
@@ -333,7 +332,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				String username = null;
 				String token = null;
 
-				if (authorizationHeader.startsWith("Bearer ")) {
+				if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 					token = authorizationHeader.substring(7);
 				} else {
 					response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -386,7 +385,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 					|| requestUrl.contains("/api/opd/updateComplaintAppointmentStatusToRemoveComplaint")
 					|| requestUrl.contains("/api/opd/getPatientDiagnosisByPatientIdForNewEMR")
 					|| requestUrl.contains("/api/opd/savePatientDiagnosisForNewEMR")
-					|| requestUrl.contains("/api/opd/getDiagnosisByGenderId")
 					|| requestUrl.contains("/api/opd/saveFreeTexPatientDiagnosis")
 					|| requestUrl.contains("/api/opd/savePatientCancelledDiagnosis")
 					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")

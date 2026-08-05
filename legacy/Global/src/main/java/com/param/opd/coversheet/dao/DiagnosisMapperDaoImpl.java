@@ -161,7 +161,7 @@ public Response getDiagnosisByGenderId(DiagnosisMapperDto diagnosisMapperDto) th
 				.getNamedQuery("GET_DIAGNOSIS_BY_GENDER_ID")
 				.setParameter("genderId", diagnosisMapperDto.getGenderId())
 				.setParameter("diagnosisName", "%"+ diagnosisMapperDto.getDiagnosisName().toLowerCase() + "%")
-				//.setParameter("organizationId", diagnosisMapperDto.getOrganizationId())
+				.setParameter("organizationId", diagnosisMapperDto.getOrganizationId())
 				.setResultTransformer(Transformers.aliasToBean(DiagnosisMapperDto.class)).list();
 		return new Response(SUCCESS, null, null, list, null);
 	} catch (HibernateException he) {

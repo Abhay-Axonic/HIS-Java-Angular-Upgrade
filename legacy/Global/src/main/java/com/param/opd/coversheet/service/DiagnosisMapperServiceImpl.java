@@ -11,6 +11,7 @@ import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.opd.coversheet.dao.IDiagnosisMapperDao;
 import com.param.opd.coversheet.dto.DiagnosisMapperDto;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 
@@ -23,6 +24,9 @@ public class DiagnosisMapperServiceImpl implements IDiagnosisMapperService, ICom
 
 	@Autowired
 	IDiagnosisMapperDao iDiagnosisMapperDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response saveDiagnosisMapper(DiagnosisMapperDto diagnosisMapperDto) throws ApplicationException{
@@ -91,6 +95,7 @@ public class DiagnosisMapperServiceImpl implements IDiagnosisMapperService, ICom
 	@Override
 	public Response getDiagnosisByGenderId(DiagnosisMapperDto diagnosisMapperDto) throws ApplicationException {
 		// TODO Auto-generated method stub
+		diagnosisMapperDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
 		return iDiagnosisMapperDao.getDiagnosisByGenderId(diagnosisMapperDto);
 	}
 

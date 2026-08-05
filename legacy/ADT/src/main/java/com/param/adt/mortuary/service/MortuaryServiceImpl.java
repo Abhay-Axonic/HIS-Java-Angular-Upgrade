@@ -11,6 +11,7 @@ import com.param.global.common.IBillingCommonConstants;
 import com.param.global.common.Response;
 import com.param.global.dao.IGlobalUnitMasterDao;
 import com.param.global.dto.MortuaryDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.unit.dto.CabinMasterDto;
 
 import in.param.exception.ApplicationException;
@@ -25,10 +26,18 @@ public class MortuaryServiceImpl implements IMortuaryService, ICommonConstants {
 	@Autowired
 	IGlobalUnitMasterDao iGlobalUnitMasterDao;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response saveDeathRegistation(MortuaryDto mortuaryDto) throws ApplicationException {
 		try {
+			mortuaryDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			mortuaryDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Response res=iMortuaryDao.checkAlreadyExistReg(mortuaryDto);
+			if (res.getStatus() != null && res.getStatus().equalsIgnoreCase(ERROR)) {
+				return res;
+			}
 	        if(res.getListObject()!=null && res.getListObject().size()>0){
 				
 				return new Response<>(ERROR, ALREADY_EXIST_CODE, ALREADY_EXIST, null, null);

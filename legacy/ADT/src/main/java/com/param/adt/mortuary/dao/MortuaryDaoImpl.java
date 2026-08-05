@@ -70,6 +70,8 @@ public class MortuaryDaoImpl extends GenericDao<DeathRegistration, Integer> impl
 					.setParameter("lastName", mortuaryDto.getLastName())
 					.setParameter("genderId", mortuaryDto.getGenderId())
 					.setParameter("age", mortuaryDto.getAge())
+					.setParameter("organizationId", mortuaryDto.getOrganizationId())
+					.setParameter("unitId", mortuaryDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(MortuaryDto.class)).list();
 		
 		return new Response(SUCCESS, SUCCESS_CODE, null, list, null);
