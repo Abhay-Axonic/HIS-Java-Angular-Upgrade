@@ -51,10 +51,26 @@ WEB = "/opt/homebrew/opt/tomcat@9/libexec/webapps/ROOT/WEB-INF/lib"
 JAVAP = "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/javap"
 WT = os.path.join(ROOT, ".claude/worktrees/sweep-lis-common")
 
+
+def resolve_wt(spec, args_wt):
+    """Worktree resolution: per-spec pin > CLI arg > default.
+    A bare name resolves to .claude/worktrees/<name>; a path (relative or
+    absolute) is used as-is. The sex spec MUST run against composed-all — its
+    freshness step reads source VIS refs from the worktree, and the deployed
+    gender service (6 = sweep 5 + BR-171 rebind) only matches the composed
+    source, not the sweep branch's (5)."""
+    wt = spec.get("worktree") or args_wt
+    if not wt:
+        return WT
+    if os.path.isabs(wt) or wt.startswith(".") or os.path.sep in wt:
+        return wt if os.path.isabs(wt) else os.path.join(ROOT, wt)
+    return os.path.join(ROOT, ".claude/worktrees", wt)
+
 SCREENS = {
     "sex": {
         "module": "Global",
         "fix_commit": "af7611f3",
+        "worktree": "composed-all",   # deployed gender service = sweep 5 + BR-171 rebind (6 VIS) — only the composed source matches
         "payload_org_field": "organizationId",   # form 1: payload carries an org field
         "service_class": "com/param/global/service/GenderMasterServiceImpl.class",
         "dao_class": "com/param/global/dao/GenderMasterDaoImpl.class",
@@ -77,6 +93,7 @@ SCREENS = {
     "relation": {
         "module": "Global",
         "fix_commit": "a30bd69f",
+        "worktree": "composed-all",
         "payload_org_field": "organizationId",
         "service_class": "com/param/global/service/RelationMasterServiceImpl.class",
         "dao_class": "com/param/global/dao/RelationMasterDaoImpl.class",
@@ -99,6 +116,7 @@ SCREENS = {
     "marital": {
         "module": "ADT",
         "fix_commit": "cd4e49d3",
+        "worktree": "composed-all",
         "payload_org_field": "organizationId",
         "service_class": "com/param/adt/master/global/service/MaritalStatusMasterServiceImpl.class",
         "dao_class": "com/param/adt/master/global/dao/MaritalStatusMasterDaoImpl.class",
@@ -121,6 +139,7 @@ SCREENS = {
     "religion": {
         "module": "ADT",
         "fix_commit": "567a59d2",   # app-code commit; entity-only parens fix 1355f15b verified via entity-filter assertion
+        "worktree": "composed-all",
         "payload_org_field": "organizationId",
         "service_class": "com/param/adt/master/global/service/ReligionMasterServiceImpl.class",
         "dao_class": "com/param/adt/master/global/dao/ReligionMasterDaoImpl.class",
@@ -143,6 +162,7 @@ SCREENS = {
     "occupation": {
         "module": "ADT",
         "fix_commit": "f66f3783",
+        "worktree": "composed-all",
         "payload_org_field": "organizationId",
         "service_class": "com/param/adt/master/global/service/OccupationMasterServiceImpl.class",
         "dao_class": "com/param/adt/master/global/dao/OccupationMasterDaoImpl.class",
@@ -165,6 +185,7 @@ SCREENS = {
     "priority": {
         "module": "Global",
         "fix_commit": "6e6f845b",
+        "worktree": "composed-all",
         "payload_org_field": "organizationId",
         "service_class": "com/param/global/org/common/service/PriorityMasterServiceImpl.class",
         "dao_class": "com/param/global/org/common/dao/PriorityMasterDaoImpl.class",
@@ -436,7 +457,7 @@ def main():
         ap.error("a screen is required unless --self-test is given")
 
     spec = SCREENS[args.screen]
-    wt = args.worktree
+    wt = resolve_wt(spec, args.worktree)
     ok = True
 
     # --- 1. source compile gate (worktree) ---
