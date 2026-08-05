@@ -996,4 +996,48 @@ was coincidence, not a pattern.
    caveat: every caller-behaviour assertion in this plan traces to the session's named-caller audits
    (QF-U, QF-AC, QF-AD, QF-AE); each Phase-3 screen gets its own end-to-end re-confirmation.
 
+## QF-2026-08-05-AG — BR-173 NEW PHASE 1: URL VARIANT CENSUS (tools/url_variant_census.py)
+
+- Method: for each of the 154 extracted entries, the caller-URL forms were extracted from the whole
+  JS/HTML tree (files loaded once; same-quote-pair + 200-char-cap regex; distinctive search target —
+  the full fragment up to 64 chars, longer fragments use a 4-segment prefix). Rule-10 control FIRST:
+  the extraction found the known forms of /api/opd/getMedicationHistoryList (assembled + the
+  ForBookView sibling), /adt/getActiveCountryList/ (trailing-slash/constant), and
+  /api/opd/patientDoc/details (the /incident and /nabh siblings). First two passes over-recalled
+  (cross-quote spans; then the 'details' stem and the 3-segment prefix matched whole classes) —
+  both corrected before any conclusion.
+- RESULT: 36 of 154 entries (23%) have caller-URL forms the exact-match would miss.
+- RULE 1 — trailing-slash-strip + query-strip (6 entries, clean): e.g. /adt/getActiveCountryList/,
+  /api/opd/getFrequencyList (caller sends '?unitId='), /api/opd/getOPDMedicationListById/,
+  /api/webappointment/getActivePrefixList/.
+- RULE 2 — per-form exact-list / individual handling (30 entries, NAMED):
+  /Report, /adt/getActiveSpecialityList, /adt/getActiveStateList, /adt/getAreaByCityId,
+  /api/billing/unit/bill/Report, /api/getVideoataForNotification, /api/global/glablServiceMaster,
+  /api/global/growthDevelopmentalMilestones/patient, /api/globals/frequency,
+  /api/opd/coversheetInstruction, /api/opd/getComplaintAppointment,
+  /api/opd/getMasterListOfICPCSystemForCoversheet, /api/opd/getMedicationHistoryList,
+  /api/opd/patientDoc/details, /api/opd/saveInvestigation, /api/opd/saveMedication,
+  /applicationConfiguration/screen-images, /br/, /checkEmailAvailability, /forgotPasswordGeneration,
+  /getSerivceRateGlobalList, /otpVerification, /resources/, /unit/subcription, adt/getActivePrefixList,
+  api/billing/kiosk/saveAndPay, api/global/patientTypeHeadSearchForAppointmentUnique,
+  deleteParticipants, opd/saveMedication, update/service.
+- The 30's variant classes: (a) SIBLING-ENDPOINT URLs riding the entry's substring today — e.g.
+  getMedicationHistoryList->ForBookView, saveInvestigation->ForAppointmentTemplate, coversheetInstruction->
+  ListForBookView, getComplaintAppointment->ByPatientId, patientDoc/details->/incident+/nabh,
+  growthMilestones/patient->/detail, getMasterListOfICPCSystemForCoversheet->ForCode,
+  getActiveSpecialityList->ForModality, getAreaByCityId->Pagination, getOPDMedicationListById->
+  ForNonFormulary, checkEmailAvailability/otpVerification/forgotPasswordGeneration->/adt/-prefixed,
+  saveAndPay->/kiosk/saveAndPay variants; (b) the BROAD-substring entries whose exact-match removes
+  whole families — /Report (the LIS/Billing/pathology report URLs), /br/ (->/adt/br/), /resources/,
+  deleteParticipants (the family), opd/saveMedication vs /api/opd/saveMedication; (c) the
+  ABSOLUTE-URL form — /api/getVideoataForNotification is called as
+  http://localhost:8078/HIS-WAR/api/getVideoataForNotification (host-strip rule); (d) the
+  PATH-VARIABLE forms — the feedback GETs (/api/outPatientFeedback/:organizationId/:unitId/...).
+- The no-clean-rule cases (need individual decisions): /Report (the family is large and cross-module),
+  the feedback path-variable GETs (an exact-match cannot cover variable ids without a pattern rule),
+  deleteParticipants (the bare substring covers a whole family that is itself under review).
+- Phase-2 implication: the filter rewrite's URL normalization = host-strip + trailing-slash-strip +
+  query-strip; the 30 individual entries need their sibling-endpoint exact-forms added to the
+  allowlist (or the sibling URLs explicitly listed) BEFORE the rewrite, or they 401.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
