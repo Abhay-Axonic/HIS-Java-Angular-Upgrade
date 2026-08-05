@@ -350,4 +350,31 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   /api/opd/getDiagnosisByGenderId whitelist entry (JwtTokenFilter:98+389) is STALE — removal is the fix,
   BR-171 pattern**. Not fixed (report only).
 
+## QF-2026-08-05-K — Operational exposure + false-success census (repo evidence only)
+
+- Q1 deployment evidence: running config = jdbc:postgresql://localhost:5432/his_local (HIS-WAR jdbc.properties);
+  legacy/devops/ carries SEVEN named-hospital preprod config TEMPLATES (athaayupreprod, oysterpreprod, queenspreprod,
+  meditestpreprod, nch, mrrch, bpp) — all `jdbc.url=CHANGE_ME_SET_LOCALLY_NOT_IN_GIT` (placeholders, no real hosts
+  in git); docker-compose = nginx+tomcat; legacy/Deployment/ = HIS-DDL-20211019 + StandAlone-Instance-Master-Data
+  (DDL snapshot dated 2021-10-19). Cannot determine from repo: whether any environment currently serves real
+  patients (no prod configs, no live hosts, no ops evidence). The coversheet path is the same code in any
+  environment this build runs.
+- Q2 timeline: baseline commit 96b75c49 dated 2026-07-15 09:21:36 "Baseline before upgrade"; the 11 CRASH entity
+  files (PatientMedicalHistory, AppointmentVitalMapper, AllergyPatientMapper, ...) have ONLY the baseline commit —
+  the commented/unbound state arrived whole in the baseline; nothing changed it in this repo; pre-baseline
+  history not in the repo. No changelog/migration doc references the coversheet history sections.
+- Q3 shape sweep: 442 ng-show/ng-if length-gated sections across 79 views; clinical decision-read views:
+  ipd-CoverSheet-new (43) + ipd-CoverSheet (68) + opd-coversheet-new (48) + opd-coversheet (56) [215 gates on the
+  coversheet family alone], update-discharge-summary (24) + discharge-summary (24), input-output-chart-history (8),
+  nursing-coversheet (2), growth-chart (1). Per-screen DAO-join confirmation pending beyond the confirmed
+  13-section coversheet read path (same template family as discharge summary). SME_GAP_ANALYSIS:16 corroborates —
+  allergyTypeMaster is a clinical-safety path "surfaced via coversheet alert icon"; the allergy section read
+  (GET_CURRENT_LIST_ALLERGY_PATIENT_MAPPER_FOR_COVERSHEET) is one of the 11 CRASH.
+- Q4 false-success census: Shape A (catch -> return new Response(SUCCESS...)) = 15 (Global 11, Abdm 2, Billing 1,
+  DietAndKitchen 1) — incl. the "MyLife sync" save-side catches in the coversheet DAOs (MedicationHistory,
+  AllergyPatientMapper, AppointmentVitalMapper, PatientFamilyHistory, PatientMedicalHistory) + RejectedDietListDaoImpl.
+  Shape B (catch -> silent fallthrough) raw match = 9,463 (Global 6,624, ADT 2,299, Billing 350, ...) — OVER-INCLUSIVE
+  (includes void-method catches where fallthrough is normal + nested-brace truncation); the meaningful subset is the
+  Response-typed DAO reads (coversheet family confirmed); a Response-typed refinement is the next census pass.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
