@@ -859,4 +859,50 @@ tuple checks exact equality, not substring). QF-AB's other claims stand (3 entri
 - KIOSK-bucket conclusion: ~15 genuinely public, ~10 internal misplacements, ~22 masters/ref-data;
   the flag set (5 writes + 2 PHI-reads) is the decision surface for the next branch.
 
+## QF-2026-08-05-AE — config-dependency traces on the 4 untraced writes + misplacement confirmation
+
+PART 1 — THE 4 WRITES (filter path: all 4 pass the filter no-token; NONE WROTE on this box — the
+stop-condition was not triggered):
+1. api/global/patientRegistration (PatientRegistrationController.java:83 POST) -> the service's
+   dup-check (CHECK_UNIQUE_PATIENT) + insert: patient.t_patient_registration + t_patient_details
+   (session.save x2, patient.patient_registration_seq). Config-deps: the UHID prefix is HARD-CODED
+   ("PC-18-"/"PR-18-"/"O-18-") — NO config row blocks the write. LIVE PROOF: 9 payload attempts, all
+   blocked at the dozer's dob String->Date parse (the app's date format not identified in the budget:
+   yyyy-MM-dd, dd/MM/yyyy, MM/dd/yyyy, dd-MM-yyyy, dd-MM-yyyy HH:mm:ss, dd-M-yyyy, dd-M-yyyy HH:mm:ss
+   all threw ParseException at the dozer DateConverter). Counts unchanged (2/1, seq 1). The write is
+   NOT PROVEN on this box but there is NO config-block visible — the dozer-format is the remaining
+   blocker, not a design block. The registration would persist wherever the format matches the app's.
+2. api/opd/patientDoc/saveAnalyzedReport (EncounterController.java:1578 POST) -> UPDATE
+   opd.t_encounter_doc_details (document_analyzed_path/date/json WHERE encounter_doc_id). LIVE PROOF:
+   no-token POST -> 500 (Internal Server Error); the table has 0 rows -> the UPDATE can match nothing;
+   write cannot persist here (env: empty table), would persist where rows exist.
+3. /api/outPatientFeedback (OutPatientFeedbackController.java:19 POST saveOutPatientFeedback) ->
+   session.save into public.out_patient_feedback (patientId/visitType/feedbackKey/Value/unit/org/
+   encounter + status 'A'). NO config-lookup in the DAO. LIVE PROOF: no-token POST -> 500
+   PSQLException "relation public.out_patient_feedback_seq does not exist" — blocked by DB DRIFT (the
+   schema's sequence missing on this box), not by config; would persist in a schema-complete
+   environment.
+4. /api/inPatientFeedback — same shape as #3 (InPatientFeedback entity, same missing-sequence class).
+   No live POST run (same drift block class as #3 — the trace stopped at the identical sequence
+   dependency).
+
+PART 2 — THE INTERNAL-MISPLACEMENT CONFIRMATION (14 candidates from QF-AD; the user's "~10"):
+- 3 CONFIRMED misplacements (authenticated post-login callers only):
+  saveTemplateListDataForNewEMR (8 coversheet callers: IPDCoverSheet, dayCareNurshing, nursing,
+  erNursing, OPDCoverSheet, postOprativeCare — all post-login clinician screens);
+  /api/opd/patientDoc/details (NABH + incident-reporting callers: nabhReporting, reportedNABH,
+  incidentReporting, reportedIncident — post-login);
+  /api/global/growthDevelopmentalMilestones/patient (OPDCoverSheet + growthChart — post-login).
+- 2 RECLASSIFIED NOT-misplacements (a caller sits on the pre-login booking surface):
+  /adt/getListOfDocumentForBookView + /api/opd/getInvestigationsListForBookView — bookViewMaster
+  controller (route '/bookView', the pre-login book-view/booking surface). Per the rule: any caller on
+  a pre-login surface -> NOT a misplacement.
+- 9 NO-CALLER entries (not misplacements — the dead/no-caller class):
+  getPatientDetailsForWorklistForWebPage, getCookieDataForNewEMR, getUserListForStore/,
+  getAppointmentsByPatientId, getLastEncounterDataOfPatientForWebAPP,
+  preBilling/orderedServicesByMobileNoForWebUser, growthDevelopmentalMilestones/detail,
+  scheduleAppointment, getAvailableDoctorBySpeciality — 0 exact-fragment callers (spot-checked the
+  identifier hits for scheduleAppointment = function-name noise, not endpoint calls).
+- All spellings verified against the extracted list.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
