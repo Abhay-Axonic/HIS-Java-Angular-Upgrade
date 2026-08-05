@@ -2532,4 +2532,25 @@ Batch closed. Rebuild branch held for final merge decision (10 commits ahead of 
 
 ---
 
+## BR-168 — Unit ICU Type list: GET_UNIT_ICU_TYPE_LIST precedence defect — status='A' branch unconditional (NOT fixed, 2026-08-05)
+
+**Pre-fix query (legacy/Entity/.../adt/master/unit/model/UnitICUTypeMapper.java):** `WHERE uicu.status='A' OR uicu.status='I' AND uicu.unitId=:unitId AND uicu.organizationId=:orgId`
+**Precedence analysis:** SQL binds AND tighter than OR → `uicu.status='A' OR (uicu.status='I' AND uicu.unitId=:unitId AND uicu.organizationId=:orgId)` — the org+unit predicates bind **only to the status='I' branch**; the **status='A' branch is unconditional** — every tenant's ACTIVE unit-ICU-type mappings are readable by every session (a list query, org+unit table).
+**Blast radius:** `UnitICUTypeDaoImpl.getUnitICUTypeList` (line 61) → `UnitICUServiceImpl.getUnitICUTypeList` (line 57) → POST `/adt/getUnitICUTypeList` (`UnitICUController`, @RequestMapping("/adt")) → frontend `GETUNITICUTYPELIST` (legacy/HIS-WAR/.../config/adt.url.config.js:38) — the Unit ICU Type master screen (ADT unit setup). The DAO binds unitId+orgId, so the 'I' branch is scoped; the 'A' branch leaks.
+**Status:** logged 2026-08-05 — NOT fixed, NO live proof captured (blast-radius review pending before queue position; if the screen is in active use it may jump the queue).
+
+## BR-169 — Discharge Type dup-check: GET_DISCHARGE_TYPE_LIST_BY_NAME precedence defect — exact-match branch unscoped (existence oracle, NOT a read leak) (NOT fixed, 2026-08-05)
+
+**Pre-fix query (legacy/Entity/.../adt/master/global/model/DischargeTypeMaster.java):** `WHERE dt.dischargeTypeName=:dischargeTypeName OR LOWER(dt.dischargeTypeName)=:dischargeTypeName AND dt.organizationId=:orgId`
+**Precedence analysis:** → `dt.dischargeTypeName=:dischargeTypeName OR (LOWER(dt.dischargeTypeName)=:dischargeTypeName AND dt.organizationId=:orgId)` — the org predicate binds **only to the LOWER branch**; the **exact-match branch is unscoped**. The DAO lowercases the param (`getDischargeTypeName().toLowerCase()`), so the oracle fires on all-lowercase-stored names. **Explicitly: this is a cross-tenant EXISTENCE ORACLE on the dup-check, NOT a read leak** — an org-1 session saving a name that an org-999 row holds in lowercase would get "Already Exists." and learn the name exists in another tenant. Identical shape to the religion defect (1355f15b) but ORIGINAL.
+**Blast radius:** `DischargeTypeMasterDaoImpl.getDischargeTypeByName` (line 46) — called by `DischargeTypeMasterServiceImpl.addDischargeTypeMaster` (line 20) → POST `/adt/saveDischargeTypeMaster` (`DischargeTypeMasterController`) → frontend `ADDDISCHARGETYPE` (adt.url.config.js:298); discharge-type master management + discharge-flow controllers reference the type lists.
+**Status:** logged 2026-08-05 — NOT fixed, NO live proof captured.
+
+## BR-170 — Priority active list: GET_PRIORITY_LIST has NO org and NO unit — live unconditional read on the unknown-patient-registration path (NOT fixed, 2026-08-05)
+
+**Pre-fix query (BOTH entity twins — legacy/Entity/.../adt/master/global/model/PriorityMaster.java line 24 AND legacy/Entity/.../global/model/PriorityMaster.java line 16):** `SELECT priority.priorityId as priorityId, priority.priorityCode as priorityCode FROM PriorityMaster priority WHERE priority.status='A' ORDER BY priority.priorityCode ASC` — **no org, no unit; the DAO binds NOTHING**.
+**Discovered** during the BR-168/169 blast-radius work (the batch worktree grep showed no caller for the Global twin; the main-tree grep found the live one).
+**Blast radius:** GET `/adt/getActivePriorityList` (`UnknownPatientRegistrationController` line 49) → `IUnknownPatientRegistrationService.getPriorityMasterList()` → `UnknownPatientRegistrationDaoImpl.getPriorityMasterList` (line 96) → unconditional list of ALL tenants' active priorities — the seeded victim 99905 (status 'A', org 999) **will appear in every session's unknown-patient-registration priority dropdown** (also in the priority dropdown of any other consumer of the same config var `GETACTIVEPRIORITYLIST`, adt.url.config.js:352). BR-162-class unconditional read; org AND unit both missing.
+**Status:** logged 2026-08-05 — NOT fixed, NO live proof captured.
+
 <!-- ============ END OF MANIFEST — new BR entries append BEFORE this marker ============ -->
