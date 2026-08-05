@@ -706,4 +706,50 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
 - The regression checker, six harness specs, and the remaining spot-checks are PAUSED pending the owner's
   response to this report (per the stop-and-report instruction).
 
+## QF-2026-08-05-X — Phase-2 battery resumed (post-removal deployment) — ALL PASS
+
+- verify_deployed_regressions.py: PASS (every closed BR's fix signature in the running jars).
+- Six harness specs (sex, relation, marital, religion, occupation, priority): ALL PASS (live,
+  org-1 token). First background attempt hit an argparse usage error (transient/odd shell state);
+  direct invocation verified all six individually.
+- Live re-checks: consult forged admission 0 rows; death-reg unique-name not-409; diagnosis
+  no-token 401 + token org-scoped success; coversheet med-history renders (Paracetamol present);
+  login public; /adt/br/ QR passes unauthenticated.
+
+## QF-2026-08-05-Y — whitelist gap reconciliation: 217 vs 220 vs 196 (tools/whitelist_gap_reconciliation.py)
+
+- PRE-REMOVAL (verified from git a70d5a56^): copy1 = 217 raw occurrences = 197 unique + 20
+  within-copy duplicates; copy2 = 220 = 199 unique + 21 duplicates. The 217-vs-220 gap (3) = copy2's
+  TWO extra unique entries (/resources/, deleteParticipants — in the else-if, absent from the
+  line-76 copy) + ONE extra duplicate-occurrence.
+- POST-REMOVAL (current): copy1 = 167/152/15; copy2 = 170/154/16; union 154 unique.
+- The 196 is a HAND-CURATED classification list, not an extraction: 196 + the 3 it missed
+  (/resources/, /views/, deleteParticipants) = the filter's 199 actual unique pre-removal entries.
+  The curated list is 3 short of the filter's reality; it also carries entry VARIANTS the filter
+  does not have (e.g. /api/opd/saveMedication vs the filter's bare opd/saveMedication — both forms
+  actually present).
+- GAP (present in either copy, absent from the 196): /resources/, /views/, deleteParticipants (3).
+- DRIFT (one copy only): copy2-only: /resources/, deleteParticipants (2) — the exemption asymmetry:
+  the else-if (no-header path) exempts them, the line-76 auth-block path does not — a request WITH
+  userId/unitId/Authorization headers to a deleteParticipants URL is NOT exempt in the line-76 copy,
+  so it falls into the token-check; the header-less request passes via the else-if.
+- Rule-10 control: known miss 'deleteParticipants' found in the gap AND known present
+  '/adt/userLogin' found in the 196 + both copies — CONTROL PASS. The capture pattern also handles
+  the double-paren form contains(("/views/")) (the /views/ entry). Nothing removed from the gap.
+- Also surfaced during the reconciliation: the med-history family entry /api/opd/getMedicationHistoryList
+  is in the filter but was never in the hand-curated 196 (the curated list's med-history coverage is
+  partial: getMedicationDetailsForNewEMR + saveMedication only).
+
+## QF-2026-08-05-Z — bare 'deleteParticipants' entry (HOLD — its own finding)
+
+- The bare entry requestUrl.contains("deleteParticipants") (JwtTokenFilter:455, else-if copy) was
+  missed by the 196 extraction (the classification had the /HIS-WAR/deleteParticipants variants and
+  /api/deleteParticipants but not the bare fragment — the ninth pattern-pass miss).
+- Its substring exempts the WHOLE family: /HIS-WAR/deleteParticipants (+ /* + /** + /Patient/dataroom_41015
+  -> 404, dead paths) AND /api/deleteParticipants (405 on GET — the controller EXISTS, POST-only).
+- Impact: an unauthenticated POST to /api/deleteParticipants reaches a LIVE controller (no-token
+  request passes via the else-if's bare entry; the live POST behavior was not exercised — the hold).
+- Per owner: NOT removed on this branch (never in the approved 45; no scope creep on a removal
+  branch). Carries to the next branch with the 30, after the gap reconciliation's findings.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
