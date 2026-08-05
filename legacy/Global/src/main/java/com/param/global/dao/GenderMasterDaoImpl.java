@@ -211,12 +211,12 @@ public class GenderMasterDaoImpl extends GenericDao<GenderMaster, Integer>
 	}
 
 	@Override
-	public Response getActiveGenderList() throws ApplicationException {
-		//System.out.println(sessionService.getOrganizationId());
+	public Response getActiveGenderList(Integer orgId) throws ApplicationException {
 		try {
+
 			List<GenderMasterDto> genderMasterDtoList = sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_ACTIVE_GENDER_LIST")
-					//.setParameter("orgId", sessionService.getOrganizationId())
+					.setParameter("orgId", orgId)
 					.setResultTransformer(Transformers.aliasToBean(GenderMasterDto.class)).list();
 			return new Response(SUCCESS, null, null, genderMasterDtoList, null);
 

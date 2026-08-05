@@ -86,7 +86,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 					GenderMaster dto = new GenderMaster();
 					dto = (GenderMaster) res.getObject();
 
-					genderMasterCache.invalidate("genderMaster");
+					genderMasterCache.invalidateAll();
 
 					genderMasterDto.setId(dto.getId());
 
@@ -132,7 +132,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 				Response updateRes = iGenderMasterDao.updateGenderMaster(genderMasterDto);
 
 				if (updateRes.getStatus().equals(SUCCESS)) {
-					genderMasterCache.invalidate("genderMaster");
+					genderMasterCache.invalidateAll();
 				}
 
 				genderMasterDto.setCreatedBy(genderMasterDto.getUpdatedBy());
@@ -161,7 +161,7 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 			if (deptResponse.getListObject() != null && deptResponse.getListObject().size() > 0) {
 				/*genderMasterDto.setUpdatedDate(GlobalCommonDateUtils.getStringDate(TimeZoneComponent.getDateByzone(unitId), "dd-M-yyyy HH:mm:ss"););*/
 				iGenderMasterDao.updateGenderStatus(genderMasterDto);
-				genderMasterCache.invalidate("genderMaster");
+				genderMasterCache.invalidateAll();
 				return new Response(SUCCESS, null, COMMON_UPDATE, null, null);
 
 			} else {
@@ -177,15 +177,18 @@ public class GenderMasterServiceImpl implements IGenderMasterService,ICommonCons
 	@Override
 	public Response getActiveGenderList() throws ApplicationException {
 		try {
-			List<GenderMasterDto> responseCache = genderMasterCache.getIfPresent("genderMaster");
+			// active-list reads bind the JWT-verified org, never all tenants
+			Integer orgId = verifiedIdentityService.getVerifiedOrganizationId();
+			String cacheKey = "genderMaster:" + orgId;
+			List<GenderMasterDto> responseCache = genderMasterCache.getIfPresent(cacheKey);
 			if (responseCache != null && !responseCache.isEmpty()) {
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size Cache: " +String.valueOf(responseCache.size()), responseCache, null);
 			}
 
-			Response res = iGenderMasterDao.getActiveGenderList();
+			Response res = iGenderMasterDao.getActiveGenderList(orgId);
 
 			if(res.getStatus().equals(SUCCESS) && res.getListObject() != null && !res.getListObject().isEmpty()){
-				genderMasterCache.put("genderMaster", res.getListObject());
+				genderMasterCache.put(cacheKey, res.getListObject());
 
 				return new Response(SUCCESS, SUCCESS_CODE, "List Size DB: " +String.valueOf(res.getListObject().size()), res.getListObject(), null);
 			}
