@@ -27,7 +27,7 @@ import javax.persistence.Table;
 	@NamedQuery(name="GET_RELIGION_LIST_BY_NAME", query="SELECT religion.id as id, "
 			+ "religion.desc as desc "
 			+ "FROM ReligionMaster as religion "
-			+ "WHERE religion.desc=:desc OR LOWER(religion.desc)=:desc "
+			+ "WHERE (religion.desc=:desc OR LOWER(religion.desc)=:desc) "
 			+ "AND religion.organizationId=:orgId"),
 	
 	@NamedQuery(name="GET_RELIGION_LIST_BY_ID", query="SELECT religion.id as id, "
