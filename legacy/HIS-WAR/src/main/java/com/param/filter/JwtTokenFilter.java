@@ -106,34 +106,36 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		"/resultUrl",
 		"/token/Doctor",
 		"/validationResultResponse",
-		// STATIC
+		// STATIC (exact — non-webjar; the webjar tree is a PREFIX rule below)
 		"/HIS-WAR/api-ui",
 		"/HIS-WAR/images/favicon-16x16.png",
 		"/HIS-WAR/images/favicon-32x32.png",
 		"/HIS-WAR/swagger-resources",
 		"/HIS-WAR/swagger-ui.html",
-		"/HIS-WAR/webjars/springfox-swagger-ui/css/print.css",
-		"/HIS-WAR/webjars/springfox-swagger-ui/css/reset.css",
-		"/HIS-WAR/webjars/springfox-swagger-ui/css/screen.css",
-		"/HIS-WAR/webjars/springfox-swagger-ui/css/typography.css",
-		"/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans-Bold.ttf",
-		"/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans.ttf",
-		"/HIS-WAR/webjars/springfox-swagger-ui/images/logo_small.png",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/backbone-min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/handlebars-2.0.0.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/highlight.7.3.pack.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery-1.8.0.min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.ba-bbq.min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.slideto.min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.wiggle.min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jsoneditor.min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/marked.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/swagger-oauth.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/lib/underscore-min.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/springfox.js",
-		"/HIS-WAR/webjars/springfox-swagger-ui/swagger-ui.min.js",
-		"/applicationConfiguration/screen-images"
+		"/applicationConfiguration/screen-images",
+		// SHELL (exact — the app entry pages)
+		"/",
+		"/index.html",
+		"/healthcheck.html"
 	));
+
+	/**
+	 * STATIC PREFIX RULES — the shell's static directory trees.
+	 * COMPOSITION: 66 exact entries (63 API/static + 3 shell) + 3 prefix rules
+	 * (the original 83-exact shape: the 20 webjar entries collapsed into the
+	 * /HIS-WAR/webjars/ prefix).
+	 *
+	 * CONSTRAINT — READ BEFORE ADDING A PREFIX: prefix matching is permitted ONLY
+	 * for static directory trees served by the default servlet (files on disk:
+	 * templates, js, css, fonts, images). NEVER for API paths. The
+	 * substring-over-API-paths behaviour is exactly what this rewrite replaced;
+	 * an API endpoint must be an exact entry with a named pre-login caller.
+	 */
+	private static final List<String> STATIC_PREFIXES = List.of(
+		"/resources/",
+		"/views/",
+		"/HIS-WAR/webjars/"
+	);
 
 	/**
 	 * The two narrow anchored patterns for the feedback path-variable GETs — ONLY these two,
@@ -174,6 +176,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			u = u.substring(0, u.length() - 1);
 		}
 		return u;
+	}
+
+	private static boolean isStaticPrefix(String url) {
+		for (String prefix : STATIC_PREFIXES) {
+			if (url.startsWith(prefix)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -217,9 +228,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			Integer userId = request.getHeader("userId") != null ? Integer.valueOf(request.getHeader("userId")) : 0;
 			Integer unitId = request.getHeader("unitId") != null ? Integer.valueOf(request.getHeader("unitId")) : null;
 
-			// BR-173 PHASE 2 — default-deny: the allowlist is the ONLY public-by-design path
+			// BR-173 PHASE 2 — default-deny: the allowlist + the static-tree prefixes are the
+			// ONLY public-by-design paths
 			String normalizedUrl = normalizeUrl(requestUrl);
 			boolean isPublic = PUBLIC_ALLOWLIST.contains(normalizedUrl)
+					|| isStaticPrefix(normalizedUrl)
 					|| OPD_FEEDBACK_PATH.matcher(normalizedUrl).matches()
 					|| IPD_FEEDBACK_PATH.matcher(normalizedUrl).matches();
 
