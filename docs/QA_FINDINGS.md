@@ -618,4 +618,41 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   whitelisted). Whoever owns the billing flow should decide the kiosk payment-trust model (verify all
   modes server-side, or authenticate the kiosk device).
 
+## QF-2026-08-05-U — 82-entry caller audit (BR-173 next-branch prep; analysis only, no removals)
+
+- RULE 10 CONTROL (tools/whitelist_caller_audit.py): the search pattern validated against the known
+  positive FIRST — GET_MEDICATION_HISTORY_LIST's caller found at IPDCoverSheetController.js:23415 with
+  serviceAction in the context window. CONTROL PASS — the negatives are trustworthy.
+- AUDIT (82 = 63 STALE + 19 UNEXPLAINED): verdicts — **30 SAFE TO REMOVE + 3 NOT STALE + 49 NO CALLER
+  (dead)**. Per-entry callers + shapes in the tool output (tools/whitelist_caller_audit.py, re-runnable).
+- SAFE (30) — every frontend caller goes through GenericService.serviceAction (token-attached): the
+  coversheet/medication family (getMedicationHistoryList, getListOfVitalsByPatientIdForCoversheet,
+  saveMedication + opd/saveMedication, getFrequencyList, saveInvestigation, saveFreeTexPatientDiagnosis,
+  savePatientCancelledDiagnosis, getComplaintAppointment, coversheetInstruction,
+  updateCoversheetInstructionStatus, updateComplaintAppointmentStatusToRemoveComplaint,
+  getMasterListOfICPCSystemForCoversheet, getCoversheetAsTemaplateList, getTemplateDataByCovTempId,
+  updateFollowUpDateOfPatient, getActiveInspectionMasterList, /api/globals/frequency,
+  getOPDMedicationListById, saveJustificationForMedicationDelete, getCurrentPatientFamilyHistory/
+  Allergy/SurgicalHistoryForCoversheet, searchFreeTextComplaint, serchFreeTexPatientDiagnosis) +
+  UNEXPLAINED-with-real-serviceAction-callers (update/service, /global/serviceMaster,
+  /api/global/glablServiceMaster, /getSerivceRateGlobalList, /unit/org/).
+- NOT STALE (3) — reclassified, caller token-behaviour unverified: /adt/discharge/dischargeSummaryCard
+  (6 callers in the discharge controllers, unverified shapes), /unit/subcription (5 callers —
+  serviceAction at hospitalMasterController x4 + selfRegistrationController:4704 unverified),
+  /api/unit/clinical/getDoctorFavouriteMedicationForCoversheet (the only hit is a URL-constant
+  definition in global.url.config.js — the real callers use the constant; needs the constant-trace).
+- NO CALLER (49) — dead exemptions: the search (exact fragment in JS/HTML + Java non-mapping, the
+  JwtTokenFilter's own lines and commented lines excluded) found no caller. Misnaming check (Rule 10):
+  the NewEMR-family entries' STEMS are used by the frontend under DIFFERENT URI forms —
+  getPatientDiagnosisByPatientIdForIcon x32 / ForMedicalHistory x11 / ForBookView x1 (the ForNewEMR
+  form never called), getInvestigationsListForCoversheet x19, getMedicationDetailsByDoctorId x13 —
+  so the entries are dead exemptions (the variant callers are token-authenticated; removal does not
+  affect them). The unexplained dead ones: /br/, /decrypt, /updateNABH, /checkParti/, the
+  deleteParticipants family (5), the hardcoded generateFlipbook URL, /global/getPopUpDataWithId,
+  /roomRent (the only java ref = the controller's own @RequestMapping + a commented call), and
+  /api/refreshAllCaches.
+- CAVEAT: the audit's shapes are the hypothesis layer (the window-based serviceAction/raw detection +
+  the config-constant callers). The removal branch must confirm the per-entry callers (Rule 10) before
+  each removal — the audit is the triage, not the proof.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

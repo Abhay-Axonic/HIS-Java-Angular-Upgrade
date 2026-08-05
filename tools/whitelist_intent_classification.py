@@ -134,12 +134,14 @@ entries = [
     ("/api/opd/saveAIAppointmentInQueue", "INTEGRATION"), ("/api/opd/getAIAppointmentCount", "INTEGRATION"),
 ]
 from collections import Counter, defaultdict
-buckets = Counter(e[1] for e in entries)
-by_bucket = defaultdict(list)
-for e, b in entries:
-    by_bucket[b].append(e)
-print(f"total entries: {len(entries)}")
-for b in ["PUBLIC", "INTEGRATION", "KIOSK", "STALE", "UNEXPLAINED"]:
-    print(f"\n{b}: {buckets[b]}")
-    for e in by_bucket[b]:
-        print(f"   {e}")
+
+if __name__ == "__main__":
+    buckets = Counter(e[1] for e in entries)
+    by_bucket = defaultdict(list)
+    for e, b in entries:
+        by_bucket[b].append(e)
+    print(f"total entries: {len(entries)}")
+    for b in ["PUBLIC", "INTEGRATION", "KIOSK", "STALE", "UNEXPLAINED"]:
+        print(f"\n{b}: {buckets[b]}")
+        for e in by_bucket[b]:
+            print(f"   {e}")
