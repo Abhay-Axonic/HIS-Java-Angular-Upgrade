@@ -82,7 +82,7 @@ TABLE = [
     (999, "SWEEP bank getHospitalBank",  "Billing-0.0.1-SNAPSHOT.jar",   "com.param.billing.global.service.BankMasterServiceImpl",                     "vis_min", 8),
     (999, "SWEEP LIS/common service",    "LIS-0.0.1-SNAPSHOT.jar",       "com.param.lis.common.service.CommonListServiceImpl",                         "vis_min", 53),
     (999, "SWEEP LIS/common DAO",        "LIS-0.0.1-SNAPSHOT.jar",       "com.param.lis.common.dao.CommonListDaoImpl",                                 "method_sig", "getGenderList"),
-    (999, "SWEEP SampleMaster entity org", "Entity-0.0.1-SNAPSHOT.jar",  "com.param.entity.lis.global.SampleMaster",                                   "query", "organizationId"),
+    (999, "SWEEP SampleMaster entity org", "Entity-0.0.1-SNAPSHOT.jar", "com.param.entity.lis.global.SampleMaster", "query", "samplestausmast.org_id = :orgId"),
     # --- BR-171 (committed, deployment pending composition approval) ---
     (171, "gender active list (BR-171)", "Global-0.0.1-SNAPSHOT.jar",    "com.param.global.service.GenderMasterServiceImpl",                           "vis_min", 1),
     (171, "gender active whitelist removed", "HIS-WAR-0.0.1-SNAPSHOT.jar", "com.param.filter.JwtTokenFilter", "string_absent", "/adt/getActiveGenderList"),
@@ -182,12 +182,14 @@ def self_test():
                  "com.param.global.model.GenderMaster", "query",
                  "NO_SUCH_QUERY_FRAGMENT_zzz"),
                 "nonexistent query fragment must FAIL")
-    # string_absent negative control: assert the whitelist URL is absent while it IS present
+    # string_absent negative control: assert a whitelist entry that STILL EXISTS is absent
+    # (/otpVerification remains whitelisted; the removed /adt/getActiveGenderList is the
+    # post-deploy correct state, so it can no longer serve as the negative control)
     expect_fail("string_absent can fail",
                 (0, "neg", "HIS-WAR-0.0.1-SNAPSHOT.jar",
                  "com.param.filter.JwtTokenFilter", "string_absent",
-                 "/adt/getActiveGenderList"),
-                "whitelist URL is currently PRESENT in the deployed filter; asserting absent must FAIL")
+                 "/otpVerification"),
+                "whitelist URL /otpVerification is currently PRESENT in the deployed filter; asserting absent must FAIL")
     # positive control: a known-present signature must PASS (proves the plumbing works both ways)
     pos = check_row((156, "pos", "Global-0.0.1-SNAPSHOT.jar",
                      "com.param.global.dao.AmbulanceTarrifDaoImpl", "vis_min", 4))
