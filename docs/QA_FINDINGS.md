@@ -419,4 +419,26 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   traces are what caught it. Two passes produced two wrong classifications (11 CRASH then 2 DEAD+11 CRASH);
   the end-to-end trace is the arbiter, not another pass.
 
+## QF-2026-08-05-N — BR-172 + clinical-leak branch: verification results + two more premise corrections
+
+- BR-172 premise REVOKED (third overturn, same direction): GET_MEDICATION_HISTORY_LIST is LIVE via its
+  @NamedNativeQuery twin (the HQL twin is commented; getNamedQuery resolves to the native — org+unit+patient
+  scoped, all binds matched). The Drug History section was never dead; the local DB simply has 0 medication-history
+  rows. Fixed: raw createSQLQuery shape -> direct named query; coversheet service error-drop propagated (both
+  save+update). Frontend empty-state = PROPOSED only (own gate).
+- Pre-fix live captures (BR-170/171 pattern, org-1 token, victims seeded org 999):
+  (1) consult-doctors: POST /api/opd/consultDoctorListByAdmission {admissionId:999999} -> 200 + victim consult row
+  incl. patientName 'PRE_01 Victim Consult999' (org 999) — LIVE cross-tenant clinical read.
+  (2) death-reg: POST /adt/saveDeathRegistation {Victim/DeathReg999/45/1} -> 409 'Already Exists.' — the org-999
+  registration matched cross-tenant — LIVE existence oracle.
+- Post-fix: (1) -> listObject [] (0 rows); (2) -> NOT 409 (the check no longer matches the org-999 victim; the
+  scoped query returns only same-tenant rows; a subsequent 409 was the dup-check correctly catching a same-tenant
+  duplicate the first post-fix call inserted — cleaned). Diagnosis-by-gender: no-token -> 401 (after the filter
+  null-header hardening — pre-hardening it NPE'd into a 200-error-JSON); authenticated -> org-scoped success.
+  Vitals sync: bytecode-verified (deployed query carries org+unit predicates; 3-param DAO signature).
+- Local-DB drift repaired (BR-155 class, additive per HIS-DDL-20211019): t_outside_hospital_doctor_mapper missing
+  (created) + opd.t_consult_doctor missing outside_hos_doc_id (added) — the consult-doctors endpoint 501'd
+  (relation does not exist) until repaired.
+- Regression checker PASS pre- and post-deploy (all closed BRs intact).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

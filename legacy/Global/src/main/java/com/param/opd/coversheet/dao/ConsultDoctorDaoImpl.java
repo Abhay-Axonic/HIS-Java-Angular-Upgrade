@@ -163,9 +163,9 @@ public class ConsultDoctorDaoImpl extends GenericDao<ConsultDoctor, Integer> imp
 	public Response consultDoctorListByAdmission(ConsultDoctorDto consultDoctorDto) throws ApplicationException {
 		try {
 			List<ConsultDoctorDto> consultDoctorDtosList = sessionFactory.getCurrentSession().getNamedQuery("GET_CONSULT_DOCTOR_LIST_BY_ADMISSION_ID")
-//					.setParameter("orgId", ConsultDoctorDto.getOrganizationId())
-//					.setParameter("unitId", ConsultDoctorDto.getUnitId())
 					.setParameter("admissionId", consultDoctorDto.getAdmissionId())
+					.setParameter("orgId", consultDoctorDto.getOrganizationId())
+					.setParameter("unitId", consultDoctorDto.getUnitId())
 					.setResultTransformer(Transformers.aliasToBean(ConsultDoctorDto.class)).list();
 
 			if (consultDoctorDtosList != null && !consultDoctorDtosList.isEmpty() && consultDoctorDto.getPatientId() != null

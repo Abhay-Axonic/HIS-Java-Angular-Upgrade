@@ -109,8 +109,8 @@ import com.param.opd.coversheet.model.EncounterMaster;
 			+ " LEFT JOIN consultDoc.outsideHospitalDoctorMapper outSideHospMapper "
 			+ "WHERE consultDoc.status='A' "
 			+ "AND consultDoc.admissionId=:admissionId "
-//			+ "AND consultDoc.organizationId=:orgId "
-//			+ "AND consultDoc.unitId=:unitId "
+			+ "AND consultDoc.organizationId=:orgId "
+			+ "AND consultDoc.unitId=:unitId "
 			),
 	
 	@NamedQuery(name="CONSULT_DOCTOR_LIST_FOR_BOOK_VIEW",query="SELECT consultDoc.consultDoctorId as consultDoctorId, "

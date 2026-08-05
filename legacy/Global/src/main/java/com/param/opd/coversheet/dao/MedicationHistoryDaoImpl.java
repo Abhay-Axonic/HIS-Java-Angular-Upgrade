@@ -228,13 +228,7 @@ implements IMedicationHistoryDao, ICommonConstants {
 	@Override
 	public Response getMedicationHistoryList(MedicationHistoryDto medicationHistoryDto) throws ApplicationException {
 			try {
-				StringBuilder stringQuery=new StringBuilder(sessionFactory.getCurrentSession().getNamedQuery("GET_MEDICATION_HISTORY_LIST").getQueryString());
-				/*if(medicationHistoryDto.getAdmissionId()!=null && medicationHistoryDto.getAdmissionId()!=0){
-					stringQuery.append(" AND medHis.admission_id="+medicationHistoryDto.getAdmissionId());
-				}else{
-					stringQuery.append(" AND medHis.encounter_id="+medicationHistoryDto.getEncounterId());
-				}*/
-			List<MedicationHistoryDto> list=sessionFactory.getCurrentSession().createSQLQuery(stringQuery.toString())
+				List<MedicationHistoryDto> list=sessionFactory.getCurrentSession().getNamedQuery("GET_MEDICATION_HISTORY_LIST")
 					.setParameter("organizationId", medicationHistoryDto.getOrganizationId())
 					.setParameter("unitId", medicationHistoryDto.getUnitId())
 					.setParameter("patientId", medicationHistoryDto.getPatientId())

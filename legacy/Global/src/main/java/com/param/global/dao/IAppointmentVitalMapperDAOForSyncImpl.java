@@ -27,10 +27,12 @@ public class IAppointmentVitalMapperDAOForSyncImpl extends GenericDao<Appointmen
 	}
 
 	@Override
-	public Response getVitalForSyncById(Integer appointmentVitalMapperId) {
+	public Response getVitalForSyncById(Integer appointmentVitalMapperId, Integer organizationId, Integer unitId) {
 		try{
 			AppointmentVitalMapperDtoSync dto = (AppointmentVitalMapperDtoSync)sessionFactory.getCurrentSession()
 					.getNamedQuery("GET_VITAL_MASTER_TO_SYNC_BY_ID").setInteger("id", appointmentVitalMapperId)
+					.setInteger("organizationId", organizationId)
+					.setInteger("unitId", unitId)
 					.setResultTransformer(Transformers.aliasToBean(AppointmentVitalMapperDtoSync.class)).uniqueResult();
 			return new Response<>(SUCCESS, SUCCESS_CODE, null, null, dto);
 		}catch(Exception e){
