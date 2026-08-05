@@ -2516,6 +2516,8 @@ All 3 screens confirmed working in the live review environment (genuine legacy l
 Batch closed. Rebuild branch held for final merge decision (10 commits ahead of main after the BR-157/158/159 merge: BR-160, BR-161+rebuild, 8 Step-6 fixes).
 
 ## BR-166 — priority master list: org filter commented out in the entity query while the DAO binds orgId (live 500 + latent cross-tenant read) — fixed on fix/five-screens-org-trust, NOT merged (2026-08-05)
+**MERGED into main via 15e4287d (2026-08-05, --no-ff).**
+
 
 **Pre-fix code:** `GET_PRIORITY_MASTER_LIST` in `legacy/Entity/.../global/model/PriorityMaster.java` had the org condition commented out (`/*+ " WHERE pc.organizationId=:orgId "*/`) while `PriorityMasterDaoImpl.getPriorityMasterList` calls `.setInteger("orgId", ...)`.
 **Live shape (refuted the assumed leak):** the endpoint does NOT return all tenants' rows — it **500s on every call**. Tomcat log 2026-08-05 10:02:52 (verbatim): `ERROR: com.param.global.org.common.dao.PriorityMasterDaoImpl - getPriorityMasterList failed / java.lang.IllegalArgumentException: Parameter orgId does not exist as a named parameter in [SELECT pc.priorityId as id, ... FROM Priority...` — Hibernate rejects the bind to the commented-out placeholder, the DAO catch returns ERROR, HTTP 500. **Latent leak:** if the bind were ever dropped, the unscoped query would return all tenants' rows — the org-999 victim (id 99905, `VICTIM-PRIORITY-999`) would be exposed to every tenant.
@@ -2523,6 +2525,8 @@ Batch closed. Rebuild branch held for final merge decision (10 commits ahead of 
 **Post-fix proof (captured 2026-08-05 after batch deployment, harness priority run PASS 18/18 + manual):** `/api/common/getPriorityMasterList` (org-1 session) → `status:success`, 3 rows (ids 1,3,2), victim 99905 absent — **the 500 is gone and the list is org-scoped**; forged by-id GET `/getPriorityMasterById/99905/999` → 0 rows; unit dimension (org-correct/unit-leaking check): payload org=1/unit=999 and org=999/unit=999 both return only org-1/unit-1 rows (3), victim absent — no unit leak. Deployed bytecode: service 6 org + 6 unit refs, DAO 3+3; entity filter `pc.organizationId=:orgId AND pc.unitId=:unitId` present in deployed Entity jar.
 
 ## BR-167 — religion: active list never wired for org (live cross-tenant read leak) + unscoped dup-checks (live existence oracle) — fixed on fix/five-screens-org-trust, NOT merged (2026-08-05)
+**MERGED into main via 15e4287d (2026-08-05, --no-ff).**
+
 
 **Pre-fix code:** `ReligionMasterServiceImpl.getActiveReligionList()` takes **no org parameter at all**; `GET_ACTIVE_RELIGION_LIST` = `WHERE religion.status='A'` only. `GET_RELIGION_LIST_BY_NAME` and `GET_RELIGION_LIST_BY_NAME_NOT_ID` = desc/id conditions with **no org**.
 **Live proof — read leak (captured 2026-08-05, pre-deploy):** GET `/adt/getActiveReligionList` with an org-1 session (real JWT) returned **6 rows including `{"id":99903,"desc":"Victim Religion 999",...}`** — the org-999 victim row is in the org-1 session's response (psql pre-state: `99903 | VICTIM-RELIGION-999 | ... | 999`). BR-162-class unconditional read.
@@ -2547,6 +2551,8 @@ Batch closed. Rebuild branch held for final merge decision (10 commits ahead of 
 **Status:** logged 2026-08-05 — NOT fixed, NO live proof captured.
 
 ## BR-170 — Priority active list: GET_PRIORITY_LIST has NO org and NO unit — live unconditional read on the unknown-patient-registration path (NOT fixed, 2026-08-05)
+**MERGED into main via d02efd49 (2026-08-05, --no-ff).**
+
 
 **Pre-fix query (BOTH entity twins — legacy/Entity/.../adt/master/global/model/PriorityMaster.java line 24 AND legacy/Entity/.../global/model/PriorityMaster.java line 16):** `SELECT priority.priorityId as priorityId, priority.priorityCode as priorityCode FROM PriorityMaster priority WHERE priority.status='A' ORDER BY priority.priorityCode ASC` — **no org, no unit; the DAO binds NOTHING**.
 **Discovered** during the BR-168/169 blast-radius work (the batch worktree grep showed no caller for the Global twin; the main-tree grep found the live one).
@@ -2556,6 +2562,8 @@ Batch closed. Rebuild branch held for final merge decision (10 commits ahead of 
 **Deployment (2026-08-05):** BR-170 is deployed via deploy/batch-plus-br170 (batch tip + cherry-picked BR-170, 33d1c01e) and again via deploy/composed-all (main + sweep + batch + BR-170 + BR-171); the regression checker (verify_deployed_regressions.py) PASSes this row against the running jars.
 
 ## BR-171 — Gender ACTIVE list: GET_ACTIVE_GENDER_LIST has no org predicate + org-blind cache — LIVE cross-tenant read on the gender dropdown (NOT fixed, 2026-08-05)
+**MERGED into main via f5215f98 (2026-08-05, --no-ff).**
+
 
 **Pre-fix query (legacy/Entity/.../global/model/GenderMaster.java, GET_ACTIVE_GENDER_LIST):** `SELECT genderMaster.id as id, genderMaster.desc as desc FROM GenderMaster as genderMaster WHERE genderMaster.status='A' ORDER BY ...` — **no org predicate**; m_gender_master HAS organization_id (org-scoped data). The list/by-id gender fixes (BR-121-class, merged) did not touch this query.
 **Cache:** `GenderMasterServiceImpl.genderMasterCache` keyed by the literal `"genderMaster"` — org-blind; the first tenant's ACTIVE list is served to every tenant.
