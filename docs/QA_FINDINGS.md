@@ -534,4 +534,23 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
   unauthenticated REACHABILITY (real for all 196) with write PERSISTENCE (per-flow-dependent). The
   realistic-write candidates (the app's daily flows — kiosk billing) need their own Rule-10 traces.
 
+## QF-2026-08-05-R — saveMedication verdict restated + BR-173 structural security finding
+
+- saveMedication TRACE VERDICT (restated per owner): unauthenticated reachability PROVEN (the whitelist
+  pass-through; the request reached the controller, never a 401); the write is blocked by ENVIRONMENT
+  (the dev unit's unconfigured prescription-number prefix), NOT by design — on a unit where the prefix
+  is configured, the same unauthenticated POST PERSISTS (the INSERT would run), and the controller
+  returns SUCCESS either way, so it would land silently. REAL VULNERABILITY WITH A COINCIDENTAL
+  MITIGATION on this dev DB.
+- BR-173 — AUTHENTICATION-GATE STRUCTURAL FINDING (own BR): rest-dispatcher-servlet-security.xml's
+  ONLY enforcing block — <http pattern="/**"> with intercept-url + resourceServerFilter — is COMMENTED
+  OUT; every security="none" declaration in that file is a NO-OP without it; the controllers carry no
+  @PreAuthorize; the sole authentication gate for ALL of /api/** (and every other path) is JwtTokenFilter
+  plus its 196-entry requestUrl.contains(...) substring whitelist (the list duplicated in the line-76
+  condition AND the else-if). Unauthenticated reachability of any whitelisted endpoint is PROVEN
+  (QF-2026-08-05-Q: saveMedication). The gate's effectiveness is exactly the whitelist's precision —
+  substring matching with broad fragments ("update/service", "opd/saveMedication", "patientRegistration",
+  "/br/", "/decrypt") + auth-exempt WRITE endpoints (kiosk/saveAndPay, update/service,
+  patientRegistration, deleteParticipants, ...) — see QF-2026-08-05-P.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

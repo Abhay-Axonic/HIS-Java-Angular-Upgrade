@@ -2588,4 +2588,16 @@ GET_VITAL_MASTER_TO_SYNC_BY_ID: org/unit predicates were inside a /* */ block ->
 ## BR-PENDING-diagnosis-gender-whitelist
 /api/opd/getDiagnosisByGenderId: JWT auth-exempt whitelist entry (JwtTokenFilter:98+389) + the query's org predicate commented + the org bind commented -> unauthenticated + unscoped diagnosis-dictionary read (reference data, not PHI; all three frontend callers are authenticated internal screens — GenericService attaches the token — entry STALE, BR-171 pattern). Fixed: both whitelist entries removed; query org predicate + DAO bind re-enabled; service rebinds org from VIS. Also hardened the filter: a missing Authorization header NPE'd (200-error-JSON instead of a clean 401) — null-guarded -> 401. Verified: no-token -> HTTP 401; authenticated -> org-scoped success. | HIS-WAR/.../filter/JwtTokenFilter.java + Entity/.../opd/coversheet/model/DiagnosisMapper.java + Global/.../coversheet/dao/DiagnosisMapperDaoImpl.java + service/DiagnosisMapperServiceImpl.java | Fixed on branch 2026-08-05, NOT merged
 
+
+## BR-173 — Authentication-gate structural finding (security architecture)
+rest-dispatcher-servlet-security.xml: the only enforcing <http pattern="/**"> block (intercept-url +
+resourceServerFilter) is COMMENTED OUT; every security="none" declaration is a no-op without it; no
+@PreAuthorize on the controllers; the SOLE authentication gate for all of /api/** is JwtTokenFilter with
+a 196-entry requestUrl.contains(...) substring whitelist (duplicated in two conditions). Unauthenticated
+reachability of any whitelisted endpoint is PROVEN by trace (QF-2026-08-05-Q: saveMedication — a write
+endpoint reachable without auth; persistence blocked only by the dev unit's unconfigured prefix — would
+persist in a configured environment). The whitelist includes auth-exempt WRITE endpoints
+(kiosk/saveAndPay, update/service, patientRegistration, deleteParticipants, saveMedication, ...).
+| HIS-WAR/.../filter/JwtTokenFilter.java + WEB-INF/rest-dispatcher-servlet-security.xml + web.xml | Logged 2026-08-05 (BR-173), NOT fixed
+
 <!-- ============ END OF MANIFEST — new BR entries append BEFORE this marker ============ -->
