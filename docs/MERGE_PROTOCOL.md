@@ -82,3 +82,24 @@ deployed + verified 2026-08-05 by the sex spec and the regression checker).
 ## Not in main after these merges (expected, correct)
 BR-162/163/164 (no fixes exist), BR-165 (scheduler, report-only), BR-168/169 (queued, not fixed),
 geo-cache class + cache track (census-only). Pushing main (ahead 15 of origin) is a separate owner decision.
+
+---
+
+## BR-173 merge — fix/br173-default-deny (authorization pending, added 2026-08-05 21:45 BST)
+
+Branch state at merge request:
+- Diff vs main = ONE application file: `legacy/HIS-WAR/src/main/java/com/param/filter/JwtTokenFilter.java`
+  (+174/-430). This session's governance docs (QA_FINDINGS QF-2026-08-05-AC, SESSION_LOG entry,
+  this section, DECISIONS_QUEUE.md) ride the branch per the CLAUDE.md docs exception (no
+  Maker-Checker needed; they document the verification, not application behavior).
+- Merge mechanics: `git merge --no-ff fix/br173-default-deny`. Zero conflict candidates (single file,
+  main has not touched JwtTokenFilter since the 45-entry removal merge 0e31ef06; verify with a
+  dry-run `--no-commit --no-ff` + abort per owner constraint 1 before resolving anything).
+- Post-merge proof (same order as constraint 3): regression checker on the current deployment (PASS
+  already confirmed 2026-08-05 against the branch filter) → rebuild from merged main → redeploy →
+  second regression run → six harness specs + four clinical live checks (token-gated, see
+  DECISIONS_QUEUE.md #2) → push.
+- OPEN CAVEAT for the owner's approval: QF-2026-08-05-AC / DECISIONS_QUEUE.md #1 — the
+  /HIS-WAR/webjars/ prefix covers a tree that does not exist in the ROOT-context dev deployment
+  (real webjar tree /webjars/** is 401, swagger-ui does not load; identical pre-rewrite, not a
+  regression). Approve the merge with the finding open, or bundle a decision on the prefix list.
