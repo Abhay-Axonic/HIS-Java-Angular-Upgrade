@@ -752,4 +752,26 @@ The "clinical" Class-2 candidates split into THREE states (declaration-level rea
 - Per owner: NOT removed on this branch (never in the approved 45; no scope creep on a removal
   branch). Carries to the next branch with the 30, after the gap reconciliation's findings.
 
+## QF-2026-08-05-AA — the copies' DRIFT is an exploitable auth asymmetry (recorded for the next branch)
+
+- /resources/ and deleteParticipants are exempt on the ELSE-IF path (no-headers path) but NOT on the
+  LINE-76 auth-block path. The same URL's auth outcome therefore depends on whether the request carries
+  userId/unitId headers: a caller OMITTING headers takes the exempt else-if path; a caller sending
+  headers lands in the line-76 token-check. Omitting headers is the shape an attacker uses by default.
+- This is an EXPLOITABLE ASYMMETRY, not a copy-consistency bookkeeping issue. The line-76 copy's list
+  must be brought in sync with the else-if's (or the duplication removed structurally) before the 30-entry
+  branch's removals — the asymmetry persists while one copy lags.
+
+## QF-2026-08-05-AB — the 196 was HAND-CURATED, not extracted (prep for the 30-entry branch)
+
+- The classification's 196-entry list is hand-written, not extracted from the filter. It does not match
+  the filter: 3 entries missing (/resources/, /views/, deleteParticipants), variant spellings
+  (e.g. /api/opd/saveMedication vs the filter's bare opd/saveMedication — both forms actually present),
+  and /api/opd/getMedicationHistoryList absent entirely.
+- Every bucket count, ranking, and removal decision this session was made against that list. BEFORE the
+  30-entry branch: (1) regenerate the entry list by EXTRACTION from the filter source, verified against
+  a known positive; (2) re-run the intent classification against the real list; (3) state how the
+  buckets change. The QF-U audit's 30 SAFE / 3 NOT_STALE verdicts were derived from the curated list and
+  need re-confirming against the extracted one.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
