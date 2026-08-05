@@ -1,8 +1,9 @@
 package com.param.filter;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
@@ -22,9 +23,158 @@ import com.param.security.config.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * BR-173 PHASE 2 — default-deny rewrite (owner-approved 2026-08-05, QF-AJ).
+ *
+ * Structure:
+ *   1. A request is public ONLY if its normalized URL is in PUBLIC_ALLOWLIST (the approved 83)
+ *      or matches one of the two narrow feedback path-variable patterns.
+ *   2. Everything else falls through to the existing token check (Bearer token validated against
+ *      the userId/unitId headers) — unchanged from the pre-rewrite filter.
+ *   3. Anything that fails both is 401. Fail closed.
+ *
+ * The old contains() whitelist chains (both copies) are removed entirely; no substring whitelist
+ * logic survives in this filter.
+ */
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
+
+	/**
+	 * The approved 83-entry exact-match allowlist (QF-AJ owner review 2026-08-05).
+	 * Ordered as the review list was: writes first, then PHI reads, reference/config, then static.
+	 * The stored forms are POST-normalization (host-stripped, query-stripped, trailing-slash-trimmed).
+	 */
+	private static final Set<String> PUBLIC_ALLOWLIST = new LinkedHashSet<>(List.of(
+		// WRITES
+		"/api/abdm/saveDetailsOfAbdm",
+		"/api/abdm/v3/updateStatus",
+		"/api/billing/kiosk/saveAndPay/future",
+		"/api/inPatientFeedback",
+		"/api/inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId",
+		"/api/inPatientFeedback/saveInPatientFeedback",
+		"/api/ipd/saveMyLatestMedicalSummaryCallBack",
+		"/api/mylife/sync/appointment/cancelorRescheduleAppointmentFromApp",
+		"/api/mylife/sync/savePatientThroughMylife",
+		"/api/opd/saveAIAppointmentInQueue",
+		"/api/outPatientFeedback",
+		"/api/outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId",
+		"/api/outPatientFeedback/saveOutPatientFeedback",
+		"/api/saveTwilioMsg",
+		"/checkEmailAvailability",
+		"/updatePatientRegistrationFromMyLife",
+		"/api/billing/kiosk/saveAndPay",
+		"/api/global/patientRegistration",
+		"/api/opd/appointment/check",
+		"/api/abdm/request/otp",
+		"/forgotPasswordGeneration",
+		"/otpVerification",
+		// PHI READS
+		"/api/global/patientTypeHeadSearchForAppointmentUniqueForNurseCheckIn",
+		"/api/abdm/dataPush",
+		"/api/abdm/getHiuDecryptedData",
+		"/api/opd/getAIAppointmentCount",
+		"/api/opd/patientDoc/fromMylife",
+		"/api/webappointment/getDetailsForBookAppointment",
+		"/api/global/patientTypeHeadSearchForAppointmentUnique",
+		"/api/billing/mylife/sync/appointment",
+		"/api/webappointment/getActivePrefixList",
+		"/getBillNoByPatient",
+		"/getBillReceiptBytesMyLife",
+		// REFERENCE / CONFIG
+		"/api/createOrganizationFromWeb",
+		"/ldapUserCredentialCheck",
+		"/api/global/getVideoConsultationLinkFromHIS",
+		"/HIS-WAR/configuration/security",
+		"/HIS-WAR/configuration/ui",
+		"/adt/getActivePrefixListForWebPage",
+		"/HIS-WAR/v2/api-docs",
+		"/LIS/global/getTotalLanguageMasterRecordActive",
+		"/adt/br",
+		"/adt/getActiveRelationListForWebPage",
+		"/adt/getListOfDocumentForBookView",
+		"/adt/getUnitByCredentials",
+		"/adt/organizationMasterList",
+		"/adt/userLogin",
+		"/api/doctorApp/getApplicationConfig",
+		"/api/getVideoataForNotification",
+		"/api/global/appoitments/doctors",
+		"/api/opd/coversheetInstructionListForBookView",
+		"/api/opd/getInvestigationsListForBookView",
+		"/api/opd/getMedicationHistoryListForBookView",
+		"/getOrderIdUnitSubscriptionPay",
+		"/resultUrl",
+		"/token/Doctor",
+		"/validationResultResponse",
+		// STATIC
+		"/HIS-WAR/api-ui",
+		"/HIS-WAR/images/favicon-16x16.png",
+		"/HIS-WAR/images/favicon-32x32.png",
+		"/HIS-WAR/swagger-resources",
+		"/HIS-WAR/swagger-ui.html",
+		"/HIS-WAR/webjars/springfox-swagger-ui/css/print.css",
+		"/HIS-WAR/webjars/springfox-swagger-ui/css/reset.css",
+		"/HIS-WAR/webjars/springfox-swagger-ui/css/screen.css",
+		"/HIS-WAR/webjars/springfox-swagger-ui/css/typography.css",
+		"/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans-Bold.ttf",
+		"/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans.ttf",
+		"/HIS-WAR/webjars/springfox-swagger-ui/images/logo_small.png",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/backbone-min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/handlebars-2.0.0.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/highlight.7.3.pack.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery-1.8.0.min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.ba-bbq.min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.slideto.min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.wiggle.min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/jsoneditor.min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/marked.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/swagger-oauth.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/lib/underscore-min.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/springfox.js",
+		"/HIS-WAR/webjars/springfox-swagger-ui/swagger-ui.min.js",
+		"/applicationConfiguration/screen-images"
+	));
+
+	/**
+	 * The two narrow anchored patterns for the feedback path-variable GETs — ONLY these two,
+	 * no general pattern facility. The exact 6-variable shapes from QF-AH/AI:
+	 *   /api/outPatientFeedback/{organizationId}/{unitId}/{patientId}/{visitType}/{visitTypeId}/{encounterId}
+	 *   /api/inPatientFeedback/{organizationId}/{unitId}/{patientId}/{visitType}/{visitTypeId}/{admissionId}
+	 */
+	private static final Pattern OPD_FEEDBACK_PATH = Pattern
+			.compile("^/api/outPatientFeedback/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+$");
+	private static final Pattern IPD_FEEDBACK_PATH = Pattern
+			.compile("^/api/inPatientFeedback/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+$");
+
+	/**
+	 * URL normalization applied BEFORE matching, in this order:
+	 *   1. host-strip — the caller may send the absolute form (e.g. http://host/HIS-WAR/api/...);
+	 *      the request URI is already host-less, but this makes the match immune to the form.
+	 *   2. query-strip — callers append query strings (?unitId=...); the match is against the path.
+	 *   3. trailing-slash-trim — callers and the allowlist disagree on the trailing slash
+	 *      (/adt/getActiveCountryList/ vs /adt/getActiveCountryList).
+	 * The allowlist was derived with exactly this normalization (QF-AH), so the stored entries are
+	 * the post-normalization forms.
+	 */
+	private static String normalizeUrl(String url) {
+		String u = url;
+		// 1. host-strip
+		int schemeEnd = u.indexOf("://");
+		if (schemeEnd >= 0) {
+			int pathStart = u.indexOf("/", schemeEnd + 3);
+			u = pathStart >= 0 ? u.substring(pathStart) : "";
+		}
+		// 2. query-strip
+		int queryStart = u.indexOf('?');
+		if (queryStart >= 0) {
+			u = u.substring(0, queryStart);
+		}
+		// 3. trailing-slash-trim
+		if (u.length() > 1 && u.endsWith("/")) {
+			u = u.substring(0, u.length() - 1);
+		}
+		return u;
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -64,223 +214,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 			}
 
-
-
 			Integer userId = request.getHeader("userId") != null ? Integer.valueOf(request.getHeader("userId")) : 0;
 			Integer unitId = request.getHeader("unitId") != null ? Integer.valueOf(request.getHeader("unitId")) : null;
 
+			// BR-173 PHASE 2 — default-deny: the allowlist is the ONLY public-by-design path
+			String normalizedUrl = normalizeUrl(requestUrl);
+			boolean isPublic = PUBLIC_ALLOWLIST.contains(normalizedUrl)
+					|| OPD_FEEDBACK_PATH.matcher(normalizedUrl).matches()
+					|| IPD_FEEDBACK_PATH.matcher(normalizedUrl).matches();
 
-  if (unitId != null && userId != null && authorizationHeader != null
-					&& !(requestUrl.contains("/adt/userLogin") || requestUrl.contains("/adt/organizationMasterList")
-					|| requestUrl.contains("/adt/getUnitByCredentials")
-					|| requestUrl.contains("/ldapUserCredentialCheck") || requestUrl.contains("/Report")
-					|| requestUrl.contains("/generateToken") || requestUrl.contains("/QR")
-					|| requestUrl.contains("/pathology/report") || requestUrl.contains("/RIS/RADIOLOGY")
-					|| requestUrl.contains("/api/billing/mylife/sync/appointment")
-					|| requestUrl.contains("/api/global/getVideoConsultationLinkFromHIS")
-					|| requestUrl.contains("/applicationConfiguration/screen-images")
-					|| requestUrl.contains("/api/mylife/sync/appointment/cancelorRescheduleAppointmentFromApp")
-					|| requestUrl.contains("/adt/discharge/dischargeSummaryCard")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/api/opd/getTemplateDataByCovTempId")
-					|| requestUrl.contains("/api/opd/coversheetInstruction")
-					|| requestUrl.contains("/api/opd/updateCoversheetInstructionStatus")
-					|| requestUrl.contains("/api/opd/getComplaintAppointment")
-					|| requestUrl.contains("/api/opd/getMasterListOfICPCSystemForCoversheet")
-					|| requestUrl.contains("/api/opd/updateComplaintAppointmentStatusToRemoveComplaint")
-					|| requestUrl.contains("/api/opd/saveFreeTexPatientDiagnosis")
-					|| requestUrl.contains("/api/opd/savePatientCancelledDiagnosis")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/getTemplateDataByCovTempId")
-					|| requestUrl.contains("/api/opd/getDailySlots")
-					|| requestUrl.contains("/api/opd/scheduleAppointment")
-					|| requestUrl.contains("/api/opd/updateFollowUpDateOfPatient")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/global/serviceMaster")
-					|| requestUrl.contains("/api/opd/saveInvestigation")
-					|| requestUrl.contains("/api/billing/bill/service/cancel")
-					|| requestUrl.contains("/api/opd/getTemplateDataByCovTempId")
-					|| requestUrl.contains("/api/common/getActiveInspectionMasterList")
-					|| requestUrl.contains("/api/globals/frequency")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/api/opd/saveMedication")
-					|| requestUrl.contains("/api/outPatientFeedback")
-					|| requestUrl.contains("/api/inPatientFeedback")
-					|| requestUrl.contains("/api/opd/getFrequencyList")
-					|| requestUrl.contains("/api/opd/saveJustificationForMedicationDelete")
-					|| requestUrl.contains("/api/opd/getOPDMedicationListById")
-					|| requestUrl.contains("/api/opd/medicationUpdate")
-					|| requestUrl.contains("/api/opd/getListOfVitalsByPatientIdForCoversheet")
-					|| requestUrl.contains("/api/opd/getLastEncounterDataOfPatientForWebAPP")
-					|| requestUrl.contains("/adt/getCookieDataForNewEMR")
-					|| requestUrl.contains("/adt/getPatientDetailsForWorklistForWebPage")
-					|| requestUrl.contains("/adt/getCookieDataForNewEMR")
-					|| requestUrl.contains("/api/opd/searchFreeTextComplaint")
-					|| requestUrl.contains("/api/opd/serchFreeTexPatientDiagnosis")
-					|| requestUrl.contains("/api/billing/unit/bill/Report")
-					|| requestUrl.contains("/adt/getListOfDocumentForBookView")
-					|| requestUrl.contains("/api/opd/getInvestigationsListForBookView")
-					|| requestUrl.contains("/api/opd/getMedicationHistoryList")
-					|| requestUrl.contains("/api/opd/getCurrentPatientFamilyHistoryForCoversheet")
-					|| requestUrl.contains("/api/opd/getCurrentAllergyPatientMapperForCoversheet")
-					|| requestUrl.contains("/api/opd/getCurrentPatientSurgicalHistoryForCoversheet")
-					|| requestUrl.contains("/br/")
-					|| requestUrl.contains("/resultUrl")
-					|| requestUrl.contains("/validationResultResponse")
-					|| requestUrl.contains("/api/opd/patientDoc/details")
-					|| requestUrl.contains("/api/unit/clinical/getDoctorFavouriteMedicationForCoversheet")
-					|| requestUrl.contains("/HIS-WAR/swagger-ui.html")
-					|| requestUrl.contains("/getBillNoByPatient")
-					|| requestUrl.contains("/getBillReceiptBytesMyLife")
-					|| requestUrl.contains("/updatePatientRegistrationFromMyLife")
-
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/typography.css")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/reset.css")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/screen.css")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery-1.8.0.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.slideto.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.wiggle.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/handlebars-2.0.0.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/underscore-min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/swagger-ui.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.ba-bbq.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/swagger-ui.html")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/backbone-min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jsoneditor.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/highlight.7.3.pack.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/marked.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/springfox.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/swagger-oauth.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/print.css")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-32x32.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-16x16.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-32x32.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-16x16.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-32x32.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-16x16.png")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/images/logo_small.png")
-
-					|| requestUrl.contains("/HIS-WAR/configuration/ui")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans-Bold.ttf")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans.ttf")
-
-					// || requestUrl.contains("/HIS-WAR/api-ui")
-
-					|| requestUrl.contains("/HIS-WAR/swagger-resources")
-
-					|| requestUrl.contains("/HIS-WAR/v2/api-docs")
-
-					|| requestUrl.contains("/HIS-WAR/configuration/security")
-					|| requestUrl.contains("/getOrderIdUnitSubscriptionPay")
-					|| requestUrl.contains("/unit/subcription")
-					|| requestUrl.contains("/token/Doctor/")
-					|| requestUrl.contains("/checkParti/")
-					|| requestUrl.contains("/checkParti/")
-					|| requestUrl.contains("/api/saveTwilioMsg")
-					|| requestUrl.contains("/api/getVideoataForNotification")
-					|| requestUrl.contains("/api/abdm/request/otp")
-					|| requestUrl.contains("/api/abdm/saveDetailsOfAbdm")
-					|| requestUrl.contains("/api/abdm/dataPush")
-					|| requestUrl.contains("/api/abdm/getHiuDecryptedData")
-					|| requestUrl.contains("/api/global/growthDevelopmentalMilestones/patient")
-					|| requestUrl.contains("/api/global/growthDevelopmentalMilestones/detail")
-					|| requestUrl.contains("/checkEmailAvailability")
-					|| requestUrl.contains("/otpVerification")
-					|| requestUrl.contains("/forgotPasswordGeneration")
-					|| requestUrl.contains("/unit/org/")
-					|| requestUrl.contains("/adt/getActivePrefixListForWebPage")
-					|| requestUrl.contains("/adt/getActiveRelationListForWebPage")
-					|| requestUrl.contains("/adt/getActiveCountryList/")
-					|| requestUrl.contains("/adt/getActiveSpecialityList")
-					|| requestUrl.contains("/api/global/getUserListForStore/")
-					|| requestUrl.contains("/api/global/webappointment/getDoctors")
-					|| requestUrl.contains("/api/webappointment/getActivePrefixList/")
-					|| requestUrl.contains("/api/doctorApp/getApplicationConfig/")
-					|| requestUrl.contains("/api/webappointment/getDetailsForBookAppointment")
-					|| requestUrl.contains("/adt/getSpecialityListByDoctorIdByOrg")
-					|| requestUrl.contains("/adt/getActiveStateListByCountryId")
-					|| requestUrl.contains("/adt/getActiveDistrictListByStateId")
-					|| requestUrl.contains("/adt/getAreaByCityId")
-					|| requestUrl.contains("/adt/getCountryById")
-					|| requestUrl.contains("/adt/getNationalityByCountryId")
-		  			|| requestUrl.contains("/adt/getActiveStateList")
-		  			|| requestUrl.contains("/adt/getDistrictMasterList")
-		  			|| requestUrl.contains("/adt/getCityMasterList")
-		  			|| requestUrl.contains("/adt/getAreaMasterList")
-		  			|| requestUrl.contains("/adt/getActiveCityListByDistrictId")
-					|| requestUrl.contains("/api/global/appoitments/doctors")
-					|| requestUrl.contains("/api/global/appointments/doctorsForWebUser")
-					|| requestUrl.contains("/api/abdm/v3/updateStatus")
-		 			|| requestUrl.contains("/getSerivceRateGlobalList")
-		            || requestUrl.contains("/api/createOrganizationFromWeb")
-		            || requestUrl.contains("/LIS/global/getTotalLanguageMasterRecordActive/")
-		            || requestUrl.contains("/api/global/glablServiceMaster")
-		  			|| requestUrl.contains("opd/saveMedication")
-		  			|| requestUrl.contains("update/service")
-				    || requestUrl.contains("generateTokenForWebUser")
-		  			|| requestUrl.contains("api/opd/patientDoc/saveAnalyzedReport")
-		  			|| requestUrl.contains("/api/billing/service/preBilling/orderedServicesByMobileNoForWebUser")
-		  			|| requestUrl.contains("/adt/getAppointmentsByPatientId")
-		  			|| requestUrl.contains("/api/mylife/sync/savePatientThroughMylife")
-
-		  			|| requestUrl.contains("/api/opd/patientDoc/fromMylife")
-
-
-					  || requestUrl.contains("api/opd/global/patientTypeHeadSearchForSelfRegistration")
-					  || requestUrl.contains("api/opd/appointment/check")
-					  || requestUrl.contains("api/global/patientTypeHeadSearchForAppointmentUnique")
-					  || requestUrl.contains("api/billing/kiosk/saveAndPay")
-					  || requestUrl.contains("adt/getActivePrefixList")
-		              || requestUrl.contains("adt/getPrefixMasterList")
-		              || requestUrl.contains("api/global/patientRegistration")
-
-		  || requestUrl.contains("api/global/patientTypeHeadSearchForSelfRegistration")
-
-		  || requestUrl.contains("api/global/getAvailableDoctorBySpeciality")
-
-		  			|| requestUrl.contains("/api/ipd/saveMyLatestMedicalSummaryCallBack")
-
-
-		  || requestUrl.contains("/api/opd/saveAIAppointmentInQueue")
-
-		  || requestUrl.contains("/api/opd/getAIAppointmentCount")
-
-
-
-
-					
-			)) {
+			if (isPublic) {
+				chain.doFilter(request, response);
+			} else if (unitId != null && userId != null && authorizationHeader != null) {
+				// the existing token check — unchanged from the pre-rewrite filter
 				String username = null;
 				String token = null;
 
@@ -305,224 +251,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				} else {
 					System.out.println(
 							"UNAUTHORIZED ##" + requestUrl + "##" + splitUrl.length + "##" + userId + "##" + unitId);
-					if(requestUrl.contains(("/views/"))) {
-						response.setStatus(HttpStatus.OK.value());
-					}
-					else{
-						response.setStatus(HttpStatus.UNAUTHORIZED.value());
-					}
+					response.setStatus(HttpStatus.UNAUTHORIZED.value());
 				}
 
-			} else if (splitUrl.length <= 2 || (requestUrl.contains("/resources/")) || (requestUrl.contains("/views/"))
-					|| (requestUrl.contains("/adt/userLogin") || requestUrl.contains("/adt/organizationMasterList")
-					|| requestUrl.contains("/adt/getUnitByCredentials")
-					|| requestUrl.contains("/ldapUserCredentialCheck") || requestUrl.contains("/Report")
-					|| requestUrl.contains("/generateToken") || requestUrl.contains("/QR")
-					|| requestUrl.contains("/pathology/report") || requestUrl.contains("/RIS/RADIOLOGY")
-					|| requestUrl.contains("/api/billing/mylife/sync/appointment")
-					|| requestUrl.contains("/applicationConfiguration/screen-images")
-					|| requestUrl.contains("/api/mylife/sync/appointment/cancelorRescheduleAppointmentFromApp")
-					|| requestUrl.contains("/adt/discharge/dischargeSummaryCard")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/api/opd/getTemplateDataByCovTempId")
-					|| requestUrl.contains("/api/opd/coversheetInstruction")
-					|| requestUrl.contains("/api/opd/updateCoversheetInstructionStatus")
-					|| requestUrl.contains("/api/opd/getComplaintAppointment")
-					|| requestUrl.contains("/api/opd/getMasterListOfICPCSystemForCoversheet")
-					|| requestUrl.contains("/api/opd/updateComplaintAppointmentStatusToRemoveComplaint")
-					|| requestUrl.contains("/api/opd/saveFreeTexPatientDiagnosis")
-					|| requestUrl.contains("/api/opd/savePatientCancelledDiagnosis")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/getTemplateDataByCovTempId")
-					|| requestUrl.contains("/api/opd/getDailySlots")
-					|| requestUrl.contains("/api/opd/scheduleAppointment")
-					|| requestUrl.contains("/api/opd/updateFollowUpDateOfPatient")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/global/serviceMaster")
-					|| requestUrl.contains("/api/opd/saveInvestigation")
-					|| requestUrl.contains("/api/billing/bill/service/cancel")
-					|| requestUrl.contains("/api/opd/getTemplateDataByCovTempId")
-					|| requestUrl.contains("/api/common/getActiveInspectionMasterList")
-					|| requestUrl.contains("/api/globals/frequency")
-					|| requestUrl.contains("/api/opd/getCoversheetAsTemaplateList")
-					|| requestUrl.contains("/api/opd/saveTemplateListDataForNewEMR")
-					|| requestUrl.contains("/api/opd/saveMedication")
-					|| requestUrl.contains("/api/opd/getFrequencyList")
-					|| requestUrl.contains("/api/outPatientFeedback")
-					|| requestUrl.contains("/api/inPatientFeedback")
-					|| requestUrl.contains("/api/opd/saveJustificationForMedicationDelete")
-					|| requestUrl.contains("/api/opd/getOPDMedicationListById")
-					|| requestUrl.contains("/api/opd/medicationUpdate")
-					|| requestUrl.contains("/api/opd/getListOfVitalsByPatientIdForCoversheet")
-					|| requestUrl.contains("/api/opd/getLastEncounterDataOfPatientForWebAPP")
-					|| requestUrl.contains("/adt/getCookieDataForNewEMR")
-					|| requestUrl.contains("/adt/getPatientDetailsForWorklistForWebPage")
-					|| requestUrl.contains("/adt/getCookieDataForNewEMR")
-					|| requestUrl.contains("/api/opd/searchFreeTextComplaint")
-					|| requestUrl.contains("/api/opd/serchFreeTexPatientDiagnosis")
-					|| requestUrl.contains("/api/billing/unit/bill/Report")
-					|| requestUrl.contains("/adt/getListOfDocumentForBookView")
-					|| requestUrl.contains("/api/opd/getInvestigationsListForBookView")
-					|| requestUrl.contains("/api/opd/getMedicationHistoryList")
-					|| requestUrl.contains("/api/opd/getCurrentPatientFamilyHistoryForCoversheet")
-					|| requestUrl.contains("/api/opd/getCurrentAllergyPatientMapperForCoversheet")
-					|| requestUrl.contains("/api/opd/getCurrentPatientSurgicalHistoryForCoversheet")
-					|| requestUrl.contains("/api/global/getVideoConsultationLinkFromHIS")
-					|| requestUrl.contains("/api/opd/patientDoc/details")
-					|| requestUrl.contains("/api/unit/clinical/getDoctorFavouriteMedicationForCoversheet")
-					|| requestUrl.contains("/br/")
-					|| requestUrl.contains("/resultUrl")
-					|| requestUrl.contains("/validationResultResponse")
-					|| requestUrl.contains("/getBillNoByPatient")
-					|| requestUrl.contains("/getBillReceiptBytesMyLife")
-					|| requestUrl.contains("/updatePatientRegistrationFromMyLife")
-
-
-					|| requestUrl.contains("/HIS-WAR/swagger-ui.html")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/typography.css")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/reset.css")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/screen.css")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery-1.8.0.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.slideto.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.wiggle.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/handlebars-2.0.0.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/underscore-min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/swagger-ui.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jquery.ba-bbq.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/swagger-ui.html")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/backbone-min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/jsoneditor.min.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/highlight.7.3.pack.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/marked.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/springfox.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/lib/swagger-oauth.js")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/css/print.css")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-32x32.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-16x16.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-32x32.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-16x16.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-32x32.png")
-
-					|| requestUrl.contains("/HIS-WAR/images/favicon-16x16.png")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/images/logo_small.png")
-
-					|| requestUrl.contains("/HIS-WAR/configuration/ui")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans-Bold.ttf")
-
-					|| requestUrl.contains("/HIS-WAR/webjars/springfox-swagger-ui/fonts/DroidSans.ttf")
-
-					// || requestUrl.contains("/HIS-WAR/api-ui")
-
-					|| requestUrl.contains("/HIS-WAR/swagger-resources")
-
-					|| requestUrl.contains("/HIS-WAR/v2/api-docs")
-
-					|| requestUrl.contains("/HIS-WAR/configuration/security")
-					|| requestUrl.contains("/getOrderIdUnitSubscriptionPay")
-					|| requestUrl.contains("/unit/subcription")
-					|| requestUrl.contains("/token/Doctor/")
-					|| requestUrl.contains("/checkParti/")
-					|| requestUrl.contains("/api/saveTwilioMsg")
-					|| requestUrl.contains("/api/getVideoataForNotification")
-					|| requestUrl.contains("deleteParticipants")
-					|| requestUrl.contains("/api/abdm/request/otp")
-					|| requestUrl.contains("/api/abdm/saveDetailsOfAbdm")
-					|| requestUrl.contains("/api/abdm/dataPush")
-					|| requestUrl.contains("/api/abdm/getHiuDecryptedData")
-					|| requestUrl.contains("/api/global/growthDevelopmentalMilestones/patient")
-					|| requestUrl.contains("/api/global/growthDevelopmentalMilestones/detail")
-					|| requestUrl.contains("/checkEmailAvailability")
-					|| requestUrl.contains("/otpVerification")
-					|| requestUrl.contains("/forgotPasswordGeneration")
-					|| requestUrl.contains("/unit/org/")
-					|| requestUrl.contains("/adt/getActivePrefixListForWebPage")
-					|| requestUrl.contains("/adt/getActiveRelationListForWebPage")
-					|| requestUrl.contains("/adt/getActiveCountryList/")
-					|| requestUrl.contains("/adt/getActiveCountryList/")
-					|| requestUrl.contains("/adt/getActiveSpecialityList")
-					|| requestUrl.contains("/api/global/getUserListForStore/")
-					|| requestUrl.contains("/api/global/webappointment/getDoctors")
-					|| requestUrl.contains("/api/webappointment/getActivePrefixList/")
-					|| requestUrl.contains("/api/doctorApp/getApplicationConfig/")
-					|| requestUrl.contains("/api/webappointment/getDetailsForBookAppointment")
-					|| requestUrl.contains("/adt/getSpecialityListByDoctorIdByOrg")
-				    || requestUrl.contains("/adt/getActiveStateListByCountryId")
-				    || requestUrl.contains("/adt/getActiveDistrictListByStateId")
-				    || requestUrl.contains("/adt/getAreaByCityId")
-				    || requestUrl.contains("/adt/getCountryById")
-				    || requestUrl.contains("/adt/getNationalityByCountryId")
-				    || requestUrl.contains("/adt/getActiveStateList")
-				    || requestUrl.contains("/adt/getDistrictMasterList")
-				    || requestUrl.contains("/adt/getCityMasterList")
-				    || requestUrl.contains("/adt/getAreaMasterList")
-				    || requestUrl.contains("/adt/getActiveCityListByDistrictId")
-				    || requestUrl.contains("/api/global/appoitments/doctors")
-				    || requestUrl.contains("/api/global/appointments/doctorsForWebUser")
-					|| requestUrl.contains("/api/abdm/v3/updateStatus")
-		    		|| requestUrl.contains("/getSerivceRateGlobalList")
-		            || requestUrl.contains("/api/createOrganizationFromWeb")
-		  			|| requestUrl.contains("/LIS/global/getTotalLanguageMasterRecordActive/")
-		            || requestUrl.contains("/api/global/glablServiceMaster")
-		  			|| requestUrl.contains("opd/saveMedication")
-		  			|| requestUrl.contains("update/service")
-		  			|| requestUrl.contains("generateTokenForWebUser")
-		  			|| requestUrl.contains("api/opd/patientDoc/saveAnalyzedReport")
-                    || requestUrl.contains("/api/billing/service/preBilling/orderedServicesByMobileNoForWebUser")
-                    || requestUrl.contains("/adt/getAppointmentsByPatientId")
-		            || requestUrl.contains("/api/mylife/sync/savePatientThroughMylife")
-		            || requestUrl.contains("/api/opd/patientDoc/fromMylife")
-		  || requestUrl.contains("/api/opd/patientDoc/fromMylife")
-
-
-
-		  || requestUrl.contains("api/opd/global/patientTypeHeadSearchForSelfRegistration")
-		  || requestUrl.contains("api/opd/appointment/check")
-		  || requestUrl.contains("api/global/patientTypeHeadSearchForAppointmentUnique")
-		  || requestUrl.contains("api/billing/kiosk/saveAndPay")
-		  || requestUrl.contains("adt/getActivePrefixList")
-		  || requestUrl.contains("adt/getPrefixMasterList")
-
-		  || requestUrl.contains("api/global/patientRegistration")
-		  || requestUrl.contains("api/global/patientTypeHeadSearchForSelfRegistration")
-
-		  || requestUrl.contains("api/global/getAvailableDoctorBySpeciality")
-
-		  || requestUrl.contains("/api/ipd/saveMyLatestMedicalSummaryCallBack")
-
-		  || requestUrl.contains("/api/opd/saveAIAppointmentInQueue")
-
-		  || requestUrl.contains("/api/opd/getAIAppointmentCount")
-
-			)) {
-				chain.doFilter(request, response);
 			} else {
 				System.out.println(
 						"UNAUTHORIZED ##" + requestUrl + "##" + splitUrl.length + "##" + userId + "##" + unitId);
