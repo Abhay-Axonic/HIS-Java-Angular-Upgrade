@@ -2514,3 +2514,18 @@ All 3 screens confirmed working in the live review environment (genuine legacy l
 - **couponTemplateMaster:** load, create with discount detail row, edit (Hibernate identity collision fixed via `sessionFactory.getCurrentSession().merge()`; BR-157 ownership check surfaced the latent bug), toggle, duplicate-name check, decimal percentage edit — all confirmed.
 - **multicounterPackage:** load, search, toggle — all confirmed.
 Batch closed. Rebuild branch held for final merge decision (10 commits ahead of main after the BR-157/158/159 merge: BR-160, BR-161+rebuild, 8 Step-6 fixes).
+
+## BR-166 — priority master list: org filter commented out in the entity query while the DAO binds orgId (live 500 + latent cross-tenant read) — fixed on fix/five-screens-org-trust, NOT merged (2026-08-05)
+
+**Pre-fix code:** `GET_PRIORITY_MASTER_LIST` in `legacy/Entity/.../global/model/PriorityMaster.java` had the org condition commented out (`/*+ " WHERE pc.organizationId=:orgId "*/`) while `PriorityMasterDaoImpl.getPriorityMasterList` calls `.setInteger("orgId", ...)`.
+**Live shape (refuted the assumed leak):** the endpoint does NOT return all tenants' rows — it **500s on every call**. Tomcat log 2026-08-05 10:02:52 (verbatim): `ERROR: com.param.global.org.common.dao.PriorityMasterDaoImpl - getPriorityMasterList failed / java.lang.IllegalArgumentException: Parameter orgId does not exist as a named parameter in [SELECT pc.priorityId as id, ... FROM Priority...` — Hibernate rejects the bind to the commented-out placeholder, the DAO catch returns ERROR, HTTP 500. **Latent leak:** if the bind were ever dropped, the unscoped query would return all tenants' rows — the org-999 victim (id 99905, `VICTIM-PRIORITY-999`) would be exposed to every tenant.
+**Repair (commit 6e6f845b):** filter re-enabled + `AND pc.unitId=:unitId` added; DAO binds verified org+unit; ownership guards on update/toggle; create binds verified org+unit (was DTO-wins). Live proof NOT captured post-fix (batch not yet deployed).
+
+## BR-167 — religion: active list never wired for org (live cross-tenant read leak) + unscoped dup-checks (live existence oracle) — fixed on fix/five-screens-org-trust, NOT merged (2026-08-05)
+
+**Pre-fix code:** `ReligionMasterServiceImpl.getActiveReligionList()` takes **no org parameter at all**; `GET_ACTIVE_RELIGION_LIST` = `WHERE religion.status='A'` only. `GET_RELIGION_LIST_BY_NAME` and `GET_RELIGION_LIST_BY_NAME_NOT_ID` = desc/id conditions with **no org**.
+**Live proof — read leak (captured 2026-08-05, pre-deploy):** GET `/adt/getActiveReligionList` with an org-1 session (real JWT) returned **6 rows including `{"id":99903,"desc":"Victim Religion 999",...}`** — the org-999 victim row is in the org-1 session's response (psql pre-state: `99903 | VICTIM-RELIGION-999 | ... | 999`). BR-162-class unconditional read.
+**Live proof — existence oracle (captured 2026-08-05, pre-deploy):** POST `/adt/saveReligionMaster` with `{"desc":"Victim Religion 999",...,"organizationId":1}` returned **`{"status":"error","message":"Already Exists."}`** — the org-1 session learned that a name held only by org-999's victim exists (the unscoped dup-check matched the other tenant's row). No write occurred (short-circuit).
+**Repair (commit 567a59d2):** DAO `getActiveReligionList` signature gains `Integer orgId`; the no-arg service method binds the JWT-verified org internally (controller untouched); all four named queries org-scoped. Live proof NOT captured post-fix (batch not yet deployed).
+
+---
