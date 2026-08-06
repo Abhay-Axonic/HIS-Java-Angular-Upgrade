@@ -1506,4 +1506,17 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   load-time calls too.
 - Status: OPEN — pattern refinement pending on the two pilots.
 
+## QA NOTE — the mechanical-rewrite near-miss: `if(!storeReady() == null)` guards that never fire, caught by a count-check — 2026-08-06
+
+- During the store-accessor refinement, a regex-based swap across 13 gate sites produced
+  `if(!$rootScope.storeReady() == null){ return; }` — the retained `== null` makes the condition
+  ALWAYS-FALSE (a boolean is never null), so every swapped guard silently stopped firing and the
+  store-scoped calls would have fired unconditionally — the exact inverse of the intended gate.
+- **Caught by a count-check before the build** (`storeReady()` occurrences vs the expected 12),
+  not by any runtime signal. Fixed to the correct shape before commit.
+- The class: a mechanical rewrite that silently produces never-firing guards is the same shape as
+  every other check-that-cannot-fail-the-way-it-claims caught today. The count-check is what saved
+  it — the verification pattern (count + shape assertions on mechanical rewrites, before the build)
+  is now part of the gate-change discipline.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
