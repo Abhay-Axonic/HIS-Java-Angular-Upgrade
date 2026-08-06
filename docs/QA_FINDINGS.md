@@ -1699,4 +1699,21 @@ gates (5/7/5/5/2/5). node --check clean; 0 raw parses; 29/29.
 - NOTE: addNewPOController matches pre-existing ANGULAR_PENDING_FINDINGS item 2 (route/controller
   name disconnect, addItemPOCreation vs addItemPO) — untouched, logged in the cycle report.
 
+## QF-2026-08-06-G — store-accessor campaign pb4 (procurement consignment+loanInOut): VERIFIED live; same-session probe NOTE recorded (advisory, Step 6)
+
+Batch pb4 (fix/store-accessor-campaign-pb4, cumulative off pb3): 7 screens (addNewConsignmentInward,
+addNewConsignmentOutward, addNewConsignmentPOCreation, addNewLoanIn, addNewLoanInOut, addNewLoanOut,
+addNewLoanOutReceive). 7 inline-comparison deref sites converted (2 guarded variants); 30 gates
+(4/4/3/5/5/4/5). node --check clean x7; 0 raw parses; 30/30.
+
+- FIRE-TEST: all 7 states, both phases CLEAN (negative = 0 pre-pick store-scoped calls; positive =
+  calls fire post-pick). Same-session probe on addNewConsignmentInward: NOTE (a primary action
+  button WAS clicked but 0 API calls in the 4s window — the button is validation/modal-gated in
+  the probe context; the probe's advisory explicitly assigns this to Step 6 click-through). NOT a
+  gate failure: the authoritative phases are clean and the probe's PASS/NOTE/SKIP semantics are
+  advisory by design.
+- Restore used five per-directory cp commands (the pb3 multi-destination-cp lesson applied);
+  drift clean (mpesa extra only).
+- Procurement family COMPLETE: 25 screens, 109 gates across pb1-pb4.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
