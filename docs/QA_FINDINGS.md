@@ -1595,4 +1595,26 @@ contract's "write code on branches" permission, same pattern + same verification
   gated parses) + 1 GUARDED. Remaining batch plan: b3 addNew cluster (9), b4 upload/issue+dashboards
   (7), b5 procurement (~21), b6 asset (~10), b7 nursing+pharmacy remainder (~10), b8 dashboards.
 
+## QF-2026-08-07-C — store-accessor campaign batch 4: VERIFIED live (7 screens; 1 positive-phase 500 traced to drift); campaign total 25 screens
+
+Batch 4 (fix/store-accessor-campaign-b4): 7 Inventory upload/issue screens (addNewScrapRequest,
+addNewStoreIndenting, addDepartmentConsumption, issueListDirectIssue, storeStockDashboard,
+uploadStockApproval, uploadStockDetails). Supervisor-direct (Claude Code OAuth-blocked).
+
+- 7 derefs converted (2 direct-assignment + 5 inline-comparison hoists -> $rootScope.getStoreObj()
+  null-safe). 26 fire-time storeReady() gates (per-file 4/1/5/4/4/2/6); pure-UI
+  SetOldValueAssetType + list-only PopulateDropdowns correctly NOT gated. node --check clean x7;
+  0 raw parses; 26/26 counts (commit ee535a3e).
+- FIRE-TEST: NEGATIVE phase all 7 screens 0 pageerrors/5xx/4xx/no literal (Q1+Q2 verified).
+  POSITIVE phase 6/7 clean; storeStockDashboard's load-time search 500s — traced in catalina.out
+  to DRIFT ITEM #4: `column stock.out_qty does not exist` (StoreStockController
+  searchdatewisezerowithstock). NOT a gate failure: the negative phase proved the gates (0 pre-pick
+  calls) and the positive phase proved non-inertness (the call fires post-pick); the backend 500s
+  on the schema-incomplete dev DB. Drift items now logged: (1) billing.m_pos_machine_device_master,
+  (2) sales1_.cop, (3) issue0_.infusion_tolal_volume, (4) stock.out_qty.
+- Suite on the b4 deployment: rate-limit 10/10, regressions PASS (43/43). Deployed frontend
+  RESTORED to main (25 files); drift check = mpesa extra only.
+- Campaign total: 25 screens converted and live-verified across 4 branches
+  (b1 pharmacy 6, b2 stock 6, b3 addNew 6, b4 upload/issue 7), all awaiting owner Rule 9b.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
