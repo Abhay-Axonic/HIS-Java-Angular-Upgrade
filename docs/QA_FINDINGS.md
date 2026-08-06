@@ -1175,4 +1175,26 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   all four 404'd before the rewrite as well. The app has been shipping dead script tags. No action —
   the filter must not be made to mask them, and the fix belongs to the app's asset audit.
 
+## QF-2026-08-05-AE — BR-174 scoped: bookView is NOT an unauthenticated PHI gap (retraction logged)
+
+- **The stronger claim is RETRACTED, and it originated with the user** (twelfth pattern-pass
+  correction; the first where the bad pass was on the user's side): the bookView family was read
+  as "pre-login route" off a route-config classification and escalated as potentially the most
+  serious finding of the project. The load test overturned it.
+- **BR-174 scope (as recorded):** post-login org-trust on the bookView endpoints — caller-
+  controlled org/unit params (QF-AA class). NOT an unauthenticated PHI read. The 25 bookView
+  endpoints are DENY'd by the filter (Layer 2) and unreachable pre-login (clean-context load of
+  #/bookView lands on the login via the encounterQueueManagement permissions-resolve crash ->
+  $urlRouterProvider.otherwise("/login")). Nothing added to the allowlist.
+- **Lazy-fetch sweep classification DISCARDED (Rule-10 control failure):** the load-test method
+  could not distinguish a known-public route from a known-gated one — every route (redirects AND
+  URL-staying states, incl. #/selfRegistrationdemo and #/selfRegistrationhome) rendered the login
+  form with no session. The shell gate overrides all routes in this deployment. Per the user's
+  condition, the ~40-gap classification was discarded, not kept.
+- **Separate finding (the kiosk flow is already broken here, unrelated to the filter):** the
+  selfRegistrationdemo state's templateUrl (views/OPD/self-registrationdemo.html) is ABSENT on
+  disk (QF-AD class); the loginController navigates only post-login destinations (dashboard/home);
+  the kiosk entry routes render the login with no session. The kiosk flow is not reachable in this
+  deployment with no session — a pre-existing break, not a filter regression.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
