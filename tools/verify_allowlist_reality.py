@@ -77,6 +77,9 @@ DENY_SAMPLES = [
     # pattern-denials (no named pre-login caller)
     "/api/global/getVideoConsultationLinkFromHIS/abc123",
     "/LIS/global/getTotalLanguageMasterRecordActive/1/1",
+    # M-Pesa callbacks — controller removed (abandoned-in-baseline); must now DENY
+    "/Billing/resultUrl",
+    "/Billing/validationResultResponse",
     # generic API paths
     "/api/unit/applicationConfiguration/billing/orgId/1/unitId/1",
     "/api/billing/unit/bill/Report/1/1",

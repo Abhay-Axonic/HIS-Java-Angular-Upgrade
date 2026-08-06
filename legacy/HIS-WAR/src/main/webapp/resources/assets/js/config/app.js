@@ -20480,12 +20480,6 @@ angular.module('myApp').config(['$stateProvider', '$urlRouterProvider','growlPro
 				 * controller: "bloodIssueAcceptanceWorklistController" })
 				 */
 
-				.state('mpesaApplicationConfiguration', {
-					 url: '/mpesaApplicationConfiguration',
-					 templateUrl: 'views/master/GlobalMaster/mpesa-application-configuration.html',
-					 controller: "mpesaApplicationConfigurationController",
-					 title: 'Bedside Investigations Master',
-				})
 				.state('departmentStoreMapper', {
 					 url: '/departmentStoreMapper',
 					 templateUrl: 'views/master/UnitMaster/assetManagement/department-store-mapper.html',

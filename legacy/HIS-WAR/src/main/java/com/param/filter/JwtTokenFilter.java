@@ -44,13 +44,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 * The exact-match allowlist (BR-173 Phase 2 + the 2026-08-06 allowlist audit).
 	 * Ordered: writes first, then PHI reads, reference/config, then static.
 	 * The stored forms are POST-normalization (host-stripped, query-stripped, trailing-slash-trimmed).
-	 * COMPOSITION: 48 exact entries (44 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
+	 * COMPOSITION: 46 exact entries (42 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
 	 * Every exact form here was audit-verified against its controller's class-level
 	 * @RequestMapping + method mapping AND the form a real caller produces (the
 	 * 2026-08-06 audit corrected 18 entries: 9 class-prefix-dropped forms corrected,
 	 * 3 pattern-needed forms moved to anchored patterns, 2 redundant colon-literals
 	 * removed, the feedback base forms removed, 8 never-resolving /HIS-WAR/ swagger/
-	 * config entries dropped, 3 no-pre-login-caller entries sent to DENY).
+	 * config entries dropped, 3 no-pre-login-caller entries sent to DENY). The two
+	 * /Billing/* M-Pesa callback entries were removed 2026-08-06 with the
+	 * abandoned-in-baseline M-Pesa controller (fix/dead-code-removal) — the callbacks
+	 * no longer resolve anywhere; the M-Pesa DAO's live methods (validateMpesaTrancastion,
+	 * updateCCAvenue) are not web-allowlisted and need no exemption.
 	 */
 	private static final Set<String> PUBLIC_ALLOWLIST = new LinkedHashSet<>(List.of(
 		// WRITES
@@ -98,8 +102,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			"/api/opd/coversheetInstructionListForBookView",
 			"/api/opd/getMedicationHistoryListForBookView",
 			"/getOrderIdUnitSubscriptionPay",
-			"/Billing/resultUrl",
-			"/Billing/validationResultResponse",
 		// LOGIN (exact — the Duo second-factor fallback, loginController.js:542;
 		// in-memory state only, no DB write; PHASE 6: rate-limit with the other
 		// credential endpoints)
