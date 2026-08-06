@@ -84,6 +84,7 @@ angular
 							
 							 $scope.searchNewWOItemList= [];
 								$scope.getListNewWOList = function () {
+								if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT) — fire-test caught this load-time call (the 4 sibling files' getListNewWOList is commented-out; THIS one is live)
 									 $scope.searchNewWOItemList= [];
 										var data = {};
 										data.orgId= $scope.orgId;
