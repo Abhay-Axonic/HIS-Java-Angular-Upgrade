@@ -1399,4 +1399,19 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   call sites — the login-page branding images were never loaded; the live screen-images GETs are the
   post-login screens' calls, unaffected).
 
+## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
+
+- web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
+  **JwtTokenFilter**), cors. `RequestWrapperFilter` (com.param.filter, an OncePerRequestFilter that
+  wraps the request in the com.param.exception ContentCachingRequestWrapper) exists on disk and is
+  wired NOWHERE — it has never run in this deployment. The "requestWrap" name + the written-but-
+  unwired wrapper class suggest the original design intended requestWrap = the body-caching wrapper
+  with JwtTokenFilter as a separate auth filter; the current mapping conflates them. Which is
+  intended is unresolved (no git evidence beyond the baseline). What depends on the cached body
+  today: NOTHING — JwtTokenFilter reads no body (path-based allowlist); the controllers read the
+  normal stream; the 6A RateLimitFilter self-wraps its own copy. The miswire is latent, not
+  breaking. No fix per owner instruction; a future cleanup (register RequestWrapperFilter before
+  rateLimit + map JwtTokenFilter under its own name) is the resolution if the wrapper is ever
+  needed (e.g. a filter that must inspect request bodies pre-controller).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
