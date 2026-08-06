@@ -25,11 +25,8 @@ angular
 									$state.go('login');
 									return;
 								}
-								var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-								if(cookieObjectStore==undefined){
-									$rootScope.storePopup();
-									angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
-								}
+								var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor pilot: null-safe parse + popup trigger, one owner
+
 								
 								$rootScope.loginpage = true;
 								$scope.LISDynamicLabel = "Machine ";
@@ -44,7 +41,7 @@ angular
 								$scope.searchKeyword;
 								$scope.commonListCount;
 								
-								$scope.storeId = cookieObjectStore.storeId;
+								$scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined; // store-accessor pilot: null-safe (the accessor above owns the parse + popup trigger)
 							  	$scope.unitId = cookieObject.unitId;
 								$scope.organizationId = cookieObject.organizationId;
 								$scope.userId = cookieObject.userId;
@@ -174,6 +171,7 @@ angular
 							$scope.init();
 							
 							$scope.getAssetDetailsByCriteria = function () {
+								if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
 								$scope.AssetDetailsByCriteria.length = 0;
 								var month = $scope.pmRequestObj.month;
 								var year = $scope.pmRequestObj.year;
@@ -241,6 +239,7 @@ angular
 							}
 							
 							$scope.getAccessoryDetailsById = function(info) {
+								if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
 								var data = {
 									 	"assetTypeId": 2,
 								        "assetCategoryId": info.assetCategoryId,

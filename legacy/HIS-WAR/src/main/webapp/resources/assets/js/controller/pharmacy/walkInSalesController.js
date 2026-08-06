@@ -41,13 +41,9 @@
     $scope.isConsolidatedBill = cookieObjectAppConfig.isConsolidatedBill;
 		// $scope.pinpadAmounFlag = false;
     $scope.counterMstObj = JSON.parse(sessionStorage.getItem('counterMstObj'));
-    $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-    $scope.storeName = $scope.cookieObjectStore.storeName;
+    $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor pilot: null-safe parse + popup trigger, one owner
+    $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header, no {{storeName}} placeholder
     $scope.changePayeeRights = cookieObject.changePayeeRights;
-    if($scope.cookieObjectStore==undefined){
-      $rootScope.storePopup();
-      angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
-    }
     
     $scope.fileObj = {};
 	$scope.fileObj.file = null;
@@ -1594,7 +1590,8 @@ $scope.getLastEncounterDetails=function(info){
     
 
     var SubstituteItems = function  (item,index) {
-    	$scope.mainIndex=index;
+   	if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
+   	$scope.mainIndex=index;
    	  item.substititeFlag=true;
          self.model.parIndx = index;
          self.model.instructionDesc = item.instructionDesc;
@@ -1803,6 +1800,7 @@ $scope.getLastEncounterDetails=function(info){
             		
           	  if(!list.itemDisabled && $scope.mainIndex == indx){
                 self.model.SelectedItems.forEach(function (item) {
+                    if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
                     item.uom = [{
                         uomDetails: "Select UOM",
                     }];
@@ -2004,6 +2002,7 @@ $scope.getLastEncounterDetails=function(info){
     }
     
     var SearchItems = function (search) {
+       if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
        if ((!self.model.prevSearch || self.model.prevSearch != search )  && (search.length == 2) ) {
         self.model.prevSearch = search;
 
@@ -2039,6 +2038,7 @@ $scope.getLastEncounterDetails=function(info){
     }
 
     var SearchGenerics = function (search) {
+      if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
       if (search.length < 1) return;
 
       if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -2101,6 +2101,7 @@ $scope.getLastEncounterDetails=function(info){
     }    
     $scope.getGenericScheduleColorMapping = function ()
     {
+    	if(!$rootScope.storeReady()){ return; } // store-accessor extension: the load-time store-scoped call — gated pre-pick (QF-AS/AT)
     	var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId + '/genericColorMapper';
         $rootScope.startLoader();
         GenericService.serviceAction("GET", URI, {}).then(function (response) {
@@ -2112,6 +2113,7 @@ $scope.getLastEncounterDetails=function(info){
     }
     $scope.getGenericScheduleColorMapping();
     var ActualAddItemToBill = function (bill, item, model, label, idx) {
+      if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
       if (!!item.id) {
         var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId + '/'+ $cookies.getObject('cookieObject').storeId  + '/' + item.id + '/' + $scope.entitlementObj.paymentEntitlementTypeId;
         $rootScope.startLoader();
@@ -2295,6 +2297,7 @@ $scope.getLastEncounterDetails=function(info){
 
     
     $scope.addKitItems = function(){
+        if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
 
         var URI = BASE_URL + ROOT_URL + "/api/global/items/details/walkin/getKitItemsOnWalkInSales";
         
@@ -2458,6 +2461,7 @@ $scope.getLastEncounterDetails=function(info){
     	// event.preventDefault();
     }
     $scope.patientConsation = function (item) {
+      if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
       if(($scope.encounterId==undefined || $scope.encounterId==null)){
         $scope.encounterId = 0;
       }
@@ -2519,6 +2523,7 @@ $scope.getLastEncounterDetails=function(info){
     }
     var BatchChangeOld = function (index, bill, batch) 
     {
+        if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
         initialStore=JSON.parse(sessionStorage.getItem('selectedTopStore'));
         // console.log("Initial Store : ",initialStore);
        // //console.log("Current Store :
@@ -9619,6 +9624,7 @@ $scope.openDatePickerInsuranceStartDate = function(index) {
 		
 		/** *****For POS machine********** */
 		$scope.getPOSMachineList=function(){
+			if(!$rootScope.storeReady()){ return; } // store-accessor extension: the load-time store-scoped call — gated pre-pick (QF-AS/AT)
 			$scope.pOSMachineList=[];
 			 var data={
 						   organizationId:$scope.organizationId,

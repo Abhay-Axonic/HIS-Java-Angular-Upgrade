@@ -1473,4 +1473,50 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   cookieObjectStore != undefined) ? cookieObjectStore.storeId : undefined;` at preventiveMaintenanceController:48.
 - Status: FIXED on the branch — pending the FULL deploy + the crash-path verification + the owner's merge.
 
+## QF-AS — store-scoped API calls fire BEFORE the store pick (backend 500s on the pre-pick state) — FOUND 2026-08-06 via the store-accessor pilot verification
+
+- **Observed live** (walkInSales, cookie cleared, post-accessor deploy): NO TypeError (the crash's fixed) and
+  NO {{storeName}} placeholder — but **2× `Failed to load resource: 500`** console errors: the screen's
+  store-scoped API calls fire with the **cookieObject.storeId** (which is undefined until the pick's
+  setStore writes it — the login's cookie never carries it). After the pick (setStore writes
+  cookieObject.storeId = the picked store), the same screen reloads with **0 errors**.
+- **NOT wrong-store data:** the cookieObject.storeId is the PICKED store (verified live — post-pick reload
+  clean). The defect is the PRE-PICK firing: the calls should be gated on the pick (or the store accessor's
+  null-state), not fired with an undefined id.
+- **Scope:** the store-scoped calls' pattern (cookieObject.storeId in the URI construction) spans the
+  family — the campaign's per-site tolerance question must answer "skip the store-scoped call when the
+  store is null" per site, not just guard the deref.
+- Status: OPEN — the crash class is fixed (the accessor); the call-gating is the campaign's follow-on.
+
+## QF-AT — the store-accessor gates CAPTURE the store at the controller's construction; a same-session pick stays inert until re-navigation — FOUND 2026-08-06 via the same-session test
+
+- **Observed live** (walkInSales, store cookie cleared, pick through the picker while sitting on the screen,
+  then typing in the item search): the pick resolves (sessionStorage + cookieObject written) but the
+  screen's store-scoped calls stay gated — the gates test the CAPTURED `$scope.cookieObjectStore` (set once
+  at the controller's construction, null pre-pick) — the search fires nothing. The screen is **inert until
+  the user re-navigates** (the controller re-runs, the capture refreshes). The user's pick appears to do
+  nothing.
+- **Fix direction (the user's own hypothesis, confirmed):** the gates must RE-READ the accessor at the firing
+  time — `$rootScope.getStoreObj() != null` (fresh parse per call) or a `$scope.storeReady()` helper that
+  calls the accessor fresh — rather than testing the captured value. Refine on the two pilots BEFORE the
+  batch multiply.
+- Related: the walkInSales's LOAD-time store-scoped calls (getGenericScheduleColorMapping + the
+  getPOSMachineDeviceMasterList) are NOT among the 10 gated sites — they fire pre-pick with the undefined
+  storeId and the backend 500s (2x observed live, both gone post-pick). The gate set must cover the
+  load-time calls too.
+- Status: OPEN — pattern refinement pending on the two pilots.
+
+## QA NOTE — the mechanical-rewrite near-miss: `if(!storeReady() == null)` guards that never fire, caught by a count-check — 2026-08-06
+
+- During the store-accessor refinement, a regex-based swap across 13 gate sites produced
+  `if(!$rootScope.storeReady() == null){ return; }` — the retained `== null` makes the condition
+  ALWAYS-FALSE (a boolean is never null), so every swapped guard silently stopped firing and the
+  store-scoped calls would have fired unconditionally — the exact inverse of the intended gate.
+- **Caught by a count-check before the build** (`storeReady()` occurrences vs the expected 12),
+  not by any runtime signal. Fixed to the correct shape before commit.
+- The class: a mechanical rewrite that silently produces never-firing guards is the same shape as
+  every other check-that-cannot-fail-the-way-it-claims caught today. The count-check is what saved
+  it — the verification pattern (count + shape assertions on mechanical rewrites, before the build)
+  is now part of the gate-change discipline.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

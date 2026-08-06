@@ -14,10 +14,9 @@ angular.module('myApp').controller(
 					$state.go('login');
 					return;
 				}
-				var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+				var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor pilot (control): null-safe parse + popup trigger, one owner — behavior-neutral on the guarded path
 				if(cookieObjectStore==undefined){
-					$rootScope.storePopup();
-					angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
+					$scope.storeId = undefined;
 				} else {
 					$scope.storeId = cookieObjectStore.storeId;
 				}
