@@ -1328,4 +1328,25 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
 - Composition after the fix: 48 exact (44 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
 - Status: FIXED on fix/br173-allowlist-audit, live-verified 77/77 by the new method.
 
+## QF-AL — BR-176: anonymous subscription-PAID bypass (entitlement) + hardcoded encryption key
+
+- **The flow:** allowlisted POST /api/createOrganizationFromWeb (UserMasterDaoImpl:1752) creates an org+unit,
+  inserts the CALLER's paymentDetails JSON verbatim into payment_details (:1800), then hard-sets
+  amount_paid_status='PAID' (:1841) with the caller-supplied amount/TransactionId — no Razorpay order
+  lookup, no signature check, no amount check. addSubScrtionDetails (authenticated /unit/subcription/details)
+  likewise takes amountPaidStatus straight from the DTO.
+- **Masking (the third environment gap):** unreachable on this dev box only because payment_details does not
+  exist locally (the flow errors at :1800). The DDL creates it (31 references) — any DDL-built environment
+  has the bypass live. family_id and saveAnalyzedReport were the first two; RULES.md Rule 10 now carries the
+  standing note: on this dev box, "it does not work" is never evidence that it is safe.
+- **The hardcoded pgp key:** 'ssshhhhhhhhhhh!!!!' in UserMasterDaoImpl:1841-1847 (and the ENCRYPTIONKEY
+  constant used to decrypt at check time) — the encrypted amounts decrypt with a string in the repo; the
+  column-level encryption is decorative. Part of BR-176, not a separate finding.
+- **The Razorpay row (t_unit_subscription_details id 1, PAID/ACTIVE, empty order id, created_by NULL):**
+  hand-inserted dev artifact on 2026-07-18 — no code path created it (createOrganizationFromWeb can't run
+  locally + never targets org 1; addSubScrtionDetails always stamps created_by; no seed inserts it). Not
+  evidence of a payment. The check gate (unit/subcription/check) is a soft nag + pay modal, no lockout.
+- **Status:** LOGGED. Fix scoped, unstarted (per owner). The prior razorpay draft's two findings
+  (client-trusted amount, missing signature verification) confirmed still present in the code today.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
