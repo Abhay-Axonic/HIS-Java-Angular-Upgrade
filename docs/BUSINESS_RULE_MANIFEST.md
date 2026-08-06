@@ -2601,3 +2601,25 @@ persist in a configured environment). The whitelist includes auth-exempt WRITE e
 | HIS-WAR/.../filter/JwtTokenFilter.java + WEB-INF/rest-dispatcher-servlet-security.xml + web.xml | Logged 2026-08-05 (BR-173), NOT fixed
 
 <!-- ============ END OF MANIFEST — new BR entries append BEFORE this marker ============ -->
+## BR-177 — RateLimitFilter body-read destroyed the login-group request bodies (authentication outage, 2026-08-06) — FIXED
+
+- **What shipped:** 6A's RateLimitFilter (merged 5c6ec08d) wrapped every login-group request in the shared
+  com.param.exception.ContentCachingRequestWrapper and read the body to derive the per-account key. That
+  wrapper caches bytes AS READ but never re-serves them (its ContentCachingInputStream reads the underlying
+  stream directly), so the filter's read exhausted the stream and every downstream @RequestBody saw an empty
+  body -> the GlobalExceptionHandler's HIS-400 "Bad request: Invalid parameters" on EVERY login-group call
+  (/adt/userLogin, /adt/getUnitByCredentials, /adt/forgotPasswordGeneration, /adt/otpVerification).
+- **What it broke:** the UI login (the unit dropdown never populated -> no login could complete) for EVERY
+  user from 12:07 until the fix — the full Rule 9 proof chain passed with the outage live.
+- **Why every check passed:** the rate-limit verifier asserted only 429-vs-not-429; the HIS-400s were read as
+  "the app's own envelopes". The tell was in the verifier's own output — oracle 200s next to login-group 400s
+  (the oracle does no body-read) — and was read as ordinary. Seventh instance of a check that cannot fail the
+  way it claims; the first where a passing check let a REAL regression ship.
+- **The fix:** the filter now wraps with a filter-local ReReadableRequestWrapper (first getInputStream serves
+  the live stream and caches; subsequent reads serve the cached copy). The shared class is untouched.
+  VERIFIER FIX (same commit): every non-429 response is asserted against its real shape — a HIS-400 on a
+  login-group target is now a FAILURE — plus a POSITIVE CONTROL (tools/golden-trace/positive_control_login.js)
+  that performs one full UI login and asserts a session token. Pre-fix proof: the corrected verifier FAILED
+  5/10 against the broken deployment (positive control UNIT-DROPDOWN-NEVER-POPULATED + 51 HIS-400s), then
+  passed 10/10 after the fix, including a real UI login returning a token.
+- **Owner approval:** FIXED per owner directive (2026-08-06); verifier + positive control are part of the same commit.

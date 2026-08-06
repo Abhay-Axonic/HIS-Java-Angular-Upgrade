@@ -1,6 +1,5 @@
 package com.param.filter;
 
-import com.param.exception.ContentCachingRequestWrapper;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -8,11 +7,15 @@ import io.github.bucket4j.Refill;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ReadListener;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -145,8 +148,18 @@ public class RateLimitFilter implements Filter {
             return;
         }
 
-        // Wrap so the body can be read once here and still served to the downstream filter/controller.
-        ContentCachingRequestWrapper wrapped = new ContentCachingRequestWrapper(httpRequest);
+        // BR-177 (2026-08-06): wrap with the filter-local RE-READABLE wrapper. The
+        // filter must read the body to derive the per-account key, but the downstream
+        // controller's @RequestBody must still see it. The shared
+        // com.param.exception.ContentCachingRequestWrapper caches as-read but NEVER
+        // re-serves (its ContentCachingInputStream reads the underlying stream
+        // directly), so the filter's read exhausted the stream and every login-group
+        // call returned HIS-400 "Bad request: Invalid parameters" — a full
+        // authentication outage that shipped with 6A and passed every check. The
+        // first getInputStream() here serves the live stream and caches; every
+        // subsequent one serves the cached copy. Filter-local by design — the shared
+        // class is untouched.
+        ReReadableRequestWrapper wrapped = new ReReadableRequestWrapper(httpRequest);
 
         String ip = httpRequest.getRemoteAddr();
         Bucket ipBucket = ipCache.computeIfAbsent(ip + "|" + path, k ->
@@ -179,10 +192,10 @@ public class RateLimitFilter implements Filter {
      * OTP group. Returns null when the body is unreadable or the account field is absent —
      * the per-IP bucket then applies alone.
      */
-    private String readAccountKey(ContentCachingRequestWrapper wrapped, String path) throws IOException {
+    private String readAccountKey(ReReadableRequestWrapper wrapped, String path) throws IOException {
         String body;
         try {
-            byte[] content = wrapped.getContentAsByteArray();
+            byte[] content = wrapped.cachedBody();
             if (content == null || content.length == 0) {
                 byte[] buf = new byte[4096];
                 int n = wrapped.getInputStream().read(buf);
@@ -210,6 +223,108 @@ public class RateLimitFilter implements Filter {
     private static String first(Pattern p, String body) {
         Matcher m = p.matcher(body);
         return m.find() ? m.group(1) : null;
+    }
+
+    /**
+     * BR-177 (2026-08-06): a request wrapper whose body can be read MULTIPLE times.
+     * The first getInputStream() serves the live stream and caches the bytes as
+     * they pass; every subsequent getInputStream() serves the cached copy. This is
+     * what the shared com.param.exception.ContentCachingRequestWrapper does NOT do
+     * (its ContentCachingInputStream reads the underlying stream directly and only
+     * ever writes to the cache), which is why the filter's body-read used to
+     * exhaust the stream and HIS-400 every login-group call. Filter-local on
+     * purpose: the shared class is untouched, per the BR-177 decision.
+     */
+    private static final class ReReadableRequestWrapper extends HttpServletRequestWrapper {
+        private final ByteArrayOutputStream cached = new ByteArrayOutputStream();
+        private boolean liveServed = false;
+
+        ReReadableRequestWrapper(HttpServletRequest request) {
+            super(request);
+        }
+
+        byte[] cachedBody() {
+            return cached.toByteArray();
+        }
+
+        @Override
+        public ServletInputStream getInputStream() throws IOException {
+            if (!liveServed) {
+                liveServed = true;
+                return new LiveCachingInputStream(super.getRequest().getInputStream());
+            }
+            return new CachedInputStream(cached.toByteArray());
+        }
+
+        private class LiveCachingInputStream extends ServletInputStream {
+            private final ServletInputStream is;
+
+            LiveCachingInputStream(ServletInputStream is) {
+                this.is = is;
+            }
+
+            @Override
+            public int read() throws IOException {
+                int ch = is.read();
+                if (ch != -1) {
+                    cached.write(ch);
+                }
+                return ch;
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException {
+                int n = is.read(b, off, len);
+                if (n > 0) {
+                    cached.write(b, off, n);
+                }
+                return n;
+            }
+
+            @Override
+            public boolean isFinished() {
+                return is.isFinished();
+            }
+
+            @Override
+            public boolean isReady() {
+                return is.isReady();
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+                is.setReadListener(readListener);
+            }
+        }
+
+        private static final class CachedInputStream extends ServletInputStream {
+            private final byte[] data;
+            private int pos = 0;
+
+            CachedInputStream(byte[] data) {
+                this.data = data;
+            }
+
+            @Override
+            public int read() {
+                return pos < data.length ? data[pos++] & 0xFF : -1;
+            }
+
+            @Override
+            public boolean isFinished() {
+                return pos >= data.length;
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+                // already fully buffered; nothing to listen for
+            }
+        }
     }
 
     @Override
