@@ -172,9 +172,11 @@
                     inward.stores = inward.stores.concat(response.data);
                     inward.replacementTypes = inward.replacementTypes;
 
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                    var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
                     for(var i=0;i<inward.stores.length;i++)
                     {
-                        if(inward.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(inward.stores[i].id==selectedStoreId)
                         {
                             inward.store = inward.stores[i];
                         }
@@ -196,6 +198,7 @@
         }
 
         var GetInwardDetails = function (inwardId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             // var opbId = openingBalanceService.getOpeningBalanceId();
 
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_INWARDS.DETAIL_API + $scope.unitId + '/'+$scope.organizationId + '/' + inwardId;
@@ -461,6 +464,7 @@
         }
 
         var RetuurnableGatepassSearch = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_INWARDS.RETURNABLE_GATEPASS_SEARCH;
             var data = {
                 "fromDate": moment(self.model.fromDate).format('YYYY-MM-DD'),
@@ -617,6 +621,7 @@
         */}
 
         var ActualAddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             SelectedItems();
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_INWARDS.ADD_MULTIPLE_ITEM_API + '/'+$scope.unitId + '/'+$scope.organizationId;
 
@@ -1233,6 +1238,7 @@
         }
 
         var SaveMaterialInward = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var totalAmount = 0.00;
             var totalTaxAmount = 0.00;
             var netAmount = 0.00;
@@ -1434,6 +1440,7 @@
         }
 
         var UpdateMaterialInward = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_INWARDS.UPDATE_API + self.model.inwardId;
 
             var data = {
@@ -1619,6 +1626,7 @@
         }
 
         var GetProductCategoryList = function (id) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var inward = self.model;
 
             // TODO : Add asset category to the uri
@@ -1699,6 +1707,7 @@
         }
 
         var AddItemsPopup = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	$scope.saveBtnDisabled=true;
             // new test api
             var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId;

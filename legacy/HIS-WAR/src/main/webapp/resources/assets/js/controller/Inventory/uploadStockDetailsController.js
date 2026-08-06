@@ -95,9 +95,9 @@
                 function (response) {
                     upload.stores = upload.stores.concat(response.data);
                     try{
-                        var selectedTopStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-            		 	$scope.storeId = selectedTopStore.storeId;
-            		 	self.model.store  =upload.stores.filter(x=>x.id==$scope.storeId)[0];            		 
+                        var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            	 	$scope.storeId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
+            	 	self.model.store  =upload.stores.filter(x=>x.id==$scope.storeId)[0];           	 		
                     }catch (e) {
                         console.log("error!",e);          
                     }                     
@@ -124,6 +124,7 @@
         }
         $scope.statusId=1;
         var GetUploadStockDetails = function (uploadId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             // var opbId = openingBalanceService.getOpeningBalanceId();
             var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.UPLOAD_STOCK.DETAIL_API + uploadId + "/" + $scope.unitId;
 
@@ -181,6 +182,7 @@
         }
         
         var openUploadStockNew = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	  $("#uploadStockNew").modal();
         }
 
@@ -259,6 +261,7 @@
         } 
 
         var AddItems = function (SelectedItemsIds) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             self.model.SelectedItemsIds.push(SelectedItemsIds.id);
             self.model.stopTransactionId = SelectedItemsIds.id;
             
@@ -301,6 +304,7 @@
         }
 
         var GetBatch = function () { 
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	 if(self.model.stopTransactionId ){
             var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.UPLOAD_STOCK.GET_OLD_BATCH;
             var data = {
@@ -424,6 +428,7 @@
     	$scope.csvfile;
     	
         $scope.uploadfile = function() {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			try {
 			            
 			   $rootScope.startLoader();
@@ -617,6 +622,7 @@
         }
 //For Download and upload CSV END
         var SaveNewUploadStock = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.UPLOAD_STOCK.SAVE_API;
             var data = {

@@ -1519,4 +1519,102 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   it — the verification pattern (count + shape assertions on mechanical rewrites, before the build)
   is now part of the gate-change discipline.
 
+## QF-2026-08-07-A — store-accessor campaign batch 1: VERIFIED live (negative phase all-clean); 1 syntax error + 6 ungated load-time calls found & fixed; positive-phase 500s traced to local-DB drift
+
+Batch 1 (fix/store-accessor-campaign-b1): 6 pharmacy-family sites converted to the accessor pattern
+(pendingIssues, pendingIssuesDetails, outPatientSalesWorklist, outPatientSalesWorklistDetails,
+billSalesReturn, detailsPatientReturnAcceptanceConsumable). Verification via the new live fire-test
+(tools/golden-trace/test_store_accessor_live_fire.js — real UI login, selectedTopStore cleared,
+$state.go per screen, pageerror/4xx/5xx/{{storeName}} capture):
+
+- NEGATIVE phase (no store): ALL SIX screens 0 pageerrors / 0 5xx / 0 4xx / no {{storeName}}
+  literal. Q1 (deref -> getStoreObj, null-safe) and Q2 (ALL store-scoped calls gated incl. load-time)
+  answered for every site.
+- POSITIVE phase (real store, id 1 "Test Main Store", seeded exactly as setStore() writes): the
+  store-scoped calls FIRE with the real storeId in the URLs (screens are NOT inert). The remaining
+  500s are NOT gate failures — traced in catalina.out to three KNOWN local-DB drift items:
+  (a) `relation "billing.m_pos_machine_device_master" does not exist` (getPOSMachineDeviceMasterList),
+  (b) `column sales1_.cop does not exist` (SalesWorkListController workList), (c) `column
+  issue0_.infusion_tolal_volume does not exist` (PendingIssuesDao search). None documented in
+  DB_DRIFT_REPAIRS.md yet — added here for the owner/day session. The 405s
+  (workList/1/1/0 with issueId=0, acceptance/consumable/1/null, getNonFormularyItemForWorklistPharmacy/undefined/1/1)
+  are the screens' load-time calls firing with empty work-item params post-pick — pre-existing
+  design, not campaign scope, flagged.
+- DEFECTS FOUND AND FIXED during verification (all on the branch, committed):
+  1. SYNTAX ERROR (batch-1 original commit 82488669): the ActualSaveBill gate was inserted BETWEEN
+     `var ActualSaveBill = function (bill)` and its body brace -> "Unexpected token 'if'" broke the
+     ENTIRE pendingIssuesDetailsController.js. Caught via live page-error capture during token mint,
+     confirmed by node --check. Fixed (dfb30eac) — gate moved inside the body.
+  2. SIX ungated load-time store-scoped calls the inline-storeId grep MISSED (the walkInSales
+     lesson, ×6): outPatientSalesWorklistDetails getGenericScheduleColorMapping +
+     getPOSMachineList + GetWorklistDetails (storeId via $scope.storeId, not cookieObject — the
+     grep pattern's blind spot), detailsPatientReturnAcceptanceConsumable
+     GetDetailsPatientReturnAcceptanceConsumable (NO storeId in the URL at all — the backend
+     derives store context), pendingIssues GetPendingIssues (load-time search), pendingIssuesDetails
+     showNonFormularyItemList. All 6 gated on fresh storeReady() at fire time (6e71213e). NOTE:
+     the commit message said "5 calls" — the true count is 6 (count-before-you-claim, corrected
+     here).
+- Enumeration lesson re-confirmed: the briefing's "grep for inline cookieObject.storeId URI
+  constructions AND fire-test the screen's load" — the fire-test is the load-bearing half; static
+  grep alone missed 6 sites in 4 files on batch 1. The fire-test is now a permanent campaign tool.
+- Suite on the batch-1 deployment: rate-limit 10/10 (clean buckets), regressions PASS, allowlist 0
+  failures, six harness specs ALL PASS (fresh token minted via the UI, /tmp/fresh_token.txt),
+  permissions bootstrap = known module-1068 stop condition only, positive-control TOKEN-OK.
+- Deployed frontend RESTORED to main after verification (6 files copied back; drift check:
+  only the pre-existing mpesaApplicationConfigurationController.js extra remains).
+
+## QF-2026-08-07-B — store-accessor campaign batch 2: VERIFIED live (all 6 stock screens, both phases clean); Claude Code OAuth blocker → supervisor-direct conversion
+
+Batch 2 (fix/store-accessor-campaign-b2, branched off b1): 6 Inventory stock-family screens
+(stockAdjustmentApproval, stockAdjustmentDetails, computeStock, confirmStock, varianceApproval,
+stopTransaction). Claude Code delegation FAILED at auth ("OAuth session expired and could not be
+refreshed"; no API key configured anywhere; interactive re-login needs the owner's claude.ai
+account) — logged to DECISIONS_QUEUE; the conversion was done supervisor-direct per the overnight
+contract's "write code on branches" permission, same pattern + same verification bar.
+
+- All 6 BARE derefs converted to $rootScope.getStoreObj() with null-safe storeId (undefined when
+  null). 24 fire-time storeReady() gates on every store-scoped container incl. load-time inits
+  (PopulateDropdown etc.). Per-file Q1/Q2 in the commit (416af1e3): stockAdjustmentApproval
+  (3 gates), stockAdjustmentDetails (5 gates; asset/product-category calls correctly NOT
+  store-scoped), computeStock (3), confirmStock (3), varianceApproval (3), stopTransaction (7).
+- Static verification: node --check clean x6; grep raw parses = 0 across all 6; storeReady()
+  counts 3/5/3/3/3/7 = 24/24 (count-before-you-claim).
+- LIVE FIRE-TEST (tools/golden-trace/test_store_accessor_live_fire.js, target list now argv-driven,
+  default = b2 states): NEGATIVE phase ALL SIX screens 0 pageerrors / 0 5xx / 0 4xx / no
+  {{storeName}}; POSITIVE phase (real store seeded) same — PASS (0 failures).
+- Caveat logged honestly: stockAdjustmentApproval's $state.go lands on accessDenied (admin's role
+  lacks that module permission — the route guard redirects BEFORE the controller instantiates), so
+  its live exercise is limited to the static + pattern-identity evidence; the other 5 screens are
+  fully live-exercised. A role with the module permission (owner's Step 6 click-through) is the
+  live path for that screen.
+- Suite on the b2 deployment: rate-limit 10/10 (clean buckets), regressions PASS (43/43). Deployed
+  frontend RESTORED to main after verification (12 files — b2's 6 stock + b1's 6 pharmacy which
+  the b2 build re-carried; drift check = only the pre-existing mpesa extra).
+- Campaign census (source-derived, /tmp/classify_store_sites.py): 65 BARE + 12 BARE? (mostly
+  safe variants — e.g. preventiveMaintenance:26 is QF-AR-guarded, walkInSales:2527/4716 are
+  gated parses) + 1 GUARDED. Remaining batch plan: b3 addNew cluster (9), b4 upload/issue+dashboards
+  (7), b5 procurement (~21), b6 asset (~10), b7 nursing+pharmacy remainder (~10), b8 dashboards.
+
+## QF-2026-08-07-C — store-accessor campaign batch 4: VERIFIED live (7 screens; 1 positive-phase 500 traced to drift); campaign total 25 screens
+
+Batch 4 (fix/store-accessor-campaign-b4): 7 Inventory upload/issue screens (addNewScrapRequest,
+addNewStoreIndenting, addDepartmentConsumption, issueListDirectIssue, storeStockDashboard,
+uploadStockApproval, uploadStockDetails). Supervisor-direct (Claude Code OAuth-blocked).
+
+- 7 derefs converted (2 direct-assignment + 5 inline-comparison hoists -> $rootScope.getStoreObj()
+  null-safe). 26 fire-time storeReady() gates (per-file 4/1/5/4/4/2/6); pure-UI
+  SetOldValueAssetType + list-only PopulateDropdowns correctly NOT gated. node --check clean x7;
+  0 raw parses; 26/26 counts (commit ee535a3e).
+- FIRE-TEST: NEGATIVE phase all 7 screens 0 pageerrors/5xx/4xx/no literal (Q1+Q2 verified).
+  POSITIVE phase 6/7 clean; storeStockDashboard's load-time search 500s — traced in catalina.out
+  to DRIFT ITEM #4: `column stock.out_qty does not exist` (StoreStockController
+  searchdatewisezerowithstock). NOT a gate failure: the negative phase proved the gates (0 pre-pick
+  calls) and the positive phase proved non-inertness (the call fires post-pick); the backend 500s
+  on the schema-incomplete dev DB. Drift items now logged: (1) billing.m_pos_machine_device_master,
+  (2) sales1_.cop, (3) issue0_.infusion_tolal_volume, (4) stock.out_qty.
+- Suite on the b4 deployment: rate-limit 10/10, regressions PASS (43/43). Deployed frontend
+  RESTORED to main (25 files); drift check = mpesa extra only.
+- Campaign total: 25 screens converted and live-verified across 4 branches
+  (b1 pharmacy 6, b2 stock 6, b3 addNew 6, b4 upload/issue 7), all awaiting owner Rule 9b.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

@@ -86,6 +86,7 @@
         }
 
         var BarcodeScan = function (event, barcode) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var enterCode = 13;
             if(self.model.barcode == undefined || self.model.barcode.length == 0 || self.model.barcode == null)
     		{
@@ -182,6 +183,7 @@
         }
         
         $scope.getBarcodeDetails = function(batchId){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
         	var batchId = batchId;
         	if(!!batchId)
@@ -282,9 +284,11 @@
             GenericService.serviceAction("GET", URI, {}).then(
                 function (response) {
                     consumption.stores = consumption.stores.concat(response.data);
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                    var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
                     for(var i=0;i<consumption.stores.length;i++)
                     {
-                        if(consumption.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(consumption.stores[i].id==selectedStoreId)
                         {
                             consumption.store = consumption.stores[i];
                         }
@@ -359,6 +363,7 @@
         }
 
         var batchChange = function (item){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if(item.batchNo == item.selectedBatch.batchNo){
                 item.availableQuantity = $scope.availableqty;
             }
@@ -777,6 +782,7 @@
         }
 
         var SaveNewConsumption = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.NURSING.NON_BILLABLE_CONSUMPTION.SAVE_API;
             var data = {
@@ -832,6 +838,7 @@
         }
 
         var GetConsumptionDetails = function (consumptionId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             // var opbId = openingBalanceService.getOpeningBalanceId();
             var URI = CONSTANTS.INVENTORY.NURSING.NON_BILLABLE_CONSUMPTION.DETAIL_API + $scope.unitId + '/'+$scope.organizationId + '/' + consumptionId;
 
@@ -937,6 +944,7 @@
             }
         }
         var UpdateBatchChange = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var consumption = self.model;
             var URI = CONSTANTS.INVENTORY.NURSING.NON_BILLABLE_CONSUMPTION.UPDATE_API + consumption.consumptionId;
@@ -1141,6 +1149,7 @@
 		}
 
         $scope.updateBatchQuantity = function (batchQuantityUpdateList) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = BASE_URL + ROOT_URL + "/api/global/items/billableConsumption/updateBatchQuantity";
 
             var data = {};

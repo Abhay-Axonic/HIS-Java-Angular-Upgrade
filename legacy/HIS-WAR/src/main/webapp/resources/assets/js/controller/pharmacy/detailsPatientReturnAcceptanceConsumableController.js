@@ -12,8 +12,8 @@
         $scope.organizationId = cookieObject.organizationId;
         $scope.userId = cookieObject.userId;
         $scope.storeId = cookieObject.storeId; 
-        var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-        $scope.storeName = cookieObjectStore.storeName;
+        var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+        $scope.storeName = cookieObjectStore != null ? cookieObjectStore.storeName : ''; // store null -> empty header
         function initializeController() {
             $rootScope.loginpage = true;
 
@@ -124,6 +124,7 @@
         }
 
         var GetDetailsPatientReturnAcceptanceConsumable = function (itemId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var URI =  CONSTANTS.PHARMACY.IP.PATIENT_RETURN_ACCEPTANCE.CONSUMABLE_DETAIL_API +$scope.unitId + "/" + itemId;
 

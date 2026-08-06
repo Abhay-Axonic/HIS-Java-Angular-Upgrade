@@ -131,9 +131,11 @@
                     scrap.assetTypes = scrap.assetTypes.concat(response.data.assetType);
                     scrap.nearExpired = scrap.nearExpired.concat($scope.expiryType);
                     scrap.assetType = scrap.assetTypes[1];
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                    var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
                     for(var i=0;i<scrap.stores.length;i++)
                     {
-                        if(scrap.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(scrap.stores[i].id==selectedStoreId)
                         {
                             scrap.store = scrap.stores[i];
                             self.model.store = scrap.store;
@@ -234,6 +236,7 @@
         }
 
         var getReturnReasonList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var scrap = self.model;
 
             var URI = CONSTANTS.INVENTORY.SCRAP.SCRAP_REQUEST.SCRAP_REASON_API+"/"+$scope.organizationId ;
@@ -534,6 +537,7 @@
         }
 
         var SaveNewScrapRequest = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.SCRAP.SCRAP_REQUEST.SAVE_API;
             // if(self.model.nearExpiry.expiry == "Select Expiry"){
@@ -757,6 +761,7 @@
         }
 
         var GetScrapRequestDetails = function (scrapId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.SCRAP.SCRAP_REQUEST.DETAIL_API + scrapId;
 
             $rootScope.startLoader();
@@ -842,6 +847,7 @@
 
         }
         var onNearExpiryChange = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (self.model.itemList.length > 0) {
                 $("#confirmLogout1").modal()
             }

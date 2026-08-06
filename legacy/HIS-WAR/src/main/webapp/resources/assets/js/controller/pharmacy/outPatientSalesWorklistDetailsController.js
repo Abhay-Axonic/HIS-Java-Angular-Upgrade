@@ -145,8 +145,8 @@
             if (cookieObjectAppConfigSecond != undefined) {
 	            $scope.exceededBillAmountSettlement=cookieObjectAppConfigSecond.exceededBillAmountSettlement;
             }
-            $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-    	    $scope.storeName = $scope.cookieObjectStore.storeName;
+            $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+    	    $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header
             // else {
             // console.log('cookieObjectAppConfig', cookieObjectAppConfig);
 
@@ -483,6 +483,7 @@
         }
 
         var SearchItems = function (search) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (search.length < 1) return;
         
             if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -520,6 +521,7 @@
         }
       
         var SearchGenerics = function (search) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (search.length < 1) return;
         
             if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -1884,6 +1886,7 @@
       
    	  
         var GetWorklistDetails = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.PHARMACY.OP.SALES_WORKLIST.DETAILS_API + $scope.unitId + '/'+$scope.storeId + '/' + self.model.issueId;
 
             self.model.worklistDetails.discountCatgeory = self.model.discountCategoryList[0];
@@ -2669,6 +2672,7 @@
         }
         $scope.getGenericScheduleColorMapping = function ()
         {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId + '/genericColorMapper';
             $rootScope.startLoader();
             GenericService.serviceAction("GET", URI, {}).then(function (response) {
@@ -11091,6 +11095,7 @@
     			
     			 /******POS machine***********/
     			$scope.getPOSMachineList=function(){
+    				if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     				$scope.pOSMachineList=[];
     				 var data={
     							   organizationId:$scope.organizationId,
