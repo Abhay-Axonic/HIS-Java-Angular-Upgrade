@@ -1213,4 +1213,25 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   gate's behavior is identical before and after the branch. NO FIX — the fix belongs to the app's
   state-config (re-enabling or re-pointing the applicationConfiguration state), not the filter.
 
+## QF-2026-08-05-AG — config-gate blockage: inferred table corrected; real drift found; login-cookie cause UNRESOLVED
+
+- **Retraction (logged):** the earlier claim that `m_unit_application_configuration` is a missing
+  table is WRONG — that table does not exist in the DB, in the authoritative DDL, or as an entity,
+  because it was never a table. The name was inferred from `UnitApplicationConfigurationDto`; the
+  actual query path disproves it. The inference error is logged as the third consecutive
+  inference-on-this-path caught by Rule-10 verification against the real query and the real row.
+- **The real config tables (org 1 / unit 1, this box):**
+  - `t_unit_application_billing_configuration` — EXISTS, 1 row, status='A' (the login DTO's
+    source via `GET_DEFAULT_SELF_TARIFF_FROM_APP_BILLING_CONF`).
+  - `t_unit_application_registration_field_config` — **MISSING (the real drift)** — the
+    `GET_UNIT_APPLICATION_REGISTRATION_FIELD_CONFIG` named query's target; the ADT screens
+    (admittedPatientList, admissionRequest, unknownPatientReg, morgueReservation) fetch it and
+    would fail on this box. Same drift class; not the login-cookie path.
+  - `m_application_configuration` — EXISTS, 1 row (org 1).
+- **Login-cookie cause: UNRESOLVED.** The assembly (`UserMasterServiceImpl:378-392`) attaches the
+  DTO from the billing-config row (present), and the 788 writer's branch needs only
+  `mainObject.unitApplicationConfigurationDto` non-null — the DB state says the cookie should be
+  set, yet the observed behavior says it is absent. Needs the live cookie value (browser) to
+  distinguish a branch-miss from a cookie-write failure.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
