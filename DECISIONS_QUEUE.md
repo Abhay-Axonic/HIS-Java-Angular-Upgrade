@@ -96,6 +96,30 @@ file remains the durable alert.*
   naming all four batches. NOT executed — awaiting verbatim Rule 9b approval.
 - Open: nothing blocks the merge review except the owner's Rule 9b approval itself.
 
+## 12. [RESOLVED] Rule 9 execution complete — store-accessor campaign merged
+
+- Rule 9b approval verbatim 2026-08-06 21:35:01 BST; --no-ff merge c3359a37; Rule 9a recorded
+  797a847c. FULL frontend redeploy from merged main (backup /tmp/ROOT-backup-pre-merge-b4; boot
+  167.75s; healthcheck 200). Post-merge proof: rate-limit 10/10 (TOKEN-OK), regressions PASS,
+  allowlist 0 failures, six harness specs ALL PASS, drift 0/1724 (mpesa extra only). Pushed;
+  main == origin/main == 797a847c. Rule 9d ledger PASS (42 hash-verified). b1/b2/b3 fully
+  contained in b4 (git branch --merged main confirms all four + pilot) — deletable.
+
+## 13. [QUEUED] walkInSales dead-code cleanup — approved in principle, own branch, NOT tonight
+
+- Owner: "The dead-code cleanup (BatchChangeOld and the 4716 no-op) is approved in principle as its
+  own branch, but not tonight."
+- Scope (from the Rule 10 trace): delete the never-invoked BatchChangeOld function
+  (walkInSalesController.js:2524-2589) and the no-op `if(initialStore==JSON.parse(...)) { }` at
+  :4716 (the disabled store-change-confirmation remains; the commented block 2506-2522 stays as
+  history or is cleaned with it — supervisor's choice at execution time, zero-risk branch).
+
+## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
+
+- procurement ~21, asset ~10, nursing ~4, pharmacy remainder ~6, dashboards ~7, masters ~1.
+  Do NOT start until the owner says go. The enumeration tooling (classify + fire-test +
+  verify_store_accessor_campaign.py) and the pattern are proven and ready.
+
 ## 10. [INFO] walkInSales (merged pilot) still carries 2 gated raw parses
 
 - walkInSalesController.js:2527 (`initialStore=JSON.parse(...)` inside BatchChangeOld, AFTER a
