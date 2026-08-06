@@ -56,9 +56,9 @@
                 self.model.reasons = reason;
             });
             
-            var selectedTopStore = JSON.parse(sessionStorage.getItem('selectedTopStore')); 
-		 	$scope.storeId = selectedTopStore.storeId; 
-		 	
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+	 	$scope.storeId = selectedTopStore != null ? selectedTopStore.storeId : undefined; 
+	 	
             self.model.PopulateDropdown = PopulateDropdown;
             self.model.OpenFromDate = OpenFromDate;
             self.model.OpenToDate = OpenToDate;
@@ -85,6 +85,7 @@
         }
 
         var PopulateDropdown = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var upload = self.model;
             upload.store = upload.stores[0];
             upload.status = upload.statuses[0];
@@ -121,6 +122,7 @@
 
 
         var UploadStockApprovalSearch = function (isSearch) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (ValidateDate()) {
                 var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.UPLOAD_STOCK_APPROVAL.SEARCH_API;
                 var data = {

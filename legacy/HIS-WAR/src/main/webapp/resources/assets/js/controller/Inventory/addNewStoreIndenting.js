@@ -247,7 +247,9 @@
               }
               else
               {
-                   if(indent.fromStores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                   var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                   var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
+                   if(indent.fromStores[i].id==selectedStoreId)
                      {
                        indent.fromStore = indent.fromStores[i];
                      }
@@ -487,6 +489,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId;
 
       var data = {

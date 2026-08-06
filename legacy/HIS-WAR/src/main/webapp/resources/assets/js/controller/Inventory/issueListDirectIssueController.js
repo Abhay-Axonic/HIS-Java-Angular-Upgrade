@@ -82,6 +82,7 @@
 
 
     var getDropdownsList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       try {
         var directissue = self.model;
 
@@ -102,9 +103,11 @@
             directissue.allStores = response.data.toStore;
             directissue.toStores = directissue.defaultStores.concat(response.data.toStore);
             directissue.carriers = directissue.carriers.concat(response.data.carrier);
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             for (var i=0;i<directissue.toStores.length;i++)
             {
-              if(directissue.toStores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(directissue.toStores[i].id==selectedStoreId)
               {
                 directissue.toStore=directissue.toStores[i];
               }
@@ -222,6 +225,7 @@
     }
 
     var GetProductCategoryList = function (id) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var indents = self.model;
       var URI = CONSTANTS.GLOBAL.PRODUCT_CATEGORY_API + id + "/"+$scope.organizationId ;
       indents.productCategory = indents.productCategories[0];
@@ -582,6 +586,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     	$scope.saveBtnDisabled=true;
       var conversionPurchase;
       var conversionStock;
@@ -1169,6 +1174,7 @@
 				}
 
     var smartIssueDirectIssue = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
       if (validateSmartIssue()) {
 

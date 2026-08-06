@@ -106,9 +106,11 @@
             stock.stores = stock.stores.concat(response.data);
             stock.newStore = stock.newStore.concat(response.data);
             stock.nearExpired = stock.nearExpired.concat($scope.expiryType);
+              var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+              var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
               for(var i=0;i<stock.stores.length;i++)
               {
-                  if(stock.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                  if(stock.stores[i].id==selectedStoreId)
                   {
                       stock.store = stock.stores[i];
                   }
@@ -121,6 +123,7 @@
       }
 
       var onNearExpiryChange = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         if(self.model.nearExpiryItem.id){
           self.model.expiredFlag = false;
           var URI = CONSTANTS.INVENTORY.STORE.STORE_STOCK_DASHBOARD.ExpiredNear_Months;
@@ -235,6 +238,7 @@
 		};
 
       var searchStock = function (offset,noOfRecordsPerPage,search) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         if (ValidateDashboard()) {
         	 $scope.offset=offset;
         	var noOfRecordsPerPage = noOfRecordsPerPage;
@@ -933,6 +937,7 @@
       }
 
       var ViewStockInTransitData = function (item){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         var URI = CONSTANTS.INVENTORY.STORE.STORE_STOCK_DASHBOARD.Stock_in_transit;
         var data = {
           "storeId": self.model.store.id,
@@ -999,6 +1004,7 @@
        }
       
       var searchSubStoreStock=function(storeSubId){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     	  self.model.chkFlg=true;
     	 var storeSubId = storeSubId.id !== undefined && storeSubId.id !== null ? storeSubId.id : self.model.substituteStore.id;
 //    	 angular.forEach(self.model.substituteDetails, function(value, key){
