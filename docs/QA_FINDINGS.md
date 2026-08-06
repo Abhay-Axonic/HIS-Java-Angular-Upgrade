@@ -1563,4 +1563,36 @@ $state.go per screen, pageerror/4xx/5xx/{{storeName}} capture):
 - Deployed frontend RESTORED to main after verification (6 files copied back; drift check:
   only the pre-existing mpesaApplicationConfigurationController.js extra remains).
 
+## QF-2026-08-07-B — store-accessor campaign batch 2: VERIFIED live (all 6 stock screens, both phases clean); Claude Code OAuth blocker → supervisor-direct conversion
+
+Batch 2 (fix/store-accessor-campaign-b2, branched off b1): 6 Inventory stock-family screens
+(stockAdjustmentApproval, stockAdjustmentDetails, computeStock, confirmStock, varianceApproval,
+stopTransaction). Claude Code delegation FAILED at auth ("OAuth session expired and could not be
+refreshed"; no API key configured anywhere; interactive re-login needs the owner's claude.ai
+account) — logged to DECISIONS_QUEUE; the conversion was done supervisor-direct per the overnight
+contract's "write code on branches" permission, same pattern + same verification bar.
+
+- All 6 BARE derefs converted to $rootScope.getStoreObj() with null-safe storeId (undefined when
+  null). 24 fire-time storeReady() gates on every store-scoped container incl. load-time inits
+  (PopulateDropdown etc.). Per-file Q1/Q2 in the commit (416af1e3): stockAdjustmentApproval
+  (3 gates), stockAdjustmentDetails (5 gates; asset/product-category calls correctly NOT
+  store-scoped), computeStock (3), confirmStock (3), varianceApproval (3), stopTransaction (7).
+- Static verification: node --check clean x6; grep raw parses = 0 across all 6; storeReady()
+  counts 3/5/3/3/3/7 = 24/24 (count-before-you-claim).
+- LIVE FIRE-TEST (tools/golden-trace/test_store_accessor_live_fire.js, target list now argv-driven,
+  default = b2 states): NEGATIVE phase ALL SIX screens 0 pageerrors / 0 5xx / 0 4xx / no
+  {{storeName}}; POSITIVE phase (real store seeded) same — PASS (0 failures).
+- Caveat logged honestly: stockAdjustmentApproval's $state.go lands on accessDenied (admin's role
+  lacks that module permission — the route guard redirects BEFORE the controller instantiates), so
+  its live exercise is limited to the static + pattern-identity evidence; the other 5 screens are
+  fully live-exercised. A role with the module permission (owner's Step 6 click-through) is the
+  live path for that screen.
+- Suite on the b2 deployment: rate-limit 10/10 (clean buckets), regressions PASS (43/43). Deployed
+  frontend RESTORED to main after verification (12 files — b2's 6 stock + b1's 6 pharmacy which
+  the b2 build re-carried; drift check = only the pre-existing mpesa extra).
+- Campaign census (source-derived, /tmp/classify_store_sites.py): 65 BARE + 12 BARE? (mostly
+  safe variants — e.g. preventiveMaintenance:26 is QF-AR-guarded, walkInSales:2527/4716 are
+  gated parses) + 1 GUARDED. Remaining batch plan: b3 addNew cluster (9), b4 upload/issue+dashboards
+  (7), b5 procurement (~21), b6 asset (~10), b7 nursing+pharmacy remainder (~10), b8 dashboards.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

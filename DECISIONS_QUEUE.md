@@ -59,3 +59,31 @@ do not delete — mark status and append.
 *Cycle 01 (2026-08-06 19:07 BST) appended by Hermes (night-shift supervisor). Full detail in
 docs/OVERNIGHT_CYCLE_01.md. ntfy webhook still not configured (no topic anywhere); the queue
 file remains the durable alert.*
+
+## 8. [OPEN] Claude Code OAuth expired — delegation unavailable overnight
+
+- `claude auth status` → "Login: Expired — log in again"; delegation attempts fail with "OAuth
+  session expired and could not be refreshed". No API key configured in env/config (empty strings).
+  Interactive re-login (`claude auth login`) needs the owner's claude.ai account — credentials
+  territory, untouched by the supervisor.
+- Impact: batches 3+ cannot be delegated to Claude Code headless until re-authenticated.
+  Fallback used for batch 2: supervisor-direct conversion (explicitly permitted by the overnight
+  contract), same pattern + same verification bar — batch 2 verified PASS.
+- Question: re-login Claude Code for the next shift, or is supervisor-direct the accepted mode?
+
+## 9. [RESOLVED] Batch-2 family choice (cycle 02 answer: Inventory stock cluster)
+
+- Done as proposed: batch 2 = 6 Inventory stock-family screens, VERIFIED PASS (see
+  QF-2026-08-07-B). Batch 3 plan: addNew cluster (addNewBatchExpDateChange, addNewDrugRecall,
+  addNewMaterialInward, addNewMaterialReturn, addNewNonBillableConsumption,
+  addNewReturnableGatepass), then b4 (addNewScrapRequest, addNewStoreIndenting,
+  addDepartmentConsumption, issueListDirectIssue, storeStockDashboard, uploadStockApproval,
+  uploadStockDetails), then procurement/asset/nursing/dashboards.
+
+## 10. [INFO] walkInSales (merged pilot) still carries 2 gated raw parses
+
+- walkInSalesController.js:2527 (`initialStore=JSON.parse(...)` inside BatchChangeOld, AFTER a
+  storeReady() gate) and :4716 (`if(initialStore==JSON.parse(...))` — a comparison parse). Both
+  are SAFE (gated / comparison-only, no crash, no call) but not pattern-pure (the accessor owns
+  the parse). Also preventiveMaintenance:26 is QF-AR-guarded (safe). Decision: convert on a later
+  batch or leave as-is?
