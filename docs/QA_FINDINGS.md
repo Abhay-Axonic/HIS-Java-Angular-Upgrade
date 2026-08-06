@@ -1473,4 +1473,19 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   cookieObjectStore != undefined) ? cookieObjectStore.storeId : undefined;` at preventiveMaintenanceController:48.
 - Status: FIXED on the branch — pending the FULL deploy + the crash-path verification + the owner's merge.
 
+## QF-AS — store-scoped API calls fire BEFORE the store pick (backend 500s on the pre-pick state) — FOUND 2026-08-06 via the store-accessor pilot verification
+
+- **Observed live** (walkInSales, cookie cleared, post-accessor deploy): NO TypeError (the crash's fixed) and
+  NO {{storeName}} placeholder — but **2× `Failed to load resource: 500`** console errors: the screen's
+  store-scoped API calls fire with the **cookieObject.storeId** (which is undefined until the pick's
+  setStore writes it — the login's cookie never carries it). After the pick (setStore writes
+  cookieObject.storeId = the picked store), the same screen reloads with **0 errors**.
+- **NOT wrong-store data:** the cookieObject.storeId is the PICKED store (verified live — post-pick reload
+  clean). The defect is the PRE-PICK firing: the calls should be gated on the pick (or the store accessor's
+  null-state), not fired with an undefined id.
+- **Scope:** the store-scoped calls' pattern (cookieObject.storeId in the URI construction) spans the
+  family — the campaign's per-site tolerance question must answer "skip the store-scoped call when the
+  store is null" per site, not just guard the deref.
+- Status: OPEN — the crash class is fixed (the accessor); the call-gating is the campaign's follow-on.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
