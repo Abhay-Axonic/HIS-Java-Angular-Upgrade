@@ -19,7 +19,7 @@
 							console.log("$scope.detailsObj",$scope.detailsObj);
 							
 							$scope.newStoreId = 0;
-							var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+							var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 							if(cookieObjectStore!=undefined){
 								$scope.newStoreId = cookieObjectStore.storeId;
 							}
@@ -135,6 +135,7 @@
 							
 							$scope.corectiveMaintenanceReturnWorklist = [];
 							$scope.getCorectiveMaintenanceReturnWorklist = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 							$scope.corectiveMaintenanceReturnWorklist = [];
 								var data = {
 									 	"fromDate":moment($scope.fromDate).format('YYYY-MM-DD'),	

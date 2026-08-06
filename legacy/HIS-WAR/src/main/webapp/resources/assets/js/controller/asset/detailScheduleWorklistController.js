@@ -28,12 +28,12 @@ angular.module('myApp').controller(
 					$state.go('login');
 					return;
 				}
-				var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+				var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 				if(cookieObjectStore==undefined){
 					$rootScope.storePopup();
 					angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
 				} else {
-					$scope.storeId = cookieObjectStore.storeId;
+					$scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
 				}
 				$scope.showAdd = true;
 				$scope.showSave = true;
@@ -250,6 +250,7 @@ angular.module('myApp').controller(
 			
 			
 			$scope.addSpareConsumption = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 				if($scope.selectedStoreId != undefined ){
 					var storeId = $scope.selectedStoreId;
 					var itemObject = {};
