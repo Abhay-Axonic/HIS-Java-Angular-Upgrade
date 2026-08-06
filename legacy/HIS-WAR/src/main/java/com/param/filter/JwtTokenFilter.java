@@ -121,9 +121,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	/**
 	 * STATIC PREFIX RULES — the shell's static directory trees.
-	 * COMPOSITION: 66 exact entries (63 API/static + 3 shell) + 3 prefix rules
+	 * COMPOSITION: 66 exact entries (63 API/static + 3 shell) + 4 prefix rules
 	 * (the original 83-exact shape: the 20 webjar entries collapsed into the
-	 * /HIS-WAR/webjars/ prefix).
+	 * /HIS-WAR/webjars/ prefix; /webjars/ added for the spring webjars-resource-
+	 * handler path, the same static tree under its other serving form).
 	 *
 	 * CONSTRAINT — READ BEFORE ADDING A PREFIX: prefix matching is permitted ONLY
 	 * for static directory trees served by the default servlet (files on disk:
@@ -134,7 +135,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	private static final List<String> STATIC_PREFIXES = List.of(
 		"/resources/",
 		"/views/",
-		"/HIS-WAR/webjars/"
+		"/HIS-WAR/webjars/",
+		"/webjars/"
 	);
 
 	/**
