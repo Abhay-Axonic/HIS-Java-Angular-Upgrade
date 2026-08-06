@@ -80,6 +80,22 @@ file remains the durable alert.*
   addDepartmentConsumption, issueListDirectIssue, storeStockDashboard, uploadStockApproval,
   uploadStockDetails), then procurement/asset/nursing/dashboards.
 
+## 11. [RECORDED] Owner decisions 2026-08-07 (verbatim substance, from his merge-review message)
+
+- Claude Code OAuth (item 8): "supervisor-direct is fine as the standing mode; I will re-login when
+  I am next at the machine." -> RESOLVED (supervisor-direct is the standing conversion mode).
+- stockAdjustmentApproval live coverage: "defer. Step 6 is mine and needs a permissioned role I do
+  not currently have set up."
+- The 4 local-DB drift items: "defer, document only. No schema changes without me." (No schema
+  change was made; all 4 items documented in QF-2026-08-07-A/C.)
+- The two unmerged null-check branches (assigningpickerdispenser, asset-management): "keep
+  separate. I want them reviewable on their own."
+- walkInSales stragglers (item 10): pending the supervisor's analysis — recommendation: fold the
+  2-line cleanup into batch 5 (not into b1-b4 under merge review).
+- Merge shape: owner confirmed cumulative b4-only merge is the intended shape; ONE merge commit
+  naming all four batches. NOT executed — awaiting verbatim Rule 9b approval.
+- Open: nothing blocks the merge review except the owner's Rule 9b approval itself.
+
 ## 10. [INFO] walkInSales (merged pilot) still carries 2 gated raw parses
 
 - walkInSalesController.js:2527 (`initialStore=JSON.parse(...)` inside BatchChangeOld, AFTER a
