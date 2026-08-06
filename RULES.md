@@ -45,6 +45,13 @@ These rules apply to every AI session (Blueprint, Maker, or Checker), regardless
     concluding anything about exposure. A missing local table, column, or config can mask a live
     vulnerability; the DDL and the production-shaped environment are the ground truth for whether
     the path is reachable elsewhere.
+Standing note (2026-08-06, after the 6A deploy failure — a partial class copy): INNER CLASSES
+    SHIP AS SEPARATE .class FILES. Copying only the outer class (RateLimitFilter.class) while the
+    inner class (RateLimitFilter$TargetConfig.class) stays behind produces NoClassDefFoundError,
+    a failed webapp deploy, and a FAST boot (seconds instead of ~20) with everything 404ing —
+    which reads as a filter defect rather than a deploy error. When deploying a changed class:
+    copy the class AND all its inner classes (RateLimitFilter*.class), and treat BOOT TIME as a
+    signal — a 5-second boot where 20 is normal means the Spring context did not load.
 11. **Docs-commit governance** (folded from the Stage-1 note): commits made directly to main under the CLAUDE.md docs exception (governance/tooling/config files) still require the end-of-session SESSION_LOG entry; where such a commit touches the ledger (`docs/BR_INDEX.md`, `docs/BUSINESS_RULE_MANIFEST.md`, any BR status), it also requires the ledger-check run appropriate to the change (`tools/check_ledger_merge_state.py` for merge states) with its output pasted into the session log. The docs exception relaxes Maker-Checker review, not record-keeping.
 
 ## Circuit breaker — emergency stop conditions
