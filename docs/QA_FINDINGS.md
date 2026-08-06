@@ -1449,4 +1449,22 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   cookieObject, the rebuild bootstraps permissions from GET_BY_ROLE_ID (Option 2 proposal, 2026-08-06).
 - Status: OPEN — tracked with Track A entry 65.
 
+## QF-AR — assetScheduler STILL crashes on the selectedTopStore null-storeId after 1fd3150d (incomplete fix — the else branch's unguarded dereference) — FOUND 2026-08-06 via the walk-set click-through
+
+- **Observed live** (walk-set click-through, deployed main-built frontend): `assetScheduler` (create-asset-scheduler)
+  throws `TypeError: Cannot read properties of null (reading 'storeId')` at `createAssetSchedulerController.js:48`
+  — `$scope.storeId = cookieObjectStore.storeId;` in the `else` branch of the store-cookie check — when
+  `cookieObjectStore` is null (fresh session, no store selected yet). Screen renders partially and the init
+  crashes.
+- **Not caused by the deploy:** the deployed file is main's; the drift check proved 0 differences. The crash is
+  the exact class 1fd3150d ("Fix recurring selectedTopStore null-dereference crash in 4 Asset Management
+  screens", 2026-07-20) names for this file — but the commit MOVED the assignment into an if/else and only
+  guarded the `if` path; the `else` branch's dereference was left unguarded. The sibling screens
+  (viewAssetScheduler, scheduleWorklist, detailScheduleWorklist) are clean in the same click-through.
+- **Not** the GenericService error-surfacing (a JS TypeError crash, not a surfaced service error).
+- **Proposed targeted fix (one line, same guard class the fix applied elsewhere):**
+  `if(cookieObjectStore != null && cookieObjectStore.storeId != undefined){ $scope.storeId = cookieObjectStore.storeId; }`
+  at :48 — its own small branch, per the standing discipline. No restore; the app is usable.
+- Status: OPEN — proposed, not fixed.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
