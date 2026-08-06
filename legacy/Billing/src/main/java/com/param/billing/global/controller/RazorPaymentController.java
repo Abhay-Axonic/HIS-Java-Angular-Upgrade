@@ -42,7 +42,7 @@ import com.param.global.common.AesUtil;
 import com.param.global.common.CCAvenueService;
 import com.param.global.common.IAppointmentAndSlotStatusMasterConstants;
 import com.param.global.common.ICommonConstants;
-import com.param.global.common.Mpesa;
+import com.param.global.common.RazorpayHelper;
 import com.param.global.common.Response;
 import com.param.global.dto.KinDetailsDto;
 import com.param.global.dto.PatientSponsorDetailsDto;
@@ -425,7 +425,7 @@ public class RazorPaymentController implements ICommonConstants{
 							
 							String referenceId = expireBy.toString();
 							
-							Map<String, String> res = Mpesa.RazorPaytransactionStatus(unitApplicationConfigurationDto.getRazorPayKeyId(),unitApplicationConfigurationDto.getRazorPaySecretKey(),reqDto.getName(),reqDto.getEmail(),reqDto.getMobileNo(),manupulateAmount,unitApplicationConfigurationDto.getRazorPayCallBackUrl(),referenceId,expireBy);
+							Map<String, String> res = RazorpayHelper.RazorPaytransactionStatus(unitApplicationConfigurationDto.getRazorPayKeyId(),unitApplicationConfigurationDto.getRazorPaySecretKey(),reqDto.getName(),reqDto.getEmail(),reqDto.getMobileNo(),manupulateAmount,unitApplicationConfigurationDto.getRazorPayCallBackUrl(),referenceId,expireBy);
 							
 							  for (Map.Entry<String,String> entry : res.entrySet()) {
 						            System.out.println("Key = " + entry.getKey() +
