@@ -1366,4 +1366,27 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   company-invoice + misc-expense; updateCCAvenue: CCAvenue settlement) and stays in place,
   per owner's revised removal scope (fix/dead-code-removal).
 
+## QF-AN — applicationConfiguration state is LIVE-navigated but commented out (the QF-AH redirect mechanism); isKiosk is 70-read, not dead
+
+- **applicationConfiguration:** 11+ live $state.go('applicationConfiguration') call sites — app.js:1936
+  (checkCookies' cookieObjectAppConfig-undefined branch) plus progressNoteController, costEstimationController,
+  unknownPatientRegController, outPatientSalesWorklistDetailsController, bookViewMasterController and more —
+  while the state itself is COMMENTED OUT (app.js, removed from the upgrade's state table). Navigating to an
+  unroutable state falls through to the router's otherwise -> /login. THIS IS THE QF-AH MASTERS'-REDIRECT
+  MECHANISM: the earlier investigation's four hypotheses (missing table, missing cookie, permission gate,
+  truncation) all stopped at the trigger; none checked whether the DESTINATION resolves. It does not — the
+  state was commented during the upgrade while 11+ navigations still target it. The trigger question (which
+  of the call sites fires for the masters) still needs the distinguishing method, but the mechanism is now
+  source-proven. NOT DELETED (step 4 bin-rule: an unroutable state that something navigates to is a live
+  defect, not dead code).
+- **isKiosk:** 70 references across the JS (casualtyWorklist, doctorDesk, patientRegistration,
+  appointmentScheduling, etc.) read the flag — it is set by the login branch and branched on app-wide.
+  NOT DEAD, NOT DELETED under the owner's deletions-only-where-nothing-live-touches-them rule. The kiosk
+  flow itself remains broken (QF-AE), but the flag's readers are live code.
+- **Deleted in step 4 (zero live references verified):** home-top-bar.html (included nowhere),
+  the commented sexMaster state block (no $state.go('sexMaster') anywhere; sexMasterList data untouched),
+  the commented screen-images block in loginController.js (loginPageImgFun/navBarImgFun + the two commented
+  call sites — the login-page branding images were never loaded; the live screen-images GETs are the
+  post-login screens' calls, unaffected).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

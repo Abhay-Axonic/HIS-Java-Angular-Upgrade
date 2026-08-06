@@ -71,7 +71,7 @@ angular
 							$scope.organizationList = [];
 							if (response.data.status == "success") {
 								$scope.organizationList = response.data.listObject;
-								//$scope.loginPageImgFun();
+
 //								$scope.applicationNameFun();
 //								$scope.copyWriteNameFun();
 //								$scope.navBarImgFun();
@@ -94,7 +94,7 @@ angular
 
 
 				$scope.getUnitByUserCredentials = function () {
-                   // $scope.loginPageImgFun();
+
 //                    $scope.applicationNameFun();
 //                    $scope.copyWriteNameFun();
 //                    $scope.navBarImgFun();
@@ -181,55 +181,6 @@ angular
 
 				};
 
-
-//                $scope.loginPageImgFun = function(){
-//                                var URI = BASE_URL + ROOT_URL + "/api/unit/applicationConfiguration/screen-images/"+$scope.organizationId+"/6"
-//                                    GenericService.serviceAction("GET", URI).then(function(response) {
-//                                    console.log("imagesCheck",response)
-//                                      if(response.data.object!= null){
-//                                    $scope.loginPageImg=response.data.object.imageURL;
-//                                    }else{
-//                                      return;
-//                                    }
-//                                    });
-//                                }
-//                $scope.applicationName;
-//                $scope.applicationNameFun = function(){
-//                                                var URI = BASE_URL + ROOT_URL + "/api/unit/applicationConfiguration/screen-images/"+$scope.organizationId+"/7"
-//                                                    GenericService.serviceAction("GET", URI).then(function(response) {
-//                                                    console.log("imagesCheck",response)
-//                                                      if(response.data.object!= null){
-//                                                    $scope.applicationName=response.data.object.logoName;
-//                                                    console.log(response.data.object.imageURL);
-//                                                    }else{
-//                                                      return;
-//                                                    }
-//                                                    });
-//                                                }
-//                $scope.copyWrite;
-//                $scope.copyWriteNameFun = function(){
-//                                                    var URI = BASE_URL + ROOT_URL + "/api/unit/applicationConfiguration/screen-images/"+$scope.organizationId+"/8"
-//                                                        GenericService.serviceAction("GET", URI).then(function(response) {
-//                                                        console.log("imagesCheck",response)
-//                                                          if(response.data.object!= null){
-//                                                        $scope.copyWrite=response.data.object.logoName;
-//                                                        }else{
-//                                                          return;
-//                                                        }
-//                                                        });
-//                                                    }
-//                $scope.navBarImg
-//                $scope.navBarImgFun = function(){
-//                var URI = BASE_URL + ROOT_URL + "/api/unit/applicationConfiguration/screen-images/"+$scope.organizationId+"/2"
-//                    GenericService.serviceAction("GET", URI).then(function(response) {
-//                    console.log("imagesCheck",response)
-//                      if(response.data.object!= null){
-//                    $scope.navBarImg=response.data.object.imageURL;
-//                    }else{
-//                      return;
-//                    }
-//                    });
-//                }
 
                     console.log($scope.organizationId)
 				

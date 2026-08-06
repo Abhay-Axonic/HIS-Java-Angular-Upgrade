@@ -3614,21 +3614,6 @@ angular.module('myApp').config(['$stateProvider', '$urlRouterProvider','growlPro
 			      }
 			 }
 	})
-	/*
-	 * .state('sexMaster', { url: '/sexMaster', templateUrl:
-	 * 'views/master/GlobalMaster/sex-master.html', controller:
-	 * "sexMasterController", title: 'Sex Master', resolve : {
-	 * 
-	 * data: function($q, $state, $timeout) { var deferred = $q.defer();
-	 * 
-	 * $timeout(function() { var arr =
-	 * JSON.parse(localStorage.getItem('permissions'))
-	 * .modules.filter(function(item){ return (item.id == 389); });
-	 * if(arr.length <= 0){ $state.go("accessDenied") deferred.reject(); } else {
-	 * deferred.resolve(); } });
-	 * 
-	 * return deferred.promise; } } })
-	 */
 	.state('relationMaster', {
 		 url: '/relationMaster',
 		 templateUrl: 'views/master/GlobalMaster/relation-master.html',
