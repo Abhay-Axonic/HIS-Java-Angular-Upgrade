@@ -1617,4 +1617,33 @@ uploadStockApproval, uploadStockDetails). Supervisor-direct (Claude Code OAuth-b
 - Campaign total: 25 screens converted and live-verified across 4 branches
   (b1 pharmacy 6, b2 stock 6, b3 addNew 6, b4 upload/issue 7), all awaiting owner Rule 9b.
 
+## QF-2026-08-06-D — store-accessor campaign pb1 (procurement workOrder 1): VERIFIED live; pre-existing undefined-function defect found (getListNewWOList), NOT fixed
+
+Batch pb1 (fix/store-accessor-campaign-pb1): 6 procurement workOrder screens (addNewQuotationSent,
+addNewWorkOrder, addNewWorkOrderCreation, addNewWorkOrderQuotation, addNewWorkorderApprovalDetails,
+addNewWorkorderApprovalDetailsSettlement). (Note: QF series A-C were IST-misdated 08-07; this is
+the first entry with the true machine clock date, 2026-08-06.)
+
+- 7 deref sites converted (4 inline-comparison hoists + 1 direct assignment + 2 popup-pattern
+  files whose storeName/storeId derefs were UNGUARDED after the lone-if — the exact QF-AR crash
+  class; now null-safe through getStoreObj()). 26 live fire-time storeReady() gates (per-file
+  5/4/6/5/3/3); PopulateDropdown list-only + initCommon pure-init correctly NOT gated. node
+  --check clean x6; 0 raw parses; 26/26 counts.
+- PRE-EXISTING DEFECT FOUND (logged, NOT fixed per default): getListNewWOList is defined ONLY
+  inside a /* */ comment block (lines 89-100) in BOTH approval-details controllers, yet CALLED
+  live at 1647/1650 (approvalDetails) and 1436/1439 (settlement) in the requestChangeToPending
+  POST callback — an undefined-function ReferenceError whenever that flow executes. The storeId
+  map for these files pointed at the COMMENTED definition (the commented-twin trap). My first
+  gate patch matched the commented twin too — caught by inspection, gate removed from the comment
+  (count integrity: 3 live gates per approval file, not 4). Owner decision needed: restore the
+  commented function (it reads data.storeId — a store-scoped list refresh) or delete the live
+  calls.
+- FIRE-TEST (all 6 states, incl. the typo'd state names deatilsWorkorderApproval /
+  deatilsWorkOrderSettlement): NEGATIVE phase all 6 clean (0 pageerrors/5xx/4xx/no literal);
+  POSITIVE phase all 6 clean (not inert). Same-session probe (new in the tool): SKIP on
+  addNewquotationS (no primary-action button in the load DOM matching search/get/save patterns) —
+  recorded; the same-session case for this batch is left to Step 6. Suite: rate-limit 10/10
+  (clean buckets), regressions PASS. Deployed frontend RESTORED to main after the test; drift =
+  mpesa extra only.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
