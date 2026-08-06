@@ -1163,4 +1163,16 @@ Verification of the owner-approved shell bucket (fix/br173-default-deny @ d5a516
 4. WEBJAR PREFIX: FAIL in this deployment. The approved /HIS-WAR/webjars/ prefix matches a tree that does not exist in the ROOT-context deployment (every real springfox file under it -> 404). The ACTUAL webjar tree /webjars/** (springfox-swagger-ui-2.4.0.jar, META-INF/resources) -> 401; /swagger-ui.html and /v2/api-docs -> 401. NOT A REGRESSION: the pre-rewrite filter whitelisted "/HIS-WAR/webjars/..." substrings, which /webjars/** never contained, so the real tree was equally 401 before the rewrite; the /HIS-WAR/... entries are /HIS-WAR-context-deployment artifacts (the preprod template shape) carried into both filters. Zero frontend consumers of /webjars/ (grep of deployed resources/, views/, index.html -> none); swagger is a dev-tool reached only by manual URL. The login SHELL itself (the actual second-gap candidate: lazy-loaded views/) is fully covered — /views/ and /resources/ serve real files 200.
 DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /swagger-ui.html, /v2/api-docs exacts) for ROOT dev convenience, accept the /HIS-WAR-shape coverage as-is, or drop the no-op — owner call, since it changes the approved prefix list. Regression checker on this deployment: PASS (every closed BR signature present; "gender active whitelist removed" asserted absent in the running filter).
 
+## QF-2026-08-05-AD — four dead script references in index.html (logged, NO FIX)
+
+- index.html references four scripts that are ABSENT on disk (404 under the old filter too — a
+  pre-existing app defect, not a filter concern):
+  1. resources/assets/css/global-button-style.js (a .js mislabeled under css/)
+  2. resources/assets/js/controller/asset/addnewAssetIndentController.js
+  3. resources/assets/js/controller/master/pharmacy/reasonMasterController.js
+  4. resources/assets/js/controller/master/unit/staffMasterController.js
+- The shell sweep (1,342 distinct index-referenced paths) returned exactly these four as non-200;
+  all four 404'd before the rewrite as well. The app has been shipping dead script tags. No action —
+  the filter must not be made to mask them, and the fix belongs to the app's asset audit.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
