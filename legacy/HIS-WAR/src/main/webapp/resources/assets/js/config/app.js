@@ -2706,6 +2706,21 @@ $rootScope.incidentReportingMenuOpen = false
 			}
 	}
 
+	$rootScope.getStoreObj = function(){
+			var storeObj = null;
+			try {
+				var raw = sessionStorage.getItem('selectedTopStore');
+				if(raw != null && raw != undefined && raw != ''){
+					var parsed = JSON.parse(raw);
+					if(parsed != null && typeof parsed === 'object'){ storeObj = parsed; }
+				}
+			} catch(e){ storeObj = null; }
+			if(storeObj == null){
+				$rootScope.storePopup();
+			}
+			return storeObj;
+	}
+
 	$rootScope.getStoreName=function(){
 			var storeObj= JSON.parse(sessionStorage.getItem('selectedTopStore'));
 			if(storeObj){

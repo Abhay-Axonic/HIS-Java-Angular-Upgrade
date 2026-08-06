@@ -41,13 +41,9 @@
     $scope.isConsolidatedBill = cookieObjectAppConfig.isConsolidatedBill;
 		// $scope.pinpadAmounFlag = false;
     $scope.counterMstObj = JSON.parse(sessionStorage.getItem('counterMstObj'));
-    $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-    $scope.storeName = $scope.cookieObjectStore.storeName;
+    $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor pilot: null-safe parse + popup trigger, one owner
+    $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header, no {{storeName}} placeholder
     $scope.changePayeeRights = cookieObject.changePayeeRights;
-    if($scope.cookieObjectStore==undefined){
-      $rootScope.storePopup();
-      angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
-    }
     
     $scope.fileObj = {};
 	$scope.fileObj.file = null;

@@ -25,11 +25,8 @@ angular
 									$state.go('login');
 									return;
 								}
-								var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-								if(cookieObjectStore==undefined){
-									$rootScope.storePopup();
-									angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
-								}
+								var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor pilot: null-safe parse + popup trigger, one owner
+
 								
 								$rootScope.loginpage = true;
 								$scope.LISDynamicLabel = "Machine ";
@@ -44,7 +41,7 @@ angular
 								$scope.searchKeyword;
 								$scope.commonListCount;
 								
-								$scope.storeId = cookieObjectStore.storeId;
+								$scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined; // store-accessor pilot: null-safe (the accessor above owns the parse + popup trigger)
 							  	$scope.unitId = cookieObject.unitId;
 								$scope.organizationId = cookieObject.organizationId;
 								$scope.userId = cookieObject.userId;
