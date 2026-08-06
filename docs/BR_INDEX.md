@@ -258,3 +258,4 @@ BR-PENDING-diagnosis-gender-whitelist | /api/opd/getDiagnosisByGenderId whitelis
 
 BR-173 | Authentication-gate structural finding: Spring Security /** catch-all commented out (all security="none" are no-ops); sole gate for /api/** = JwtTokenFilter + 196-entry substring whitelist; unauthenticated reachability PROVEN (saveMedication write trace); whitelist carries auth-exempt write endpoints. | JwtTokenFilter + rest-dispatcher-servlet-security.xml + web.xml | Logged 2026-08-05, NOT fixed
 BR-174 | Post-login org-trust on the bookView endpoints (caller-controlled org params, QF-AA class) | OPEN | Not an unauthenticated PHI gap
+BR-175 | Config cookie carries the SMTP endpoint + username (host/port/id, zero client reads; password + razor keys already stripped) | OPEN | Logged, NO FIX

@@ -1234,4 +1234,38 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   set, yet the observed behavior says it is absent. Needs the live cookie value (browser) to
   distinguish a branch-miss from a cookie-write failure.
 
+## QF-2026-08-05-AH — master-screen redirect: UNRESOLVED (four hypotheses, three disproved)
+
+- **Observation:** authenticated deep-links to #/relationMaster, #/maritalstatusMaster,
+  #/occupationMaster land on the applicationConfiguration screen.
+- **Hypothesis 1 — missing table:** disproved. `m_unit_application_configuration` was never a
+  table (inference from the DTO name); the real config tables exist with data
+  (t_unit_application_billing_configuration 1 active row; m_application_configuration 1 row).
+- **Hypothesis 2 — missing cookie:** disproved. The cookieObjectAppConfig cookie IS present in the
+  logged-in session; the login DTO attaches and line 788 writes it.
+- **Hypothesis 3 — permission gate:** disproved. The masters' states have NO resolve; the role-1
+  privilege modules JSON carries 390 Relation Master, 391 Marital Status Master, 393 Occupation
+  Master (and 660 Application Configuration). The role has everything.
+- **Hypothesis 4 — 4KB cookie truncation (JSON parse fails -> getObject undefined -> the
+  checkCookies gate fires despite the cookie's presence):** plausible, traced from source (82-field
+  DTO, URL-encoded, near the 4KB ceiling; the sidebar's checkCookies destructuring + the shell
+  render are the trigger path), but NOT verified — the user stopped the investigation before the
+  cookie-length check. The pattern (four plausible source-traced explanations in a row) is exactly
+  what Rule 10 warns about.
+- **Status: UNRESOLVED.** Return after the merge with a method that can distinguish (a logged-in
+  browser capture), not another inference. Not merge-critical; the masters are API-verified by the
+  six harness specs.
+
+## BR-175 — config cookie carries the SMTP endpoint + credential (logged, NO FIX)
+
+- The cookieObjectAppConfig cookie (82-field UnitApplicationConfigurationDto, client-readable,
+  URL-encoded JSON) is written by the login flow. `stripClientFacingSecrets()` (Dto:1435) already
+  nulls **password, razorPayKeyId, razorPaySecretKey** at the login (UserMasterServiceImpl:398) —
+  those three do NOT reach the cookie.
+- **NOT stripped and carried in the cookie: host, port, id** (the SMTP endpoint + username).
+  The frontend reads 95 distinct cookieObjectAppConfig fields across the JS — **host/port/id have
+  ZERO reads** (grep-verified). They are carried client-side with no consumer.
+- **Fix direction (deferred):** extend stripClientFacingSecrets() to host/port/id (no client
+  consumers exist). Not applied.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
