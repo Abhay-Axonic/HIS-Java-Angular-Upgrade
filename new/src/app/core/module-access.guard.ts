@@ -22,7 +22,7 @@ import { SessionService } from './session.service';
  * module check -- legacy itself doesn't gate those two screens by module,
  * so this guard doesn't invent a stricter rule than legacy actually has.
  */
-export const moduleAccessGuard: CanActivateFn = (route) => {
+export const moduleAccessGuard: CanActivateFn = async (route) => {
   const session = inject(SessionService);
   const router = inject(Router);
 
@@ -33,11 +33,22 @@ export const moduleAccessGuard: CanActivateFn = (route) => {
   const moduleId = route.data['moduleId'] as number | undefined;
   const requireSuperUser = route.data['requireSuperUser'] === true;
 
-  if (moduleId !== undefined && !session.hasModuleAccess(moduleId)) {
-    return router.parseUrl('/accessDenied');
+  if (moduleId !== undefined) {
+    // Track A #65: wait for the permissions bootstrap (one fetch per session),
+    // then distinguish WHY the gate failed — the store never populated
+    // (permissionsUnavailable) vs the module genuinely absent (denied). The
+    // distinction is what makes a permissions-plumbing failure observable
+    // instead of reading as an individual dead screen.
+    await session.ensurePermissions();
+    if (!session.permissionsLoaded()) {
+      return router.parseUrl('/accessDenied?reason=permissionsUnavailable');
+    }
+    if (!session.hasModuleAccess(moduleId)) {
+      return router.parseUrl('/accessDenied?reason=denied');
+    }
   }
   if (requireSuperUser && !session.isSuperUser) {
-    return router.parseUrl('/accessDenied');
+    return router.parseUrl('/accessDenied?reason=denied');
   }
 
   return true;

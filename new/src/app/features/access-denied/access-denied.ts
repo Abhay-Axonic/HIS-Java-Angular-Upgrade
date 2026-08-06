@@ -16,6 +16,10 @@ import { ActivatedRoute } from '@angular/router';
       <p>
         @if (reason === 'notLoggedIn') {
           You must be logged in to access this page.
+        } @else if (reason === 'permissionsUnavailable') {
+          Your permissions could not be loaded. Log out and log back in to retry.
+        } @else if (reason === 'denied') {
+          You do not have access to this screen. Contact your administrator.
         } @else {
           You do not have permission to access this page.
         }

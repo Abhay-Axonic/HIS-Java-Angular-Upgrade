@@ -13,9 +13,6 @@ async function main() {
   // login check).
   await page.goto(`${DEV}/`, { waitUntil: 'load', timeout: 30000 });
   await page.waitForTimeout(1000);
-  await page.evaluate(() => {
-    localStorage.setItem('permissions', JSON.stringify({ modules: [{ id: 573 }, { id: 522 }, { id: 739 }, { id: 468 }] }));
-  });
   const cookiesBefore = await context.cookies();
   console.error('cookies present:', cookiesBefore.map(c => c.name));
 

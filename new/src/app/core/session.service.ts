@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { API_BASE_URL } from './api-config';
 
 /**
  * Reads the SAME `cookieObject` cookie the legacy AngularJS app's
@@ -48,6 +51,9 @@ export interface CookieObjectAppConfig {
 export class SessionService {
   private readonly cached: CookieObject | null;
   private readonly cachedAppConfig: CookieObjectAppConfig | null;
+  private readonly http = inject(HttpClient);
+  private readonly base = inject(API_BASE_URL);
+  private permissionsPromise: Promise<void> | null = null;
 
   constructor() {
     this.cached = this.readCookieObject();
@@ -118,6 +124,74 @@ export class SessionService {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * Track A #65 (docs/ANGULAR_PENDING_FINDINGS.md entry 65): legacy's login
+   * writes localStorage.permissions at ITS origin; this origin never sees it
+   * (localStorage is origin-scoped, including port). The legacy login now
+   * carries `roleId` in cookieObject (loginController.js — Track A commit),
+   * so this origin can fetch the role's modules itself and populate the SAME
+   * key/shape `hasModuleAccess` parses ({ status, modules: [{id, ...}] }).
+   *
+   * Idempotent: at most one fetch per session. Failure modes are NON-silent —
+   * a failed/absent fetch leaves the store empty and the module-access guard
+   * reports reason=permissionsUnavailable instead of the generic denial, so a
+   * permissions-plumbing problem is observable rather than reading as an
+   * individual dead screen.
+   */
+  ensurePermissions(): Promise<void> {
+    if (this.permissionsPromise) return this.permissionsPromise;
+    this.permissionsPromise = this.fetchPermissions().catch(() => undefined);
+    return this.permissionsPromise;
+  }
+
+  /** True when the permissions store holds a real (non-empty) module set. */
+  permissionsLoaded(): boolean {
+    try {
+      const parsed = JSON.parse(localStorage.getItem('permissions') ?? 'null') as
+        | { modules?: unknown[] }
+        | null;
+      return Array.isArray(parsed?.modules) && parsed.modules.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  private async fetchPermissions(): Promise<void> {
+    if (this.permissionsLoaded()) return;
+    const session = this.cached;
+    const roleId = (session as { roleId?: unknown } | null)?.roleId as number | undefined;
+    if (!session || typeof roleId !== 'number') {
+      // Pre-change session (no roleId in the cookie yet) or no session: the
+      // store stays empty -> guard reports permissionsUnavailable, whose
+      // message (log out and back in) is the self-healing prompt.
+      return;
+    }
+    const url =
+      `${this.base}/privilege/role/${session.organizationId}/${session.unitId}/${roleId}`;
+    const res = await firstValueFrom(this.http.get<Record<string, unknown>>(url));
+    const rows = Array.isArray(res?.['modules']) ? (res['modules'] as unknown[]) : [];
+    const modules: Array<{ id: number }> = [];
+    for (const row of rows) {
+      const raw = (row as { modules?: unknown }).modules;
+      if (typeof raw === 'string') {
+        try {
+          modules.push(...(JSON.parse(raw) as Array<{ id: number }>));
+        } catch {
+          /* one malformed row must not fail the whole bootstrap */
+        }
+      } else if (Array.isArray(raw)) {
+        modules.push(...(raw as Array<{ id: number }>));
+      }
+    }
+    const deduped = [
+      ...new Map(modules.filter((m) => typeof m?.id === 'number').map((m) => [m.id, m])).values(),
+    ];
+    localStorage.setItem(
+      'permissions',
+      JSON.stringify({ status: 'success', modules: deduped }),
+    );
   }
 
   /**

@@ -100,14 +100,6 @@ function startStaticServer() {
 // target state is ever reached. cookieObject is seeded separately, in
 // captureOne() below, AFTER bootstrap completes -- i.e. after
 // loginController's one-time wipe has already run.
-const PERMISSIONS_SEED_SCRIPT = `
-try {
-  localStorage.setItem('permissions', JSON.stringify({
-    modules: Array.from({length: 2000}, (_, i) => ({ id: i + 1 }))
-  }));
-} catch (e) {}
-`;
-
 const COOKIE_OBJECT = {
   unitId: 1, organizationId: 1, userId: 1, doctorId: 0, isSuperUser: 'Y',
 };
@@ -202,7 +194,6 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
-  await context.addInitScript({ content: PERMISSIONS_SEED_SCRIPT });
   await context.addInitScript({ content: TRACER_SRC });
 
   console.error(`Capturing ${targets.length} state(s)...`);
