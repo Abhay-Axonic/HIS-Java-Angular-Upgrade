@@ -1349,4 +1349,21 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
 - **Status:** LOGGED. Fix scoped, unstarted (per owner). The prior razorpay draft's two findings
   (client-trusted amount, missing signature verification) confirmed still present in the code today.
 
+## QF-AM — RETRACTION: the CCAvenue "abandoned-in-baseline" verdict (from the partner-baseline report)
+
+- **Retracted 2026-08-06, reason stated:** the verdict was produced by tracing the CCAvenue TABLES
+  (absent from the local DB and the DDL) without tracing the CALL SITES. The call-site trace shows
+  CCAvenue is a live, governed integration: RazorPaymentController endpoints /sendCCAvenueLink,
+  /validateCCAvenuePayment, and the /validatePayment/callBackUrl webhook, the billing settlement
+  (BillingMasterServiceImpl:2082 -> updateCCAvenue), and an owner-approved business rule
+  (BR-012, 2026-07-04) documenting the webhook's post-payment reconciliation behavior with an
+  explicit log-only decision pending verification of the CCAvenue retry contract. The missing
+  schema (t_cc_avenue_log) is an environment/schema gap of the Rule-10 shape, not evidence of dead
+  code. Lesson folded into the Rule 10 standing note's spirit: trace call sites, not just tables.
+- **Status:** RETRACTED. CCAvenue stays untouched. The M-Pesa STK-push/callback layer's
+  dead-verdict stands (zero config, zero transactions, production-only URL, orphaned writes) —
+  but the M-Pesa DAO layer is live (validateMpesaTrancastion: admission mode-5 receipts +
+  company-invoice + misc-expense; updateCCAvenue: CCAvenue settlement) and stays in place,
+  per owner's revised removal scope (fix/dead-code-removal).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
