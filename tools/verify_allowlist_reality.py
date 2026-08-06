@@ -80,6 +80,8 @@ DENY_SAMPLES = [
     # M-Pesa callbacks — controller removed (abandoned-in-baseline); must now DENY
     "/Billing/resultUrl",
     "/Billing/validationResultResponse",
+    # BR-176 — anonymous org-registration denied (interim mitigation); must now 401
+    "/api/createOrganizationFromWeb",
     # generic API paths
     "/api/unit/applicationConfiguration/billing/orgId/1/unitId/1",
     "/api/billing/unit/bill/Report/1/1",

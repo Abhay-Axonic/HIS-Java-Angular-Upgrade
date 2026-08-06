@@ -1414,4 +1414,17 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   rateLimit + map JwtTokenFilter under its own name) is the resolution if the wrapper is ever
   needed (e.g. a filter that must inspect request bodies pre-controller).
 
+## QF-AP — createOrganizationFromWeb returns generated ADMIN CREDENTIALS in its response body (design defect, independent of the payment layers)
+
+- The org-registration flow (UserMasterDaoImpl:1791 setPassword + :1875 return) returns the
+  OrganizationMasterDto carrying the org's Admin password (a fresh server-random value) in the HTTP
+  response body — alongside the orgId/unitId/userId. Whoever can call the endpoint receives working
+  admin credentials for a fully provisioned tenant. This is a design defect on its own, independent of
+  the payment-bypass layers (BR-176): even with perfect payment verification, an anonymous credential-
+  granting endpoint should never return credentials in-band.
+- **Mitigation:** the endpoint is DENIED at the filter (BR-176 interim mitigation, merged 2026-08-06).
+- **Required before the endpoint is ever public again (recorded in BR-176's re-allowlist criteria):**
+  credentials must be delivered out-of-band (email/WhatsApp only), never in the response body.
+- Status: OPEN, tracked under BR-176's merge criteria.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

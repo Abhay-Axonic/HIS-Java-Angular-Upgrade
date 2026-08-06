@@ -44,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 * The exact-match allowlist (BR-173 Phase 2 + the 2026-08-06 allowlist audit).
 	 * Ordered: writes first, then PHI reads, reference/config, then static.
 	 * The stored forms are POST-normalization (host-stripped, query-stripped, trailing-slash-trimmed).
-	 * COMPOSITION: 46 exact entries (42 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
+	 * COMPOSITION: 45 exact entries (41 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
 	 * Every exact form here was audit-verified against its controller's class-level
 	 * @RequestMapping + method mapping AND the form a real caller produces (the
 	 * 2026-08-06 audit corrected 18 entries: 9 class-prefix-dropped forms corrected,
@@ -89,7 +89,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			"/api/billing/getBillNoByPatient",
 			"/api/billing/getBillReceiptBytesMyLife",
 		// REFERENCE / CONFIG
-			"/api/createOrganizationFromWeb",
+			// BR-176 DENY (2026-08-06): /api/createOrganizationFromWeb removed — anonymous
+			// org-registration returned generated admin credentials in the response body,
+			// hard-set the subscription PAID from client-asserted payment JSON, and fired
+			// AWS/WhatsApp/cache side effects per request, unrate-limited, with zero
+			// frontend callers. Interim mitigation (fix layers recorded in BR-176); the
+			// endpoint is re-allowlisted ONLY behind the BR-176 merge criteria.
 			"/ldapUserCredentialCheck",
 			"/adt/getActivePrefixListForWebPage",
 			"/adt/getActiveRelationListForWebPage",
