@@ -113,6 +113,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		"/HIS-WAR/swagger-resources",
 		"/HIS-WAR/swagger-ui.html",
 		"/applicationConfiguration/screen-images",
+		// LOGIN (exact — the Duo second-factor fallback, loginController.js:542;
+		// in-memory state only, no DB write; PHASE 6: rate-limit with the other
+		// credential endpoints)
+		"/login",
 		// SHELL (exact — the app entry pages)
 		"/",
 		"/index.html",
@@ -121,10 +125,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	/**
 	 * STATIC PREFIX RULES — the shell's static directory trees.
-	 * COMPOSITION: 66 exact entries (63 API/static + 3 shell) + 4 prefix rules
+	 * COMPOSITION: 67 exact entries (63 API/static + 3 shell + 1 login fallback)
+	 * + 4 prefix rules + 4 anchored patterns
 	 * (the original 83-exact shape: the 20 webjar entries collapsed into the
 	 * /HIS-WAR/webjars/ prefix; /webjars/ added for the spring webjars-resource-
-	 * handler path, the same static tree under its other serving form).
+	 * handler path, the same static tree under its other serving form; the
+	 * org-master subdomain + /checkParti patterns + the /login exact added for
+	 * the login submit path).
 	 *
 	 * CONSTRAINT — READ BEFORE ADDING A PREFIX: prefix matching is permitted ONLY
 	 * for static directory trees served by the default servlet (files on disk:
@@ -140,15 +147,27 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	);
 
 	/**
-	 * The two narrow anchored patterns for the feedback path-variable GETs — ONLY these two,
-	 * no general pattern facility. The exact 6-variable shapes from QF-AH/AI:
-	 *   /api/outPatientFeedback/{organizationId}/{unitId}/{patientId}/{visitType}/{visitTypeId}/{encounterId}
-	 *   /api/inPatientFeedback/{organizationId}/{unitId}/{patientId}/{visitType}/{visitTypeId}/{admissionId}
+	 * The narrow anchored patterns — FOUR total, each replacing a path-variable
+	 * shape that exact entries cannot enumerate:
+	 *   1-2. the feedback path-variable GETs (6 variable segments each)
+	 *   3.   the org-master list subdomain form (loginController.js:66 appends the
+	 *        hostname — localhost/smeabc/qa/intdev/demo — the variable a pattern
+	 *        exists for)
+	 *   4.   the Twilio participant check (twilio-video.js:31032 bare fetch,
+	 *        same flow as /token/Doctor)
+	 * A pattern is justified ONLY for a genuinely variable segment on a pre-login
+	 * caller's path; anything enumerable must be an exact entry. A pattern
+	 * facility that grows without that justification becomes the next contains()
+	 * chain.
 	 */
 	private static final Pattern OPD_FEEDBACK_PATH = Pattern
 			.compile("^/api/outPatientFeedback/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+$");
 	private static final Pattern IPD_FEEDBACK_PATH = Pattern
 			.compile("^/api/inPatientFeedback/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+$");
+	private static final Pattern ORG_MASTER_LIST_PATH = Pattern
+			.compile("^/adt/organizationMasterList/[^/]+$");
+	private static final Pattern CHECKPARTI_PATH = Pattern
+			.compile("^/checkParti/[^/]+$");
 
 	/**
 	 * URL normalization applied BEFORE matching, in this order:
@@ -236,7 +255,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			boolean isPublic = PUBLIC_ALLOWLIST.contains(normalizedUrl)
 					|| isStaticPrefix(normalizedUrl)
 					|| OPD_FEEDBACK_PATH.matcher(normalizedUrl).matches()
-					|| IPD_FEEDBACK_PATH.matcher(normalizedUrl).matches();
+					|| IPD_FEEDBACK_PATH.matcher(normalizedUrl).matches()
+					|| ORG_MASTER_LIST_PATH.matcher(normalizedUrl).matches()
+					|| CHECKPARTI_PATH.matcher(normalizedUrl).matches();
 
 			if (isPublic) {
 				chain.doFilter(request, response);
