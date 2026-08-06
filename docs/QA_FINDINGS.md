@@ -1280,4 +1280,22 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
 - Same class as QF-AD (referenced-but-absent assets): the fix would be shipping the font files or
   removing the @font-face rules. No fix applied — logged only.
 
+## QF-AJ — global search unreachable for role 1 (module-987 permission gap) + coversheet dependence + dead home-top-bar
+
+- **Module-987 permission gap:** the only rendered header (top-bar.html, index.html:187 ng-if
+  loginpage) carries the global-search trigger — the "Book View Search" icon (top-bar.html:276),
+  gated ng-if="checkAccessT(987)". Module 987 is ABSENT from the role-1 privilege tree (1,077
+  modules, no id 987) -> the icon does not render -> #searchModal has no trigger. The only other
+  data-target="#searchModal" is in home-top-bar.html:151 (see below). No JS opens the modal (the
+  sole reference is a .modal('hide')). NOT a filter defect; identical before and after this branch.
+- **Coversheet dependence:** the patient coversheet's designed entry is the global search
+  (search-result click passes appointmentObj into #/OPDCoverSheet). With the search unreachable,
+  the coversheet has no working entry for this session; a bare deep-link renders empty
+  (params.appointmentObj empty, drugHistoryList unpopulated). Pre-existing; not a filter defect.
+- **Dead home-top-bar template:** views/common/home-top-bar.html is included NOWHERE (grep across
+  views: zero ng-include references) yet carries the only ungated search trigger (line 151). Dead
+  template; pre-existing. Candidate for removal in the template cleanup phase.
+- Status: LOGGED, no fix. The role's module tree is data, not code — the fix (adding module 987 to
+  the role's privilege modules) is a configuration decision for the owner.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
