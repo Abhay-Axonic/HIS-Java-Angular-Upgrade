@@ -191,9 +191,10 @@
           function (response) {
             self.model.stores = self.model.stores.concat(response.data.store);
             self.model.assetTypes = self.model.assetTypes.concat(response.data.assetType);
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
             for(var i=0;self.model.stores.length > i;i++)
             {
-              if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(self.model.stores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
               {
                 self.model.store = self.model.stores[i];
               }
@@ -258,6 +259,7 @@
     }
 
     var GetLoanOut = function (loanOutId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.LOAN_IN_OUT.LOAN_OUT.DETAILS_API+ $scope.unitId + '/' + loanOutId;
 
       $rootScope.startLoader();
@@ -426,6 +428,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if(self.model.itemName){
         if(self.model.itemName.length >= 3){
           //var URI = CONSTANTS.GLOBAL.BATCH_API + "unit/"+$scope.unitId;
@@ -502,6 +505,7 @@
     }
     
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     	 if (!self.model.SelectedItemsIds.length) {
  	        growl.error('Please select items to add');
  	        return false;
@@ -656,6 +660,7 @@
     }
 
     var CreateLoanOut = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.LOAN_IN_OUT.LOAN_OUT.SAVE_API;
 
       var data = {

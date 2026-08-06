@@ -100,8 +100,9 @@
                         self.model.stores = self.model.stores.concat(response.data.store);
                         for(var i=0;i<self.model.stores.length;i++)
                         {
-                        	 if(self.model.stores!=undefined && self.model.stores[i].id!=undefined){
-                        		 if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        	 	 if(self.model.stores!=undefined && self.model.stores[i].id!=undefined){
+                        	 		 var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                        	 		 if(self.model.stores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
                         		 {
                         			 self.model.store = self.model.stores[i];
                         		 }
@@ -193,6 +194,7 @@
         }
 
         var GetConsignmentOutwardDetails = function (outwardId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         
             var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_OUTWARD.DETAILS_API + $scope.unitId + '/'+ outwardId;
 
@@ -293,6 +295,7 @@
         }
 
         var searchNewItem = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if(self.model.search.itemName){
                 if(self.model.search.itemName.length >= 3){
                     var URI = CONSTANTS.GLOBAL.NEW_BATCH_API + true;
@@ -558,6 +561,7 @@
         }
 
         var CreateConsignmentOutwardRequestDetails = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_OUTWARD.SAVE_API;
 
@@ -607,6 +611,7 @@
         }
 
         var UpdateConsignmentOutwardRequestDetails = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_OUTWARD.UPDATE_API + self.model.outwardId;
             var data = {
                 "id": self.model.outwardId,

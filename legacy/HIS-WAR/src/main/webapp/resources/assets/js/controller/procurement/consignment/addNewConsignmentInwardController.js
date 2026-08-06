@@ -139,8 +139,9 @@
           inward.stores = inward.stores.concat(response.data);
           for(var i=0;i<inward.stores.length;i++)
           {
-        	 if(inward.stores!=undefined && inward.stores[i].id!=undefined){
-        		 if(inward.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+        	 	 if(inward.stores!=undefined && inward.stores[i].id!=undefined){
+        	 		 var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+        	 		 if(inward.stores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
         		 {
         			 inward.store = inward.stores[i];
         		 }
@@ -181,6 +182,7 @@
     }
 
     var GetProductCategoryList = function (id) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var inward = self.model;
 
       //TODO : Add asset category to the uri
@@ -273,6 +275,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       // new test api
       var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId;
       var data = {
@@ -636,6 +639,7 @@
     }
 
     var SaveNewConsignmentInward = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var store = self.model;
       var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_INWARD.SAVE_API;
 
@@ -869,6 +873,7 @@
     }
 
     var GetInward = function (inwardId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
       var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_INWARD.DETAIL_API + $scope.unitId + '/' + inwardId;
 
