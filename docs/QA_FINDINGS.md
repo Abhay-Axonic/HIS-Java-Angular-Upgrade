@@ -1673,4 +1673,30 @@ UNGUARDED storeName/storeId derefs + 1 inline-comparison); 24 live gates (3/7/3/
 - Same-session probe: SKIP again (workOrderApproval — no primary action button in load DOM). Suite:
   rate-limit 10/10 (clean buckets), regressions PASS. Restored main frontend; drift = mpesa only.
 
+## QF-2026-08-06-F — store-accessor campaign pb3 (procurement quotation+purchase): VERIFIED live; two pre-existing 500s interpreted, NOT gate failures
+
+Batch pb3 (fix/store-accessor-campaign-pb3, cumulative off pb2): 6 screens (addNewEnquirySent,
+addNewPO, addNewQuotation, addNewQuotationFillIn, detailsGRNApproval, addNewLocalPR). 6 deref
+sites converted (5 inline hoists + 1 BARE init deref in detailsGRNApproval — QF-AR class); 29
+gates (5/7/5/5/2/5). node --check clean; 0 raw parses; 29/29.
+
+- FIRE-TEST: 4 of 6 screens clean both phases. Two 500s interpreted from the LINES + catalina,
+  neither a gate failure:
+  1. detailsGRNApproval 500 (both phases) on /api/procurements/quotation/grn/approval/1/1/0 =
+     GetGRNList with dataId=0 — the fire-test navigates directly without a GRN id (a real user
+     always arrives from the list with an id). Pre-existing invalid-input 500; GetGRNList is
+     by-id (unit/org/dataId), NOT store-scoped, correctly ungated.
+  2. addNewEnquirySentToVendor pre-pick 500 on /api/global/allvendor/search/unit/1/vendorName/
+     noSelectedVendorFound = allvendors() init call (addNewEnquirySentController.js:184-206):
+     unit-scoped URI with a hardcoded sentinel text, ZERO storeId in URI or payload (read from
+     the lines). Clean post-pick — cold-path 500 on first load after login, not store-related.
+- Both logged per the never-halt default (pre-existing defect surfaced by the work -> log, do not
+  fix). They will 500 identically on main (no campaign code in their path).
+- Same-session probe: SKIP (no primary action button in load DOM). Suite: rate-limit 10/10
+  (clean buckets), regressions PASS. Frontend RESTORED to main after the test (incl. a repair of
+  my own broken restore command — 17 stray files had been dumped into procurement/purchase by a
+  multi-destination cp; moved out, drift re-verified clean). Drift = mpesa extra only.
+- NOTE: addNewPOController matches pre-existing ANGULAR_PENDING_FINDINGS item 2 (route/controller
+  name disconnect, addItemPOCreation vs addItemPO) — untouched, logged in the cycle report.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
