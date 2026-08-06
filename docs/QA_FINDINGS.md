@@ -1153,4 +1153,149 @@ THE THREE NO-CLEAN-RULE RESOLUTIONS:
   is the artifact the rewrite matches against (normalization: host-strip, query-strip,
   trailing-slash-strip; the pattern rule for the two feedback path-variable GETs).
 
+## QF-2026-08-05-AC — BR-173 shell bucket: login shell VERIFIED, webjar prefix check FAILS in the ROOT deployment (decision queued)
+
+Verification of the owner-approved shell bucket (fix/br173-default-deny @ d5a51640, deployed to the running Tomcat PID 3458 as WEB-INF/classes; class mtime 20:45 == commit minute, strings confirm the 3 prefixes + 3 shell exacts, 0 requestUrl.contains).
+
+1. LOGIN PAGE end-to-end, no token: PASS. /, /index.html, /healthcheck.html all 200. 1,333 local asset refs enumerated from the served /index.html and fetched — 0 x 401 (the 9 "401" rows in the raw sweep are protocol-relative EXTERNAL CDN URLs (//ajax.googleapis.com etc.) the browser resolves off-host; they never hit the filter. 2 non-401 content anomalies are pre-existing and filter-irrelevant: /resources/assets/css/global-button-style.js -> 404 (referenced, missing on disk) and one backslash-escaped href artifact -> 400.)
+2. ALLOW re-sweep: 68/68 not-401 (66 exact entries incl. the 3 shell exacts + the 2 real-shaped feedback URLs /api/{in,out}PatientFeedback/1/1/1/1/1/1, which reach their controllers and 500 on fake IDs — the criterion is not-401). All 66 verbatim entries pass; /HIS-WAR/... exacts (swagger-ui.html, v2/api-docs, configuration/*, api-ui, swagger-resources, images/favicons) are allowlisted-but-404 at ROOT (legacy context-path artifacts, harmless).
+3. DENY sample: 14/14 -> 401 across buckets, including every previously-exempt write family: /api/opd/saveMedication + /updateMedication + /saveMedicationHistory (old whitelist line 110), /api/opd/patientDoc/saveAnalyzedReport + getAnalyzedReport/1, /api/billing/unit/bill/Report + /MIS + /file/1/1, /deleteParticipants + /{identity}/{room} + /api/deleteParticipants, /api/opd/getFrequencyList (old line 113), /adt/getActiveCountryList, /api/global/patientRegistration/save (kiosk sibling; only the exact base is allowed).
+4. WEBJAR PREFIX: FAIL in this deployment. The approved /HIS-WAR/webjars/ prefix matches a tree that does not exist in the ROOT-context deployment (every real springfox file under it -> 404). The ACTUAL webjar tree /webjars/** (springfox-swagger-ui-2.4.0.jar, META-INF/resources) -> 401; /swagger-ui.html and /v2/api-docs -> 401. NOT A REGRESSION: the pre-rewrite filter whitelisted "/HIS-WAR/webjars/..." substrings, which /webjars/** never contained, so the real tree was equally 401 before the rewrite; the /HIS-WAR/... entries are /HIS-WAR-context-deployment artifacts (the preprod template shape) carried into both filters. Zero frontend consumers of /webjars/ (grep of deployed resources/, views/, index.html -> none); swagger is a dev-tool reached only by manual URL. The login SHELL itself (the actual second-gap candidate: lazy-loaded views/) is fully covered — /views/ and /resources/ serve real files 200.
+DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /swagger-ui.html, /v2/api-docs exacts) for ROOT dev convenience, accept the /HIS-WAR-shape coverage as-is, or drop the no-op — owner call, since it changes the approved prefix list. Regression checker on this deployment: PASS (every closed BR signature present; "gender active whitelist removed" asserted absent in the running filter).
+
+## QF-2026-08-05-AD — four dead script references in index.html (logged, NO FIX)
+
+- index.html references four scripts that are ABSENT on disk (404 under the old filter too — a
+  pre-existing app defect, not a filter concern):
+  1. resources/assets/css/global-button-style.js (a .js mislabeled under css/)
+  2. resources/assets/js/controller/asset/addnewAssetIndentController.js
+  3. resources/assets/js/controller/master/pharmacy/reasonMasterController.js
+  4. resources/assets/js/controller/master/unit/staffMasterController.js
+- The shell sweep (1,342 distinct index-referenced paths) returned exactly these four as non-200;
+  all four 404'd before the rewrite as well. The app has been shipping dead script tags. No action —
+  the filter must not be made to mask them, and the fix belongs to the app's asset audit.
+
+## QF-2026-08-05-AE — BR-174 scoped: bookView is NOT an unauthenticated PHI gap (retraction logged)
+
+- **The stronger claim is RETRACTED, and it originated with the user** (twelfth pattern-pass
+  correction; the first where the bad pass was on the user's side): the bookView family was read
+  as "pre-login route" off a route-config classification and escalated as potentially the most
+  serious finding of the project. The load test overturned it.
+- **BR-174 scope (as recorded):** post-login org-trust on the bookView endpoints — caller-
+  controlled org/unit params (QF-AA class). NOT an unauthenticated PHI read. The 25 bookView
+  endpoints are DENY'd by the filter (Layer 2) and unreachable pre-login (clean-context load of
+  #/bookView lands on the login via the encounterQueueManagement permissions-resolve crash ->
+  $urlRouterProvider.otherwise("/login")). Nothing added to the allowlist.
+- **Lazy-fetch sweep classification DISCARDED (Rule-10 control failure):** the load-test method
+  could not distinguish a known-public route from a known-gated one — every route (redirects AND
+  URL-staying states, incl. #/selfRegistrationdemo and #/selfRegistrationhome) rendered the login
+  form with no session. The shell gate overrides all routes in this deployment. Per the user's
+  condition, the ~40-gap classification was discarded, not kept.
+- **Separate finding (the kiosk flow is already broken here, unrelated to the filter):** the
+  selfRegistrationdemo state's templateUrl (views/OPD/self-registrationdemo.html) is ABSENT on
+  disk (QF-AD class); the loginController navigates only post-login destinations (dashboard/home);
+  the kiosk entry routes render the login with no session. The kiosk flow is not reachable in this
+  deployment with no session — a pre-existing break, not a filter regression.
+
+## QF-2026-08-05-AF — applicationConfiguration state commented out: the checkCookies() config gate redirects to an unroutable state (logged, NO FIX)
+
+- **Finding:** the app's standard init guard `checkCookies()` (app.js:1927) redirects any guarded
+  screen to `applicationConfiguration` when the `cookieObjectAppConfig` cookie is missing
+  (app.js:1936). The `applicationConfiguration` state definition is COMMENTED OUT (app.js:15340),
+  so the redirect target is unroutable and falls through to `$urlRouterProvider.otherwise("/login")`
+  (app.js:3117). The gate has been broken independently of this branch — it predates the BR-173
+  rewrite and is a frontend state-config defect, not a filter issue.
+- **Context:** the redirect is the app's designed config gate (cookieObject vs cookieObjectAppConfig
+  discriminator), uniform across 213 controllers. The `cookieObjectAppConfig` cookie is written by
+  the ADT/registration flows, not by login. Deep-linking to guarded screens (e.g. the GlobalMaster
+  screens) redirects until the config has been loaded through an admission-flow screen.
+- **Does NOT affect the merge:** the BR-173 filter work is independent of this frontend gate; the
+  gate's behavior is identical before and after the branch. NO FIX — the fix belongs to the app's
+  state-config (re-enabling or re-pointing the applicationConfiguration state), not the filter.
+
+## QF-2026-08-05-AG — config-gate blockage: inferred table corrected; real drift found; login-cookie cause UNRESOLVED
+
+- **Retraction (logged):** the earlier claim that `m_unit_application_configuration` is a missing
+  table is WRONG — that table does not exist in the DB, in the authoritative DDL, or as an entity,
+  because it was never a table. The name was inferred from `UnitApplicationConfigurationDto`; the
+  actual query path disproves it. The inference error is logged as the third consecutive
+  inference-on-this-path caught by Rule-10 verification against the real query and the real row.
+- **The real config tables (org 1 / unit 1, this box):**
+  - `t_unit_application_billing_configuration` — EXISTS, 1 row, status='A' (the login DTO's
+    source via `GET_DEFAULT_SELF_TARIFF_FROM_APP_BILLING_CONF`).
+  - `t_unit_application_registration_field_config` — **MISSING (the real drift)** — the
+    `GET_UNIT_APPLICATION_REGISTRATION_FIELD_CONFIG` named query's target; the ADT screens
+    (admittedPatientList, admissionRequest, unknownPatientReg, morgueReservation) fetch it and
+    would fail on this box. Same drift class; not the login-cookie path.
+  - `m_application_configuration` — EXISTS, 1 row (org 1).
+- **Login-cookie cause: UNRESOLVED.** The assembly (`UserMasterServiceImpl:378-392`) attaches the
+  DTO from the billing-config row (present), and the 788 writer's branch needs only
+  `mainObject.unitApplicationConfigurationDto` non-null — the DB state says the cookie should be
+  set, yet the observed behavior says it is absent. Needs the live cookie value (browser) to
+  distinguish a branch-miss from a cookie-write failure.
+
+## QF-2026-08-05-AH — master-screen redirect: UNRESOLVED (four hypotheses, three disproved)
+
+- **Observation:** authenticated deep-links to #/relationMaster, #/maritalstatusMaster,
+  #/occupationMaster land on the applicationConfiguration screen.
+- **Hypothesis 1 — missing table:** disproved. `m_unit_application_configuration` was never a
+  table (inference from the DTO name); the real config tables exist with data
+  (t_unit_application_billing_configuration 1 active row; m_application_configuration 1 row).
+- **Hypothesis 2 — missing cookie:** disproved. The cookieObjectAppConfig cookie IS present in the
+  logged-in session; the login DTO attaches and line 788 writes it.
+- **Hypothesis 3 — permission gate:** disproved. The masters' states have NO resolve; the role-1
+  privilege modules JSON carries 390 Relation Master, 391 Marital Status Master, 393 Occupation
+  Master (and 660 Application Configuration). The role has everything.
+- **Hypothesis 4 — 4KB cookie truncation (JSON parse fails -> getObject undefined -> the
+  checkCookies gate fires despite the cookie's presence):** plausible, traced from source (82-field
+  DTO, URL-encoded, near the 4KB ceiling; the sidebar's checkCookies destructuring + the shell
+  render are the trigger path), but NOT verified — the user stopped the investigation before the
+  cookie-length check. The pattern (four plausible source-traced explanations in a row) is exactly
+  what Rule 10 warns about.
+- **Status: UNRESOLVED.** Return after the merge with a method that can distinguish (a logged-in
+  browser capture), not another inference. Not merge-critical; the masters are API-verified by the
+  six harness specs.
+
+## BR-175 — config cookie carries the SMTP endpoint + credential (logged, NO FIX)
+
+- The cookieObjectAppConfig cookie (82-field UnitApplicationConfigurationDto, client-readable,
+  URL-encoded JSON) is written by the login flow. `stripClientFacingSecrets()` (Dto:1435) already
+  nulls **password, razorPayKeyId, razorPaySecretKey** at the login (UserMasterServiceImpl:398) —
+  those three do NOT reach the cookie.
+- **NOT stripped and carried in the cookie: host, port, id** (the SMTP endpoint + username).
+  The frontend reads 95 distinct cookieObjectAppConfig fields across the JS — **host/port/id have
+  ZERO reads** (grep-verified). They are carried client-side with no consumer.
+- **Fix direction (deferred):** extend stripClientFacingSecrets() to host/port/id (no client
+  consumers exist). Not applied.
+
+## QF-AI — /fonts/ content gap (QF-AD class, NO FIX)
+
+- The web-appointment.html template's inline @font-face blocks reference ../fonts/robotoregular.*
+  and ../fonts/robotomedium.* (relative to /views/AppointmentScheduling/, resolving to the root
+  /fonts/ tree). The font FILES are absent from the source webapp AND the deployed ROOT — there is
+  no /fonts/ directory anywhere in the WAR.
+- The /fonts/ prefix (5th static prefix) fixes the AUTH answer: the requests now 404 instead of
+  401, so the filter no longer masks the missing-asset problem. The 404s remain; the browser falls
+  back to the system font and the web-appointment page still renders (why this went unnoticed).
+- Same class as QF-AD (referenced-but-absent assets): the fix would be shipping the font files or
+  removing the @font-face rules. No fix applied — logged only.
+
+## QF-AJ — global search unreachable for role 1 (module-987 permission gap) + coversheet dependence + dead home-top-bar
+
+- **Module-987 permission gap:** the only rendered header (top-bar.html, index.html:187 ng-if
+  loginpage) carries the global-search trigger — the "Book View Search" icon (top-bar.html:276),
+  gated ng-if="checkAccessT(987)". Module 987 is ABSENT from the role-1 privilege tree (1,077
+  modules, no id 987) -> the icon does not render -> #searchModal has no trigger. The only other
+  data-target="#searchModal" is in home-top-bar.html:151 (see below). No JS opens the modal (the
+  sole reference is a .modal('hide')). NOT a filter defect; identical before and after this branch.
+- **Coversheet dependence:** the patient coversheet's designed entry is the global search
+  (search-result click passes appointmentObj into #/OPDCoverSheet). With the search unreachable,
+  the coversheet has no working entry for this session; a bare deep-link renders empty
+  (params.appointmentObj empty, drugHistoryList unpopulated). Pre-existing; not a filter defect.
+- **Dead home-top-bar template:** views/common/home-top-bar.html is included NOWHERE (grep across
+  views: zero ng-include references) yet carries the only ungated search trigger (line 151). Dead
+  template; pre-existing. Candidate for removal in the template cleanup phase.
+- Status: LOGGED, no fix. The role's module tree is data, not code — the fix (adding module 987 to
+  the role's privilege modules) is a configuration decision for the owner.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

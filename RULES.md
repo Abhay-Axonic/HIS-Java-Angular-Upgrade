@@ -22,6 +22,18 @@ These rules apply to every AI session (Blueprint, Maker, or Checker), regardless
     matched the DEFINITION SITE (the entity declaration, the whitelist's own entry, the controller's
     @RequestMapping, a config-file URL constant, a bean field name) rather than a USAGE — the
     definition-site matches are not callers.
+
+    Standing note (2026-08-05, after the third shell gap — /fonts/ — was found by catalina, not by
+    any sweep): every static-asset enumeration so far was scoped to a SINGLE artifact type —
+    index.html references (1,342 assets), WAR directory structure, .css url() rules, JS lazy-fetch
+    calls — and each scope was blind to the others. The /fonts/ tree existed only as relative
+    ../fonts/ references inside INLINE <style> blocks in a view template (web-appointment.html);
+    the files are absent from the WAR, so the directory-structure sweep had nothing to find, the
+    index sweep never saw the template, and the .css sweep excluded inline styles. Any future asset
+    enumeration must either cover ALL artifact types (html references, inline <style> blocks in
+    templates, .css url() rules, JS fetches, directory structure) or state explicitly which types
+    it excludes and why the exclusion cannot hide a gap. Ground truth for "what the app actually
+    requests" is the server log, not the source tree.
 11. **Docs-commit governance** (folded from the Stage-1 note): commits made directly to main under the CLAUDE.md docs exception (governance/tooling/config files) still require the end-of-session SESSION_LOG entry; where such a commit touches the ledger (`docs/BR_INDEX.md`, `docs/BUSINESS_RULE_MANIFEST.md`, any BR status), it also requires the ledger-check run appropriate to the change (`tools/check_ledger_merge_state.py` for merge states) with its output pasted into the session log. The docs exception relaxes Maker-Checker review, not record-keeping.
 
 ## Circuit breaker — emergency stop conditions
