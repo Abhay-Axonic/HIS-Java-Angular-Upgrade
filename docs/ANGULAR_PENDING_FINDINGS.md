@@ -1070,6 +1070,25 @@ angular.forEach($scope.<sourceChecklist>, function(value, index){
 
 ---
 
+## 65b. (LOG 2026-08-06) The batch verification harness SEEDS the permissions it tests — sixth instance of a check that cannot fail the way it claims; false-negative generator for unseeded moduleIds
+
+**Where:** `tools/golden-trace/batch35/verify_seed.js:30-31` (the per-batch seed pattern; sibling scripts
+share it) and `tools/golden-trace/capture.js`'s `PERMISSIONS_SEED_SCRIPT` (entry 91's range seed).
+
+**What it is, plainly:** every batch verification since Phase 2 has done a real legacy login, then written a
+hand-built `permissions` object (only the batch's module ids) into the dev origin's localStorage before
+navigating module-gated screens. The guard therefore ALWAYS passes during verification — the harness cannot
+fail the way it claims to check, which is why entry 65's gap (nothing ever populates `permissions` for a real
+user) sat un-flagged since Phase 2. The seed also generates false negatives: a screen whose moduleId is
+outside the seeded set bounces to accessDenied and reads as dead — the documented instance is `rackMasters`
+(1068) vs the old 1-999 seed (entry 91; caught + fixed 2026-07-21; boxMasters/rowMasters were never captured
+until then; NO screen was permanently written off — verified by scanning the ledger for the dead-screen shape:
+all other "unreachable/dead" entries (19, 24, 25, 46) trace to real code-level causes, not permission bounces).
+
+**Disposition:** the seeds are removed as part of the entry-65 fix (Option 2 — the real path is exercised:
+login carries roleId in cookieObject, the rebuild bootstraps permissions from GET_BY_ROLE_ID). Until then the
+seed stays ONLY as an acknowledged test-harness workaround, explicitly not evidence about real-user reachability.
+
 ## 66. PHASE 0 CLASSIFICATION DATA-QUALITY ISSUE, LOGGED 2026-07-21 — `doorToNeedle` is mistagged "low-risk" in the Phase 0 inventory; it is actually clinical-safety relevant and has a live, unconditional load-time crash
 
 **Where:** `docs/ANGULAR_PHASE0_SCREEN_INVENTORY.md` line 1048 (inventory row, tagged `bc:0/on:0` — neither clinical-safety nor billing) and `resources/assets/js/controller/master/global/doorToNeedleController.js` (the actual code).
@@ -5336,3 +5355,15 @@ Step 6 owner review COMPLETE. All 3 screens confirmed working across the full ch
 ### Entry — visitTypeMasterProcedure: NOT A SCREEN (excluded; documented to prevent future confusion)
 
 **Status:** EXCLUDED. Exhaustive search (app.js states, frontend controllers, views, Java) returned ZERO hits for `visitTypeMasterProcedure` and all variants. The only "ProcedureMaster" hits in app.js are the `slideProcedureMaster` commonMaster dispatcher branches (LIS screens, part of the 41-screen sweep). Batch-3's screen is registered as `url === "visitType"` → `visitTypeMasterController`. No referent exists — do not investigate in future batches.
+
+### Entry — consultantType: DISPATCHER DEAD-ENTRY (documented, nothing to fix)
+
+**Status:** DEAD-ENTRY — documented per sweep instruction; no code change needed, no vulnerability.
+
+**What it is, plainly:** `consultantType` is registered in the commonMaster dispatcher (`app.js`, `url === "consultantType"` → `consultantTypeMasterController`), but the frontend controller is a **pure UI stub** (1,418 chars: only scope scaffolding + sidebar highlighting, ZERO `GenericService.serviceAction` calls, no save/list/update/toggle implementation), and the backend has **NO controller/service/DAO at all** — `ConsultantTypeMasterDto` is the only Java referent (an orphaned DTO, defined but never referenced by any controller, service, or DAO). The shared `common-master-screen.html` template renders the form shell, but with no controller logic and no backend, the screen cannot load, save, or toggle anything.
+
+**Why it's not a vulnerability:** with no backend endpoint, there is no org-trust surface — nothing to forge, nothing to leak. The screen is dead scaffolding, not a live access point.
+
+**Sweep implication:** excluded from live verification/fix scope. If consultantType is ever needed, it must be built from scratch (frontend controller + backend master + dispatcher wiring) — the orphaned DTO suggests it was once planned and abandoned.
+
+**Evidence:** frontend stub `consultantTypeMasterController.js` (1418 chars, no serviceAction calls); `grep -rln "ConsultantTypeMasterDto" legacy/` → only the DTO file itself; no `*ConsultantType*Controller.java` anywhere in the repo (verified via case-insensitive find across LIS/Global/ADT/Billing).

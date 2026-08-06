@@ -1427,4 +1427,26 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   credentials must be delivered out-of-band (email/WhatsApp only), never in the response body.
 - Status: OPEN, tracked under BR-176's merge criteria.
 
+## QF-AQ — the Track-A verification harness SEEDS the permissions it claims to verify (sixth instance of a check that cannot fail the way it claims; first on Track A) — LOGGED 2026-08-06
+
+- The golden-trace batch verification (e.g. `tools/golden-trace/batch35/verify_seed.js:30-31`) performs a
+  real legacy login, then writes a HAND-BUILT `permissions` object into the dev origin's localStorage
+  (`page.evaluate(() => localStorage.setItem('permissions', JSON.stringify({modules:[...]})))`) before
+  navigating the module-gated screens. The seed contains only the batch's own module ids (e.g. 573/522/739/468).
+- Consequence: the harness GUARANTEES the module-access guard passes — so it was structurally incapable of
+  detecting that nothing in the rebuild ever populates `permissions` for a real user (ANGULAR_PENDING_FINDINGS
+  entry 65). The verification could not fail the way it claims to check.
+- This is the sixth instance of the self-referential-check class: the 66/66 allowlist sweep (curled the
+  allowlist's own strings), the allowlist audit (18 wrong entries the sweep could not see), the CCAvenue
+  baseline (traced tables, not call sites), the false-success 200+0-rows shape (insert never ran), the BR-176
+  environment-mask (missing payment_details hid a live bypass), and now the seeded permissions.
+- Companion false-negative generator (ledger entry 91): the seed covers only the batch's module ids — a screen
+  with a moduleId outside the seeded set bounces to accessDenied and reads as dead. Documented instance:
+  `rackMasters` (1068) against the old 1-999 capture seed — first capture showed zero network calls and looked
+  like a dead screen; siblings `boxMasters`/`rowMasters` were never captured at all. Caught and fixed 2026-07-21
+  (seed raised 1-2000); no screen was permanently written off.
+- Fix direction (accepted): remove the seeds and exercise the real path — the legacy login carries roleId in
+  cookieObject, the rebuild bootstraps permissions from GET_BY_ROLE_ID (Option 2 proposal, 2026-08-06).
+- Status: OPEN — tracked with Track A entry 65.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
