@@ -124,6 +124,7 @@
         }
 
         var GetDetailsPatientReturnAcceptanceConsumable = function (itemId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var URI =  CONSTANTS.PHARMACY.IP.PATIENT_RETURN_ACCEPTANCE.CONSUMABLE_DETAIL_API +$scope.unitId + "/" + itemId;
 

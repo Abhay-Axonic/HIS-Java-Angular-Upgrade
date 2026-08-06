@@ -548,7 +548,8 @@
         }
         
      	  $scope.showNonFormularyItemList = function(){
-  			try{
+     	  if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
+     	  try{
   				$rootScope.startLoader();
   				$scope.savePriscritpionId = $scope.prescriptionId;
   			    var URI = BASE_URL + ROOT_URL + "/api/opd/getNonFormularyItemForWorklistPharmacy/" +$scope.prescriptionId +"/"+ $scope.unitId+"/"+ $scope.organizationId ;
