@@ -79,10 +79,10 @@
                 self.model.reasons = reason;
             });
             
-            var selectedTopStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-		 	$scope.storeId = selectedTopStore.storeId;       
-		 
-		 	 self.model.OpenFromDate = OpenFromDate;
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+	 	$scope.storeId = selectedTopStore != null ? selectedTopStore.storeId : undefined; // store null -> undefined (the calls gate on storeReady)       
+	 
+	 	 self.model.OpenFromDate = OpenFromDate;
             self.model.OpenToDate = OpenToDate;
             self.model.OpenStopDateTime = OpenStopDateTime;
             self.model.OpenStartDateTime = OpenStartDateTime;
@@ -253,6 +253,7 @@
         }
 
         var PopulateDropdown = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var stransaction = self.model;
             stransaction.store = stransaction.stores[0];
             stransaction.storePopup = stransaction.storesPopup[0];
@@ -276,6 +277,7 @@
         }
         
        var sendAlert = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     	   var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.STOP_TRANSACTION.SEND_ALERT +  $scope.storeId + "/" + $scope.unitId;   
     	   $rootScope.startLoader();
     	   GenericService.serviceAction("PATCH", URI, "").then(
@@ -290,6 +292,7 @@
         }
   
         var StopTransactionSearch = function (isSearch) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.STOP_TRANSACTION.SEARCH_API;         
             var data = {
                 "fromDate": moment(self.model.fromDate).format('YYYY-MM-DD'),
@@ -416,7 +419,8 @@
 //        	}        
 //      }
         
-        var CheckStopTransactionExist = function(){        	
+        var CheckStopTransactionExist = function(){       	
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	var isExists = false;
            /*	var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.STOP_TRANSACTION.CHECK_STOP_TRANSCTION_BY_STORE + "/" + self.model.storePopup.id;
            	
@@ -451,6 +455,7 @@
         
         
         var ActualStopTransactionSave  = function  (){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             $rootScope.startLoaderPopup();
         	var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.STOP_TRANSACTION.SAVE_API;                
             var startTimePicker = $scope.startTime; 
@@ -517,6 +522,7 @@
 
 
         var ApproveStopTransaction = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (self.model.action == 'Update') {
                 var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.STOP_TRANSACTION.APPROVE_API;
 
@@ -591,6 +597,7 @@
 
         /* start code for resolved HIS-10094 Store / Inventory - Without add stop transaction details able to save request for stop transaction */
         var CheckStopTransactionDetail = function (){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
         	var data = {
                     "stopTransactionId": self.model.SelectedRequestIds

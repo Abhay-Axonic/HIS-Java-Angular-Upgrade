@@ -56,8 +56,8 @@
                 self.model.reasons = reason;
             });
             
-            var selectedTopStore = JSON.parse(sessionStorage.getItem('selectedTopStore')); 
-		 	$scope.storeId = selectedTopStore.storeId;     
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+	 	$scope.storeId = selectedTopStore != null ? selectedTopStore.storeId : undefined; // store null -> undefined (the calls gate on storeReady)    
 
             self.model.PopulateDropdown = PopulateDropdown;
             self.model.OpenFromDate = OpenFromDate;
@@ -87,6 +87,7 @@
         }
 
         var PopulateDropdown = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var compute = self.model;
             compute.store = compute.stores[0];
             compute.status = compute.statuses[0];
@@ -110,6 +111,7 @@
                 });
         }
         var ComputeStockSearch = function (isSearch) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.COMPUTE_STOCK.SEARCH_API;
             var data = {
                 "fromDate": moment(self.model.fromDate).format('YYYY-MM-DD'),
@@ -233,6 +235,7 @@
         }
 
         var ApproveComputeStock = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (self.model.action == 'Update') {
                 var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.COMPUTE_STOCK.APPROVE_API;
 

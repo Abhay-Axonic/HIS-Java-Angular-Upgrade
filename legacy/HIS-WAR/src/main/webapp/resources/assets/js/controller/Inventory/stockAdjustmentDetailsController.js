@@ -82,6 +82,7 @@
         }
 
         var SearchItems = function (search) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if ((!self.model.prevSearch || self.model.prevSearch != search) ) {
                self.model.prevSearch = search;
 
@@ -126,6 +127,7 @@
 
      	$scope.buttonDisabled = true;
         var AddItemToBill = function (item) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
          	$scope.buttonDisabled = false;
             var itemname = item.split('| ');
@@ -547,6 +549,7 @@
         } 
         
         var PopulateDropdown = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var upload = self.model;
 
             var URI = CONSTANTS.GLOBAL.USER_STORE_API + "/"+$scope.organizationId + "/"+$scope.unitId+ "/"+$scope.userId ;
@@ -557,9 +560,9 @@
             function (response) {
                 upload.stores = upload.stores.concat(response.data);
                 try{
-                    var selectedTopStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-                    $scope.storeId = selectedTopStore.storeId;
-                    self.model.store  =upload.stores.filter(x=>x.id==$scope.storeId)[0];            		 
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                    $scope.storeId = selectedTopStore != null ? selectedTopStore.storeId : undefined; // store null -> undefined (the calls gate on storeReady)
+                    self.model.store  =upload.stores.filter(x=>x.id==$scope.storeId)[0];           	 		
                 }catch (e) {
                     console.log("error!",e);          
                 }                     
@@ -817,6 +820,7 @@ function searchItemList() {
         }
 
         var saveStockAdjustment = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if($scope.validateQty()){
                 var store = self.model;
                 var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.UPLOAD_STOCK.SAVE_API;
@@ -880,6 +884,7 @@ $scope.idToUpdate;
 $scope.flagCheck=false;
 $scope.flagCheckButtonDisable=false;
         var GetUploadStockDetails = function (uploadId,flag1) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STOCK_ADJUSTMENT.UPLOAD_STOCK.DETAIL_API + uploadId + "/" + $scope.unitId;
             $scope.idToUpdate=uploadId;
             $rootScope.startLoader();
