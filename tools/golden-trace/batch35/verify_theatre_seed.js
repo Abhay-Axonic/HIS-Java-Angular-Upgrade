@@ -27,9 +27,6 @@ async function main() {
   await login(page);
   await page.goto(`${DEV}/`, { waitUntil: 'load', timeout: 30000 });
   await page.waitForTimeout(1000);
-  await page.evaluate(() => {
-    localStorage.setItem('permissions', JSON.stringify({ modules: [{ id: 573 }, { id: 522 }, { id: 739 }, { id: 468 }] }));
-  });
 
   await page.goto(`${DEV}/operationTable`, { waitUntil: 'load', timeout: 15000 });
   await page.waitForTimeout(2000);

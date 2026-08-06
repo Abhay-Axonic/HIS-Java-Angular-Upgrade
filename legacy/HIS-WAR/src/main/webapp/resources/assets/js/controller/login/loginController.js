@@ -121,7 +121,7 @@ angular
                             }
                         });
                     }
-                    $scope.img = (found.organizationLogo !=null && found.organizationLogo !="") ? found.organizationLogo : "resources/assets/images/logo/loginImgD.png";
+                    $scope.img = (found && found.organizationLogo !=null && found.organizationLogo !="") ? found.organizationLogo : "resources/assets/images/logo/loginImgD.png";
                     console.log($scope.img);
 					
 					if(found != undefined){
@@ -345,6 +345,7 @@ angular
 								sessionStorage.setItem("roleIds", roleIds);
 
 								var cookieObject = { 'organizationId': $scope.organizationId, 'unitId': $scope.unitId, 'userId': response.data.object.userId, 'doctorId': response.data.object.doctorId }
+								if(response.data.object.roleIds != null && response.data.object.roleIds.length > 0){ cookieObject.roleId = response.data.object.roleIds[0].roleId; } // Track A #65: roleId in the session cookie (guarded — the roleIds forEach above is inside a != null check)
 								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								//console.log(data);
 
@@ -415,6 +416,7 @@ angular
 									  cookieObject.firstName = 'Admin';
 									}
 								$scope.roleId=response.data.object.roleIds[0].roleId;
+								cookieObject.roleId = $scope.roleId; // Track A #65: carry roleId in the session cookie so the rebuild's permissions bootstrap (GET /privilege/role/...) can populate its own origin's localStorage.permissions
 								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								console.log('cookieObjecttttttttttttt', cookieObject);
 								//console.log(data);
@@ -1079,6 +1081,7 @@ angular
 								sessionStorage.setItem("roleIds", roleIds);
 
 								var cookieObject = { 'organizationId': $scope.organizationId, 'unitId': $scope.unitId, 'userId': response.data.object.userId, 'doctorId': response.data.object.doctorId }
+								if(response.data.object.roleIds != null && response.data.object.roleIds.length > 0){ cookieObject.roleId = response.data.object.roleIds[0].roleId; } // Track A #65: roleId in the session cookie (guarded — the roleIds forEach above is inside a != null check)
 								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								//console.log(data);
 
@@ -1147,6 +1150,7 @@ angular
 									  cookieObject.userName = 'Admin';
 									  cookieObject.firstName = 'Admin';
 									}
+								if(response.data.object.roleIds != null && response.data.object.roleIds.length > 0){ cookieObject.roleId = response.data.object.roleIds[0].roleId; } // Track A #65: roleId in the session cookie (continue-login path)
 								$cookies.putObject('cookieObject', cookieObject, {'domain': 'localhost', 'secure' : false});
 								$scope.getRmoRoster(cookieObject.isRMO,cookieObject.doctorId);
 								//console.log(data);

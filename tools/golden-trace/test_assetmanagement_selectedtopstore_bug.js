@@ -33,9 +33,6 @@ function startStaticServer() {
 // code under test -- provided explicitly below, not left to ambient defaults.
 const SEED_SCRIPT = `
 try {
-  localStorage.setItem('permissions', JSON.stringify({
-    modules: Array.from({length: 999}, (_, i) => ({ id: i + 1 }))
-  }));
   document.cookie = 'cookieObject=' + encodeURIComponent(JSON.stringify({
     unitId: 1, organizationId: 1, userId: 1, doctorId: 0
   })) + '; path=/';
