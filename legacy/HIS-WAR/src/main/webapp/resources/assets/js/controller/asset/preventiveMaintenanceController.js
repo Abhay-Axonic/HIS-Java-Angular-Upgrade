@@ -45,7 +45,7 @@ angular
 									showWeeks : false,
 									minDate:new Date()
 								};
-								$scope.storeId = cookieObjectStore.storeId;
+								$scope.storeId = (cookieObjectStore != null && cookieObjectStore != undefined) ? cookieObjectStore.storeId : undefined; // QF-AR: guard the deref — the lone-if above only shows the store popup; the deref was unconditional and crashed every load when the store cookie is absent
 								
 								$scope.schedulerObj ={
 										"itemNameId":"",
