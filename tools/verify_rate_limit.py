@@ -13,6 +13,12 @@ Notes:
     are ordered normal-rate FIRST, then per-account, then bursts, so a fresh run
     observes the correct thresholds; a re-run against a warmed deployment may see
     residual drain (the in-memory limitation is documented in the filter).
+  - ORDERING vs other sweeps: run this tool BEFORE tools/verify_allowlist_reality.py
+    on a fresh deployment — that sweep's ALLOW curls hit /adt/userLogin,
+    /adt/checkEmailAvailability, /adt/forgotPasswordGeneration and /adt/otpVerification
+    (one token each), which pre-consumes those buckets and shifts the exact-boundary
+    assertions (observed 2026-08-06: 5/7 when run after the reality sweep, 7/7 when
+    run first).
   - All endpoints return the app's own envelopes (200-with-error etc.); the ONLY
     429 source on these paths is the rate limiter.
 Usage: python3 tools/verify_rate_limit.py [base-url]
