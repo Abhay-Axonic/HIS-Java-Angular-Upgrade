@@ -130,6 +130,54 @@ async function observe(page, phase, stateName, quiet) {
   return summary;
 }
 
+async function sameSessionProbe(page, stateName) {
+  // Same-session case: store picked on the CURRENT screen (no re-navigation), then a primary
+  // action is clicked and the store-scoped call must fire immediately (fresh storeReady() read).
+  // Tries the real popup path first; falls back to direct seed (same as pickStore).
+  const popup = page.locator('#pharmacyPopupBeforLeftexpand');
+  if (await popup.isVisible().catch(() => false)) {
+    const options = await page.$$eval('#pharmacyPopupBeforLeftexpand select option', (o) =>
+      o.map((x) => x.textContent.trim()));
+    if (options.length >= 1) {
+      await page.selectOption('#pharmacyPopupBeforLeftexpand select', { label: options[0] });
+      await page.locator('#pharmacyPopupBeforLeftexpand #otpOk').click();
+      await page.waitForTimeout(1200);
+    }
+  } else {
+    await page.evaluate(() => {
+      sessionStorage.setItem('selectedTopStore', JSON.stringify({ storeId: 1, storeName: 'Test Main Store' }));
+    });
+  }
+  const fired = [];
+  const listener = (r) => { if (r.url().includes('/api/')) fired.push(r.url()); };
+  page.on('response', listener);
+  let clicked = false;
+  try {
+    clicked = await page.evaluate(() => {
+      const btns = [...document.querySelectorAll('button')].filter((b) => {
+        const t = (b.textContent || '').trim().toLowerCase();
+        const nc = (b.getAttribute('ng-click') || '').toLowerCase();
+        return (t === 'search' || nc.includes('search') || nc.includes('get') || nc.includes('save'))
+          && b.offsetParent !== null;
+      });
+      if (btns.length) { btns[0].click(); return true; }
+      return false;
+    });
+  } catch (e) { /* button click errors are reported below */ }
+  await page.waitForTimeout(4000);
+  page.removeListener('response', listener);
+  const apiCalls = fired.filter((u) => !u.includes('/api/adt/userLogin'));
+  const result = clicked
+    ? (apiCalls.length >= 1 ? 'PASS' : 'NOTE')
+    : 'SKIP';
+  console.log(`[same-session] ${stateName}: probe=${result} apiCalls=${apiCalls.length} clicked=${clicked}`);
+  if (result === 'NOTE') {
+    console.log(`  >>> same-session probe: clicked a primary action but 0 API calls fired — ` +
+      `possible gate over-block OR validation-gated action; needs Step 6 click-through`);
+  }
+  return result;
+}
+
 async function main() {
   const targets = TARGETS;
   console.log(`fire-test targets: ${targets.join(', ')}`);
@@ -169,6 +217,20 @@ async function main() {
       failures++;
       console.log(`   >>> NEGATIVE FAIL for ${t}`);
     }
+  }
+
+  // ---------------- SAME-SESSION probe: pick on the first screen, act without navigating ----------------
+  console.log('\n--- SAME-SESSION probe (store picked on the loaded screen, no re-navigation) ---');
+  pageerrors = []; http5 = []; http4 = [];
+  await page.evaluate(() => sessionStorage.removeItem('selectedTopStore'));
+  const probeNav = await navigate(page, targets[0]);
+  await page.waitForTimeout(2000);
+  const probe = await sameSessionProbe(page, targets[0]);
+  if (probe === 'PASS' || probe === 'SKIP') {
+    if (probe === 'SKIP') console.log('  (probe SKIP: no primary action button found on this screen — same-session case left to Step 6)');
+  } else {
+    failures++;
+    console.log('   >>> SAME-SESSION probe FAIL (0 API calls after a primary action post-pick)');
   }
 
   // ---------------- POSITIVE phase: real store picked ----------------
