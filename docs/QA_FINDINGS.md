@@ -1268,4 +1268,16 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
 - **Fix direction (deferred):** extend stripClientFacingSecrets() to host/port/id (no client
   consumers exist). Not applied.
 
+## QF-AI — /fonts/ content gap (QF-AD class, NO FIX)
+
+- The web-appointment.html template's inline @font-face blocks reference ../fonts/robotoregular.*
+  and ../fonts/robotomedium.* (relative to /views/AppointmentScheduling/, resolving to the root
+  /fonts/ tree). The font FILES are absent from the source webapp AND the deployed ROOT — there is
+  no /fonts/ directory anywhere in the WAR.
+- The /fonts/ prefix (5th static prefix) fixes the AUTH answer: the requests now 404 instead of
+  401, so the filter no longer masks the missing-asset problem. The 404s remain; the browser falls
+  back to the system font and the web-appointment page still renders (why this went unnoticed).
+- Same class as QF-AD (referenced-but-absent assets): the fix would be shipping the font files or
+  removing the @font-face rules. No fix applied — logged only.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
