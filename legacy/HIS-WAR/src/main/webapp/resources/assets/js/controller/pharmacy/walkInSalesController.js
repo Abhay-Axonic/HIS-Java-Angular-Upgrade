@@ -1590,7 +1590,8 @@ $scope.getLastEncounterDetails=function(info){
     
 
     var SubstituteItems = function  (item,index) {
-    	$scope.mainIndex=index;
+   	if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
+   	$scope.mainIndex=index;
    	  item.substititeFlag=true;
          self.model.parIndx = index;
          self.model.instructionDesc = item.instructionDesc;
@@ -1799,6 +1800,7 @@ $scope.getLastEncounterDetails=function(info){
             		
           	  if(!list.itemDisabled && $scope.mainIndex == indx){
                 self.model.SelectedItems.forEach(function (item) {
+                    if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
                     item.uom = [{
                         uomDetails: "Select UOM",
                     }];
@@ -2000,6 +2002,7 @@ $scope.getLastEncounterDetails=function(info){
     }
     
     var SearchItems = function (search) {
+       if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
        if ((!self.model.prevSearch || self.model.prevSearch != search )  && (search.length == 2) ) {
         self.model.prevSearch = search;
 
@@ -2035,6 +2038,7 @@ $scope.getLastEncounterDetails=function(info){
     }
 
     var SearchGenerics = function (search) {
+      if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
       if (search.length < 1) return;
 
       if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -2108,6 +2112,7 @@ $scope.getLastEncounterDetails=function(info){
     }
     $scope.getGenericScheduleColorMapping();
     var ActualAddItemToBill = function (bill, item, model, label, idx) {
+      if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
       if (!!item.id) {
         var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId + '/'+ $cookies.getObject('cookieObject').storeId  + '/' + item.id + '/' + $scope.entitlementObj.paymentEntitlementTypeId;
         $rootScope.startLoader();
@@ -2291,6 +2296,7 @@ $scope.getLastEncounterDetails=function(info){
 
     
     $scope.addKitItems = function(){
+        if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
 
         var URI = BASE_URL + ROOT_URL + "/api/global/items/details/walkin/getKitItemsOnWalkInSales";
         
@@ -2454,6 +2460,7 @@ $scope.getLastEncounterDetails=function(info){
     	// event.preventDefault();
     }
     $scope.patientConsation = function (item) {
+      if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
       if(($scope.encounterId==undefined || $scope.encounterId==null)){
         $scope.encounterId = 0;
       }
@@ -2515,6 +2522,7 @@ $scope.getLastEncounterDetails=function(info){
     }
     var BatchChangeOld = function (index, bill, batch) 
     {
+        if($scope.cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
         initialStore=JSON.parse(sessionStorage.getItem('selectedTopStore'));
         // console.log("Initial Store : ",initialStore);
        // //console.log("Current Store :

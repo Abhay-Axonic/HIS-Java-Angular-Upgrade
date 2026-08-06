@@ -171,6 +171,7 @@ angular
 							$scope.init();
 							
 							$scope.getAssetDetailsByCriteria = function () {
+								if(cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
 								$scope.AssetDetailsByCriteria.length = 0;
 								var month = $scope.pmRequestObj.month;
 								var year = $scope.pmRequestObj.year;
@@ -238,6 +239,7 @@ angular
 							}
 							
 							$scope.getAccessoryDetailsById = function(info) {
+								if(cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
 								var data = {
 									 	"assetTypeId": 2,
 								        "assetCategoryId": info.assetCategoryId,
