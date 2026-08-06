@@ -121,7 +121,7 @@ angular
                             }
                         });
                     }
-                    $scope.img = (found.organizationLogo !=null && found.organizationLogo !="") ? found.organizationLogo : "resources/assets/images/logo/loginImgD.png";
+                    $scope.img = (found && found.organizationLogo !=null && found.organizationLogo !="") ? found.organizationLogo : "resources/assets/images/logo/loginImgD.png";
                     console.log($scope.img);
 					
 					if(found != undefined){
