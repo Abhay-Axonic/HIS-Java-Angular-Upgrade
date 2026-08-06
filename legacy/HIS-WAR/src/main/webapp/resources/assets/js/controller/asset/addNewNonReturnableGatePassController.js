@@ -112,9 +112,10 @@
             GenericService.serviceAction("GET", URI, {}).then(
                 function (response) {
                     self.model.stores = self.model.stores.concat(response.data);
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
                     for(var i=0;i<self.model.stores.length;i++)
                     {
-                        if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(self.model.stores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
                         {
                             self.model.store = self.model.stores[i];
                         }
@@ -134,6 +135,7 @@
                 });
         }
         var GetNonReturnableGatepassDetails = function (returnableId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.ASSET.NON_RETURNABLE_GATEPASS.DETAILS_API  + returnableId;
 
             $rootScope.startLoader();
@@ -289,6 +291,7 @@
         }
 
         var searchNewItem = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var URI = CONSTANTS.GLOBAL.BATCH_API + "unit/"+$scope.unitId;
             const data = {
@@ -566,6 +569,7 @@
             // }
         }
         var SaveNonReturnableGatePass = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (Validate()) {
                 var URI = CONSTANTS.ASSET.NON_RETURNABLE_GATEPASS.SAVE_API;
 

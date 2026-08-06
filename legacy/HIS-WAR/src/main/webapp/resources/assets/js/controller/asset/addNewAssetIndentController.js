@@ -18,8 +18,8 @@
         
         function initializeController() {
             $rootScope.loginpage = true;
-            var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-            $scope.storeId = cookieObjectStore.storeId;
+            var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            $scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
             self.model = {
                 fromStores: [{
                     "store": "Select Store"
@@ -387,6 +387,7 @@
         }
 
         var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId;
 
             var data = {
@@ -427,6 +428,7 @@
         }
 
         var AddItemsPopup = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId;
             var data = {
                 "itemIds": self.model.SelectedItemsIds,
@@ -565,6 +567,7 @@
             }
         }
         var SaveAssetIndent = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var URI = CONSTANTS.ASSET.ASSET_INDENT.SAVE_API;
 
@@ -618,6 +621,7 @@
                 });
         }
         var UpdateAssetIndent = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var indent = self.model;
             var URI = CONSTANTS.ASSET.ASSET_INDENT.UPDATE_API + indent.indentId;
             var data = {
