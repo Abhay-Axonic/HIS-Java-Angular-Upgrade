@@ -126,12 +126,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	/**
 	 * STATIC PREFIX RULES — the shell's static directory trees.
 	 * COMPOSITION: 67 exact entries (63 API/static + 3 shell + 1 login fallback)
-	 * + 4 prefix rules + 4 anchored patterns
+	 * + 5 prefix rules + 4 anchored patterns
 	 * (the original 83-exact shape: the 20 webjar entries collapsed into the
 	 * /HIS-WAR/webjars/ prefix; /webjars/ added for the spring webjars-resource-
 	 * handler path, the same static tree under its other serving form; the
 	 * org-master subdomain + /checkParti patterns + the /login exact added for
-	 * the login submit path).
+	 * the login submit path; /fonts/ added as the 5th prefix — the
+	 * web-appointment inline @font-face tree).
 	 *
 	 * CONSTRAINT — READ BEFORE ADDING A PREFIX: prefix matching is permitted ONLY
 	 * for static directory trees served by the default servlet (files on disk:
@@ -140,10 +141,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	 * an API endpoint must be an exact entry with a named pre-login caller.
 	 */
 	private static final List<String> STATIC_PREFIXES = List.of(
-		"/resources/",
-		"/views/",
-		"/HIS-WAR/webjars/",
-		"/webjars/"
+			"/resources/",
+			"/views/",
+			"/HIS-WAR/webjars/",
+			"/webjars/",
+			// /fonts/ — the web-appointment.html inline @font-face blocks reference
+			// ../fonts/ relative to /views/AppointmentScheduling/, resolving to the
+			// root /fonts/ tree (the same default-servlet static class; catalina
+			// showed the 401s). NOTE: the font FILES are absent from the WAR and
+			// the deployed ROOT — this prefix fixes the auth answer only; the
+			// requests 404 (browser falls back to the system font). Content gap
+			// logged as QF-AI, no fix.
+			"/fonts/"
 	);
 
 	/**
