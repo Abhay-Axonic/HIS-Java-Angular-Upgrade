@@ -19,7 +19,7 @@ public class OrganizationWebRegistrationController implements ICommonConstants {
     @Autowired
     IUserMasterService iUserMasterService;
 
-    @RequestMapping(value = "/createOrganizationFromWeb " , method = RequestMethod.POST , consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/createOrganizationFromWeb", method = RequestMethod.POST , consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response createOrganizationFromWeb(@RequestBody OrganizationMasterDto organizationMasterForWebDto) {
         try {
             iUserMasterService.createOrganizationFromWeb(organizationMasterForWebDto);
