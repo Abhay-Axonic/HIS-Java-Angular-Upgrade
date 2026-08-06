@@ -168,9 +168,9 @@
         }
       }
     }
-    $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-    $scope.storeName = $scope.cookieObjectStore.storeName;
-    $scope.storeId = $scope.cookieObjectStore.storeId;
+    $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+    $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header
+    $scope.storeId = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeId : undefined; // store null -> undefined (the calls gate on storeReady)
     $scope.popupStore = function () {
         var popup = angular.element('#storePopUp');
         popup.modal('show');

@@ -12,8 +12,8 @@
         $scope.organizationId = cookieObject.organizationId;
         $scope.userId = cookieObject.userId;
         $scope.storeId = cookieObject.storeId; 
-        var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-        $scope.storeName = cookieObjectStore.storeName;
+        var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+        $scope.storeName = cookieObjectStore != null ? cookieObjectStore.storeName : ''; // store null -> empty header
         function initializeController() {
             $rootScope.loginpage = true;
 

@@ -145,8 +145,8 @@
             if (cookieObjectAppConfigSecond != undefined) {
 	            $scope.exceededBillAmountSettlement=cookieObjectAppConfigSecond.exceededBillAmountSettlement;
             }
-            $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-    	    $scope.storeName = $scope.cookieObjectStore.storeName;
+            $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+    	    $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header
             // else {
             // console.log('cookieObjectAppConfig', cookieObjectAppConfig);
 
@@ -483,6 +483,7 @@
         }
 
         var SearchItems = function (search) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (search.length < 1) return;
         
             if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -520,6 +521,7 @@
         }
       
         var SearchGenerics = function (search) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (search.length < 1) return;
         
             if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {

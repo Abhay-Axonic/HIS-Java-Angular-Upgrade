@@ -7,8 +7,8 @@
 
         //Default Constructor
         var cookieObject = $cookies.getObject('cookieObject'); if(cookieObject == undefined){ $state.go('login'); return;}$scope.unitId = cookieObject.unitId;$scope.organizationId = cookieObject.organizationId;$scope.userId = cookieObject.userId;$scope.storeId = cookieObject.storeId; 
-        $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-        $scope.storeName = $scope.cookieObjectStore.storeName;
+        $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+        $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header
         function initializeController() {
             $rootScope.loginpage = true;
 
@@ -129,6 +129,7 @@
 		}
 
         var SearchItems = function (search) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (search.length < 1) return;
             $scope.isNarcotic=false;
             if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -835,6 +836,7 @@
                     }, response.data);
         
                     $timeout( function(){
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                     	nrsdcnsdnc.itemDisabled = false;
                     	nrsdcnsdnc.disabled = false;
                     	nrsdcnsdnc.isConsumed=false;		
@@ -1107,6 +1109,7 @@
   	}
       $scope.validateBatchAndUomFlag=false;
         var GetPendingIssuesDetails = function (issueId) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	self.model.issueId = issueId;
             var URI = CONSTANTS.PHARMACY.IP.PENDING_ISSUES.DETAIL_API  + $scope.unitId + '/'+$scope.organizationId+ '/'+ $cookies.getObject('cookieObject').storeId + '/' + issueId;
             $rootScope.startLoader();
@@ -1931,6 +1934,7 @@
         }
        
         var BatchChange = function (index, bill, batch, parentIndex) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var item = null;
 
             //Assign Item and UOM
@@ -4436,6 +4440,7 @@
         }
         $scope.itemsRemoved=false;
         var RemoveItem = function (index, bill,parentIndex) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
         	//sneha
         	if( $scope.nonFormularyItemList!= undefined && $scope.nonFormularyItemList != null && $scope.nonFormularyItemList.length > 0){
@@ -5024,6 +5029,7 @@
         }
 
         var AllocateQuantity = function (index, bill,parentIndex) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             // if (!!bill && ValidateQuantity (bill)) {
             if (!!bill) {
             	var item  ;
@@ -5219,6 +5225,7 @@
     }    
         
         var ActualSaveBill = function (bill) 
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         {
         	$scope.saveBtnDisabled=true;
             // if (bill.statusId != 4) {
@@ -6608,6 +6615,7 @@
         }
        
         var ValidateBill = function (bill) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var isValid = true;
             var count = 0;
@@ -6897,6 +6905,7 @@
         }
 
         var AllocateBatch = function (bill, batchId) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if( batchId != undefined){
                 var URI = CONSTANTS.PHARMACY.OP.WALK_IN_SALES.ALLOCATE_BATCH_API + $scope.unitId + '/'+$scope.organizationId + '/'+$scope.userId + '/'+$cookies.getObject('cookieObject').storeId + '/' + $scope.entitlementObj.paymentEntitlementTypeId + '/' + bill.id;
                 var data = {
@@ -6906,6 +6915,7 @@
                 };
                 $rootScope.startLoader();
                 GenericService.serviceAction("PUT", URI, data).then(function (response) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                     if (!!response.data) {
                         var check = false;
                         angular.forEach(bill.items,function(value,key){
@@ -7040,6 +7050,7 @@
         }
 
         var AddBatchToDetail = function (worklist, itemId, batchId) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var itemId = itemId;
             var batchId = batchId;
             angular.forEach(self.model.pendingIssuesDetails.items, function (item, key) {
@@ -7589,6 +7600,7 @@
       $scope.parentIssueDetailsId = 0;
       $scope.isFromAssignPicker = false;
       var SubstituteItems = function  (item,index) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
          // self.model.parentIndex=parentIndex;
     	  self.model.SelectedItems=[];
     	  item.substititeFlag=true;
@@ -7805,6 +7817,7 @@
             	  
             	  if(!list.itemDisabled){
                   self.model.SelectedItems.forEach(function (item) {
+	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                       item.uom = [{
                           uomDetails: "Select UOM",
                       }];

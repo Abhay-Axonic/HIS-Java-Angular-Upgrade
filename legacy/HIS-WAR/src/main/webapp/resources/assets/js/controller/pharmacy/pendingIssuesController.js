@@ -7,8 +7,8 @@
         //Default Constructor
         var cookieObject = $cookies.getObject('cookieObject'); if(cookieObject == undefined){ $state.go('login'); return;}$scope.unitId = cookieObject.unitId;$scope.organizationId = cookieObject.organizationId;$scope.userId = cookieObject.userId;$scope.storeId = cookieObject.storeId; 
         
-        $scope.cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-        $scope.storeName = $scope.cookieObjectStore.storeName;
+        $scope.cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+        $scope.storeName = $scope.cookieObjectStore != null ? $scope.cookieObjectStore.storeName : ''; // store null -> empty header
         function initializeController() {
             $rootScope.loginpage = true;
 
