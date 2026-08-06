@@ -221,9 +221,11 @@
             self.model.stores = self.model.stores.concat(response.data.store);
             var prId = commonDetailService.getDataId();
             $rootScope.stopLoader();
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             for(var i=0;self.model.stores.length > i;i++)
             {
-              if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(self.model.stores[i].id==selectedStoreId)
               {
                 self.model.store = self.model.stores[i];
               }
@@ -283,6 +285,7 @@
       }
     }
     var GetEnquiry = function (enquiryId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_QUOTATION_REQUEST.DETAILS_API + $scope.unitId + '/' + enquiryId;
 
       $rootScope.startLoader();
@@ -441,6 +444,7 @@
     }
 
     var GetWorkOrders = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (ValidateDate()) {
         var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_QUOTATION_REQUEST.QO_SEARCH;
 
@@ -477,6 +481,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if(self.model.itemName){
         if(self.model.itemName.length >= 3){    
           var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_QUOTATION_REQUEST.GET_ITEM_LIST;
@@ -556,6 +561,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (!self.model.SelectedItemsIds.length) {
         growl.error('Please select items to add');
         return false;
@@ -870,6 +876,7 @@
     }
 
     var CreateWorkOrderQuotation = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_QUOTATION_REQUEST.DETAILS_API;
       var data = {
         "approvalStatusId": setStatus('New'),

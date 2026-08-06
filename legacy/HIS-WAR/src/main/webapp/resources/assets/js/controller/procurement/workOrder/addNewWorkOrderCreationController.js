@@ -8,8 +8,8 @@
     function initializeController() {
       $rootScope.loginpage = true;
       var cookieObject = $cookies.getObject('cookieObject');
-      var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-      $scope.storeId = cookieObjectStore.storeId;
+      var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+      $scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
       self.model = {
         pagination: {
           currentPage: 1,
@@ -372,6 +372,7 @@
     }
 
     var GetWorkOrder = function (purchaseId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_CREATION.DETAILS_API + $scope.unitId + '/'+$scope.organizationId + '/' + purchaseId;
       $rootScope.startLoader();
       GenericService.serviceAction("GET", URI, {}).then(
@@ -525,6 +526,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (!self.model.SelectedItemsIds.length) {
         growl.error('Please select items to add');
         return false;
@@ -826,6 +828,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if(self.model.itemName){
         if(self.model.itemName.length >= 3){    
           var URI = CONSTANTS.GLOBAL.ITEMS_WORKORDER;
@@ -1084,6 +1087,7 @@
     }
 
     var GetWorkOrders = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (ValidateDate()) {
         var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_QUOTATION_REQUEST.QO_SEARCH;
 
@@ -1147,6 +1151,7 @@
       }
     }
     var GetIndentListAgaintstWR = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (ValidateDate()) {
         var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_CREATION.SEARCH_BY_WR;
 
@@ -1336,6 +1341,7 @@
     }
 
     var CreateWorkOrderCreation = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var workOrder = self.model;
 
       var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_CREATION.SAVE_API;
