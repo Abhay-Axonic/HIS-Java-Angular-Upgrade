@@ -2721,6 +2721,18 @@ $rootScope.incidentReportingMenuOpen = false
 			return storeObj;
 	}
 
+	$rootScope.storeReady = function(){
+			var ok = false;
+			try {
+				var raw = sessionStorage.getItem('selectedTopStore');
+				if(raw != null && raw != undefined && raw != ''){
+					var parsed = JSON.parse(raw);
+					ok = parsed != null && typeof parsed === 'object';
+				}
+			} catch(e){ ok = false; }
+			return ok;
+	}
+
 	$rootScope.getStoreName=function(){
 			var storeObj= JSON.parse(sessionStorage.getItem('selectedTopStore'));
 			if(storeObj){

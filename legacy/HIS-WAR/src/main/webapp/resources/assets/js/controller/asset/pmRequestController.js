@@ -171,7 +171,7 @@ angular
 							$scope.init();
 							
 							$scope.getAssetDetailsByCriteria = function () {
-								if(cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
+								if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
 								$scope.AssetDetailsByCriteria.length = 0;
 								var month = $scope.pmRequestObj.month;
 								var year = $scope.pmRequestObj.year;
@@ -239,7 +239,7 @@ angular
 							}
 							
 							$scope.getAccessoryDetailsById = function(info) {
-								if(cookieObjectStore == null){ return; } // store-accessor extension: no store-scoped call before the store pick (QF-AS)
+								if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
 								var data = {
 									 	"assetTypeId": 2,
 								        "assetCategoryId": info.assetCategoryId,
