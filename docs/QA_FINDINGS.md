@@ -1617,4 +1617,21 @@ uploadStockApproval, uploadStockDetails). Supervisor-direct (Claude Code OAuth-b
 - Campaign total: 25 screens converted and live-verified across 4 branches
   (b1 pharmacy 6, b2 stock 6, b3 addNew 6, b4 upload/issue 7), all awaiting owner Rule 9b.
 
+## QF-2026-08-06-H — store-accessor campaign ab1 (asset batch 1): VERIFIED live; probe NOTE recorded (advisory); tool re-applied (family-off-main gap)
+
+Batch ab1 (fix/store-accessor-campaign-ab1, asset family batch 1, branched off MAIN): 5 screens
+(addNewAssetIndent, addNewAssetReturn, addNewAuctionRequistion, addNewCorrectiveMaintenance,
+addNewNonReturnableGatePass). 5 deref sites converted (1 BARE init direct-assignment, 1
+already-guarded parse, 3 inline-comparison); 15 gates (4/3/4/1/3). node --check clean x5; 0 raw
+parses; 15/15.
+
+- FIRE-TEST: all 5 states, both phases CLEAN. Same-session probe NOTE on addNewAssetIndent (a
+  primary action WAS clicked, 0 API calls in window — modal/validation-gated button; advisory,
+  Step 6). NOT a gate failure (authoritative phases clean).
+- TOOL GAP FOUND + FIXED: ab1 branched off main, and the same-session probe was added on the
+  UNMERGED pb1 — the first fire-test run on ab1 executed main's b1-era script (no probe). The
+  probe was re-applied to the ab1 tree (commit 42d57d49) and the fire-test re-run with it. Lesson:
+  any family branched off main must re-apply the probe (or the tool commits must ride main sooner).
+- Restore: single-directory cp; drift clean (mpesa extra only).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
