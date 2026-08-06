@@ -1235,6 +1235,16 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   distinguish a branch-miss from a cookie-write failure.
 
 ## QF-2026-08-05-AH — master-screen redirect: UNRESOLVED (four hypotheses, three disproved)
+**RESOLVED 2026-08-06 — the redirect mechanism, source-proven (see QF-AN):** the applicationConfiguration
+state is commented out in app.js while 64 $state.go('applicationConfiguration') call sites (app.js:1936
+checkCookies' cookieObjectAppConfig-undefined branch + 63 controller sites) still navigate to it. The router
+has no such state, falls through to otherwise("/login"), and the redirect presents as an auth failure. The
+four earlier hypotheses (missing table — retracted; missing cookie — disproved; permission gate — stopped at
+loginpage; 4KB truncation — abandoned) all asked what BLOCKED the screen; nothing did — the DESTINATION did
+not exist. The trigger question (which call site fires for the masters) remains open but the mechanism is
+closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
+
+
 
 - **Observation:** authenticated deep-links to #/relationMaster, #/maritalstatusMaster,
   #/occupationMaster land on the applicationConfiguration screen.
