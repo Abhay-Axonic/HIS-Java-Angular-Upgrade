@@ -1519,4 +1519,48 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   it — the verification pattern (count + shape assertions on mechanical rewrites, before the build)
   is now part of the gate-change discipline.
 
+## QF-2026-08-07-A — store-accessor campaign batch 1: VERIFIED live (negative phase all-clean); 1 syntax error + 6 ungated load-time calls found & fixed; positive-phase 500s traced to local-DB drift
+
+Batch 1 (fix/store-accessor-campaign-b1): 6 pharmacy-family sites converted to the accessor pattern
+(pendingIssues, pendingIssuesDetails, outPatientSalesWorklist, outPatientSalesWorklistDetails,
+billSalesReturn, detailsPatientReturnAcceptanceConsumable). Verification via the new live fire-test
+(tools/golden-trace/test_store_accessor_live_fire.js — real UI login, selectedTopStore cleared,
+$state.go per screen, pageerror/4xx/5xx/{{storeName}} capture):
+
+- NEGATIVE phase (no store): ALL SIX screens 0 pageerrors / 0 5xx / 0 4xx / no {{storeName}}
+  literal. Q1 (deref -> getStoreObj, null-safe) and Q2 (ALL store-scoped calls gated incl. load-time)
+  answered for every site.
+- POSITIVE phase (real store, id 1 "Test Main Store", seeded exactly as setStore() writes): the
+  store-scoped calls FIRE with the real storeId in the URLs (screens are NOT inert). The remaining
+  500s are NOT gate failures — traced in catalina.out to three KNOWN local-DB drift items:
+  (a) `relation "billing.m_pos_machine_device_master" does not exist` (getPOSMachineDeviceMasterList),
+  (b) `column sales1_.cop does not exist` (SalesWorkListController workList), (c) `column
+  issue0_.infusion_tolal_volume does not exist` (PendingIssuesDao search). None documented in
+  DB_DRIFT_REPAIRS.md yet — added here for the owner/day session. The 405s
+  (workList/1/1/0 with issueId=0, acceptance/consumable/1/null, getNonFormularyItemForWorklistPharmacy/undefined/1/1)
+  are the screens' load-time calls firing with empty work-item params post-pick — pre-existing
+  design, not campaign scope, flagged.
+- DEFECTS FOUND AND FIXED during verification (all on the branch, committed):
+  1. SYNTAX ERROR (batch-1 original commit 82488669): the ActualSaveBill gate was inserted BETWEEN
+     `var ActualSaveBill = function (bill)` and its body brace -> "Unexpected token 'if'" broke the
+     ENTIRE pendingIssuesDetailsController.js. Caught via live page-error capture during token mint,
+     confirmed by node --check. Fixed (dfb30eac) — gate moved inside the body.
+  2. SIX ungated load-time store-scoped calls the inline-storeId grep MISSED (the walkInSales
+     lesson, ×6): outPatientSalesWorklistDetails getGenericScheduleColorMapping +
+     getPOSMachineList + GetWorklistDetails (storeId via $scope.storeId, not cookieObject — the
+     grep pattern's blind spot), detailsPatientReturnAcceptanceConsumable
+     GetDetailsPatientReturnAcceptanceConsumable (NO storeId in the URL at all — the backend
+     derives store context), pendingIssues GetPendingIssues (load-time search), pendingIssuesDetails
+     showNonFormularyItemList. All 6 gated on fresh storeReady() at fire time (6e71213e). NOTE:
+     the commit message said "5 calls" — the true count is 6 (count-before-you-claim, corrected
+     here).
+- Enumeration lesson re-confirmed: the briefing's "grep for inline cookieObject.storeId URI
+  constructions AND fire-test the screen's load" — the fire-test is the load-bearing half; static
+  grep alone missed 6 sites in 4 files on batch 1. The fire-test is now a permanent campaign tool.
+- Suite on the batch-1 deployment: rate-limit 10/10 (clean buckets), regressions PASS, allowlist 0
+  failures, six harness specs ALL PASS (fresh token minted via the UI, /tmp/fresh_token.txt),
+  permissions bootstrap = known module-1068 stop condition only, positive-control TOKEN-OK.
+- Deployed frontend RESTORED to main after verification (6 files copied back; drift check:
+  only the pre-existing mpesaApplicationConfigurationController.js extra remains).
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
