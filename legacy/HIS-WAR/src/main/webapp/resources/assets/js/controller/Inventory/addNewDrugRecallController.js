@@ -74,7 +74,8 @@
             self.model.openBatchDetails=openBatchDetails;
             self.model.GetStoreStockDetails=getItemWiseStoreStock;
             self.model.getBatchWiseStoreStock=getBatchWiseStoreStock;
-            $scope.storeId = JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId;
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            $scope.storeId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             
             updateOpen();
 
@@ -118,6 +119,7 @@
         }
 
         var getItemWiseStoreStock=function (itemId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.STORE_STOCK_DASHBOARD.ITEM_WISE_BATCH_API + $scope.unitId + '/' +itemId
             $rootScope.startLoaderPopup();
             GenericService.serviceAction("GET", URI, {}).then(
@@ -134,6 +136,7 @@
         }
 
         var getBatchWiseStoreStock=function (batchId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.STORE_STOCK_DASHBOARD.BATCH_WISE_BATCH_API+$scope.unitId + "/"+batchId
             $rootScope.startLoaderPopup();
             GenericService.serviceAction("GET", URI, {}).then(
@@ -150,6 +153,7 @@
         }
 
         var getPatientsListForItem=function (itemId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.PHARMACY.IN_PATIENT_PHARMACY.PATIENT_CONSUMABLE_ISSUE.ISSUE_SEARCH_FOR_DRUG_RECALL_API;
             var data = {
                // "storeId":1,
@@ -176,6 +180,7 @@
         }
 
         var getPatientsListForBatch=function (batchId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.PHARMACY.IN_PATIENT_PHARMACY.PATIENT_CONSUMABLE_ISSUE.ISSUE_SEARCH_FOR_DRUG_RECALL_API;
             var data = {
                 //"storeId":1,
@@ -382,6 +387,7 @@
        	  });      	
         */}
         var ActaulAddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId;
             var data = {
                 "itemIds": self.model.SelectedItemsIds,
@@ -436,6 +442,7 @@
 
         }
         var openBatchDetails=function (batchId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             $("#detailsDrugRecallModal").modal();
             console.log('Inside openBatchDetails');
             getBatchWiseStoreStock(batchId);
@@ -494,6 +501,7 @@
             }
         }
         var UpdateDrugRecall = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var drug = self.model;
             var URI = CONSTANTS.INVENTORY.STORE.DRUG_RECALL.UPDATE_API + drug.drugId;
@@ -541,6 +549,7 @@
                 });
         }
         var SaveNewDrugRecall = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.STORE.DRUG_RECALL.SAVE_API;
             var data = {

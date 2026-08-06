@@ -147,9 +147,11 @@
                 function (response) {
                     returnable.stores = returnable.stores.concat(response.data.store);
                     returnable.againstList = returnable.againstList.concat(agList);
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                    var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
                     for(var i=0;i<returnable.stores.length;i++)
                     {
-                        if(returnable.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(returnable.stores[i].id==selectedStoreId)
                         {
                             returnable.store = returnable.stores[i];
                         }
@@ -170,6 +172,7 @@
         }
 
         var GetReturnableGatepassDetails = function (returnableId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.RETURNABLE_GATEPASS.DETAIL_API +  $scope.unitId + '/'+$scope.organizationId + '/' + returnableId;
 
             $rootScope.startLoader();
@@ -437,6 +440,7 @@
         }
 
         var GetProductCategoryList = function (id) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var returnable = self.model;
 
             //TODO : Add asset category to the uri
@@ -1255,6 +1259,7 @@
         }
 
         var SaveNewGatepass = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	$scope.saveBtnDisabled=true;
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.STORE.RETURNABLE_GATEPASS.SAVE_API;
@@ -1355,6 +1360,7 @@
         }
 
         var UpdateGatepass = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	$scope.saveBtnDisabled=true;
             var URI = CONSTANTS.INVENTORY.STORE.RETURNABLE_GATEPASS.UPDATE_API + self.model.returnableId;
             var data = {
@@ -1556,6 +1562,7 @@
         }
 
         var ValidateQuantity = function (item) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var isValid = true;
             if(item.returnQuantity!=undefined && item.returnQuantity!=null && item.returnQuantity!='' && item.returnQuantity>0)
             	{
@@ -1795,6 +1802,7 @@
 
 
         $scope.checkReturnableGatePass = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.RETURNABLE_GATEPASS.SAVE_API + 'checkReturnableGatePass';
             $scope.newArray1 = [];
                 angular.forEach(self.model.NewItemList, function (grn) {

@@ -155,6 +155,7 @@
         }
 
         var getDropdownsList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var mreturn = self.model;
            // mreturn.fromStore = mreturn.fromStores[0];
             mreturn.toStore = mreturn.toStores[0];
@@ -169,9 +170,11 @@
                     mreturn.toStores = mreturn.toStores.concat(response.data.toStore);
                     mreturn.carriers = mreturn.carriers.concat(response.data.carrier);
 
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                    var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
                     for(var i=0;i<mreturn.fromStores.length;i++)
                     {
-                        if(mreturn.fromStores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(mreturn.fromStores[i].id==selectedStoreId)
                         {
                             mreturn.fromStore = mreturn.fromStores[i];
                         }
@@ -233,6 +236,7 @@
         }
 
         var getReturnReasonList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             self.model.reason = self.model.returnReasonList[0];
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_RETURN.RETURN_REASON_API + "/" + $scope.unitId;
 
@@ -335,6 +339,7 @@
         }
         
         var ValidateDate = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var isValid = true;
 
             if (!self.model.fromDate || !self.model.toDate) {
@@ -492,6 +497,7 @@
         }
 
         var isSelected = function (item) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             return item.isSelected;
         }
 
@@ -691,6 +697,7 @@
             }
         }
         var SaveNewMaterialReturn = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             $scope.saveDisabled = false;
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_RETURN.SAVE_API;
@@ -764,6 +771,7 @@
         }
         $scope.isFromEdit=false;
         var GetMaterialReturnDetails = function (mreturnId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.INVENTORY.STORE.MATERIAL_RETURN.DETAILS_API + $scope.unitId + '/' + mreturnId;
             $scope.isFromEdit=true;
             $rootScope.startLoader();
@@ -865,6 +873,7 @@
             }
         }
         var UpdateMaterialReturn = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             $scope.saveDisabled = false;
             var mreturn = self.model;
 

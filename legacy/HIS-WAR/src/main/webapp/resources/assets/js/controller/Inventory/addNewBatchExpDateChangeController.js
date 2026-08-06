@@ -115,9 +115,11 @@
             GenericService.serviceAction("GET", URI, {}).then(
                 function (response) {
                     batch.stores = batch.stores.concat(response.data.stores);
-                    for(var i=0;i<batch.stores.length;i++)
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
+            for(var i=0;i<batch.stores.length;i++)
                     {
-                        if(batch.stores[i].storeId==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(batch.stores[i].storeId==selectedStoreId)
                         {
                             batch.store = batch.stores[i];
                         }
@@ -196,6 +198,7 @@
         }
 
         var GetProductCategoryList = function (id) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var batch = self.model;
             batch.productCategory = batch.productCategories[0];
             batch.productCategories.splice(1);
@@ -629,6 +632,7 @@
         }
 
         var isSelected = function (item) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             return item.isSelected;
         }
         
@@ -774,6 +778,7 @@
         }
 
         var GetBatchDetails = function (batchId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             // var opbId = openingBalanceService.getOpeningBalanceId();
 
             var URI = CONSTANTS.INVENTORY.STORE.BATCH_CHANGE.DETAILS_API + batchId;
@@ -840,6 +845,7 @@
 
 
         var SaveNewBatchRequest = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var store = self.model;
             var URI = CONSTANTS.INVENTORY.STORE.BATCH_CHANGE.SAVE_API;
 
@@ -918,6 +924,7 @@
         }
         
         var UpdateBatchChange = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var batch = self.model;
 
