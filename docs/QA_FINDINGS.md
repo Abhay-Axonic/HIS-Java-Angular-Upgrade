@@ -1197,4 +1197,20 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   the kiosk entry routes render the login with no session. The kiosk flow is not reachable in this
   deployment with no session — a pre-existing break, not a filter regression.
 
+## QF-2026-08-05-AF — applicationConfiguration state commented out: the checkCookies() config gate redirects to an unroutable state (logged, NO FIX)
+
+- **Finding:** the app's standard init guard `checkCookies()` (app.js:1927) redirects any guarded
+  screen to `applicationConfiguration` when the `cookieObjectAppConfig` cookie is missing
+  (app.js:1936). The `applicationConfiguration` state definition is COMMENTED OUT (app.js:15340),
+  so the redirect target is unroutable and falls through to `$urlRouterProvider.otherwise("/login")`
+  (app.js:3117). The gate has been broken independently of this branch — it predates the BR-173
+  rewrite and is a frontend state-config defect, not a filter issue.
+- **Context:** the redirect is the app's designed config gate (cookieObject vs cookieObjectAppConfig
+  discriminator), uniform across 213 controllers. The `cookieObjectAppConfig` cookie is written by
+  the ADT/registration flows, not by login. Deep-linking to guarded screens (e.g. the GlobalMaster
+  screens) redirects until the config has been loaded through an admission-flow screen.
+- **Does NOT affect the merge:** the BR-173 filter work is independent of this frontend gate; the
+  gate's behavior is identical before and after the branch. NO FIX — the fix belongs to the app's
+  state-config (re-enabling or re-pointing the applicationConfiguration state), not the filter.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
