@@ -1646,4 +1646,31 @@ the first entry with the true machine clock date, 2026-08-06.)
   (clean buckets), regressions PASS. Deployed frontend RESTORED to main after the test; drift =
   mpesa extra only.
 
+## QF-2026-08-06-E — store-accessor campaign pb2 (procurement workOrder 2): VERIFIED live after fire-test correction; DRIFT item #5 documented
+
+Batch pb2 (fix/store-accessor-campaign-pb2, cumulative off pb1): 6 workOrder screens
+(addNewWorkorderApprovalList, addNewWorkorderLabour, addNewWorkorderLabourList, addWorkOrderQEntry,
+workOrderCompletion, workOrderCompletionDetails). 6 deref sites converted (5 popup-pattern with
+UNGUARDED storeName/storeId derefs + 1 inline-comparison); 24 live gates (3/7/3/4/4/3).
+
+- FIRE-TEST round 1 caught a REAL gate miss: addNewWorkorderLabourList's load-time getCreationRequestList
+  fired PRE-pick (500). Root cause: the screen's own guard checks `storeId==undefined` but initCommon
+  seeds storeId='' (empty string) — the guard passes, the call fires. My container classification had
+  skipped it (getListNewWOList was "N/A commented twin" — WRONG for this file). Gated.
+- CORRECTION TO MY OWN CLAIM (from pb1/QF-D): "getListNewWOList commented-twin across the whole
+  approval family" was WRONG. Verified per file: COMMENTED in addNewWorkorderApprovalDetails,
+  addNewWorkorderApprovalDetailsSettlement, workOrderCompletionDetails (3); LIVE in
+  addNewWorkorderApprovalList, addNewWorkorderLabourList, workOrderCompletion (3 — the latter two now
+  gated as load-time calls). The undefined-function defect (live calls to a commented definition) is
+  REAL only in the 3 commented files (approvalDetails/settlement: requestChangeToPending flow;
+  completionDetails: 2180/2183).
+- DRIFT ITEM #5 (document-only per owner; same class as b4's storeStockDashboard): positive-phase
+  500s on /api/procurements/workOrder/getCreationRequestList and .../completionSearch —
+  `column request.workorder_completion_status_id does not exist` (NewWorkOrderCreationDaoImpl
+  getCreationRequestListCompletion; catalina ~5844024). The calls are GATED correctly (negative
+  phase clean after the fix — 0 pre-pick calls on all 6 screens) and fire post-pick (not inert);
+  the 500 is the local DB missing the column.
+- Same-session probe: SKIP again (workOrderApproval — no primary action button in load DOM). Suite:
+  rate-limit 10/10 (clean buckets), regressions PASS. Restored main frontend; drift = mpesa only.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
