@@ -1488,4 +1488,22 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   store is null" per site, not just guard the deref.
 - Status: OPEN — the crash class is fixed (the accessor); the call-gating is the campaign's follow-on.
 
+## QF-AT — the store-accessor gates CAPTURE the store at the controller's construction; a same-session pick stays inert until re-navigation — FOUND 2026-08-06 via the same-session test
+
+- **Observed live** (walkInSales, store cookie cleared, pick through the picker while sitting on the screen,
+  then typing in the item search): the pick resolves (sessionStorage + cookieObject written) but the
+  screen's store-scoped calls stay gated — the gates test the CAPTURED `$scope.cookieObjectStore` (set once
+  at the controller's construction, null pre-pick) — the search fires nothing. The screen is **inert until
+  the user re-navigates** (the controller re-runs, the capture refreshes). The user's pick appears to do
+  nothing.
+- **Fix direction (the user's own hypothesis, confirmed):** the gates must RE-READ the accessor at the firing
+  time — `$rootScope.getStoreObj() != null` (fresh parse per call) or a `$scope.storeReady()` helper that
+  calls the accessor fresh — rather than testing the captured value. Refine on the two pilots BEFORE the
+  batch multiply.
+- Related: the walkInSales's LOAD-time store-scoped calls (getGenericScheduleColorMapping + the
+  getPOSMachineDeviceMasterList) are NOT among the 10 gated sites — they fire pre-pick with the undefined
+  storeId and the backend 500s (2x observed live, both gone post-pick). The gate set must cover the
+  load-time calls too.
+- Status: OPEN — pattern refinement pending on the two pilots.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
