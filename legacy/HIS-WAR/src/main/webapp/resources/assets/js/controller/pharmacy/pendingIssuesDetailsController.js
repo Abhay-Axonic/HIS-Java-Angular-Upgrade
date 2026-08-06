@@ -5225,8 +5225,8 @@
     }    
         
         var ActualSaveBill = function (bill) 
-	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         {
+        	if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	$scope.saveBtnDisabled=true;
             // if (bill.statusId != 4) {
         	
