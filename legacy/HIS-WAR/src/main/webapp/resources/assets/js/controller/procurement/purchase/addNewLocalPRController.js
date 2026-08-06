@@ -242,11 +242,13 @@
             var purchaseId = commonDetailService.getDataId();
             $rootScope.stopLoader();
             
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             for(var i=0; i<localPurchase.fromStoresData.length;i++)
             {
               if(i !=0)
               {
-                if(localPurchase.fromStoresData[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                if(localPurchase.fromStoresData[i].id==selectedStoreId)
                 {
                   localPurchase.fromStoreData = localPurchase.fromStoresData[i];
                 }  
@@ -291,6 +293,7 @@
     }
 
     var GetLocalPR = function (purchaseId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.PURCHASE.LOCAL_PURCHASE_REQUEST.SAVE_API + $scope.unitId + '/'+$scope.organizationId + '/' + purchaseId;
 
       $rootScope.startLoader();
@@ -589,6 +592,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if(self.model.search.itemName){
 
          if ( self.model.search.itemName!=undefined  &&  (self.model.search.itemName.replace(/\s/g, "").length) == 2  ) {
@@ -681,6 +685,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (self.model.SelectedItemsIds.length == 0) {
         growl.error('Please select items to add');
         return false;
@@ -947,6 +952,7 @@
     }
 
     var AddIndentItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (self.model.intendItemIds.length == 0) {
         growl.error('Please select items to add');
         return false;
@@ -1091,6 +1097,7 @@
     }
 
     var CreateLocalPR = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var localPurchase = self.model;
 
       var URI = CONSTANTS.PROCUREMENT.PURCHASE.LOCAL_PURCHASE_REQUEST.SAVE_API;

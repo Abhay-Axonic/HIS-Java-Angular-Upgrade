@@ -1214,9 +1214,11 @@
             purchaseOrder.stores = purchaseOrder.stores.concat(response.data.deliveryStores);
             purchaseOrder.fromStores = purchaseOrder.fromStores.concat(response.data.requestingStores);
             purchaseOrder.poTypes = purchaseOrder.poTypes.concat(response.data.assetType);
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             for(var i=0;i<purchaseOrder.fromStores.length;i++)
             {
-              if(purchaseOrder.fromStores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(purchaseOrder.fromStores[i].id==selectedStoreId)
               {
                 purchaseOrder.fromStore = purchaseOrder.fromStores[i];
               }
@@ -1417,6 +1419,7 @@
       }
 
     var GetPO = function (poId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.QUOTATION.PURCHSE_ORDER.SAVE_API + $scope.unitId + '/'+$scope.organizationId + '/' + poId;
 
       $rootScope.startLoader();
@@ -2162,6 +2165,7 @@
     }
 
     var GetIndentList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (ValidateDate()) {
         var URI = CONSTANTS.GLOBAL.AGAINST_PR_SEARCH;
 
@@ -2204,6 +2208,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if(self.model.searchItem.itemName){
          if (self.model.searchItem.itemName!=undefined  &&  (self.model.searchItem.itemName.replace(/\s/g, "").length) == 2  ) {
 
@@ -2312,6 +2317,7 @@
     }
 
     var GetReorderPoItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         var URI = CONSTANTS.GLOBAL.Item_Api_store_withcomparequantity + "unit/"+$scope.unitId;
 
 //      Item_Api_store;
@@ -2362,6 +2368,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (self.model.SelectedItemsIds.length == 0) {
         growl.error('Please select items to add');
         return false;
@@ -3720,6 +3727,7 @@
     }
     $scope.saveBtnDisabled=false;
     var CreatePurchaseOrder = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         $scope.saveBtnDisabled=true;
       var purchaseOrder = self.model;
 
@@ -4269,6 +4277,7 @@
     }
 
     var GetQRIndentList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (ValidateDate()) {
         var URI = CONSTANTS.GLOBAL.AGAINST_QR_SEARCH;
 

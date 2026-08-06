@@ -91,7 +91,7 @@
 
       GetGRNList();
       
-      $scope.storeId = JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId;
+      $scope.storeId = $rootScope.getStoreObj() != null ? $rootScope.getStoreObj().storeId : undefined; // store-accessor campaign: null-safe parse + picker trigger, one owner (BARE deref at init, QF-AR class)
     }
 
     var SetDecimal = function (name, item, value) {
@@ -1913,6 +1913,7 @@
     }
     
     var ActaulSaveGRNApproval = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     	 $scope.saveBtn=true;
          $scope.saveBtnDisabled=true;
     	 var count=0;
@@ -2667,6 +2668,7 @@
 	    }
 	 
     var rePrintBillSlip = function (grn,storeId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var data = {
         "appName": "HIS",
         "appSecretKey": "f306b6eccd9d5069d2dc71afe139271a",
