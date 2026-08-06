@@ -41,86 +41,73 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
 
 	/**
-	 * The approved 83-entry exact-match allowlist (QF-AJ owner review 2026-08-05).
-	 * Ordered as the review list was: writes first, then PHI reads, reference/config, then static.
+	 * The exact-match allowlist (BR-173 Phase 2 + the 2026-08-06 allowlist audit).
+	 * Ordered: writes first, then PHI reads, reference/config, then static.
 	 * The stored forms are POST-normalization (host-stripped, query-stripped, trailing-slash-trimmed).
+	 * COMPOSITION: 48 exact entries (44 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
+	 * Every exact form here was audit-verified against its controller's class-level
+	 * @RequestMapping + method mapping AND the form a real caller produces (the
+	 * 2026-08-06 audit corrected 18 entries: 9 class-prefix-dropped forms corrected,
+	 * 3 pattern-needed forms moved to anchored patterns, 2 redundant colon-literals
+	 * removed, the feedback base forms removed, 8 never-resolving /HIS-WAR/ swagger/
+	 * config entries dropped, 3 no-pre-login-caller entries sent to DENY).
 	 */
 	private static final Set<String> PUBLIC_ALLOWLIST = new LinkedHashSet<>(List.of(
 		// WRITES
-		"/api/abdm/saveDetailsOfAbdm",
-		"/api/abdm/v3/updateStatus",
-		"/api/billing/kiosk/saveAndPay/future",
-		"/api/inPatientFeedback",
-		"/api/inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId",
-		"/api/inPatientFeedback/saveInPatientFeedback",
-		"/api/ipd/saveMyLatestMedicalSummaryCallBack",
-		"/api/mylife/sync/appointment/cancelorRescheduleAppointmentFromApp",
-		"/api/mylife/sync/savePatientThroughMylife",
-		"/api/opd/saveAIAppointmentInQueue",
-		"/api/outPatientFeedback",
-		"/api/outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId",
-		"/api/outPatientFeedback/saveOutPatientFeedback",
-		"/api/saveTwilioMsg",
-		"/checkEmailAvailability",
-		"/updatePatientRegistrationFromMyLife",
-		"/api/billing/kiosk/saveAndPay",
-		"/api/global/patientRegistration",
-		"/api/opd/appointment/check",
-		"/api/abdm/request/otp",
-		"/forgotPasswordGeneration",
-		"/otpVerification",
+			"/api/abdm/saveDetailsOfAbdm",
+			"/api/abdm/v3/updateStatus",
+			"/api/billing/kiosk/saveAndPay/future",
+			"/api/inPatientFeedback/saveInPatientFeedback",
+			"/api/ipd/saveMyLatestMedicalSummaryCallBack",
+			"/api/mylife/sync/appointment/cancelorRescheduleAppointmentFromApp",
+			"/api/mylife/sync/savePatientThroughMylife",
+			"/api/opd/saveAIAppointmentInQueue",
+			"/api/outPatientFeedback/saveOutPatientFeedback",
+			"/api/saveTwilioMsg",
+			"/adt/checkEmailAvailability",
+			"/api/global/updatePatientRegistrationFromMyLife",
+			"/api/billing/kiosk/saveAndPay",
+			"/api/global/patientRegistration",
+			"/api/opd/appointment/check",
+			"/api/abdm/request/otp",
+			"/adt/forgotPasswordGeneration",
+			"/adt/otpVerification",
 		// PHI READS
-		"/api/global/patientTypeHeadSearchForAppointmentUniqueForNurseCheckIn",
-		"/api/abdm/dataPush",
-		"/api/abdm/getHiuDecryptedData",
-		"/api/opd/getAIAppointmentCount",
-		"/api/opd/patientDoc/fromMylife",
-		"/api/webappointment/getDetailsForBookAppointment",
-		"/api/global/patientTypeHeadSearchForAppointmentUnique",
-		"/api/billing/mylife/sync/appointment",
-		"/api/webappointment/getActivePrefixList",
-		"/getBillNoByPatient",
-		"/getBillReceiptBytesMyLife",
+			"/api/global/patientTypeHeadSearchForAppointmentUniqueForNurseCheckIn",
+			"/api/abdm/dataPush",
+			"/api/abdm/getHiuDecryptedData",
+			"/api/opd/getAIAppointmentCount",
+			"/api/opd/patientDoc/fromMylife",
+			"/api/webappointment/getDetailsForBookAppointment",
+			"/api/global/patientTypeHeadSearchForAppointmentUnique",
+			"/api/billing/mylife/sync/appointment",
+			"/adt/getActivePrefixList",
+			"/api/billing/getBillNoByPatient",
+			"/api/billing/getBillReceiptBytesMyLife",
 		// REFERENCE / CONFIG
-		"/api/createOrganizationFromWeb",
-		"/ldapUserCredentialCheck",
-		"/api/global/getVideoConsultationLinkFromHIS",
-		"/HIS-WAR/configuration/security",
-		"/HIS-WAR/configuration/ui",
-		"/adt/getActivePrefixListForWebPage",
-		"/HIS-WAR/v2/api-docs",
-		"/LIS/global/getTotalLanguageMasterRecordActive",
-		"/adt/br",
-		"/adt/getActiveRelationListForWebPage",
-		"/adt/getListOfDocumentForBookView",
-		"/adt/getUnitByCredentials",
-		"/adt/organizationMasterList",
-		"/adt/userLogin",
-		"/api/doctorApp/getApplicationConfig",
-		"/api/getVideoataForNotification",
-		"/api/global/appoitments/doctors",
-		"/api/opd/coversheetInstructionListForBookView",
-		"/api/opd/getInvestigationsListForBookView",
-		"/api/opd/getMedicationHistoryListForBookView",
-		"/getOrderIdUnitSubscriptionPay",
-		"/resultUrl",
-		"/token/Doctor",
-		"/validationResultResponse",
-		// STATIC (exact — non-webjar; the webjar tree is a PREFIX rule below)
-		"/HIS-WAR/api-ui",
-		"/HIS-WAR/images/favicon-16x16.png",
-		"/HIS-WAR/images/favicon-32x32.png",
-		"/HIS-WAR/swagger-resources",
-		"/HIS-WAR/swagger-ui.html",
-		"/applicationConfiguration/screen-images",
+			"/api/createOrganizationFromWeb",
+			"/ldapUserCredentialCheck",
+			"/adt/getActivePrefixListForWebPage",
+			"/adt/getActiveRelationListForWebPage",
+			"/adt/getListOfDocumentForBookView",
+			"/adt/getUnitByCredentials",
+			"/adt/userLogin",
+			"/api/doctorApp/getApplicationConfig",
+			"/api/getVideoataForNotification",
+			"/api/global/appoitments/doctors",
+			"/api/opd/coversheetInstructionListForBookView",
+			"/api/opd/getMedicationHistoryListForBookView",
+			"/getOrderIdUnitSubscriptionPay",
+			"/Billing/resultUrl",
+			"/Billing/validationResultResponse",
 		// LOGIN (exact — the Duo second-factor fallback, loginController.js:542;
 		// in-memory state only, no DB write; PHASE 6: rate-limit with the other
 		// credential endpoints)
-		"/login",
+			"/login",
 		// SHELL (exact — the app entry pages)
-		"/",
-		"/index.html",
-		"/healthcheck.html"
+			"/",
+			"/index.html",
+			"/healthcheck.html"
 	));
 
 	/**
@@ -156,18 +143,29 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	);
 
 	/**
-	 * The narrow anchored patterns — FOUR total, each replacing a path-variable
-	 * shape that exact entries cannot enumerate:
-	 *   1-2. the feedback path-variable GETs (6 variable segments each)
-	 *   3.   the org-master list subdomain form (loginController.js:66 appends the
-	 *        hostname — localhost/smeabc/qa/intdev/demo — the variable a pattern
-	 *        exists for)
-	 *   4.   the Twilio participant check (twilio-video.js:31032 bare fetch,
-	 *        same flow as /token/Doctor)
+	 * The narrow anchored patterns — SEVEN total, each replacing a path-variable
+	 * shape that exact entries cannot enumerate, each with a named pre-login caller:
+	 *   1.   OPD feedback GET, 6 variable segments — outPatientFeedbackController.js
+	 *   2.   IPD feedback GET, 6 variable segments — inPatientFeedbackController.js
+	 *   3.   org-master list subdomain (loginController.js:66 appends the hostname —
+	 *        localhost/smeabc/qa/intdev/demo)
+	 *   4.   Twilio participant check (twilio-video.js:31032 bare fetch)
+	 *   5.   bookView investigations list, 4 variable segments (bookViewMasterController.js:1664
+	 *        appends patientId/orgId/fromDate/toDate — the pre-login booking flow)
+	 *   6.   Twilio video token (twilio-video.js:30732 fetch — /token/{identity}/{room},
+	 *        the same video-consult flow as #4; the bare /token/Doctor exact could never
+	 *        match the two variable segments)
+	 *   7.   kiosk QR barcode (selfRegistrationController.js:5173 builds /adt/br/{uniqueId}
+	 *        as the QR link the patient's browser opens — pre-login; the bare /adt/br
+	 *        exact could never match the variable segment)
 	 * A pattern is justified ONLY for a genuinely variable segment on a pre-login
 	 * caller's path; anything enumerable must be an exact entry. A pattern
 	 * facility that grows without that justification becomes the next contains()
-	 * chain.
+	 * chain. The 2026-08-06 audit DENIED two candidate patterns for lacking a
+	 * named pre-login caller: /api/global/getVideoConsultationLinkFromHIS/{uuid}
+	 * (zero callers anywhere in the webapp) and
+	 * /LIS/global/getTotalLanguageMasterRecordActive/{orgId}/{unitId} (post-login
+	 * LIS screens only — they authenticate and need no exemption).
 	 */
 	private static final Pattern OPD_FEEDBACK_PATH = Pattern
 			.compile("^/api/outPatientFeedback/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+/[^/]+$");
@@ -177,6 +175,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			.compile("^/adt/organizationMasterList/[^/]+$");
 	private static final Pattern CHECKPARTI_PATH = Pattern
 			.compile("^/checkParti/[^/]+$");
+	private static final Pattern BOOKVIEW_INVESTIGATIONS_PATH = Pattern
+			.compile("^/api/opd/getInvestigationsListForBookView/[^/]+/[^/]+/[^/]+/[^/]+$");
+	private static final Pattern TWILIO_TOKEN_PATH = Pattern
+			.compile("^/token/[^/]+/[^/]+$");
+	private static final Pattern ADT_BR_PATH = Pattern
+			.compile("^/adt/br/[^/]+$");
 
 	/**
 	 * URL normalization applied BEFORE matching, in this order:
@@ -266,7 +270,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 					|| OPD_FEEDBACK_PATH.matcher(normalizedUrl).matches()
 					|| IPD_FEEDBACK_PATH.matcher(normalizedUrl).matches()
 					|| ORG_MASTER_LIST_PATH.matcher(normalizedUrl).matches()
-					|| CHECKPARTI_PATH.matcher(normalizedUrl).matches();
+					|| CHECKPARTI_PATH.matcher(normalizedUrl).matches()
+					|| BOOKVIEW_INVESTIGATIONS_PATH.matcher(normalizedUrl).matches()
+					|| TWILIO_TOKEN_PATH.matcher(normalizedUrl).matches()
+					|| ADT_BR_PATH.matcher(normalizedUrl).matches();
 
 			if (isPublic) {
 				chain.doFilter(request, response);

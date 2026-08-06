@@ -1298,4 +1298,34 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
 - Status: LOGGED, no fix. The role's module tree is data, not code — the fix (adding module 987 to
   the role's privilege modules) is a configuration decision for the owner.
 
+## QF-AK — allowlist-reality audit: 18 wrong forms (merge-day defect) + self-referential sweep + controller typo
+
+- **The verification-method finding (the real defect):** the 66/66 ALLOW sweep curled the
+  allowlist's OWN strings, so a 404 counted as not-401 — it tested the allowlist against itself
+  and could not detect a wrong entry. Fifth instance of a check structurally incapable of finding
+  what it claimed to verify. Replaced by tools/verify_allowlist_reality.py (committed): derives
+  the form a real caller produces from the controller mappings + frontend sources, treats 401 AND
+  404 on an ALLOW entry as FAILURES. Pre-fix proof: 42 failures on the broken deployment; the
+  audit tool (tools/allowlist_audit.py) resolved every exact against the controller's class-level
+  @RequestMapping + method mapping and the frontend call form.
+- **18 wrong forms (pre-fix allowlist):** 9 class-prefix-dropped exacts corrected to the real
+  forms (/adt/checkEmailAvailability, /adt/forgotPasswordGeneration, /adt/otpVerification,
+  /api/global/updatePatientRegistrationFromMyLife, /adt/getActivePrefixList,
+  /api/billing/getBillNoByPatient, /api/billing/getBillReceiptBytesMyLife, /Billing/resultUrl,
+  /Billing/validationResultResponse); 3 pattern-needed forms moved to anchored patterns
+  (bookView investigations 4-var, /token/{identity}/{room}, /adt/br/{barcodeNumber}); 4 dead
+  feedback entries removed; 8 never-resolving /HIS-WAR/ swagger/config entries dropped; the
+  redundant bare /adt/organizationMasterList removed (pattern covers it).
+- **Controller typo (fixed on this branch):** OrganizationWebRegistrationController.java:22 — the
+  /api/createOrganizationFromWeb mapping had a TRAILING SPACE in the value
+  ("/createOrganizationFromWeb "), so the endpoint never resolved at the clean path — nobody has
+  called it successfully. One-line fix.
+- **Pattern candidates DENIED (no named pre-login caller, per the standing pattern rule):**
+  /api/global/getVideoConsultationLinkFromHIS/{uuid} (zero callers anywhere in the webapp) and
+  /LIS/global/getTotalLanguageMasterRecordActive/{orgId}/{unitId} (post-login LIS screens only);
+  /api/unit/applicationConfiguration/screen-images/{orgId}/{imageTypeId} (login-page callers are
+  commented out; live callers are post-login screens with tokens). All three DENY.
+- Composition after the fix: 48 exact (44 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
+- Status: FIXED on fix/br173-allowlist-audit, live-verified 77/77 by the new method.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
