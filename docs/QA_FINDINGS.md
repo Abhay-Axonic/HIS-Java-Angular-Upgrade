@@ -1235,6 +1235,16 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   distinguish a branch-miss from a cookie-write failure.
 
 ## QF-2026-08-05-AH — master-screen redirect: UNRESOLVED (four hypotheses, three disproved)
+**RESOLVED 2026-08-06 — the redirect mechanism, source-proven (see QF-AN):** the applicationConfiguration
+state is commented out in app.js while 64 $state.go('applicationConfiguration') call sites (app.js:1936
+checkCookies' cookieObjectAppConfig-undefined branch + 63 controller sites) still navigate to it. The router
+has no such state, falls through to otherwise("/login"), and the redirect presents as an auth failure. The
+four earlier hypotheses (missing table — retracted; missing cookie — disproved; permission gate — stopped at
+loginpage; 4KB truncation — abandoned) all asked what BLOCKED the screen; nothing did — the DESTINATION did
+not exist. The trigger question (which call site fires for the masters) remains open but the mechanism is
+closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
+
+
 
 - **Observation:** authenticated deep-links to #/relationMaster, #/maritalstatusMaster,
   #/occupationMaster land on the applicationConfiguration screen.
@@ -1327,5 +1337,66 @@ DECISION QUEUED (DECISIONS_QUEUE.md #1): widen the prefixes with /webjars/ (+ /s
   commented out; live callers are post-login screens with tokens). All three DENY.
 - Composition after the fix: 48 exact (44 API/static + 3 shell + 1 login) + 5 prefixes + 7 patterns.
 - Status: FIXED on fix/br173-allowlist-audit, live-verified 77/77 by the new method.
+
+## QF-AL — BR-176: anonymous subscription-PAID bypass (entitlement) + hardcoded encryption key
+
+- **The flow:** allowlisted POST /api/createOrganizationFromWeb (UserMasterDaoImpl:1752) creates an org+unit,
+  inserts the CALLER's paymentDetails JSON verbatim into payment_details (:1800), then hard-sets
+  amount_paid_status='PAID' (:1841) with the caller-supplied amount/TransactionId — no Razorpay order
+  lookup, no signature check, no amount check. addSubScrtionDetails (authenticated /unit/subcription/details)
+  likewise takes amountPaidStatus straight from the DTO.
+- **Masking (the third environment gap):** unreachable on this dev box only because payment_details does not
+  exist locally (the flow errors at :1800). The DDL creates it (31 references) — any DDL-built environment
+  has the bypass live. family_id and saveAnalyzedReport were the first two; RULES.md Rule 10 now carries the
+  standing note: on this dev box, "it does not work" is never evidence that it is safe.
+- **The hardcoded pgp key:** 'ssshhhhhhhhhhh!!!!' in UserMasterDaoImpl:1841-1847 (and the ENCRYPTIONKEY
+  constant used to decrypt at check time) — the encrypted amounts decrypt with a string in the repo; the
+  column-level encryption is decorative. Part of BR-176, not a separate finding.
+- **The Razorpay row (t_unit_subscription_details id 1, PAID/ACTIVE, empty order id, created_by NULL):**
+  hand-inserted dev artifact on 2026-07-18 — no code path created it (createOrganizationFromWeb can't run
+  locally + never targets org 1; addSubScrtionDetails always stamps created_by; no seed inserts it). Not
+  evidence of a payment. The check gate (unit/subcription/check) is a soft nag + pay modal, no lockout.
+- **Status:** LOGGED. Fix scoped, unstarted (per owner). The prior razorpay draft's two findings
+  (client-trusted amount, missing signature verification) confirmed still present in the code today.
+
+## QF-AM — RETRACTION: the CCAvenue "abandoned-in-baseline" verdict (from the partner-baseline report)
+
+- **Retracted 2026-08-06, reason stated:** the verdict was produced by tracing the CCAvenue TABLES
+  (absent from the local DB and the DDL) without tracing the CALL SITES. The call-site trace shows
+  CCAvenue is a live, governed integration: RazorPaymentController endpoints /sendCCAvenueLink,
+  /validateCCAvenuePayment, and the /validatePayment/callBackUrl webhook, the billing settlement
+  (BillingMasterServiceImpl:2082 -> updateCCAvenue), and an owner-approved business rule
+  (BR-012, 2026-07-04) documenting the webhook's post-payment reconciliation behavior with an
+  explicit log-only decision pending verification of the CCAvenue retry contract. The missing
+  schema (t_cc_avenue_log) is an environment/schema gap of the Rule-10 shape, not evidence of dead
+  code. Lesson folded into the Rule 10 standing note's spirit: trace call sites, not just tables.
+- **Status:** RETRACTED. CCAvenue stays untouched. The M-Pesa STK-push/callback layer's
+  dead-verdict stands (zero config, zero transactions, production-only URL, orphaned writes) —
+  but the M-Pesa DAO layer is live (validateMpesaTrancastion: admission mode-5 receipts +
+  company-invoice + misc-expense; updateCCAvenue: CCAvenue settlement) and stays in place,
+  per owner's revised removal scope (fix/dead-code-removal).
+
+## QF-AN — applicationConfiguration state is LIVE-navigated but commented out (the QF-AH redirect mechanism); isKiosk is 70-read, not dead
+
+- **applicationConfiguration:** 11+ live $state.go('applicationConfiguration') call sites — app.js:1936
+  (checkCookies' cookieObjectAppConfig-undefined branch) plus progressNoteController, costEstimationController,
+  unknownPatientRegController, outPatientSalesWorklistDetailsController, bookViewMasterController and more —
+  while the state itself is COMMENTED OUT (app.js, removed from the upgrade's state table). Navigating to an
+  unroutable state falls through to the router's otherwise -> /login. THIS IS THE QF-AH MASTERS'-REDIRECT
+  MECHANISM: the earlier investigation's four hypotheses (missing table, missing cookie, permission gate,
+  truncation) all stopped at the trigger; none checked whether the DESTINATION resolves. It does not — the
+  state was commented during the upgrade while 11+ navigations still target it. The trigger question (which
+  of the call sites fires for the masters) still needs the distinguishing method, but the mechanism is now
+  source-proven. NOT DELETED (step 4 bin-rule: an unroutable state that something navigates to is a live
+  defect, not dead code).
+- **isKiosk:** 70 references across the JS (casualtyWorklist, doctorDesk, patientRegistration,
+  appointmentScheduling, etc.) read the flag — it is set by the login branch and branched on app-wide.
+  NOT DEAD, NOT DELETED under the owner's deletions-only-where-nothing-live-touches-them rule. The kiosk
+  flow itself remains broken (QF-AE), but the flag's readers are live code.
+- **Deleted in step 4 (zero live references verified):** home-top-bar.html (included nowhere),
+  the commented sexMaster state block (no $state.go('sexMaster') anywhere; sexMasterList data untouched),
+  the commented screen-images block in loginController.js (loginPageImgFun/navBarImgFun + the two commented
+  call sites — the login-page branding images were never loaded; the live screen-images GETs are the
+  post-login screens' calls, unaffected).
 
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

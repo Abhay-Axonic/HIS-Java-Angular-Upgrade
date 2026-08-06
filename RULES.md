@@ -34,6 +34,17 @@ These rules apply to every AI session (Blueprint, Maker, or Checker), regardless
     templates, .css url() rules, JS fetches, directory structure) or state explicitly which types
     it excludes and why the exclusion cannot hide a gap. Ground truth for "what the app actually
     requests" is the server log, not the source tree.
+
+    Standing note (2026-08-06, after the third environment gap hid a real vulnerability — BR-176:
+    the anonymous org-registration entitlement bypass is unreachable on this dev box only because
+    `payment_details` is absent locally, while any DDL-built environment has the table and the
+    bypass live; preceded by `family_id` for patientRegistration and the empty table for
+    saveAnalyzedReport): ON THIS DEVELOPMENT BOX, "IT DOES NOT WORK" IS NEVER EVIDENCE THAT IT IS
+    SAFE. When a code path fails or 404s locally, establish whether the blocker is DESIGN (the
+    code never worked, by construction) or ENVIRONMENT (a local schema/config gap) before
+    concluding anything about exposure. A missing local table, column, or config can mask a live
+    vulnerability; the DDL and the production-shaped environment are the ground truth for whether
+    the path is reachable elsewhere.
 11. **Docs-commit governance** (folded from the Stage-1 note): commits made directly to main under the CLAUDE.md docs exception (governance/tooling/config files) still require the end-of-session SESSION_LOG entry; where such a commit touches the ledger (`docs/BR_INDEX.md`, `docs/BUSINESS_RULE_MANIFEST.md`, any BR status), it also requires the ledger-check run appropriate to the change (`tools/check_ledger_merge_state.py` for merge states) with its output pasted into the session log. The docs exception relaxes Maker-Checker review, not record-keeping.
 
 ## Circuit breaker — emergency stop conditions

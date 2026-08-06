@@ -1,5 +1,18 @@
 package com.param.global.mpesa.Dao;
 
+/**
+ * LIVE METHODS (owner-verified 2026-08-06, fix/dead-code-removal): 
+ *   validateMpesaTrancastion — the payment-mode-5 receipt validation, called by
+ *     CompanyInvoiceCreationServiceImpl:575, MiscellaneousExpenseDaoImpl:174, and the
+ *     admission payment flow (admissionController.js sets skipMpesaValidation for the
+ *     M-Pesa payment mode) — DO NOT DELETE.
+ *   updateCCAvenue — the CCAvenue settlement, called by BillingMasterServiceImpl:2082
+ *     (CCAvenue is a live integration governed by BR-012) — DO NOT DELETE.
+ * The surrounding STK-push/callback layer (MpesaMasterController, MpesaMasterServiceImpl,
+ * Mpesa.java) was removed 2026-08-06 as abandoned-in-baseline (zero config, zero
+ * transactions, production-only URL) — the named queries in this DAO still hit the
+ * t_mpesa_master / t_mpesa_transaction_details tables, which back the live validation.
+ */
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.time.LocalDateTime;
