@@ -18,14 +18,9 @@ const { chromium } = require('playwright');
 
 const LEGACY = 'http://localhost:8080';
 
-const DEFAULT_TARGETS = [
-  'outPatientSalesWorklist',
-  'outPatientSalesWorklistDetails',
-  'billSalesReturn',
-  'detailsPatientReturnAcceptanceConsumable',
-  'pendingIssues',
-  'pendingIssuesDetails',
-];
+// target states: pass comma-separated state names as argv[2], else the batch default
+const TARGETS = (process.argv[2] || 'stockAdjustmentApproval,computeStock,confirmStock,varianceApproval,stopTransaction,detailsStockAdjustment')
+  .split(',').map((s) => s.trim()).filter(Boolean);
 
 async function login(page) {
   await page.goto(`${LEGACY}/index.html`, { waitUntil: 'load', timeout: 30000 });
@@ -136,8 +131,7 @@ async function observe(page, phase, stateName, quiet) {
 }
 
 async function main() {
-  const targets = process.argv.slice(2);
-  if (targets.length === 0) targets.push(...DEFAULT_TARGETS);
+  const targets = TARGETS;
   console.log(`fire-test targets: ${targets.join(', ')}`);
 
   const browser = await chromium.launch({ headless: true });
