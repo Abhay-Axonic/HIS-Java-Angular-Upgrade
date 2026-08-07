@@ -201,13 +201,46 @@ file remains the durable alert.*
 - OBSERVABILITY SPLIT (method + blind spots in SWALLOWED_EXCEPTION_SWEEP.md §7): of 8,077
   swallow-shape catches, 6,587 (81.6%) return ERROR-marked envelopes (observable; degraded);
   1,490 (18.4%) indistinguishable-or-unknown (DEFINITE-invisible ~640 / ~7.9%, UNKNOWN ~850).
-  CONCLUSION: NOT a campaign — a targeted fix on the ~640 (filtered by decision surface to
+  CONCLUSION: NOT a campaign — a targeted fix on ~640 (filtered by decision surface to
   tens) is the shape; per-site fix proposal with cost/risk in OVERNIGHT_CYCLE_14.md §2.
 - OTP SEAM FOUND: forgotPasswordGeneration writes the OTP to public.m_user_master.otp (+
   otp_expiry_date/otp_count/blocked) in the same flow that mails it (UserMasterDaoImpl
   :337-349). The password-reset journey IS locally testable (DB read + mail-inert profile);
   the dark-list design's headline NEED is downgraded — journey priority UP. Recommend it
   becomes a near-term test (identity-binding + enumeration legs are the high-value asserts).
+- Nothing fixed/built. Item 15 stays top for the morning.
+
+## 20. [RESOLVED 2026-08-07] Cycle 15 — residual CLOSED (the nine are invisible one layer up), decision filter applied, OTHER sampled, reset spec written
+
+- RESIDUAL CLOSED (overrides item 19's "degraded observability" framing): traced the shared
+  services + 2 of the 5 screens (Rule 10, least-confident first). GenericService's GET path
+  inspects ONLY HTTP-level errors — a 200+ERROR envelope passes UNINSPECTED; the traced
+  handlers render empty on it (otCompletionController null-checks listObject ->
+  tabs render false/empty; masterDischargeSummary status-gates with no else -> list
+  empty/stale). The save-path service CAN growl on envelopes but the traced save call
+  passes notificationStatus=false. ANSWER: the nine are INVISIBLE at the UI — nine more
+  instances of the class one layer up, NOT fixed-by-convention. The fix shape must include
+  the frontend; highest-leverage = the shared GET serviceAction inspects
+  response.data.status and growls (one change, every GenericService GET screen).
+- DECISION FILTER (sampling method stated in cycle 15 §2 — file-area, not caller-chain):
+  of 640 definite-invisible, 188 (29%) are decision-surface (OPD 80 / billing 35 / doctor
+  21 / procedure 11 / otims 11 / pharmacy 11 / admission 8 / nursing 5 / referral 3 / lab
+  2 / appointment 1). Worst: ProcedureOrderDaoImpl:177 (grounded), ProcedureOrderServiceImpl
+  getBatchList:4443, TIndividualDoctorShareGroupWiseDaoImpl checkUniqueIndividualGroup
+  (:351) + checkUniqueIndividualGroupForReferral (:431), DoctorSlabMasterController:31-67,
+  UnitServiceTariffMasterController:91, BillingMasterDaoImpl getNextValGetBillId:1057 +
+  getTallyInterfaceDataInJsonFormat:4232. Order of magnitude: ~190 (of 8,077 = ~2%).
+- OTHER BUCKET (~850): unknown because the post-catch return is a plain value/var (0, "OK",
+  dto, response) — not statically marked. Sampled first 15 in file order: ~13/15
+  INVISIBLE-class (e.g. BillingMasterController.myfileSynch returns "OK" on failure —
+  FALSE SUCCESS; updateFinalBill returns 0 — indistinguishable from 0 rows); ~2 ambiguous.
+  Extrapolation: invisible population ≈ 640 + ~0.85x850 ≈ 1,350 (~17%); decision-surface
+  subset ≈ 400. Full pass = one read per site, not a dataflow problem.
+- PASSWORD-RESET SPEC written (cycle 15 §4, spec only): tools/golden-trace/
+  test_password_reset_journey.js; fixtures = seeded user + psql read of m_user_master.otp +
+  mail-inert profile + token; drives forgotPasswordGeneration -> otpVerification (wrong/
+  right/single-use) -> resetPassword (incl. the unverified-identity NEGATIVE = the identity-
+  binding regression) -> enumeration leg -> login with new password. NOT BUILT.
 - Nothing fixed/built. Item 15 stays top for the morning.
 
 ## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
