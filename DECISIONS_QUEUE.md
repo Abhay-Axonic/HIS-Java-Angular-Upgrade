@@ -326,3 +326,27 @@ file remains the durable alert.*
   the race cannot recur on the next login/reboot.
 - Nothing fixed, nothing merged, nothing pushed (limits held); the deploy sequence is stopped at
   step 1 per the failure rule.
+- UPDATE 09:16 BST — option A EXECUTED; boot FAILED again, but the stuck-boot class is now
+  MECHANICALLY EXPLAINED. Done: `brew services stop postgresql@14` (port freed), postgresql@16
+  came up on 5432 (launchd retry) — his_local restored, psql -l confirms; killed the failed
+  Tomcat (PID 506) -> launchd KeepAlive restarted it (PID 2074) on the restored ROOT. Boot
+  ground through 13 of 23 webapps dirs (every ROOT.* backup = a FULL app copy, ~18-250s each,
+  all deploying successfully against the live DB) then FAILED: `java.lang.OutOfMemoryError:
+  Java heap space` (4x, localhost.2026-08-07.log:7094+) — jstat on PID 2074: old gen 99.72%,
+  metaspace 99.91%, 327 full GCs / 342s GCT in ~10 min (GC death spiral — the historical
+  "CPU-pinned, Hikari-only, no startup line" signature). ROOT's own context never started
+  (instant abort, no log lines). Connections during boot: 74-76 (each copy's pools; max 100,
+  no "too many clients") — pool/orphan theory stays DISPROVEN. THE CAUSE IS MEMORY: 19 app
+  copies (18 ROOT.* backups + ROOT) in ONE JVM with no -Xmx flag. This also explains pr1's
+  5.7h boot and the three 44-min stuck deploy boots (same spiral at smaller pile sizes).
+  STOPPED per the failure rule: killed 2074, `brew services stop tomcat@9` (prevents the
+  KeepAlive auto-restart spiral); 8080 free, no java. NOTHING restored (ROOT content is
+  already the pre-merge build; the backups were NOT moved — no fixes).
+- NEW DECISION NEEDED (the boot path cannot work without it): move the 18 ROOT.* backup dirs
+  OUT of webapps/ (e.g., to a sibling backup dir) so Tomcat deploys ONLY the real ROOT, then
+  `brew services start tomcat@9` -> expect a normal ~20-25s boot (the 08:39 ROOT deploy took
+  16.8s under the pile). Optional: set -Xmx (e.g. -Xmx4g) in the launchd env/startup.sh as a
+  second line of defense. ALSO decide: the tomcat LaunchAgent (KeepAlive=true) auto-starts
+  Tomcat at EVERY login — with the pile present it re-enters the spiral; keep it registered
+  or run Tomcat manually (the historical startup.sh pattern)? The merged-build deploy stays
+  blocked until the boot path works. NO SECOND REBOOT (limit).
