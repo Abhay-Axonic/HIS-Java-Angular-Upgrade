@@ -30,6 +30,7 @@ import com.param.global.dto.ContractConsumptionDto;
 import com.param.global.dto.OrderDetailsByEncounterIdDto;
 import com.param.global.dto.OrderDetailsDiscountDto;
 import com.param.global.dto.ServiceMasterDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.ServicePriceDetailsDto;
 import com.param.global.dto.SlotMasterDto;
 import com.param.global.dto.UnitApplicationConfigurationDto;
@@ -58,6 +59,9 @@ public class ServiceMasterDaoImpl extends GenericDao<ServiceMaster, Integer>
 
 	@Autowired
 	IUnitApplicationBillingConfigurationDao iUnitApplicationBillingConfigurationDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	final static Logger logger = Logger.getLogger(ServiceMasterDaoImpl.class);
 
@@ -170,6 +174,12 @@ public class ServiceMasterDaoImpl extends GenericDao<ServiceMaster, Integer>
 	@Override
 	public Response updateOrganizationServiceMaster(ServiceMasterDto xServiceMasterDto) throws ApplicationException {
 		try {
+			// BR-182 ownership guard: the loaded record's org must match the verified session identity (unit scoping N/A — m_service_master has no unit column)
+			ServiceMaster existingServiceMaster = findById(xServiceMasterDto.getServiceMasterId());
+			if (existingServiceMaster == null
+					|| !existingServiceMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
+				throw new ApplicationException("BR182-UPDATE-ORG-SERVICE-MASTER-OWNERSHIP: service master does not belong to the current organization");
+			}
 			// ----------- check if Service Name alreay exist ---------------//
 			Long count = (Long) sessionFactory.getCurrentSession()
 					.createQuery(

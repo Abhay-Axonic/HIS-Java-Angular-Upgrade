@@ -8,6 +8,7 @@ import com.param.adt.admission.dto.UnreservedPatientDto;
 import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.global.dto.AdmissionDto;
+import com.param.global.service.VerifiedIdentityService;
 
 import in.param.exception.ApplicationException;
 @Service
@@ -17,6 +18,9 @@ public class BedReservationListServiceImpl implements IBedReservationListService
 
 	@Autowired
 	IBedReservationListDao iBedReservationListDao;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 	
 
 	@Override
@@ -35,6 +39,9 @@ public class BedReservationListServiceImpl implements IBedReservationListService
 	public Response unreservePatrientBooking(UnreservedPatientDto unreservedPatientDto) throws ApplicationException 
 	{
 		try{
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity
+			unreservedPatientDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			unreservedPatientDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			
 			/*AdmissionNoteDto admissionNoteDto = new AdmissionNoteDto();
 			admissionNoteDto.setOrganizationId(unreservedPatientDto.getOrganizationId());

@@ -407,6 +407,9 @@ public class UnknownPatientRegistrationServiceImpl
 						null
 				);
 			}
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity
+			admissionDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			admissionDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iMedicolegalDao.updateMedicolegalDetails(admissionDto);
 		
 		} catch (Exception e) {

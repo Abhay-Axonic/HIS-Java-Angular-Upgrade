@@ -21,6 +21,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.adt.master.global.dto.PaymentEntitlementMasterDto;
 import com.param.global.dto.AdmissionNoteDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.KinDetailsDto;
 import com.param.global.dto.PatientCategoryMasterDto;
 
@@ -39,6 +40,9 @@ public class PendingRequestDaoImpl extends GenericDao<AdmissionNote, Integer>
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 
 	@Override
@@ -356,6 +360,13 @@ public class PendingRequestDaoImpl extends GenericDao<AdmissionNote, Integer>
 	@Override
 	public Response cancelPendingAdmissionRequest(AdmissionNoteDto admissionNoteDto) throws ApplicationException {
 		try{
+			// BR-182 ownership guard: load the note, verify org/unit against the verified session identity
+			AdmissionNote admissionNote = (AdmissionNote) sessionFactory.getCurrentSession().get(AdmissionNote.class, admissionNoteDto.getAdmissionNoteId());
+			if (admissionNote == null
+					|| !admissionNote.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| !admissionNote.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				throw new ApplicationException("BR182-CANCEL-PENDING-ADMISSION-OWNERSHIP: admission note does not belong to the current organization/unit");
+			}
 			Query qr1 = sessionFactory.getCurrentSession().createQuery(
 					"update AdmissionNote an set an.status='I', an.isCancel='Y', an.canceledDate=now(), an.updatedBy=:updatedBy, an.updatedDate=now() where an.admissionNoteId=:admissionNoteId");
 			qr1.setParameter("updatedBy", admissionNoteDto.getUpdatedBy());
