@@ -264,6 +264,23 @@ file remains the durable alert.*
   (GenericService gap first). ~10-minute read.
 - Nothing fixed/built. Item 15 stays top.
 
+## 22. [2026-08-07, EXECUTION IN PROGRESS] Rule 9b approved — merges DONE local, deploy FAILED, reboot taken
+
+- APPROVAL (verbatim, SESSION_LOG 07:24 BST): merge the live-verified store-accessor campaign
+  batches into main, --no-ff, per Rule 9. STATIC-ONLY branches NOT included, await Step 6.
+- EXECUTED: dependency structure confirmed (pb1-pb3 ⊆ pb4, ab1 ⊆ ab2 — two cumulative chains)
+  → TWO tip merges: pb4 @ 40bc56f3 + ab2 @ c7c49b39 (--no-ff, Rule 9a flipped, docs conflicts
+  resolved both-sides). Token independently verified.
+- FAILED at the deploy boot (3rd stuck boot, same signature): 517% CPU, HikariPool-only
+  catalina, no startup line by 44 min. Restored from backup, Tomcat stopped, nothing pushed.
+- DIAGNOSIS (4-point): Postgres UP; 1/100 connections (pool NOT starved); HikariPool shapes =
+  normal noise (fills skipped, stats active=0/waiting=0, zero timeouts); NO orphan java.
+  Pool theory DISPROVEN → INCONCLUSIVE → REBOOT taken per the supervisor's instruction.
+- PENDING after reboot: mint a fresh token FIRST (the token dies with the reboot; /tmp is
+  wiped) → redeploy merged main → canonical proof chain (rate-limit FIRST on clean buckets,
+  regressions, allowlist, six harness specs, drift, TOKEN-OK login) → push → main ==
+  origin/main → 9d ledger. Then Step 6 fire-tests (item 15 stays top).
+
 ## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
 
 - procurement ~21, asset ~10, nursing ~4, pharmacy remainder ~6, dashboards ~7, masters ~1.
