@@ -1471,10 +1471,21 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   update, no schema change) — which would also unblock the OTCompletion parent grid for m1's
   otBillingCompletionDetails fire-test.
 
-## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
+## QF-2026-08-07-H — org-trust audit of the six ADT/clinical batch candidates (Track A batch 36): 6/6 carry the unfixed cross-tenant pattern — NOT rebuildable on top of it (owner decision pending: fix backend first vs drop)
 
-- web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
-  **JwtTokenFilter**), cors. `RequestWrapperFilter` (com.param.filter, an OncePerRequestFilter that
+- **Audit scope (2026-08-07, Step 1 before any rebuild — owner's standing rule: a screen whose backend carries the unfixed pattern gets reported, not silently rebuilt):** admittedPatientList, admissionRequest, pendingAdmissionDischarge, bedReservationList, bedAllocation, serviceMaster. Method per the cross-tenant-idor-fix skill: write-path inspection (Pattern B findById/raw-SQL update by client ID; Pattern C INSERT with client org/unit; Pattern A client-supplied org/unit in read WHEREs) + VerifiedIdentityService presence across the full chain. ZERO VerifiedIdentityService references in any of the six screens' write chains (the only VIS refs found nearby belong to OTHER methods: PendingRequestServiceImpl:103 = the batch-4 payment-entitlement cache fix, NOT the cancel; UnitServiceMasterDetailsServiceImpl = the batch-4 unit-service-master-details fix, a different screen).
+- **admittedPatientList** — WRITE: MedicolegalDaoImpl.updateMedicolegalDetails (:38-47) — Pattern B: findById(client medicolegalId), no org/unit predicate on the load, then set + update. READ: AdmittedPatientListDaoImpl — org-filtered inline but values from the client DTO (Pattern A shape); chain VIS=0.
+- **admissionRequest** — WRITE: AdmissionRequestDaoImpl.saveAdmissionRequest (:108-121) — Pattern C: mapper pulls org/unit from the client DTO into the INSERT. READ: getPatientListLike (:52-60) — Pattern A: GET_PATIENT_LIST_LIKE org parameter set from the client DTO (the /adt/patientSearchByMultipleCriteria surface — cross-tenant patient search).
+- **pendingAdmissionDischarge** — WRITE: PendingRequestDaoImpl.cancelPendingAdmissionRequest (:357-364) — Pattern B raw-SQL: `update AdmissionNote an set ... where an.admissionNoteId=:admissionNoteId` — no org/unit predicate (the service's VIS refs are in a DIFFERENT method). READ: getPendingAdmissionRequestDetails (:45-52) — Pattern A: org/unit from the client DTO.
+- **bedReservationList** — WRITE: BedReservationListDaoImpl.cancelReservation (:66-86) — Pattern B raw-SQL: `update AdmissionNote an ... where an.admissionNoteId=:admissionNoteId` — no org/unit predicate; rescheduleReservation same class. READ: getBedReservationList (:44-53) — Pattern A: org/unit from the client DTO.
+- **bedAllocation** — WRITE: BedAllocationDaoImpl.savePatientAdmission (:208-222) — Pattern C: mapper pulls org/unit from the client DTO into the admission INSERT (a forged admission lands in the victim org's namespace — clinical + billing surface); updateWatingListNumber (:574) same class.
+- **serviceMaster** — WRITE: ServiceMasterDaoImpl.saveOrganizationServiceMaster (:65-79) — Pattern C + the dup-check org-scoped but from the client DTO (Pattern A); updateOrganizationServiceMaster (:171-202) — Pattern B detached-entity update keyed on the client serviceMasterId (org/unit from the DTO become SET columns, not predicates).
+- **Impact class:** these are ADT/clinical operations — a forged cancel (pending admission, bed reservation), medicolegal edit, or admission INSERT is a clinical-data-integrity event in another tenant, not merely a leak — the tier's 100% hit rate held (owner's expectation confirmed). Not fixed; the owner decides: VerifiedIdentityService treatment first (dedicated branch, live attack-then-defense proof, per BR-121-142 rigor) or drop the screens from the batch.
+
+ ## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
+
+ - web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
+ **JwtTokenFilter**), cors. `RequestWrapperFilter` (com.param.filter, an OncePerRequestFilter that
   wraps the request in the com.param.exception ContentCachingRequestWrapper) exists on disk and is
   wired NOWHERE — it has never run in this deployment. The "requestWrap" name + the written-but-
   unwired wrapper class suggest the original design intended requestWrap = the body-caching wrapper
