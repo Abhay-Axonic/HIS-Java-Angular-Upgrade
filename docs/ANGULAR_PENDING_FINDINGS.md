@@ -725,7 +725,7 @@ For a 401, this redirects and shows a message. **For every other failure** (500,
 
 ---
 
-## 42. SEVERITY 1 — `OPDCoverSheet` can silently save procedure-order/AI-diagnosis data against a different patient's identity than the one on screen — found during the screen-clustering divergence analysis
+## 42. MOVED TO BR-181 — 2026-08-07 (owner): promoted from this ledger to a tracked BR — OPDCoverSheet patient-identity mismatch. Full detail at docs/BUSINESS_RULE_MANIFEST.md BR-181. No fix; the parity-vs-corrected decision is the owner's, not made today.
 
 **Where:** `resources/assets/js/controller/opd/transection/OPDCoverSheetController.js:2044` (this screen's own patient-identity mechanism), `:24785-24787` and `:24799-24801` (inside `saveProcedureOrder`'s procedure-request builder), `:46153` (inside `saveDianosisFromAIdata`). Cross-referenced against `resources/assets/js/config/app.js:13346-13354` (this screen's own state param declaration), `:16967` (`IPDCoverSheet`'s declaration), and `:19590-19621` (the `erNursingCoversheet`/`nursingCoversheet`/`dayCareNursingCoversheet` family's declarations). Found while spot-checking a "cover sheet" structural cluster for a separate, read-only clustering-feasibility analysis — not part of the Phase 4 batch this screen belongs to, and not itself further investigated or fixed per that task's read-only scope.
 
