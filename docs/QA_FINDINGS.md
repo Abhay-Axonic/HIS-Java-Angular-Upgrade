@@ -1764,4 +1764,44 @@ parses; 15/15.
   libexec/bin/setenv.sh (CATALINA_OPTS="-Xmx4g"); confirm webapps/ contains ONLY ROOT +
   the 4 built-ins (re-archive any ROOT.* dirs to outside webapps/); never move-aside the
   old ROOT into webapps/ during future deploys — back it up to /tmp or the archive dir.
+## QF-2026-08-07-E — LOGIN BROKEN on the merged deploy: JWT_SIGNING_KEY env var missing from post-reboot Tomcat processes (env regression, NOT a deploy/code regression)
+
+- SYMPTOM: every POST /adt/userLogin returns 401 EMPTY (pre-controller) on the merged build;
+  the rate-limit verifier's positive control fails NO-TOKEN; API logins were 401s all along
+  (the verifier's normal-rate assertion only checks "no 429", so 401s passed silently —
+  misread once as 200s; the codes were [401,401,401,401,401]).
+- PROOF IT IS NOT THE DEPLOY: every login-path class is byte-identical between the pre-merge
+  (login worked at 07:28 — the owner's token mint) and the merged deploy: JwtTokenFilter,
+  RateLimitFilter, SecurityConfig, CORSFilter, web.xml, UserMasterController,
+  UserMasterServiceImpl, UserMasterDaoImpl, UserMaster entity, GlobalCommonDateUtils
+  (verified with cmp on classes/jars). The filter's allowlist contains /adt/userLogin
+  (constant pool verified via javap). The domain config (public.domain_config) is present
+  and correct. The login reaches the app and dies at TOKEN GENERATION.
+- ROOT CAUSE (catalina.out, startup.sh run): ExceptionInInitializerError at
+  UserMasterServiceImpl.userLogin:247 (generateToken) -> JwtTokenUtil.<clinit> ->
+  IllegalStateException "JWT_SIGNING_KEY environment variable must be set -- refusing to
+  start with no signing key configured" (JwtTokenUtil.loadSigningKey:26). This is the
+  DECISION_NEEDED_HardcodedJwtSigningKey.md remediation (documented as already-fixed): the
+  code REQUIRES the env var ("Operator action required, every environment"). The pre-reboot
+  process was started via startup.sh from a shell that had the var exported; the post-reboot
+  launchd-spawned processes have no EnvironmentVariables in the plist -> the var is missing
+  -> every login 401s. The same failure class appears in catalina.out on 2026-08-06 23:27
+  BST ("method failed" x4 — the ab2-era NO-TOKEN misread as a cold-boot flake).
+- THE VALUE IS NOWHERE ON DISK (no shell profiles, no scripts, no .env) — the operator
+  holds the only copy.
+- FIX (owner-authorized only): put the key into libexec/bin/setenv.sh
+  (export JWT_SIGNING_KEY=...) — setenv.sh is sourced by catalina.sh for BOTH launchd and
+  startup.sh runs — then restart Tomcat. A fresh random value (openssl rand -base64 64) is
+  acceptable (tokens are short-lived; no persisted keys depend on it).
+- SECONDARY (post-fix, for the owner): (1) the verification tooling hardcodes admin/12345
+  (positive_control_login.js, mint_token.js, test_store_accessor_live_fire.js) — this DB's
+  stored hash RGcKiWDPcb7Giyfymr6FSA== != encrypt('12345') = 5ebTyzUzig57g5D4OK409A==
+  (AES/ECB, key "ssshhhhhhhhhhh!!!!" -> SHA-1 -> 16 bytes; pipeline round-trip verified),
+  and the stored hash does not decrypt with the current key either — the real password
+  semantics need the owner (he minted successfully at 07:28); (2) admin is OTP-blocked
+  (otp_count=5, blocked='t'); (3) an active t_user_login_log entry from the 07:28 mint
+  exists (the next real login shows the already-logged-in dialog — the tooling handles it);
+  (4) /tmp/fresh_token.txt does not exist (the reboot wiped /tmp; the 07:28 token died).
+- ENV-VAR LESSON: post-reboot launchd runs do NOT inherit shell exports; any env-var-
+  dependent config must live in the plist or setenv.sh, or every reboot silently breaks it.
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

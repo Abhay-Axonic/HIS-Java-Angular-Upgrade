@@ -361,3 +361,26 @@ file remains the durable alert.*
   machine-config issue (heap exhaustion from the webapps pile — not the app, not the merges).
   NEXT: Abhay mints a fresh token -> FULL deploy of merged main (pb4+ab2) -> canonical proof
   chain -> push -> main == origin/main -> 9d ledger.
+- UPDATE 10:45 BST — deploy EXECUTED; proof chain 4/8; LOGIN BLOCKER ROOT-CAUSED:
+  JWT_SIGNING_KEY env var missing from post-reboot Tomcat processes. Full detail in
+  QF-2026-08-07-E. Summary: merged build booted 18.8s (baseline), HC 200, 6 conns;
+  verify_rate_limit 12/12 rate-limit assertions (0 HIS-400); regressions PASS; allowlist 0;
+  DRIFT CLEAN (3,353 files, mpesa-only); loginController guard x1 + roleId x4 present.
+  EVERY POST /adt/userLogin -> 401 EMPTY (pre-controller): ExceptionInInitializerError from
+  JwtTokenUtil.<clinit> -> IllegalStateException "JWT_SIGNING_KEY environment variable must be
+  set" (catalina.out; UserMasterServiceImpl.userLogin:247 generateToken). This is the
+  DECISION_NEEDED_HardcodedJwtSigningKey.md remediation (code REQUIRES the env var). The
+  pre-reboot process was startup.sh from a shell that exported it; post-reboot launchd
+  processes have no EnvironmentVariables -> missing -> login 401s. The value is NOWHERE on
+  disk (no profiles/scripts/.env) — Abhay holds the only copy. NOT a deploy regression:
+  every login-path class is byte-identical pre-merge vs merged (verified by cmp). Also:
+  /tmp/fresh_token.txt does NOT exist (reboot wiped it — the 07:28 token died with the
+  reboot); tooling's hardcoded admin/12345 != this DB's stored hash (encrypt('12345')=
+  5ebTyzUzig57g5D4OK409A== vs stored RGcKiWDPcb7Giyfymr6FSA==, which also doesn't decrypt
+  with the current key); admin is OTP-blocked (otp_count=5, blocked='t'); an active
+  login-log entry from the 07:28 mint exists (next real login hits the already-logged-in
+  dialog — tooling handles it). DECISION NEEDED: (1) supply JWT_SIGNING_KEY (or authorize a
+  fresh openssl rand value) -> add to libexec/bin/setenv.sh (works for launchd AND
+  startup.sh) -> restart Tomcat -> login recovers; (2) then the real admin password for the
+  verification tooling (or a DB-side reset — owner's call); (3) then owner mints the token
+  -> six harness + permissions bootstrap + TOKEN-OK -> push -> 9d.
