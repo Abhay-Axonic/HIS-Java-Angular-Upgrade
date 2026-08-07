@@ -52,6 +52,17 @@ Standing note (2026-08-06, after the 6A deploy failure — a partial class copy)
     which reads as a filter defect rather than a deploy error. When deploying a changed class:
     copy the class AND all its inner classes (RateLimitFilter*.class), and treat BOOT TIME as a
     signal — a 5-second boot where 20 is normal means the Spring context did not load.
+
+Standing note (2026-08-07, after the BR-183 stale-jar false pass — a verification that
+inspected the wrong artifact and reported clean): a verification that reads an artifact must
+FAIL when the artifact is unreadable. "End-of-central-directory signature not found" followed
+by a clean result is a check reporting on nothing. Any file-reading assertion needs a
+parse-success precondition: force a fresh extraction (never reuse a file that merely exists),
+confirm the artifact actually parses (zip validity, expected byte count, expected structure)
+BEFORE the assertion runs, and treat the parse failure itself as a FAIL. The false pass
+happened because a stale partial jar file existed, the extraction step was skipped on the
+existence check, and strings on the broken file returned zero matches — a check whose
+artifact does not parse cannot be trusted.
 11. **Docs-commit governance** (folded from the Stage-1 note): commits made directly to main under the CLAUDE.md docs exception (governance/tooling/config files) still require the end-of-session SESSION_LOG entry; where such a commit touches the ledger (`docs/BR_INDEX.md`, `docs/BUSINESS_RULE_MANIFEST.md`, any BR status), it also requires the ledger-check run appropriate to the change (`tools/check_ledger_merge_state.py` for merge states) with its output pasted into the session log. The docs exception relaxes Maker-Checker review, not record-keeping.
 
 ## Circuit breaker — emergency stop conditions
