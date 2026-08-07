@@ -1,5 +1,18 @@
 # MORNING BRIEFING — 2026-08-07 (extended-run handover; ~10 minutes)
 
+**STATE AT REST (written at close, ~10:00 BST):** The deployed app is MAIN'S FRONTEND — the
+last fire-test deployment (ab2) was reverted and main's frontend restored after the stuck-boot
+episode; a fresh drift check with the committed tool at closing PASSES (3,353 files
+hash-identical to main, only the pre-existing mpesa extra). The app IS SERVING right now
+(healthcheck 200 — the restore boot eventually completed on its own; NO reboot was performed).
+It is NOT suite-green in the strict sense: the last full suite ran against the ab2 build, and
+nothing has been live-verified since the boot trouble began. The machine's boot path is still
+fragile — one deploy boot ran ~5.7 hours without completing — so a reboot before the next
+deploy/fire-test work remains my recommendation. If you do nothing: nothing is on fire — no
+merges or pushes are pending, no partial deploy state exists, and all 13 branches sit parked
+and ready — but boot reliability is unproven for the next deploy, the static batches' fire-tests
+stay pending (their evidence is static-only), and none of the decisions below advance.
+
 Everything below is analysis/verification state. NOTHING was merged, pushed, or fixed overnight.
 The detailed ledger is DECISIONS_QUEUE.md; this is the executive layer. Machine clock note: the
 session clock drifted; times are approximate — the SEQUENCE is accurate.
@@ -25,10 +38,11 @@ session clock drifted; times are approximate — the SEQUENCE is accurate.
    updateFinalBill returns 0 — indistinguishable from "0 rows").
 3. THE STORE-ACCESSOR CAMPAIGN IS COMPLETE — every store-cookie deref in the 80-site census is
    converted (55 screens this run, 187 gates; the whole census re-checked with a broader net —
-   zero new sites). 13 branches parked ready, but the machine's Tomcat stopped booting
-   (~5.7h stuck boot) after ~20h of builds — a machine reboot is needed before any further
-   live verification. NO reboot was attempted (your call; the session token + deployed state
-   depend on it).
+   zero new sites). 13 branches parked ready. MACHINE: Tomcat's boots became pathologically
+   slow/stuck after ~20h of builds (one deploy boot ran ~5.7h without completing; the restore
+   boot eventually finished on its own — the app serves main's frontend now, verified
+   drift-clean at close). Boot reliability for the NEXT deploy is still the open risk; NO
+   reboot was attempted (your call; the session token and deployed state depend on it).
 
 ## Decisions needed — ordered by consequence (each phrased as a question)
 
