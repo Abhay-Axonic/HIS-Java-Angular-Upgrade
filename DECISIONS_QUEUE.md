@@ -243,6 +243,27 @@ file remains the durable alert.*
   binding regression) -> enumeration leg -> login with new password. NOT BUILT.
 - Nothing fixed/built. Item 15 stays top for the morning.
 
+## 21. [RESOLVED 2026-08-07] Cycle 16 — GenericService scoped, OTHER bucket finished, MORNING_BRIEFING.md written
+
+- GENERICSERVICE SCOPED (decision-ready; cycle 16 §1): 14,554 serviceAction call sites, 2,859
+  GET across 906 files. Three handler classes traced (Rule 10): null-check render
+  (otCompletion — blank on ERROR), status-gate-no-else (masterDischargeSummary — blank on
+  ERROR), ERROR-AS-NORMAL-PATH (walkInSales:1179 — "no active package" is a normal outcome;
+  surfacing = FALSE ALARM). 2,373 handlers already consume status=='error' — a global growl
+  double-surfaces on all of them. RECOMMENDATION: opt-in per call site (flag mirroring the
+  save path's notificationStatus, default FALSE), decision-surface screens opt in — NOT a
+  global growl.
+- OTHER BUCKET FULL PASS (850): FALSE_SUCCESS 29 (11 decision-surface; myfileSynch "OK",
+  updateFinalBill 0, JwtTokenFilter true, AppointmentSchedulingDaoImpl 0s...), OBSERVABLE 0,
+  INVISIBLE 128 (40 decision), AMBIGUOUS 693 (202 decision — method-call returns, one read
+  each). FINAL INVISIBLE POPULATION 797 (239 decision-surface); targeted-fix scope =
+  decision-surface 239-441.
+- MORNING PACKAGE: docs/MORNING_BRIEFING.md — decisions 1-6 ordered by consequence
+  (GenericService shape, machine reboot, campaign merges, swallow-fix shape, password-reset
+  test, drift tool/dark-list), branches with STATIC-ONLY marking, Step 6 list, top-3 findings
+  (GenericService gap first). ~10-minute read.
+- Nothing fixed/built. Item 15 stays top.
+
 ## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
 
 - procurement ~21, asset ~10, nursing ~4, pharmacy remainder ~6, dashboards ~7, masters ~1.
