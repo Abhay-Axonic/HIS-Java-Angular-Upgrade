@@ -1731,4 +1731,37 @@ parses; 15/15.
   probe was re-applied to the ab1 tree (commit 42d57d49) and the fire-test re-run with it. Lesson:
   any family branched off main must re-apply the probe (or the tool commits must ride main sooner).
 - Restore: single-directory cp; drift clean (mpesa extra only).
+## QF-2026-08-07-D — STUCK-BOOT ROOT CAUSE (RESOLVED): unbounded JVM heap + the webapps/ backup pile — environment configuration, NOT repo code
+
+- CLASS: machine/Tomcat environment config. The fix lives OUTSIDE version control
+  (/opt/homebrew/Cellar/tomcat@9/9.0.120/libexec/bin/setenv.sh) and would NOT survive a
+  machine rebuild or a `brew upgrade` of tomcat@9 — it must be re-applied. See the
+  rebuild checklist at the end.
+- OCCURRENCES IT EXPLAINS (all the same mechanism — GC thrashing, not deadlock):
+  1. pr1's 5.7h "stuck" boot (2026-08-06, first occurrence),
+  2. the three Rule 9 deploy "stuck" boots (2026-08-07, 44+ min each at 517% CPU, killed —
+     the CPU-pinned grind, HikariPool-DEBUG-only catalina.out, no startup line),
+  3. the "degraded" boots that eventually completed (971s ab2-era, 1656s restore boot) —
+     the same pile at smaller sizes.
+- MECHANISM (proven live 2026-08-07, cycle 18S): Tomcat auto-deploys EVERY directory under
+  webapps/ as a separate full webapp. 18 ROOT.* backup dirs (created by past deploys'
+  move-aside steps) = 18 full app copies; ~19 copies in ONE JVM with no -Xmx (default heap)
+  → old gen 99.72% / metaspace 99.91% / 327 full GCs costing 342s GCT in ~10 min →
+  java.lang.OutOfMemoryError: Java heap space (4x; localhost.2026-08-07.log:7094,
+  handoverWorkListController autowire) → GC death spiral. The pool/orphan theories are
+  disproven: 74-76 healthy connections during the failure, no "too many clients".
+- BEHAVIOURAL EVIDENCE (the fix): setenv.sh CATALINA_OPTS="-Xmx4g" → jcmd on the live JVM
+  reads MaxHeapSize=4294967296; boot "Server startup in [16839] ms" (16.8s, the normal
+  signal) → healthcheck 200 in 0.11s → 6 connections to his_local (one copy's pools).
+  Ad-hoc verification script 6/6 PASS (syntax, sourced value, exec bit, live heap cap,
+  pile absent, healthcheck).
+- FIX (owner-authorized 2026-08-07): (1) the 18 ROOT.* backup dirs moved OUT of webapps/ to
+  /opt/homebrew/Cellar/tomcat@9/9.0.120/libexec/webapps.archive-20260807/ (nothing deleted;
+  webapps/ = ROOT + docs/examples/host-manager/manager only); (2) libexec/bin/setenv.sh
+  written with CATALINA_OPTS="-Xmx4g"; (3) tomcat LaunchAgent (KeepAlive) retained — safe
+  with the pile gone.
+- REBUILD CHECKLIST (after any machine rebuild / brew upgrade): re-create
+  libexec/bin/setenv.sh (CATALINA_OPTS="-Xmx4g"); confirm webapps/ contains ONLY ROOT +
+  the 4 built-ins (re-archive any ROOT.* dirs to outside webapps/); never move-aside the
+  old ROOT into webapps/ during future deploys — back it up to /tmp or the archive dir.
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
