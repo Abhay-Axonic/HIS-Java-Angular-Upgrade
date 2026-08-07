@@ -79,9 +79,10 @@
                 function (response) {
                     auction.stores = auction.stores.concat(response.data.store);
                     //   auction.statuses = auction.statuses.concat(response.data.status);
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
                     for(var i=0;i<auction.stores.length;i++)
                     {
-                        if(auction.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(auction.stores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
                         {
                             auction.store = auction.stores[i];
                         }
@@ -135,6 +136,7 @@
                 });
         }
         var GetProductCategoryList = function (id) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var auction = self.model;
 
             //TODO : Add asset category to the uri
@@ -295,6 +297,7 @@
         }
 
         var createNewAuctionRequisition = function () { 
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                 var auction = self.model;
 
                 var URI = CONSTANTS.ASSET.AUCTION_REQUISITION.SAVE_API;
@@ -337,6 +340,7 @@
         }
 
         var UpdateNewAuctionRequisition = function () { 
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                 var auction = self.model;
 
                 var URI = CONSTANTS.ASSET.AUCTION_REQUISITION.DETAILS_API  + self.model.auctionRequisitionId;
@@ -399,6 +403,7 @@
 
 
         var GetAuctionRequisitionData = function (auctionRequisitionId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             self.model.auctionRequisitionId = auctionRequisitionId;
             var URI = CONSTANTS.ASSET.AUCTION_REQUISITION.DETAILS_API + $scope.unitId+ '/'+$scope.organizationId + '/' + $scope.userId + '/' + auctionRequisitionId;
 

@@ -190,9 +190,10 @@
                     areturn.fromStores = areturn.fromStores.concat(response.data.fromStore);
                     areturn.toStores = areturn.toStores.concat(response.data.toStore);
                     areturn.carriers = areturn.carriers.concat(response.data.carrier);
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
                     for(var i=0;i<areturn.fromStores.length;i++)
                     {
-                        if(areturn.fromStores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(areturn.fromStores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
                         {
                             areturn.fromStore = areturn.fromStores[i];
                         }
@@ -312,6 +313,7 @@
         }
 
         var GetIssueList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.ASSET.ASSET_RETURN.ISSUELIST_API;
             var data = {
                 "fromStoreId": self.model.fromStore.id,
@@ -492,6 +494,7 @@
         }
 
         var SaveNewAssetReturn = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var store = self.model;
             var URI = CONSTANTS.ASSET.ASSET_RETURN.SAVE_API;
 
@@ -536,6 +539,7 @@
                 });
         }
         var UpdateAssetReturn = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var areturnId = self.model;
 

@@ -15,13 +15,13 @@ angular.module('myApp').controller(
 					$state.go('login');
 					return;
 				}
-				var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+				var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 				console.log("preventiveScheduleWorklistController ctrl");
 				if(cookieObjectStore==undefined){
 					$rootScope.storePopup();
 					angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
 				} else {
-					$scope.storeId = cookieObjectStore.storeId;
+					$scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
 				}
 				$scope.showAdd = true;
 				$scope.showView = true;
@@ -138,6 +138,7 @@ angular.module('myApp').controller(
 			$scope.init();
 			
 			$scope.getAssetDetailsByCriteria = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 				$scope.AssetDetailsByScheduleCriteria = [];
 	            var URI = BASE_URL+ROOT_URL+"/api/assetManagement/maintenance/getAssetDetailsByCriteria";
 	            $rootScope.startLoader();

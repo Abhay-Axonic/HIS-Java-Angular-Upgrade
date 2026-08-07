@@ -25,7 +25,7 @@ angular
 							}
 							
 							$scope.storeId = 0;
-							var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+							var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 							if(cookieObjectStore!=undefined){
 								$scope.storeId = cookieObjectStore.storeId;
 							}
@@ -176,6 +176,7 @@ angular
 							
 						
 								$scope.searchNewItem = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 									var data = {
 											 	"assetTypeId": 2,
 										        "assetCategoryId": $scope.assetCategoryObj.id,

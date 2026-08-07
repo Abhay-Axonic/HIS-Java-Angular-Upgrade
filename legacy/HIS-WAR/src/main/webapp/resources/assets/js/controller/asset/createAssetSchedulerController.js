@@ -40,12 +40,12 @@ angular
 								if($scope.assetInfo.itemNameId == null || $scope.assetInfo.itemNameId == undefined){
 									$state.go('assetPMSScheduler');
 								}else{
-									var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+									var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 									if(cookieObjectStore==undefined){
 										$rootScope.storePopup();
 										angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
 									} else {
-										$scope.storeId = cookieObjectStore.storeId;
+										$scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
 									}
 									$scope.showAdd = true;
 									$scope.showView = true;
@@ -180,6 +180,7 @@ angular
 					        }
 
                             $scope.createAssetSchedule = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                                 if (!$scope.schedulerObj.pmsFrequency) {
                                     growl.warning('Select PMS frequency', { title: 'warning!' });
                                     return;

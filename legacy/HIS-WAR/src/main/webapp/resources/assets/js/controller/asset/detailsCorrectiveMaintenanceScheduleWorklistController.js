@@ -34,7 +34,7 @@ angular
 							console.log("$scope.detailsObj",$scope.detailsObj);
 							
 							$scope.newStoreId = 0;
-							var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+							var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 							if(cookieObjectStore!=undefined){
 								$scope.newStoreId = cookieObjectStore.storeId;
 							}
@@ -418,6 +418,7 @@ angular
 							
 							$scope.stock = 0 ;
 							$scope.itemStock = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								var date = new Date();
 					        	date.setDate(date.getDate() + 1);	
 								var dataForSearch = {
@@ -680,6 +681,7 @@ angular
 						
 							$scope.replaceAssetObj = {};
 							$scope.saveReplace = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								
 								if($scope.serialNoObj.batchId== "" || $scope.serialNoObj.batchId == undefined){
 
@@ -707,6 +709,7 @@ angular
 							
 							
 							$scope.saveDetails = function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								var assetDt,fromDt,toDate,completionDate;
 								if($scope.resolutionObj.isCompleted){ 
 									
