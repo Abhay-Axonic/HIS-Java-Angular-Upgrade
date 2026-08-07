@@ -73,3 +73,58 @@ identificationMasterController.js:70.
   scheduler-side — same class, separate batch.
 - The sweep is re-runnable: the classifier script was ad-hoc; the counts above are the
   baseline. A committed version (tools/) is worth adding once the owner picks a fix batch.
+
+## 5. COMPREHENSIVE RE-RUN (2026-08-07, open-ended item 3) — method corrected, GLOBAL included
+
+METHOD (stated, with blind spots): regex+brace-matching catch-block extraction over every
+.java under legacy/{Billing,HIS-WAR,Global,Entity}/src/main/java. Bodies are COMMENT-STRIPPED
+before classification (removes // TODO catches and comment-text false positives). Shapes:
+EMPTY (empty or comment-only body — effectively nothing runs), PRINTSTACKTRACE (printStackTrace
+alone), LOG-ONLY (logger/system-out + no rethrow + no return), LOG+RETURN (log + return + no
+rethrow). BLIND SPOTS: (1) catches that log through a wrapper (no literal log. prefix) are
+missed; (2) a return inside a nested lambda within the catch still triggers LOG+RETURN even if
+unreachable; (3) per-site visibility requires TRACING — a LOG-ONLY catch whose method later
+returns a failure value is observable, a LOG-ONLY catch whose method falls through to a
+success-looking return is not; the counts are the FIRST-PASS surface, not per-site truth.
+VALIDATION (Rule 10): 9 sampled Global catches verified — 3 EMPTY (pdfHTMLHeaderAndFooterExample
+TODO catches — comment-only, correctly EMPTY), 2 LOG-ONLY (UserActionFavouritesDaoImpl
+save/remove/get — real log-and-fall-through), 3 LOG+RETURN (RoleController.getAllRoles +
+SlotMasterDaoImpl generateSlots — these return EXPLICIT error Responses, i.e. OBSERVABLE; a
+key caveat: not all 1032 LOG+RETURN sites are invisible — only those returning success-looking
+values).
+
+TOTALS (comment-stripped): 8,077 swallow-shape catches
+- EMPTY 456 | PRINTSTACKTRACE 8 | LOG-ONLY 6,581 | LOG+RETURN 1,032
+- BY MODULE: Global 7,614 (the dominant share — the shared service/DAO layer logs-and-falls-
+  through pervasively), Billing 385, HIS-WAR 72, Entity 6.
+- BY AREA (top): Global com/param/global 6,206; Global com/param/opd 1,270; Billing
+  com/param/billing 283; HIS-WAR com/param/batchjobs 63; Global com/param/workbench 57;
+  Billing com/param/procedure 55; Billing com/param/service 47.
+- NOTE: the earlier §1-3 numbers (451 total) covered Billing+HIS-WAR only; this run's
+  Billing 385 + HIS-WAR 72 = 457 (delta = Entity + method change; the Global share was never
+  counted before). Global inclusion changes the picture: the swallow surface is dominated by
+  the shared layer, not the billing module alone.
+
+TOP 10 WORST INSTANCES — decision-surface (clinical/financial screen reads the output before a
+decision; failure invisible). All EMPTY, all Billing procedure DAOs:
+  1. OTCompletionCssdKitDaoImpl.java:93/94  updateIsUsedFlag()        — OT CSSD kit usage flag;
+     the OT completion screen decides kit billing on it.
+  2. OtCompletionStaffDaoImpl.java:99/101   getDoctorList()           — OT staff list for the
+     completion screen's doctor selection.
+  3. ProcedureReqDaoImpl.java:114/115       updateProcedureRequestSeconderyToPrimary() — the
+     secondary->primary promotion a clinician triggers.
+  4. ProcedureReqDaoImpl.java:142/143       cancelProcedureReq()      — procedure cancellation;
+     a silent failure leaves the request active while the UI shows it cancelled.
+  5. ProcedureOrderDaoImpl.java:177         getProcedureOrderListByStatus() — the status list
+     the OT/billing screen renders.
+  6. ProcedureOrderDaoImpl.java:514         getProcedureOrderList()   — the core order list for
+     clinical decisions.
+  Each: an exception is caught and dropped; the method returns normally with whatever state
+  (often null/empty) — the screen shows an empty/successful view and the clinician/biller
+  decides on invisible failure. THIS is the class that hid the store crash and the Drug
+  History gap.
+
+REFINED OWNER GUIDANCE: the invisible-failure priority is (a) EMPTY 456 everywhere, then
+(b) LOG-ONLY in decision-surface DAOs (trace to confirm fall-through returns), then (c) the
+subset of LOG+RETURN returning success-looking values (trace the returned object). Global's
+LOG+RETURN controllers that return Response(ERROR,...) are OBSERVABLE and lower priority.

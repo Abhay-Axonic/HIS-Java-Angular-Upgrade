@@ -167,6 +167,28 @@ file remains the durable alert.*
   getStoreObj() pattern on evidence, not convenience. Full rationale in the cycle report for
   Abhay's judgment.
 
+## 18. [RESOLVED 2026-08-07] Open-ended analysis items 1-3 COMPLETE (cycle 13) — nothing fixed
+
+- ITEM 1 (census re-run, broader net): zero new application-code sites — the original census
+  population was complete. The only 2 sites the original literal missed are STRING-READs inside
+  the pattern-anchor's own getStoreObj/storeReady (app.js:2712/2727) — deliberate. Rule 10
+  method validation done both directions (known positive matched; 26/27 merged files clean, the
+  27th = the fire-test tool's own fixtures).
+- ITEM 2 (dark-list designs): docs/DARK_LIST_TEST_DESIGNS.md — password-reset journey (needs an
+  OTP capture seam + a full-journey driver + identity-binding regression coverage; none exist),
+  feedback submissions (6-segment scoping contract undocumented; whitelist matrix lacks the
+  feedback patterns), AI appointment endpoints (queue bookkeeping untested; boundary: local
+  tests cover bookkeeping, not any external AI prediction). Designs only — build nothing.
+- ITEM 3 (swallowed-exception sweep, comprehensive): 8,077 swallow-shape catches with GLOBAL
+  included for the first time (EMPTY 456 / LOG-ONLY 6,581 / LOG+RETURN 1,032 / PRINTSTACKTRACE
+  8; Global 7,614, Billing 385, HIS-WAR 72, Entity 6). Top-10 worst = EMPTY catches in the
+  Billing procedure DAOs (OT completion + procedure order surfaces — invisible failure on
+  clinical/financial decisions). Method + blind spots + sample verification in
+  SWALLOWED_EXCEPTION_SWEEP.md §5. NOTHING FIXED. Suggested fix batches for the owner: the
+  procedure-DAO EMPTY cluster first, then decision-surface LOG-ONLY (trace-verified), then the
+  success-looking LOG+RETURN subset. A committed sweep tool is worth adding once a fix batch
+  is chosen.
+
 ## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
 
 - procurement ~21, asset ~10, nursing ~4, pharmacy remainder ~6, dashboards ~7, masters ~1.
