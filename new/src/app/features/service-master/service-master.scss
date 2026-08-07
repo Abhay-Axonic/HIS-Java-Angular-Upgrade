@@ -1,0 +1,154 @@
+// serviceMaster rebuild — layout styles mirroring the legacy
+// service-master.html grid/form structure (his-style container, bootstrap
+// table, floating-label inputs). Status-toggle CSS ships with
+// <app-status-toggle> itself; nothing to add for that control here.
+
+.service-master-page {
+  padding: 16px;
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 16px;
+  }
+
+  .col-field {
+    flex: 1 1 180px;
+    min-width: 180px;
+    position: relative;
+  }
+
+  .col-action {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .form-group {
+    position: relative;
+  }
+
+  .text-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  select.text-input {
+    height: 36px;
+  }
+
+  .star {
+    color: #d9534f;
+  }
+
+  .help-block {
+    color: #d9534f;
+    font-size: 12px;
+    margin: 4px 0 0;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .width9 { width: 9%; }
+  .width6 { width: 6%; }
+  .width14 { width: 14%; }
+  .width2 { width: 2%; }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .pointer {
+    cursor: pointer;
+    margin: 0 6px;
+  }
+
+  .pagination-row {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+
+    .active {
+      font-weight: bold;
+      background: #337ab7;
+      color: #fff;
+    }
+  }
+
+  .typeahead {
+    position: absolute;
+    z-index: 100;
+    background: #fff;
+    border: 1px solid #ccc;
+    max-height: 180px;
+    overflow-y: auto;
+    width: 100%;
+
+    .typeahead-row {
+      padding: 6px 8px;
+      cursor: pointer;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.inventory-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 4px;
+  z-index: 1001;
+  width: 560px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e5e5e5;
+    font-weight: bold;
+
+    .close {
+      border: none;
+      background: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .modal-body {
+    padding: 16px;
+    overflow-y: auto;
+  }
+}

@@ -1604,6 +1604,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/age-group-master/age-group-master').then((m) => m.AgeGroupMaster),
       },
       {
+        path: 'serviceMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 376, title: 'Service Master' },
+        loadComponent: () => import('./features/service-master/service-master').then((m) => m.ServiceMaster),
+      },
+      {
         path: 'doctorSlabMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 1020, title: 'Doctor Slab Master' },
