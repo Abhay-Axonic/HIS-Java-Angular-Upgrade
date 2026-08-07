@@ -153,9 +153,10 @@
             GenericService.serviceAction("GET", URI, {}).then(
                 function (response) {
                     self.model.storeList = self.model.storeList.concat(response.data.requestingStores);
+                    var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
                     for(var i=0;self.model.storeList.length > i;i++)
                     {
-                        if(self.model.storeList[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+                        if(self.model.storeList[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
                         {
                             self.model.store = self.model.storeList[i];
                         }
@@ -173,6 +174,7 @@
         }
 
         var GetPurchaseOrder = function (poId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             commonDetailService.setDataId(null);
 
             var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_PO_CREATION.DETAILS_API + $scope.unitId + '/' + poId;
@@ -249,6 +251,7 @@
         }
 
         var AddItemForPO = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (ValidateDate() && ValidateDetails()) {
 
                 var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_PO_CREATION.GET_ITEM;
@@ -435,6 +438,7 @@
         }
 
         var CreatePurchaseOrder = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var purchaseOrder = self.model;
 
             var URI = CONSTANTS.PROCUREMENT.CONSIGNMENT.CONSIGNMENT_PO_CREATION.SAVE_API;

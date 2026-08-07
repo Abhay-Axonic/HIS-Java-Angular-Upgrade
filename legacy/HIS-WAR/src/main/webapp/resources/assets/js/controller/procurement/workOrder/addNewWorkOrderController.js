@@ -180,9 +180,11 @@
           function (response) {
             self.model.stores = self.model.stores.concat(response.data.store);
             self.model.contractTypes = self.model.contractTypes.concat(response.data.contractType);
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             for(var i=0;i<self.model.stores.length;i++)
             {
-              if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(self.model.stores[i].id==selectedStoreId)
               {
                 self.model.store = self.model.stores[i];
               }
@@ -218,6 +220,7 @@
     }
 
     var GetWorkOrder = function (purchaseId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_REQUEST.DETAILS_API + $scope.unitId + '/' + purchaseId;
 
       $rootScope.startLoader();
@@ -366,6 +369,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.GLOBAL.ITEMS_WORKORDER;
 
       var data = {
@@ -398,6 +402,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (!self.model.SelectedItemsIds.length) {
         growl.error('Please select items to add');
         return false;
@@ -523,6 +528,7 @@
     }
 
     var CreateWorkOrder = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
       var URI = CONSTANTS.PROCUREMENT.WORK_ORDER.WORK_ORDER_REQUEST.DETAILS_API;
 

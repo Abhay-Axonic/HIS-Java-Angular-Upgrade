@@ -62,12 +62,12 @@ angular
 				return;
 			}
 							
-			var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+			var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 			if(cookieObjectStore==undefined){
 				$rootScope.storePopup();
 				angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
 			}
-			$scope.storeName = 'All';
+			$scope.storeName = 'All'; // labour-list intentional default: ALL stores (unchanged behavior — only the parse was converted)
 			$scope.storeId = 0;
 							
 			$scope.workOrderItemDetails=[];
@@ -84,6 +84,7 @@ angular
 							
 							 $scope.searchNewWOItemList= [];
 								$scope.getListNewWOList = function () {
+								if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT) — fire-test caught this load-time call (the 4 sibling files' getListNewWOList is commented-out; THIS one is live)
 									 $scope.searchNewWOItemList= [];
 										var data = {};
 										data.orgId= $scope.orgId;
@@ -365,6 +366,7 @@ angular
 						        }
 							 
 							 $scope.searchNewItem = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								 $scope.searchNewItemList= [];
 								 $scope.searchNewItemids=[];
 									var data = {
@@ -398,6 +400,7 @@ angular
 							 
 							 
 							 $scope.searchWorkorderItem = function(searchtext){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 							      if (searchtext.length < 3) return;
 							      if($scope.StoreWorkOrder.storeId==undefined || $scope.StoreWorkOrder.storeId==''){
 							    	  growl.warning("Please select store",

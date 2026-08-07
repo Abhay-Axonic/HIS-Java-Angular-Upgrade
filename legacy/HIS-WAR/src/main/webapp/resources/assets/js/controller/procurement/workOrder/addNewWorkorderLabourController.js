@@ -62,13 +62,13 @@ angular
 								return;
 							}
 							
-							var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+							var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 							if(cookieObjectStore==undefined){
 								$rootScope.storePopup();
 								angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
 							}
-							$scope.storeName = cookieObjectStore.storeName;
-							$scope.storeId = cookieObjectStore.storeId;
+							$scope.storeName = cookieObjectStore != null ? cookieObjectStore.storeName : ''; // store null -> empty header (approved tolerance)
+							$scope.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
 							
 							
 							
@@ -329,6 +329,7 @@ angular
 							
 						 
 							 $scope.addnewItem= function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								 
 								 if($scope.StoreWorkOrder.storeId==undefined  || $scope.StoreWorkOrder.storeId==''){
 									 growl.warning('Please select store.',
@@ -495,6 +496,7 @@ angular
 							 
 							 $scope.assetObject={};
 							 $scope.AddAssets =function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								 
 								 if($scope.StoreWorkOrder.storeId==undefined || $scope.StoreWorkOrder.storeId==""  ){
 									 growl.warning("Please select store",
@@ -573,6 +575,7 @@ angular
 						        }
 							 
 							 $scope.searchNewItem = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                                  $scope.selectAllRows=false;
 								 if($scope.itemName){
 									 if($scope.itemName.length >= 3){		 
@@ -658,6 +661,7 @@ angular
 								 }
 							 }
 							 $scope.addItems=function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								 $scope.selectedItemList=[];
 								 $scope.otherChargesList=[];
 								 
@@ -735,6 +739,7 @@ angular
 							 }
 							 
 							 $scope.getcontractTypeList=function(contractTypeId){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								 $scope.AddOtherSavechargesList=[];
                              	 $scope.AddOtherchargesList=[];
                              	 $scope.AddOtherchargeSave();
@@ -791,6 +796,7 @@ angular
 							 
 							 
 							 $scope.searchWorkorderItem = function(searchtext){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 							      if (searchtext.length < 1) return;
 							      if($scope.StoreWorkOrder.storeId==undefined || $scope.StoreWorkOrder.storeId==''){
 							    	  growl.warning("Please select store",
@@ -1360,6 +1366,7 @@ angular
 									
 							 
                                 $scope.saveWorkOrderCreationRequest=function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
                                 	
                                 	console.log("saveObj", $scope.StoreWorkOrder);
                                 	 if($scope.StoreWorkOrder.storeId==undefined || $scope.StoreWorkOrder.storeId==''){

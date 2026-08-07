@@ -218,9 +218,10 @@
             }*/
             
             // start code for resolved HIS-6625 Loan Out Receive
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
             for(var i=0; i < self.model.stores.length ;i++)
             {
-              if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(self.model.stores[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
               {
                 self.model.store = self.model.stores[i];
                 break;
@@ -243,6 +244,7 @@
     }
 
     var SearchLoanOut = function() {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.LOAN_IN_OUT.LOAN_OUT_RECEIVE.SEARCH_LOAN_OUT;
       var data ={
         "storeId": self.model.store.id,
@@ -434,6 +436,7 @@
     }
 
     var GetLoanIn = function (loanInOutId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.LOAN_IN_OUT.LOAN_OUT_RECEIVE.DETAILS_API + $scope.unitId + '/' + loanInOutId;
 
       $rootScope.startLoader();
@@ -646,6 +649,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.GLOBAL.ITEM_API +"unit/"+$scope.unitId;
 
       var data = {
@@ -670,6 +674,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (!self.model.SelectedItemsIds.length) {
         growl.error('Please select items to add');
         return false;
@@ -799,6 +804,7 @@
     }
 
     var CreateLoanInOut = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.LOAN_IN_OUT.LOAN_OUT_RECEIVE.SAVE_API;
 
       var data = {

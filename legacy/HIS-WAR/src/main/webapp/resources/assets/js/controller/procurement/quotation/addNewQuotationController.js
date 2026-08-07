@@ -412,9 +412,11 @@
             self.model.stores = self.model.stores.concat(response.data.store);
             self.model.assetTypes = self.model.assetTypes.concat(response.data.assetType);
 
+            var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            var selectedStoreId = selectedTopStore != null ? selectedTopStore.storeId : undefined;
             for(var i=0;i<self.model.stores.length;i++)
             {
-              if(self.model.stores[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+              if(self.model.stores[i].id==selectedStoreId)
               {
                 self.model.store = self.model.stores[i];
               }
@@ -461,6 +463,7 @@
     }
 
     var GetQuotationEnquiry = function (prId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.QUOTATION.QUOTATION_ENQUIRY.SAVE_API + prId;
 
       $rootScope.startLoader();
@@ -787,6 +790,7 @@
     }
 
     var GetIndentList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (ValidateDate()) {
         var URI = CONSTANTS.GLOBAL.AGAINST_PR_SEARCH;
 
@@ -826,6 +830,7 @@
     }
 
     var GetItemList = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if(self.model.search.itemName){
         if(self.model.search.itemName.length >= 3){    
           var URI = CONSTANTS.GLOBAL.ITEM_API +"unit/"+$scope.unitId;
@@ -897,6 +902,7 @@
     }
 
     var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       if (self.model.SelectedItemsIds.length == 0) {
         growl.error('Please select items to add');
         return false;
@@ -1342,6 +1348,7 @@
     }
 
     var CreateQuotationEnquiry = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
       var URI = CONSTANTS.PROCUREMENT.QUOTATION.QUOTATION_ENQUIRY.SAVE_API;
 
       var data = {

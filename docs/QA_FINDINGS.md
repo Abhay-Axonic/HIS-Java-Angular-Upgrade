@@ -1617,4 +1617,103 @@ uploadStockApproval, uploadStockDetails). Supervisor-direct (Claude Code OAuth-b
 - Campaign total: 25 screens converted and live-verified across 4 branches
   (b1 pharmacy 6, b2 stock 6, b3 addNew 6, b4 upload/issue 7), all awaiting owner Rule 9b.
 
+## QF-2026-08-06-D — store-accessor campaign pb1 (procurement workOrder 1): VERIFIED live; pre-existing undefined-function defect found (getListNewWOList), NOT fixed
+
+Batch pb1 (fix/store-accessor-campaign-pb1): 6 procurement workOrder screens (addNewQuotationSent,
+addNewWorkOrder, addNewWorkOrderCreation, addNewWorkOrderQuotation, addNewWorkorderApprovalDetails,
+addNewWorkorderApprovalDetailsSettlement). (Note: QF series A-C were IST-misdated 08-07; this is
+the first entry with the true machine clock date, 2026-08-06.)
+
+- 7 deref sites converted (4 inline-comparison hoists + 1 direct assignment + 2 popup-pattern
+  files whose storeName/storeId derefs were UNGUARDED after the lone-if — the exact QF-AR crash
+  class; now null-safe through getStoreObj()). 26 live fire-time storeReady() gates (per-file
+  5/4/6/5/3/3); PopulateDropdown list-only + initCommon pure-init correctly NOT gated. node
+  --check clean x6; 0 raw parses; 26/26 counts.
+- PRE-EXISTING DEFECT FOUND (logged, NOT fixed per default): getListNewWOList is defined ONLY
+  inside a /* */ comment block (lines 89-100) in BOTH approval-details controllers, yet CALLED
+  live at 1647/1650 (approvalDetails) and 1436/1439 (settlement) in the requestChangeToPending
+  POST callback — an undefined-function ReferenceError whenever that flow executes. The storeId
+  map for these files pointed at the COMMENTED definition (the commented-twin trap). My first
+  gate patch matched the commented twin too — caught by inspection, gate removed from the comment
+  (count integrity: 3 live gates per approval file, not 4). Owner decision needed: restore the
+  commented function (it reads data.storeId — a store-scoped list refresh) or delete the live
+  calls.
+- FIRE-TEST (all 6 states, incl. the typo'd state names deatilsWorkorderApproval /
+  deatilsWorkOrderSettlement): NEGATIVE phase all 6 clean (0 pageerrors/5xx/4xx/no literal);
+  POSITIVE phase all 6 clean (not inert). Same-session probe (new in the tool): SKIP on
+  addNewquotationS (no primary-action button in the load DOM matching search/get/save patterns) —
+  recorded; the same-session case for this batch is left to Step 6. Suite: rate-limit 10/10
+  (clean buckets), regressions PASS. Deployed frontend RESTORED to main after the test; drift =
+  mpesa extra only.
+
+## QF-2026-08-06-E — store-accessor campaign pb2 (procurement workOrder 2): VERIFIED live after fire-test correction; DRIFT item #5 documented
+
+Batch pb2 (fix/store-accessor-campaign-pb2, cumulative off pb1): 6 workOrder screens
+(addNewWorkorderApprovalList, addNewWorkorderLabour, addNewWorkorderLabourList, addWorkOrderQEntry,
+workOrderCompletion, workOrderCompletionDetails). 6 deref sites converted (5 popup-pattern with
+UNGUARDED storeName/storeId derefs + 1 inline-comparison); 24 live gates (3/7/3/4/4/3).
+
+- FIRE-TEST round 1 caught a REAL gate miss: addNewWorkorderLabourList's load-time getCreationRequestList
+  fired PRE-pick (500). Root cause: the screen's own guard checks `storeId==undefined` but initCommon
+  seeds storeId='' (empty string) — the guard passes, the call fires. My container classification had
+  skipped it (getListNewWOList was "N/A commented twin" — WRONG for this file). Gated.
+- CORRECTION TO MY OWN CLAIM (from pb1/QF-D): "getListNewWOList commented-twin across the whole
+  approval family" was WRONG. Verified per file: COMMENTED in addNewWorkorderApprovalDetails,
+  addNewWorkorderApprovalDetailsSettlement, workOrderCompletionDetails (3); LIVE in
+  addNewWorkorderApprovalList, addNewWorkorderLabourList, workOrderCompletion (3 — the latter two now
+  gated as load-time calls). The undefined-function defect (live calls to a commented definition) is
+  REAL only in the 3 commented files (approvalDetails/settlement: requestChangeToPending flow;
+  completionDetails: 2180/2183).
+- DRIFT ITEM #5 (document-only per owner; same class as b4's storeStockDashboard): positive-phase
+  500s on /api/procurements/workOrder/getCreationRequestList and .../completionSearch —
+  `column request.workorder_completion_status_id does not exist` (NewWorkOrderCreationDaoImpl
+  getCreationRequestListCompletion; catalina ~5844024). The calls are GATED correctly (negative
+  phase clean after the fix — 0 pre-pick calls on all 6 screens) and fire post-pick (not inert);
+  the 500 is the local DB missing the column.
+- Same-session probe: SKIP again (workOrderApproval — no primary action button in load DOM). Suite:
+  rate-limit 10/10 (clean buckets), regressions PASS. Restored main frontend; drift = mpesa only.
+
+## QF-2026-08-06-F — store-accessor campaign pb3 (procurement quotation+purchase): VERIFIED live; two pre-existing 500s interpreted, NOT gate failures
+
+Batch pb3 (fix/store-accessor-campaign-pb3, cumulative off pb2): 6 screens (addNewEnquirySent,
+addNewPO, addNewQuotation, addNewQuotationFillIn, detailsGRNApproval, addNewLocalPR). 6 deref
+sites converted (5 inline hoists + 1 BARE init deref in detailsGRNApproval — QF-AR class); 29
+gates (5/7/5/5/2/5). node --check clean; 0 raw parses; 29/29.
+
+- FIRE-TEST: 4 of 6 screens clean both phases. Two 500s interpreted from the LINES + catalina,
+  neither a gate failure:
+  1. detailsGRNApproval 500 (both phases) on /api/procurements/quotation/grn/approval/1/1/0 =
+     GetGRNList with dataId=0 — the fire-test navigates directly without a GRN id (a real user
+     always arrives from the list with an id). Pre-existing invalid-input 500; GetGRNList is
+     by-id (unit/org/dataId), NOT store-scoped, correctly ungated.
+  2. addNewEnquirySentToVendor pre-pick 500 on /api/global/allvendor/search/unit/1/vendorName/
+     noSelectedVendorFound = allvendors() init call (addNewEnquirySentController.js:184-206):
+     unit-scoped URI with a hardcoded sentinel text, ZERO storeId in URI or payload (read from
+     the lines). Clean post-pick — cold-path 500 on first load after login, not store-related.
+- Both logged per the never-halt default (pre-existing defect surfaced by the work -> log, do not
+  fix). They will 500 identically on main (no campaign code in their path).
+- Same-session probe: SKIP (no primary action button in load DOM). Suite: rate-limit 10/10
+  (clean buckets), regressions PASS. Frontend RESTORED to main after the test (incl. a repair of
+  my own broken restore command — 17 stray files had been dumped into procurement/purchase by a
+  multi-destination cp; moved out, drift re-verified clean). Drift = mpesa extra only.
+- NOTE: addNewPOController matches pre-existing ANGULAR_PENDING_FINDINGS item 2 (route/controller
+  name disconnect, addItemPOCreation vs addItemPO) — untouched, logged in the cycle report.
+
+## QF-2026-08-06-G — store-accessor campaign pb4 (procurement consignment+loanInOut): VERIFIED live; same-session probe NOTE recorded (advisory, Step 6)
+
+Batch pb4 (fix/store-accessor-campaign-pb4, cumulative off pb3): 7 screens (addNewConsignmentInward,
+addNewConsignmentOutward, addNewConsignmentPOCreation, addNewLoanIn, addNewLoanInOut, addNewLoanOut,
+addNewLoanOutReceive). 7 inline-comparison deref sites converted (2 guarded variants); 30 gates
+(4/4/3/5/5/4/5). node --check clean x7; 0 raw parses; 30/30.
+
+- FIRE-TEST: all 7 states, both phases CLEAN (negative = 0 pre-pick store-scoped calls; positive =
+  calls fire post-pick). Same-session probe on addNewConsignmentInward: NOTE (a primary action
+  button WAS clicked but 0 API calls in the 4s window — the button is validation/modal-gated in
+  the probe context; the probe's advisory explicitly assigns this to Step 6 click-through). NOT a
+  gate failure: the authoritative phases are clean and the probe's PASS/NOTE/SKIP semantics are
+  advisory by design.
+- Restore used five per-directory cp commands (the pb3 multi-destination-cp lesson applied);
+  drift clean (mpesa extra only).
+- Procurement family COMPLETE: 25 screens, 109 gates across pb1-pb4.
+
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->
