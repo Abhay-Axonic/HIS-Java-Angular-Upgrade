@@ -128,3 +128,28 @@ REFINED OWNER GUIDANCE: the invisible-failure priority is (a) EMPTY 456 everywhe
 (b) LOG-ONLY in decision-surface DAOs (trace to confirm fall-through returns), then (c) the
 subset of LOG+RETURN returning success-looking values (trace the returned object). Global's
 LOG+RETURN controllers that return Response(ERROR,...) are OBSERVABLE and lower priority.
+
+## 6. CORRECTION (2026-08-07, cycle 14) — the top-10 characterization was WRONG for 9 of 10
+
+The §5 claim that the top-10 "show an empty/successful view" was traced and REVERSED: 9 of
+the 10 catch lines are followed IN THE SAME METHOD by `return new Response(ERROR, ...)` —
+they fail loudly at the envelope (the cost is lost exception DETAIL, not invisibility). The
+one genuinely invisible site is ProcedureOrderDaoImpl:177 getProcedureOrderListByStatus —
+EMPTY HibernateException catch, then FALLS THROUGH to `return null` (line 182) — HTTP 200
+with a null body, indistinguishable from "no procedure orders exist". Full traces in
+OVERNIGHT_CYCLE_14.md §1.
+
+## 7. OBSERVABILITY QUANTIFICATION (cycle 14 §3) — method + blind spots stated
+
+For each swallow-shape catch, the first return after the catch's closing brace is classified
+(ERROR-RETURN = observable at envelope; NULL/SUCCESS/NO-RETURN = indistinguishable; OTHER =
+unknown, counted invisible conservatively). Blind spots: statement-level approximation
+(multi-branch methods may return elsewhere); OTHER may actually surface failures; the
+frontend's rendering of envelopes is NOT included (the 68 console-only handlers can make an
+envelope invisible anyway).
+RESULT (8,077 swallow-shape): 6,587 (81.6%) ERROR-RETURN / observable-at-envelope; 1,490
+(18.4%) indistinguishable-or-unknown, of which DEFINITE-invisible (NULL+SUCCESS+NO-RETURN)
+~640 (~7.9%) and UNKNOWN ~850. LOG-ONLY's 6,145 ERROR-RETURN = the shared layer's pervasive
+catch->log->return-ERROR pattern — observable but detail-losing at scale.
+CONCLUSION: not a campaign — ~82% already observable; the targeted-fix population is the
+~640 definite-invisible, narrowed by the decision-surface filter to tens.

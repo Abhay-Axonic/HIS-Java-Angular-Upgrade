@@ -189,6 +189,27 @@ file remains the durable alert.*
   success-looking LOG+RETURN subset. A committed sweep tool is worth adding once a fix batch
   is chosen.
 
+## 19. [RESOLVED 2026-08-07] Cycle 14 — top-10 traces CORRECTED, observability quantified, OTP seam found
+
+- TRACE CORRECTION (plainly): the sweep's top-10 claim ("empty/successful view") was WRONG
+  for 9 of 10 catch lines — they are followed IN-METHOD by `return Response(ERROR, ...)`
+  (observable generic envelopes; the cost is lost exception detail). The ONE genuinely
+  invisible site: ProcedureOrderDaoImpl:177 getProcedureOrderListByStatus — EMPTY
+  HibernateException catch falls through to `return null` -> HTTP 200 null body ->
+  indistinguishable from "no procedure orders exist". Frontend residual (the 5 screens'
+  handlers) is the remaining unknown — queued for the next run.
+- OBSERVABILITY SPLIT (method + blind spots in SWALLOWED_EXCEPTION_SWEEP.md §7): of 8,077
+  swallow-shape catches, 6,587 (81.6%) return ERROR-marked envelopes (observable; degraded);
+  1,490 (18.4%) indistinguishable-or-unknown (DEFINITE-invisible ~640 / ~7.9%, UNKNOWN ~850).
+  CONCLUSION: NOT a campaign — a targeted fix on the ~640 (filtered by decision surface to
+  tens) is the shape; per-site fix proposal with cost/risk in OVERNIGHT_CYCLE_14.md §2.
+- OTP SEAM FOUND: forgotPasswordGeneration writes the OTP to public.m_user_master.otp (+
+  otp_expiry_date/otp_count/blocked) in the same flow that mails it (UserMasterDaoImpl
+  :337-349). The password-reset journey IS locally testable (DB read + mail-inert profile);
+  the dark-list design's headline NEED is downgraded — journey priority UP. Recommend it
+  becomes a near-term test (identity-binding + enumeration legs are the high-value asserts).
+- Nothing fixed/built. Item 15 stays top for the morning.
+
 ## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
 
 - procurement ~21, asset ~10, nursing ~4, pharmacy remainder ~6, dashboards ~7, masters ~1.
