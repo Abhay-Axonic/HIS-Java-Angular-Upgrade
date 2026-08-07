@@ -25,7 +25,7 @@
         return;
       }
       
-      var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+      var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
       if(cookieObjectStore==undefined){
         $rootScope.storePopup();
         angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
@@ -912,6 +912,7 @@
       }
   
       var SearchGenerics = function (search) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         if (search.length < 1) return;
   
         if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -967,6 +968,7 @@
   
       
       var AddItemToBill = function (bill, item, model, label) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         if (!!item.id) {
           var storeId1 = $scope.storeId !== undefined && $scope.storeId !== null ? $scope.storeId : 0;
           var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId+ '/'+storeId1 + '/' + item.id + '/' + $scope.entitlementObj.paymentEntitlementTypeId +'/walkInPrescription';
@@ -1194,6 +1196,7 @@
       var RemoveItem = function (index)
       
       {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         var item = self.model.walkInSale.items[index];
         var tempList = [];
         if (!!item.allocationIds) {
@@ -1518,6 +1521,7 @@
       }
 
       var ClearBill = function (bill) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         self.model.walkInSale.prefix = self.model.prefixList[0];
         self.model.walkInSale.patientName = undefined;
         self.model.walkInSale.patientAddress = undefined;
@@ -1725,6 +1729,7 @@
       }
       
       $scope.saveMedicationForIp = function(items) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			$scope.saveBtnFlag = true;
 			$scope.updateBtnFlag = false;
 			$scope.updateScope = false;
@@ -1871,6 +1876,7 @@
 			}
 		}
       $scope.saveMedicationForOp = function(items) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			$scope.saveBtnFlag = true;
 			$scope.updateBtnFlag = false;
 			$scope.updateScope = false;
@@ -2108,6 +2114,7 @@
      // $scope.getKitMasterList();
 
     $scope.addKitItems = function(bill, item, model, label){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
             var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/getUOMForCoversheet';
 //        var URI = BASE_URL + ROOT_URL + "/api/global/items/details/walkin/getKitItemsOnWalkInSales";
@@ -2250,6 +2257,7 @@
 
 	  $scope.kitMasterItemsList = [];
 	 $scope.kitItemDetails =  function(){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 		 $scope.kitMasterItemsList = [];
 
          var URI = BASE_URL + ROOT_URL + "/api/units/kit/master/" + $scope.kitId + "/" + $cookies.getObject('cookieObject').storeId+ "/" +$scope.unitId ;
@@ -2350,6 +2358,7 @@
      }
 
       var BatchChange = function (index, bill, batch, parentIndex) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         var item = null;
 
         // Assign Item and UOM

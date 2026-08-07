@@ -32,8 +32,8 @@
     $scope.selfPayeeId = cookieObjectAppConfig.selfPayeeId;
 		//$scope.pinpadAmounFlag = false;
     
-    var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-    $scope.storeName = cookieObjectStore.storeName;
+    var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+    $scope.storeName = cookieObjectStore != null ? cookieObjectStore.storeName : '';
     if(cookieObjectStore==undefined){
       $rootScope.storePopup();
       angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
@@ -130,6 +130,7 @@
 		}
 
         var SearchItems = function (search) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (search.length < 1) return;
         
             if ((!self.model.prevSearch || self.model.prevSearch != search) && (search.length == 1)) {
@@ -167,6 +168,7 @@
         }
         
         var AddItemToBill = function (bill, item, model, label) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	if (!!item.id) {
         		
         		 ActualAddItemToBill(bill, item, model, label);
@@ -193,6 +195,7 @@
         } 
         
         var ActualAddItemToBill = function (bill, item, model, label) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (!!item.id) {
                 var URI = CONSTANTS.GLOBAL.ITEM_DETAILS_API +'/org/' + $scope.organizationId +'/unit/'+$scope.unitId + '/'+$scope.storeId+'/' + item.id + '/' + $scope.entitlementObj.paymentEntitlementTypeId;
         
@@ -505,6 +508,7 @@
         } 
         
          var AllocateBatch = function (bill, itemId, batchId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if(itemId != undefined && batchId != undefined){
                 var URI = CONSTANTS.PHARMACY.OP.WALK_IN_SALES.ALLOCATE_BATCH_API + $scope.unitId + '/'+$scope.organizationId + '/'+$scope.userId + '/'+$cookies.getObject('cookieObject').storeId + '/' + $scope.entitlementObj.paymentEntitlementTypeId + '/' + bill.id;
                 var data = {
@@ -640,6 +644,7 @@
         $scope.parentIssueDetailsId = 0;
         $scope.isFromAssignPicker = false;
         var SubstituteItems = function (item,index) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	//self.model.parentIndex=parentIndex;
             self.model.SelectedItems=[];
         	item.substititeFlag=true;
@@ -848,6 +853,7 @@
         }
         
         var Add = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (!self.model.SelectedItems || self.model.SelectedItems == undefined || self.model.SelectedItems == '') {
                 growl.error('Please select items')
                 return false;
@@ -1076,6 +1082,7 @@
        
         
         var GetNarcoticsIssueWorklistDetails = function (issueId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             var URI = CONSTANTS.PHARMACY.NARCOTICS.NARCOTICS_ISSUE_WORKLIST.DETAIL_API  + $scope.unitId + '/'+$scope.storeId + '/' + issueId;
 
             // self.model.worklistDetails.discountCatgeory = self.model.discountCategoryList[0];
@@ -1490,6 +1497,7 @@
         }
 
         var BatchChange = function (index, bill, batch, parentIndex) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
          
         	self.model.parentIndex=parentIndex;
            
@@ -3058,6 +3066,7 @@
         }
             
         var CopyItem = function (index, bill, parentIndex) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	var item = null;
             var totalIssuedQty = 0;
             var finalOrdQty = 0;
@@ -3166,6 +3175,7 @@
         var RemoveItem = function (index, bill)
         
         {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
         	  var item = bill.items[index];
               var parentIndex = self.model.parentIndexNew;
@@ -3576,6 +3586,7 @@
         }
 
         var AllocateQuantity = function (index,bill,parentIndex) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
         	 var item = null;
             if (!!bill) {
@@ -3709,6 +3720,7 @@
         $scope.saveBtnDisabled=false;
         
         var SaveBill = function (bill) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	
         	ActualSaveBill(bill);
         	/*   
@@ -3744,6 +3756,7 @@
         */}
 
         var ActualSaveBill = function (bill) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             $scope.saveBtnDisabled=true;
             if (bill.visitType == 1) {
                 bill.saleTypeId = 2;
@@ -4987,6 +5000,7 @@
     
     $scope.saveAndValidateContract = function(bill)
     {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
     	
     	ActulsaveAndValidateContract(bill);
     	

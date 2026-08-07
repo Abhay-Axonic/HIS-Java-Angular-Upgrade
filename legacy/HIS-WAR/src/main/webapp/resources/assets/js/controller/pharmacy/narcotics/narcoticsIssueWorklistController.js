@@ -52,8 +52,8 @@
                     sortBy: PaginationService.sortBy
                   }
             };
-            var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-            $scope.storeName = cookieObjectStore.storeName;
+            var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            $scope.storeName = cookieObjectStore != null ? cookieObjectStore.storeName : '';
             if (cookieObjectStore == undefined) {
                 $rootScope.storePopup();
                 angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
@@ -443,6 +443,7 @@
         }
 
         var GetNarcoticsIssueWorklist = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (ValidateDate()) {
                 var URI = CONSTANTS.PHARMACY.NARCOTICS.NARCOTICS_ISSUE_WORKLIST.SEARCH_API;
 
