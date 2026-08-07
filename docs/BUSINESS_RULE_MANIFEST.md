@@ -2652,3 +2652,16 @@ persist in a configured environment). The whitelist includes auth-exempt WRITE e
   app-wide blast radius to fix. No schema impact, no backend change.
 - **Evidence:** live probes 2026-08-07 (login response capture: unitApplicationConfigurationDto PRESENT; raw document.cookie dump: absent; $cookies injector: absent; manual same-size write: visible=false; config row updated_date: 2026-07-31 12:00).
 - **Status:** OPEN — logged as its own BR per owner directive (2026-08-07). No fix, no cookie manipulation, no workaround applied.
+
+## BR-179 — store-accessor campaign MERGED: pharmacy (pr1), assetPMS (ab3), nursing (n1), dashboard (db1), walkInSales cleanup (wd1) — 21 frontend files, 0 java; m1 HELD
+
+- **Status (Rule 9a flip, 2026-08-07 14:2x BST):** MERGED into main via five --no-ff merge commits (Rule 9c):
+  pr1 = 8c7ba5d1 (8 pharmacy screens, 25 gates), ab3 = 020309a5 (preventiveMaintenanceController, QF-AR redirect-target fix),
+  n1 = 6f3eb600 (4 nursing screens, 16 gates), db1 = 7c336843 (5 dashboards, divergent access-check-only shape, 0 gates),
+  wd1 = 928e2172 (walkInSales dead-code removal, 73 lines).
+- **Verification:** all five fire-tested on a combined branch deploy (QF-2026-08-07-F rebuild) with per-branch QF-AT
+  pick->fires proof; narcoticsIssueWorklist clean before/after (main threw 'Cannot read properties of null (reading
+  storeName)' at construction + literal {{storeName}}; converted renders empty, no TypeError); db1 negative-only per its
+  divergent shape with no transactional storePopup; 0 service-call lines changed across all branches (additive diffs).
+- **m1 (fix/store-accessor-campaign-m1) HELD:** module 1071 gating (globalServiceMaster) + the QF-2026-08-07-G blocked
+  OTCompletion parent prevent its per-branch QF-AT proof. Owner's HOLD approved 2026-08-07 14:2x BST.
