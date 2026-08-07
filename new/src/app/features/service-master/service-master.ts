@@ -335,8 +335,15 @@ export class ServiceMaster {
       return;
     }
     this.api.searchItems(keyword.trim()).subscribe((res) => {
-      if (res.status === 'success') {
-        this.itemList.set(res.listObject ?? []);
+      // The typeahead endpoint returns a RAW ARRAY, not the app's envelope
+      // (confirmed live: [{itemId,itemName,...}] / []). The legacy controller's
+      // `response.data.status == "success"` check therefore never matches and
+      // its itemList stays empty — a legacy dead-typeahead. Rebuilt to accept
+      // the raw array (flagged parity fix, not a silent divergence).
+      if (Array.isArray(res)) {
+        this.itemList.set(res as unknown as ItemMaster[]);
+      } else if ((res as { status?: string }).status === 'success') {
+        this.itemList.set((res as { listObject?: ItemMaster[] }).listObject ?? []);
       }
     });
   }
