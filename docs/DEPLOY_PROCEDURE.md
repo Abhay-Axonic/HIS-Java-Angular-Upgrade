@@ -59,6 +59,25 @@ accumulate in git while production ran the baseline (the drift incident).
    and the four Track-A roleId edits (`cookieObject.roleId` ×4). If the class-level hotfix
    path is ever used, these are NOT shipped by it — copy the file explicitly and say so.
 
+### 3.1 Required environment settings (setenv.sh — OUTSIDE version control)
+
+`libexec/bin/setenv.sh` carries TWO required settings. Both live outside version control
+and must be re-applied after any machine rebuild or `brew upgrade` of tomcat@9:
+
+1. `CATALINA_OPTS="-Xmx4g"` — without it, a webapps/ backup pile exhausts the default
+   heap → the stuck-boot class (GC death spiral, CPU-pinned, no startup line).
+   QF-2026-08-07-D.
+2. `export JWT_SIGNING_KEY=...` — REQUIRED by JwtTokenUtil (the hardcoded-key
+   remediation). Without it every `POST /adt/userLogin` returns 401 EMPTY at token
+   generation: `ExceptionInInitializerError` → `IllegalStateException: JWT_SIGNING_KEY
+   environment variable must be set` (catalina.out). The value is recorded in
+   QF-2026-08-07-D's rebuild checklist and the 2026-08-07 18V session-log entry.
+
+setenv.sh is sourced by catalina.sh for BOTH launchd and startup.sh runs. launchd-spawned
+processes do NOT inherit shell exports — this file is the only place these settings
+survive reboots. Rotating JWT_SIGNING_KEY invalidates live tokens (expected; tokens are
+short-lived).
+
 ## 4. HOTFIX deploy — the procedure (emergency only)
 
 1. Build (as above).

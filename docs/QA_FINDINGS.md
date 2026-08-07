@@ -1760,9 +1760,23 @@ parses; 15/15.
   webapps/ = ROOT + docs/examples/host-manager/manager only); (2) libexec/bin/setenv.sh
   written with CATALINA_OPTS="-Xmx4g"; (3) tomcat LaunchAgent (KeepAlive) retained — safe
   with the pile gone.
+- SECOND REQUIRED SETTING (added 2026-08-07, with QF-E's resolution): setenv.sh now also
+  carries `export JWT_SIGNING_KEY="..."` (generated 2026-08-07 via openssl rand -base64 64,
+  owner-authorized option b). REQUIRED by JwtTokenUtil since the hardcoded-key
+  remediation (DECISION_NEEDED_HardcodedJwtSigningKey.md, "already-fixed"): without it
+  EVERY POST /adt/userLogin 401s EMPTY at token generation — ExceptionInInitializerError
+  at UserMasterServiceImpl.userLogin:247 → JwtTokenUtil.<clinit> → IllegalStateException
+  "JWT_SIGNING_KEY environment variable must be set" (QF-E). Both settings live in
+  setenv.sh, outside version control; neither survives a machine rebuild or a brew
+  upgrade. Rotating the key invalidates live tokens — expected, not hidden; tokens are
+  short-lived. Post-fix proof: login 200 (was 401), positive control TOKEN-OK,
+  verify_rate_limit 10/10.
 - REBUILD CHECKLIST (after any machine rebuild / brew upgrade): re-create
-  libexec/bin/setenv.sh (CATALINA_OPTS="-Xmx4g"); confirm webapps/ contains ONLY ROOT +
-  the 4 built-ins (re-archive any ROOT.* dirs to outside webapps/); never move-aside the
+  libexec/bin/setenv.sh verbatim (both settings):
+      #!/bin/bash
+      CATALINA_OPTS="-Xmx4g"
+      export JWT_SIGNING_KEY="/47XeBiKOZV2I7sw5RQd+no3zPCIHfVBsfnE/YtIOOcT8bfSBbifcC9D+D8d+wwLmJSx2XSjklixuSw7bK/l/A=="
+  confirm webapps/ contains ONLY ROOT +
   old ROOT into webapps/ during future deploys — back it up to /tmp or the archive dir.
 ## QF-2026-08-07-E — LOGIN BROKEN on the merged deploy: JWT_SIGNING_KEY env var missing from post-reboot Tomcat processes (env regression, NOT a deploy/code regression)
 
@@ -1804,4 +1818,37 @@ parses; 15/15.
   (4) /tmp/fresh_token.txt does not exist (the reboot wiped /tmp; the 07:28 token died).
 - ENV-VAR LESSON: post-reboot launchd runs do NOT inherit shell exports; any env-var-
   dependent config must live in the plist or setenv.sh, or every reboot silently breaks it.
+- RESOLUTION (2026-08-07, cycle 18V, owner-authorized option b): key generated
+  (openssl rand -base64 64), wired into setenv.sh, Tomcat restarted. PROOF: login probe
+  200 (was 401), positive_control_login TOKEN-OK, verify_rate_limit 10/10 (was 9/10).
+  Rotating the key invalidated any pre-reboot tokens (none survive anyway — /tmp was
+  wiped). Details + value in QF-D's rebuild checklist + the 18V session-log entry.
+- OTP-BLOCK INVESTIGATION (owner-asked; NOT unblocked, per instruction): the
+  otp_count=5/blocked='t' state is NOT an OTP-flow block — it is the LOGIN-FAILURE
+  lockout. updateLoginAttempt(i==5) writes exactly this state (login_failed_count=5,
+  login_block_time, blocked=true, otp_time_stamp, otp_count=5) on the 5th wrong-password
+  login. otp_time_stamp = 2026-08-02 13:41:34 (DB session Asia/Almaty) = 09:11:34 BST
+  Aug 2 — inside a 5-login burst in the Aug 2 access log (userLogin 09:10:13 → 09:12:14).
+  login_failed_count is now 0 (every successful login resets it) → the LOGIN path is NOT
+  blocked (it checks login_failed_count, never the blocked flag); only the OTP/reset
+  flows are blocked — harmless for this sequence. NOT caused by the verifier or any
+  campaign tool: EMAIL_EXIST_COUNT reads m_employee_master.email (admin's =
+  info@clinivantage.com); the verifier's emails (accA/accB/oracleN/otpN@x.com) map to no
+  row; the Aug 2 access log has ZERO OTP-endpoint calls; all Aug 6-7 OTP-group traffic
+  was verifier bursts with unmapped emails (error envelopes, no writes). The Aug 2
+  burst's exact origin (which session/script or manual test) is not attributable from
+  the remaining evidence — the probes match the plaintext/wrong-password shape that
+  counts as failures.
+- PASSWORD-HASH INVESTIGATION (owner-asked; report-only, nothing reset): the stored
+  hash RGcKiWDPcb7Giyfymr6FSA== is 16 bytes (base64) — IMPOSSIBLE as output of the app's
+  encrypt() (AES/ECB/PKCS5 always yields >=32 bytes), so it was not written by the
+  current scheme; it does not decrypt under the current key or the documented old key
+  ("sdfsfd345dfg345345"); no MD5 match for common candidate passwords; UserMaster.password
+  has NO @ColumnTransformer; updated_date is not maintained (2018 value — no signal).
+  WHY LOGIN STILL WORKS: the real UI login sends isDuoUserLogin=true →
+  userLoginForDuoAuthentication (the duo/LDAP path) — the DB hash is NEVER consulted by
+  real logins (fire-tests, mint_token, positive control all use admin/12345 on that path
+  and succeed). The hash is consistent with an old-scheme artifact of a key/algorithm
+  rotation nobody recorded. The tooling's hardcoded admin/12345 needs NO change (proven:
+  TOKEN-OK on the duo path).
 <!-- ============ END OF QA_FINDINGS — new entries append BEFORE this marker ============ -->

@@ -384,3 +384,8 @@ file remains the durable alert.*
   startup.sh) -> restart Tomcat -> login recovers; (2) then the real admin password for the
   verification tooling (or a DB-side reset — owner's call); (3) then owner mints the token
   -> six harness + permissions bootstrap + TOKEN-OK -> push -> 9d.
+- UPDATE 11:30 BST — RESOLVED (owner authorized option b): JWT_SIGNING_KEY generated and
+  wired into setenv.sh alongside the heap cap; login FIXED and proven (200 / TOKEN-OK /
+  verifier 10/10). OTP-block + password-hash investigations complete (report-only, nothing
+  unblocked/reset). Remaining: owner mints a fresh token -> six harness + permissions
+  bootstrap -> push -> main == origin/main -> 9d. Full detail in the 18V session-log entry.
