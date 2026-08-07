@@ -1418,6 +1418,35 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   `cookieObjectAppConfig.isKiosk` deref (sidebarController.js:15) throws the TypeError. The screens bounce
   because the shell bounces, not because they navigate anywhere themselves.
 
+## QF-2026-08-07-F — fire-test series ran against the deployed MAIN build while the merge candidates sat on undeployed branches (wrong-artifact verification — same class as the self-referential allowlist sweep)
+
+- **The gap:** the Step-6 fire-test pack traced routes, gate sets, and store-scoped calls from the six parked
+  branches, but the click-throughs ran against the deployed ROOT — which is MAIN's build. "Deployed == branch"
+  was never checked (not by the pack, not by the sequencing). Verified only after the retraction:
+  deployed narcoticsIssueWorklistController == source(main), untouched since the baseline, zero conversion
+  markers; deployed preventiveMaintenanceController likewise. Consequences: (a) the ab3 "PASS both phases"
+  validated an UNCONVERTED screen (direct-menu load doesn't crash, no auto store calls, the button fires) —
+  it does not stand as branch verification; (b) the narcoticsIssueWorklist "FAIL" ({{storeName}} literal +
+  TypeError at construction) reproduced MAIN's raw QF-AR-class crash — the pr1 BRANCH version already fixes
+  that exact site (null-safe `cookieObjectStore != null ? cookieObjectStore.storeName : ''`, verified).
+  "pr1 is NOT merge-ready" was retracted by the owner. Same defect class as the self-referential allowlist
+  sweep: the check could not fail the way it claimed — it tested the wrong artifact.
+- **The useful survivor:** main's narcoticsIssueWorklistController:55-56 —
+  `var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore')); $scope.storeName =
+  cookieObjectStore.storeName;` — crashes at controller construction when the store cookie is cleared
+  (JSON.parse(null) → null → null.storeName → TypeError, {{storeName}} renders). Reproduced live on the
+  production build 2026-08-07. This is the defect class the store-accessor campaign exists to fix,
+  demonstrated end-to-end on main.
+- **m1 log (owner: log, do not fix):** otBillingCompletionDetailsController `selectStoreFromCoockies()`
+  (m1 branch) — lines 785/786 deref `cookieObjectStore.storeName/.storeId` INSIDE the
+  `cookieObjectStore==undefined` branch (logic inversion — derefing the variable the branch says is
+  undefined). Reachable only in a storeReady()-true / getStoreObj()-undefined race (store cookie removed
+  between the two calls); the function's top gate (`if(!$rootScope.storeReady()){ return; }`) makes it
+  unreachable in the negative phase. Latent, race-only — logged, no fix.
+- **The rebuild:** fire-tests re-run against a COMBINED deploy of the six branches' frontend files (21
+  files, all JS controllers — 0 java), with per-family branch-version confirmation after deploy
+  (QF-2026-08-07-F, second part).
+
 ## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
 
 - web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
