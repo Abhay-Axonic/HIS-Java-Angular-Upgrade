@@ -1064,3 +1064,13 @@ CONTINUATION (14:2x BST): MERGES (Rule 9c --no-ff, order pr1->ab3->n1->db1->wd1)
 
 2026-08-07 17:55 BST | Cycle 19 — BR-182 MERGE APPROVAL (Rule 9b verbatim, owner): "Approved — merge fix/br-182-adt-org-trust into main, --no-ff, per Rule 9. BR-182: ownership guards and VerifiedIdentityService rebinds across 11 ADT and clinical methods. Pre-fix evidence: an org-1 session cancelled an org-999 pending admission and bed reservation, both psql-confirmed A|N to I|Y, and a forged patient search executed with $1='999' returning another tenant's patient at the query layer. Post-fix: both cancels blocked on fresh victims 99011 and 99012 with rows unchanged, and the search executes with $1='1'. A3, A4, A5 and A7 are guarded-but-unverified — blocked by entity/table drift and a missing org-999 config row, both recorded as separate findings. A6 has no exposed endpoint."
 CONTINUATION (17:55-18:05 BST): BR-182 EXECUTED per Rule 9 — 9b verbatim approval recorded (17:55); 9a flip (manifest + BR_INDEX, MERGED 14062363); merge --no-ff fix/br-182-adt-org-trust -> main (14062363); FULL deploy from merged main (backup /tmp/ROOT-backup-pre-br182-merge-20260807; build-marker check pre-ship: BR182 markers in 5 guard classes; boot ~17:58, HC 200 0.05s); canonical proof chain: rate_limit 10/10, deployed-regressions PASS, allowlist 0, master 6/6, frontend-drift 0, positive_control TOKEN-OK, BR-182 attack-then-defense re-run on merged build 4/4 (A1/A2 blocked on fresh victims, A8 $1='1'); push ad4954e9..0c91c1bd; main == origin/main (0c91c1bd); 9d ledger PASS — 45 BR lines hash-verified (BR-182 14062363 in main; BR-181 note = open decision record, no hash). BATCH UNFROZEN — six-screen rebuild pending owner go on the readiness report.
+
+2026-08-07 18:43 BST | Cycle 19 CONT — BR-183 MERGE APPROVAL (Rule 9b verbatim, owner): "Approved — merge fix/br-183-entity-drift into main, --no-ff, per Rule 9.
+BR-183: removes three phantom entity fields — MedicoLeagal.mlc_no,
+MedicoLeagal.modeof_arrival, ServiceMaster.medall_service_id — mapping columns
+absent from the authoritative DDL and the live database, plus eight query
+references across five named queries and three raw-SQL sites. Verified: legit
+org-1 medicolegal and service-master updates persist, forged cross-org attempts
+blocked by the BR-182 guards with psql pre/post, UnitServiceMapper queries
+execute and return rows, BR-182 regressions hold on the same build. Closes the
+guarded-but-unverified caveat on A3 and A7." | Hermes (deepseek-v4-flash) | main
