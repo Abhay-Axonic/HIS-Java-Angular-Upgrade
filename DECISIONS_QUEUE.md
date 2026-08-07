@@ -105,14 +105,67 @@ file remains the durable alert.*
   main == origin/main == 797a847c. Rule 9d ledger PASS (42 hash-verified). b1/b2/b3 fully
   contained in b4 (git branch --merged main confirms all four + pilot) — deletable.
 
-## 13. [QUEUED] walkInSales dead-code cleanup — approved in principle, own branch, NOT tonight
+## 13. [RESOLVED 2026-08-07] walkInSales dead-code cleanup — EXECUTED on fix/walkinsales-deadcode-cleanup @ f3ddf304
 
 - Owner: "The dead-code cleanup (BatchChangeOld and the 4716 no-op) is approved in principle as its
   own branch, but not tonight."
-- Scope (from the Rule 10 trace): delete the never-invoked BatchChangeOld function
-  (walkInSalesController.js:2524-2589) and the no-op `if(initialStore==JSON.parse(...)) { }` at
-  :4716 (the disabled store-change-confirmation remains; the commented block 2506-2522 stays as
-  history or is cleaned with it — supervisor's choice at execution time, zero-risk branch).
+- EXECUTED per the extended-run queue: BatchChangeOld (2524-2589) DELETED (verified unreferenced —
+  grep: declaration-only; outPatientSalesWorklistDetails has its OWN separate BatchChangeOld,
+  sibling find, out of scope, untouched). 4716 empty-if no-op DELETED. walkInSales now 0 raw
+  parses. initialStore (line 7) left as a declaration-only var (remaining refs are comments).
+  node --check clean. STATIC-ONLY (server down) — screen-load fire-test queued.
+
+## 15. [QUEUED] Extended-run complete: Step 6 priority = fire-test coverage for STATIC-ONLY batches
+
+- Everything after the boot failure is STATIC-ONLY (syntax, parse elimination, gate placement,
+  family shape proven; RUNTIME behavior NOT proven — no live fire-test). Abhay's Step 6 click-
+  through / a future deploy run must cover these FIRST:
+  - pr1  (fix/store-accessor-campaign-pr1, 97c3f42d): 8 screens (detailsPatientReturnAcceptanceMedication,
+    assigningPickerDispenser, OPassigningPickerDispenser, walkinPrescription, acceptanceOfEmptyAmpoules,
+    detailsNarcoticsIssueWorklist, deliveryWorklist, narcoticsIssueWorklist), 25 gates. Deploy attempted,
+    boot STUCK, killed, never fire-tested.
+  - ab3  (fix/store-accessor-campaign-ab3, 1a7a99e4): preventiveMaintenanceController, 2 gates.
+  - n1   (fix/store-accessor-campaign-n1, 690652fb): 4 screens (consumableIndent,
+    addNewComsumablePatientIssueReturn, addNewMedicationPatientIssueReturn, administrationWorklistMaster), 16 gates.
+  - db1  (fix/store-accessor-campaign-db1, 7f648a9f): 5 screens (CEOdashbord, doctorDashboard,
+    financerDashboard, nurseDashboardMaster, bedManagement), 0 gates — DIVERGENT SHAPE (see cycle 12).
+  - m1   (fix/store-accessor-campaign-m1, b8e51c26): 2 screens (globalServiceMaster, otBillingCompletionDetails), 13 gates.
+  - wd1  (fix/walkinsales-deadcode-cleanup, f3ddf304): walkInSales cleanup — screen-load check.
+  = 20 screens + 1 cleanup across 6 branches. The 6 LIVE-verified branches (pb1-pb4, ab1, ab2)
+  need only the owner's Rule 9b + routine Step 6.
+- BOOT-FAILURE EVIDENCE (recorded per directive; NO reboot attempted — Abhay's call):
+  - ab2 boot: "06-Aug-2026 23:25:13 ... Server startup in [971108] ms" — 16.2 min, the last SUCCESSFUL boot.
+  - pr1 deploy boot: started ~00:15 BST 2026-08-07; never emitted a startup line; ran ~5.7h at
+    ~500-640% CPU (PIDs 18414/18609 held :8080); killed 06:00 BST. catalina.out's last line during
+    the stuck window: HikariPool DEBUG fills (pool at sufficient level) — the app-init grind.
+  - Restore boot (main's frontend, startup ~05:58 BST): also failed to complete within ~40 min;
+    the java process (19075) holds :8080; catalina still advancing slowly (HikariPool DEBUG) as of
+    06:10 BST. Server remains UNAVAILABLE. NO port conflicts (each boot held :8080 exclusively;
+    lsof showed one listener at a time). Machine has sustained ~20h of builds/deploys; a reboot is
+    the queued remedy (owner's call — the session token and deployed state depend on it).
+  - The healthcheck (curl :8080/healthcheck.html) is the live authority; catalina's "Server startup
+    in" line lags behind the actual readiness (observed across b3/b4/pb4/ab1/ab2).
+
+## 16. [QUEUED] Frontend drift tool committed — DEPLOY_PROCEDURE.md position + folding proposal
+
+- tools/verify_frontend_drift.py committed on fix/frontend-drift-tool @ eaaa79a7. Replaces the
+  ad-hoc `diff -rq` (which required /tmp/main-wt). Hash-compares deployed ROOT resources/assets
+  vs a git-ref source tree (default = current branch HEAD). KNOWN_EXCEPTIONS = the pre-existing
+  deployed-only mpesaApplicationConfigurationController (report-only). VERIFIED BOTH DIRECTIONS
+  (clean PASS 3353 files; injected-drift FAIL).
+- PROPOSED position in DEPLOY_PROCEDURE.md canonical order: after the post-deploy verify_* suite
+  (rate-limit/regressions/allowlist), BEFORE the fire-test — the fire-test must run against a tree
+  that is EXACTLY main + the batch's own build.
+- Folding question: RECOMMEND KEEP SEPARATE. verify_deployed_regressions.py is HTTP-layer
+  behaviour (its failure = an API 500); the drift tool is file-tree hash comparison (its failure =
+  a stray file). Mixed failure semantics in one tool would obscure which layer broke. Run them
+  sequentially in the canonical order instead.
+
+## 17. [RESOLVED] Dashboard/masters family divergences — recorded in OVERNIGHT_CYCLE_12.md §8
+
+- The dashboard family (5 screens) and globalServiceMaster (deref-only) diverged from the proven
+  getStoreObj() pattern on evidence, not convenience. Full rationale in the cycle report for
+  Abhay's judgment.
 
 ## 14. [HOLD] Remaining store-accessor campaign families wait for the owner's go
 

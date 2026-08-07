@@ -77,7 +77,40 @@
 9. Open-ended items 2-3 (dark-list coverage designs; swallowed-exception sweep) NOT started —
    queued for the next run.
 
-## 7. What I will do next
+## 8. WHY THE DASHBOARD AND MASTERS FAMILIES DIVERGED FROM THE PROVEN PATTERN (for Abhay's judgment)
+
+The campaign's proven shape is: `var cookieObjectStore = $rootScope.getStoreObj();` (fresh parse +
+auto-storePopup trigger when null) + null-safe derefs + `!storeReady()` early-return gates on every
+store-scoped call. Two families did NOT get that shape. The evidence for each:
+
+(a) DASHBOARDS (CEOdashbord, doctorDashboard, financerDashboard, nurseDashboardMaster,
+bedManagement) — trace-one-first instruction applied. The traced read (CEOdashbord :35-38 and the
+same shape in all 5): the parse result is used ONLY as an access-check — `if(cookieObjectStore==
+undefined){ $rootScope.storePopupAcesss(); }` — NEVER deref'd (0 storeName/storeId reads; grep
+confirms no other cookieObjectStore usage), and NO store-scoped calls exist in any of the 5
+(call-map extraction: no function body contains storeId; dashboards are org/unit-scoped aggregate
+views). The popup is the DASHBOARD-specific `storePopupAcesss` — a different function from the
+transactional `storePopup`. Converting via getStoreObj() would have (1) fired the WRONG popup
+(transactional storePopup) in addition to storePopupAcesss — a visible behavior change on every
+store-less load, and (2) triggered a parse for a value the screens never read. The correct
+behavior-preserving shape: `if(!$rootScope.storeReady()){ $rootScope.storePopupAcesss(); }` —
+storeReady() is the same fresh parse WITHOUT the popup side effect; the dashboard's own popup
+fires exactly as before. 0 gates by design (nothing store-scoped to gate). THIS IS THE ONE
+DIVERGENCE MOST LIKELY TO BE WRONG — the check to run: load each dashboard with no store selected
+(expect ONLY storePopupAcesss, never storePopup) and with a store selected (expect no popup, full
+load).
+
+(b) MASTERS (globalServiceMaster) — deref-only class (billSalesReturn precedent): the parse result
+is deref'd ONCE at init (`$scope.storeName = $scope.cookieObjectStore.storeName;` — the header
+label) and no function in the file contains storeId (call-map: empty). getStoreObj() + a null-safe
+deref (`storeName = ... != null ? ...storeName : ''`) preserves behavior; 0 gates by design. The
+only difference from (a): the masters screen DOES read the store value (header), so the accessor
+(which owns the popup trigger) is correct here; the dashboards never read it, so storeReady() +
+their own popup is correct there. The distinguishing question for any future screen: does it
+READ the store value, or only CHECK that one is selected? Read → getStoreObj; check-only with its
+own popup → storeReady + own popup.
+
+## 9. What I will do next
 
 - Nothing further this run: the machine cannot boot Tomcat reliably; live verification is
   blocked. All branches are parked at "ready to merge, awaiting owner." The next run starts with
