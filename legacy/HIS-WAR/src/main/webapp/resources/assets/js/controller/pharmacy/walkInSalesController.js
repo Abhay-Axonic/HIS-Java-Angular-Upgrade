@@ -2521,73 +2521,6 @@ $scope.getLastEncounterDetails=function(info){
 		 * storePopup(); }
 		 */
     }
-    var BatchChangeOld = function (index, bill, batch) 
-    {
-        if(!$rootScope.storeReady()){ return; } // store-accessor extension: fresh re-read at fire time — a same-session pick works immediately (QF-AT)
-        initialStore=JSON.parse(sessionStorage.getItem('selectedTopStore'));
-        // console.log("Initial Store : ",initialStore);
-       // //console.log("Current Store :
-		// ",$cookies.getObject('selectedTopStore'));
-        // console.log("Index : ",index);
-      var item = bill.items[index];
-     
-      var markup;
-      item.uom = [{
-        uomDetails: "Select UOM",
-      }];
-
-      if (!!batch.batchId) {
-        item.uom = item.uom.concat(batch.uom);
-
-        item.selectedUom = item.uom.find(function (obj) {
-          return obj.opUom;
-        });
-
-        if ($scope.isMarkup) 
-        {
-          markup = batch.markup;
-          self.model.markupPercent = markup;
-        }
-       
-        
-      } else {
-        item.selectedUom = item.uom[0];
-        item.quantity = null;
-        item.rate = 0;
-        
-       // CalculateRate(item, item.selectedUom, item.uom);
-        // AllocateQuantity(index, bill);
-        CalculateAmount(item);
-        ApplyDiscount(self.model.walkInSale);
-        
-      }
-       // $("#storeSelection *").attr("disabled", "disabled").off('click');
-      var URI = CONSTANTS.PHARMACY.OP.SALES_WORKLIST.AVAILABLE_QTY_API  + $scope.unitId + "/"+ $cookies.getObject('cookieObject').storeId +'/'+item.itemId+'/'+item.selectedBatch.batchId+'/'+item.selectedUom.uomTypeId;
-      GenericService.serviceAction("GET", URI, {}).then(
-              function (response) 
-              {
-                  item.stock=response.data.availableqty;
-                  item.newStock =response.data.availableqty;
-              	// item.stock = 10;
-                 // CalculateRate(item, item.selectedUom, item.uom);
-                 // AllocateQuantity(index, bill);
-                 // CalculateAmount(item);
-               // ApplyDiscount(self.model.walkInSale);
-                  $rootScope.stopLoader();
-              },
-              function (err) 
-              {
-                item.stock = 0;
-                item.newStock = 0;
-                  $rootScope.stopLoader();
-               // CalculateRate(item, item.selectedUom, item.uom);
-                // AllocateQuantity(index, bill);
-                // CalculateAmount(item);
-                 // ApplyDiscount(self.model.walkInSale);
-              });
-    
-    }
-    
       var BatchChange = function (index, bill, batch, parentIndex) {
         var item = null;
 
@@ -4712,12 +4645,7 @@ $scope.getLastEncounterDetails=function(info){
           if (!ValidateQuantity(billitem)) {
             isValid = false;
           }
-           
-            if(initialStore==JSON.parse(sessionStorage.getItem('selectedTopStore')))
-            {
-               
-            }
-
+          
         });
         return isValid;
       }
