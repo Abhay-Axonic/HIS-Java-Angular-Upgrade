@@ -2629,6 +2629,26 @@ persist in a configured environment). The whitelist includes auth-exempt WRITE e
 - **The defect:** every fresh login executes the config write (`$cookies.putObject('cookieObjectAppConfig', ...)`, loginController:741) but the browser SILENTLY REJECTS the cookie. The login response's `unitApplicationConfigurationDto` serializes to **5,005 bytes**; the ~105-key `cookieObjectAppConfig` subset plus URL-encoding exceeds Chromium's **4,096-byte per-cookie cap**. Proof: the write block demonstrably runs — its sibling `cookieObjectAppConfigSecond` (loginController:779) lands in localStorage every login — while `document.cookie` never contains `cookieObjectAppConfig` (verified via live probe: raw cookie dump, $cookies injector read, and a manual same-size write test that returned visible=false). `cookieObject` (~1.3KB) survives, which is why login itself works.
 - **The blast radius:** `$rootScope.checkCookies()` (app.js:1927) treats the missing cookie as "not configured" and `$state.go('applicationConfiguration')` — a state that is COMMENTED OUT (QF-AH/QF-AN) — so the router falls through to /login. Seven screens carry the checkCookies gate and bounce on EVERY session: **walkInSales, walkinPrescription, detailsNarcoticsIssueWorklist, administrationWorklistMaster, consumableIndent, financerDashboard, CEOdashbord** (walkinPrescription is additionally module-gated 862). The other 14 store-accessor screens do NOT call checkCookies (their gate is the state-resolve module check → accessDenied) and load normally.
 - **The cause — our own remediation:** the config data source `t_unit_application_billing_configuration` was last updated **2026-07-31 12:00** — the BR-136/137 window, the exact table those fixes touched. The row's content growth pushed the login config past the cookie budget. The Aug 6 fire-tests appeared unaffected only because the screens they exercised mostly do not call checkCookies — the missing cookie was never exercised, not absent.
-- **Fix direction (NOT applied — owner-directed):** the app already has the proven pattern — `cookieObjectAppConfigSecond` lives in localStorage (loginController:779) and survives. Move the config write to localStorage (or shrink the payload under the cap); update checkCookies to read the localStorage twin. App-wide frontend change, no schema impact, no backend change.
+- **AMENDED 2026-08-07 (owner's live capture + probes — Rule 10):** the cookie-size rejection above is REAL
+  (document.cookie never receives the config) but the deployed app DECORATES $cookies (app.js:16-49,
+  a5e2a635) to redirect cookieObjectAppConfig + cookieObjectAppConfigSecond to sessionStorage — so a normal
+  fresh login writes the sessionStorage twin (no 4KB cap) and checkCookies PASSES (live probe: getObject
+  returned the 100-key config from sessionStorage; screens loaded). The observable bounce is NOT caused by
+  the rejected cookie — it requires the sessionStorage twin to ALSO be absent (the decorator's getObject
+  returns undefined), which happens when: (a) the session's sessionStorage was cleared after login (broad
+  clear / Clear-site-data / sessionStorage.clear() in negative-phase prep), or (b) browser privacy settings
+  or extensions silently block sessionStorage writes. The redirect itself is fired by the SHARED SIDEBAR's
+  checkCookies (sidebarController.js:12 — every screen, gated only by loginpage=true), not by the seven
+  screens' own controllers; the isKiosk TypeError (sidebarController.js:15) is the fallout AFTER the
+  $state.go fires. Corrected blast radius: the bounce is app-wide when the twin is missing; the seven named
+  screens are the ones that ALSO call checkCookies in their own controllers (they would bounce even without
+  the sidebar). The destination resolves: applicationConfiguration IS registered (applicationConfiguration-
+  Controller.js:2054-2060) and renders a working form — see QF-AN CORRECTED.
+- **Fix direction (NOT applied — owner-directed):** the decorator (app.js:16-49) is the proven pattern — the
+  config's storage home is sessionStorage, no cap. The residual defects: (a) checkCookies + the sidebar
+  deref should tolerate the twin's absence gracefully (no redirect to applicationConfiguration on a missing
+  config; the sidebar should null-guard cookieObjectAppConfig); (b) a login that fails to write the twin
+  (or a session whose storage is cleared) currently bounces the whole app via the shell — that is the
+  app-wide blast radius to fix. No schema impact, no backend change.
 - **Evidence:** live probes 2026-08-07 (login response capture: unitApplicationConfigurationDto PRESENT; raw document.cookie dump: absent; $cookies injector: absent; manual same-size write: visible=false; config row updated_date: 2026-07-31 12:00).
 - **Status:** OPEN — logged as its own BR per owner directive (2026-08-07). No fix, no cookie manipulation, no workaround applied.

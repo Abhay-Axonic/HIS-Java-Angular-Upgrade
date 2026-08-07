@@ -1399,6 +1399,25 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   call sites — the login-page branding images were never loaded; the live screen-images GETs are the
   post-login screens' calls, unaffected).
 
+- **CORRECTED 2026-08-07 (owner's live capture — Rule 10):** the "commented out / unroutable /
+  falls through to /login" mechanism above is WRONG in the deployed build. The state IS registered:
+  applicationConfigurationController.js:2054-2060 (`$stateProvider.state("applicationConfiguration", { url:
+  "/applicationConfiguration", templateUrl: 'views/master/UnitMaster/configuration/application-master.html',
+  controller: "ApplicationConfiguration.Controller", title: 'Application Configuration', resolve: {...} })`).
+  The app.js:15352 `// .state('applicationConfiguration'...)` line is a commented DUPLICATE of an older
+  registration, not the live one. The router RESOLVES #/applicationConfiguration and the full config form
+  renders (verified by live capture 2026-08-07: populated form, speciality dropdowns, date formats,
+  "Application Configuration" header, DEMO/Dr. Demo session). The "falls through to the router's otherwise
+  -> /login" consequence NEVER happens; the redirect lands on a working screen. The QF-AH masters'-redirect
+  mechanism's trigger question is also settled: the redirect is fired by the SHARED SIDEBAR's checkCookies
+  (sidebarController.js:12 — runs on EVERY screen once loginpage=true), NOT by the target screens'
+  controllers (the four observed pharmacy screens contain zero checkCookies calls — accurate and irrelevant).
+  checkCookies' cookieObjectAppConfig-undefined branch (app.js:1936) fires when the $cookies decorator
+  (app.js:16-49, which redirects cookieObjectAppConfig to sessionStorage) returns undefined — i.e. when the
+  sessionStorage twin is absent — and the $state.go fires BEFORE the sidebar's subsequent
+  `cookieObjectAppConfig.isKiosk` deref (sidebarController.js:15) throws the TypeError. The screens bounce
+  because the shell bounces, not because they navigate anywhere themselves.
+
 ## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
 
 - web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
