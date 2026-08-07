@@ -53,8 +53,7 @@ angular
 			$scope.popUpFlag = true;
 			// end for popup
 			
-			var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-			if(cookieObjectStore==undefined){
+			if(!$rootScope.storeReady()){ // store-accessor campaign: dashboard family — access-check only, its OWN popup (storePopupAcesss)
 				$rootScope.storePopupAcesss();
 			}
 			

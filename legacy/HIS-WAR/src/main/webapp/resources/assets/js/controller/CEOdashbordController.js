@@ -32,8 +32,7 @@ angular
 			console.log("$scope.organizationId",$scope.organizationId);
 			console.log("$scope.unitId ",$scope.unitId );
 			
-			var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-			if(cookieObjectStore==undefined){
+			if(!$rootScope.storeReady()){ // store-accessor campaign: dashboard family reads the store differently — access-check only, its OWN popup (storePopupAcesss); the transactional getStoreObj()/storePopup would be wrong here
 				$rootScope.storePopupAcesss();
 			}
 			
