@@ -1482,10 +1482,18 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
 - **serviceMaster** — WRITE: ServiceMasterDaoImpl.saveOrganizationServiceMaster (:65-79) — Pattern C + the dup-check org-scoped but from the client DTO (Pattern A); updateOrganizationServiceMaster (:171-202) — Pattern B detached-entity update keyed on the client serviceMasterId (org/unit from the DTO become SET columns, not predicates).
 - **Impact class:** these are ADT/clinical operations — a forged cancel (pending admission, bed reservation), medicolegal edit, or admission INSERT is a clinical-data-integrity event in another tenant, not merely a leak — the tier's 100% hit rate held (owner's expectation confirmed). Not fixed; the owner decides: VerifiedIdentityService treatment first (dedicated branch, live attack-then-defense proof, per BR-121-142 rigor) or drop the screens from the batch.
 
- ## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
+## QF-2026-08-07-I — schema drift on the BR-182 audit tier: MedicoLeagal entity's mlc_no and ServiceMaster entity's medall_service_id reference columns that do not exist in their tables — the update endpoints fail for ALL callers (pre-existing bug class, blocks the pre-fix leak proof)
 
- - web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
- **JwtTokenFilter**), cors. `RequestWrapperFilter` (com.param.filter, an OncePerRequestFilter that
+- **Found during the BR-182 pre-fix live capture (2026-08-07):** two write endpoints on the six-screen ADT/clinical batch cannot execute for ANY caller — the leaks on them cannot be demonstrated live because the endpoints themselves are broken:
+  - `updateMedicolegalDetails` — catalina.out: `PSQLException: ERROR: column medicoleag0_.mlc_no does not exist` at MedicolegalDaoImpl.updateMedicolegalDetails:41 (the findById SELECT enumerates the entity's columns) — the MedicoLeagal entity maps mlc_no; adt.t_medico_legal lacks it.
+  - `updateOrganizationServiceMaster` — catalina.out: `ERROR: column "medall_service_id" of relation "m_service_master" does not exist` → GlobalExceptionHandler [ERR-e3dd5f48] — the ServiceMaster entity maps medall_service_id (typo'd name); service.m_service_master lacks it.
+  - `saveAdmissionRequest` (the forged org-999 INSERT) errors "Something went wrong !!" — the exact cause not yet isolated; same class suspected (the note entity vs the table) — the full column comparison pending.
+- **Impact:** these endpoints are broken for legitimate same-org users too (the pre-existing-bug confidence tier — not a security boundary). The BR-182 pre-fix capture for A3/A7 is documented as blocked-by-drift; the ownership guards still apply per the owner's scope; the drifts are separate defects needing the owner's decision (fix the drift columns as part of BR-182 vs separate findings).
+
+## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
+
+- web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
+  **JwtTokenFilter**), cors. `RequestWrapperFilter` (com.param.filter, an OncePerRequestFilter that
   wraps the request in the com.param.exception ContentCachingRequestWrapper) exists on disk and is
   wired NOWHERE — it has never run in this deployment. The "requestWrap" name + the written-but-
   unwired wrapper class suggest the original design intended requestWrap = the body-caching wrapper
