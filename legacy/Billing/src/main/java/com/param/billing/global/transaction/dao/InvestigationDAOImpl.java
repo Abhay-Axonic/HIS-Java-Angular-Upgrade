@@ -557,7 +557,6 @@ public class InvestigationDAOImpl extends GenericDao<InvestigationModel, Integer
 		sb.append("select "  + 
 				" ord_mst.order_id as \"orderId\", " + 
 				" service_mst.speciality_id as \"specialityId\"," + 
-				" service_mst.medall_service_id as \"medallServiceId\"," + 
 				" service_mst.sub_speciality_id as \"subDeptId\"," + 
 				" service_mst.sub_speciality_id as \"subSpecialityId\"," + 
 				"ord_dtls.is_procedure_service as \"isProcedureService\", " + 
@@ -673,7 +672,6 @@ public class InvestigationDAOImpl extends GenericDao<InvestigationModel, Integer
     		 " select " + 
     		 "ord_mst.order_id as \"orderId\", " + 
     		 "service_mst.speciality_id as \"specialityId\"," + 
-    		 " service_mst.medall_service_id as \"medallServiceId\"," + 
     		 "service_mst.sub_speciality_id as \"subDeptId\"," + 
     		 "service_mst.sub_speciality_id as \"subSpecialityId\"," + 
     		 "ord_dtls.is_procedure_service as \"isProcedureService\", " + 

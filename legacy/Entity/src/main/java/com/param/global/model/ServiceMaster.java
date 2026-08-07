@@ -47,7 +47,6 @@ import com.param.service.global.model.TPackageServicesDetails;
 					+ "orderDetails.serviceId as serviceMasterId, "
 					+ "service.serviceStandardName as serviceStandardName, "
 					+ "service.serviceStandardCode as serviceStandardCode, "
-					 + " service.medallServiceId as medallServiceId , "
 					+ "orderDetails.priorityId as priorityId, "
 					+ "orderDetails.isOutsourced as isOutsourced,"
 					+ "orderDetails.discountCategoryId as discountCategoryId,"
@@ -2532,9 +2531,6 @@ public class ServiceMaster {
 	@Column(name = "general_ledger_id")
 	private Integer generalLedgerId;
 	
-	@Column(name = "medall_service_id")
-	private Integer medallServiceId;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "general_ledger_id", insertable = false, updatable = false, nullable = false)
 	private GeneralLedgerMaster generalLedgerMaster;
@@ -2915,14 +2911,6 @@ public class ServiceMaster {
 
 	public void setGeneralLedgerId(Integer generalLedgerId) {
 		this.generalLedgerId = generalLedgerId;
-	}
-
-	public Integer getMedallServiceId() {
-		return medallServiceId;
-	}
-
-	public void setMedallServiceId(Integer medallServiceId) {
-		this.medallServiceId = medallServiceId;
 	}
 
 	

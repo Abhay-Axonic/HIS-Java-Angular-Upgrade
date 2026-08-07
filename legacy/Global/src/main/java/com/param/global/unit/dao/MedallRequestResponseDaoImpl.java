@@ -106,8 +106,7 @@ public class MedallRequestResponseDaoImpl  extends GenericDao<MedallRequestRespo
 					"	tlsd.sample_barcode as \"sampleNo\", " + 
 					"	msm.service_standard_name as \"serviceStandardName\", " + 
 					"	tom.encounter_id as \"encounterId\", " + 
-					"	tom.patient_id as \"patientId\", "
-					+ " msm.medall_service_id as \"medallServiceId\" ," + 
+					"	tom.patient_id as \"patientId\", " + 
 					"	tom.admission_id as \"admissionId\"" 
 					+ "from " 
 					+ "	public.t_order_details tod "

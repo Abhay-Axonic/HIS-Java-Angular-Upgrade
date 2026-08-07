@@ -197,8 +197,6 @@ public class UnknownPatientRegistrationServiceImpl
 //					if(unAdmissionDto.getIsMedicoLegal()=='Y' && res3.getStatus().equals(SUCCESS))
 					if(res3.getStatus().equals(SUCCESS))
 					{
-						String erencounter = iGlobalUnitMasterDao.getGeneratedNo(0, unAdmissionDto.getUnitId(), ERENCOUNTER);
-						unAdmissionDto.setMlcNo(erencounter);
 						iUnknownPatientRegistrationDao.saveMedicoLegalDetails(unAdmissionDto);
 						return res3;
 					}
