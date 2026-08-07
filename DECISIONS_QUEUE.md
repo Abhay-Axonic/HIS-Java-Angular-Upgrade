@@ -350,3 +350,14 @@ file remains the durable alert.*
   Tomcat at EVERY login — with the pile present it re-enters the spiral; keep it registered
   or run Tomcat manually (the historical startup.sh pattern)? The merged-build deploy stays
   blocked until the boot path works. NO SECOND REBOOT (limit).
+- RESOLVED 09:50 BST — A/B/C EXECUTED and VERIFIED. A: the 18 ROOT.* backup dirs moved to
+  /opt/homebrew/Cellar/tomcat@9/9.0.120/libexec/webapps.archive-20260807/ (nothing deleted;
+  webapps/ now holds only ROOT + docs/examples/host-manager/manager). B: libexec/bin/setenv.sh
+  written with CATALINA_OPTS="-Xmx4g" (confirmed active: jcmd MaxHeapSize=4294967296). C: the
+  tomcat LaunchAgent KEPT (safe with the pile gone; removes the manual-start failure mode).
+  BOOT: `brew services start tomcat@9` -> PID 3181 -> "Server startup in [16839] ms" (16.8s,
+  the normal signal) -> healthcheck 200 in 0.11s -> 6 connections to his_local (one copy's
+  pools; the pile-era math confirmed: 76/13 ≈ 6/copy). The stuck-boot class is CLOSED as a
+  machine-config issue (heap exhaustion from the webapps pile — not the app, not the merges).
+  NEXT: Abhay mints a fresh token -> FULL deploy of merged main (pb4+ab2) -> canonical proof
+  chain -> push -> main == origin/main -> 9d ledger.
