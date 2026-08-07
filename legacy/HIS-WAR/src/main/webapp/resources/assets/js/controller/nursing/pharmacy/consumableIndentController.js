@@ -123,6 +123,7 @@
         }
 
 		var GetPatientIndentDetails = function (itemId) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
 			var URI = CONSTANTS.PHARMACY.IP.PATIENT_INDENT.DETAIL_API + $scope.unitId + '/' + itemId;
 			$rootScope.startLoader();
@@ -285,9 +286,10 @@
 						commonDetailService.setDataId(null);
 						GetPatientIndentDetails(indentId);
 					}
+					var selectedTopStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 					for(var i=0;i<self.model.fromstoreList.length;i++)
 					{
-						if(self.model.fromstoreList[i].id==JSON.parse(sessionStorage.getItem('selectedTopStore')).storeId)
+						if(self.model.fromstoreList[i].id==(selectedTopStore != null ? selectedTopStore.storeId : undefined))
 						{
 							self.model.fromstore = self.model.fromstoreList[i];
 						}
@@ -723,6 +725,7 @@
 		// }
 
 		var SearchNewItem = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			if(self.model.search.itemName){
 				if(self.model.search.itemName.length >= 3){
 					self.model.selectAllRows = false;
@@ -857,6 +860,7 @@
 		}
 
 		var AddItems = function (flag) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			var conversionPurchase;
 		      var conversionStock;
 		      var conversionDespense;
@@ -1209,6 +1213,7 @@
 		}
 
 		var SaveNewPatientIndentRequest = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			var ItemDetailList = self.model.ItemDetailList;
 			// if (Validate()) {
 			var URI = CONSTANTS.PHARMACY.IP.PATIENT_INDENT.SAVE_API;
@@ -1283,6 +1288,7 @@
 		}
 
 		var UpdatePatientIndent = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 
 			var URI = CONSTANTS.PHARMACY.IP.PATIENT_INDENT.UPDATE_API + self.model.indentId;
 			var data = {

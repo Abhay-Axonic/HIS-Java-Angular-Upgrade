@@ -41,7 +41,7 @@ angular.module('myApp')
 				return;
 			}
 			console.log("cookieObjecttttttttttt",$cookies.getObject('cookieObject'));
-			var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+			var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 		    if(cookieObjectStore==undefined){
 		      $rootScope.storePopup();
 		      angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
@@ -419,6 +419,7 @@ angular.module('myApp')
 			$scope.listOfMedicationsTestFinal = [];
 			$scope.cancelObj = {};
 			$scope.medicationsList = function(info) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 				$scope.listOfMedications = [];
 				$scope.listOfMedicationsTest = [];
 				$scope.validateOrderQty=false;//sneha
@@ -675,6 +676,7 @@ angular.module('myApp')
 			}*/
 		
 			$scope.getBatchList=function(info,index){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 				$scope.indexs=index;
 //				 $rootScope.startLoaderPopup();
 				var data={
@@ -697,6 +699,7 @@ angular.module('myApp')
 			}
 			
 			$scope.getUOMListByBatchId=function(info,index){
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 				$scope.indexs=index;
 //				 $rootScope.startLoaderPopup();
 				var data={
