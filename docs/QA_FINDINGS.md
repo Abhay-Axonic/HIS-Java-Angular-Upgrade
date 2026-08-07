@@ -1447,6 +1447,30 @@ closed. Cross-ref: QF-AN (logged 2026-08-06, fix/dead-code-removal).
   files, all JS controllers — 0 java), with per-family branch-version confirmation after deploy
   (QF-2026-08-07-F, second part).
 
+## QF-2026-08-07-G — OTCompletion digest-loop: getDateByFormat throws on the NULL config dateFormat (start_date_format NULL in the config row) — pre-existing on main, not the store-accessor conversion
+
+- **The symptom (owner's live capture, 2026-08-07):** loading #/OTCompletion produced 120 console errors,
+  rising to 744 after the store pick — repeated `TypeError: Cannot read properties of null (reading
+  'toUpperCase')` at `$rootScope.getDateByFormat` (app.js ~550), firing continuously through the digest
+  cycle. Grid empty, no rows.
+- **Root cause (traced, not assumed):** the else-branch of getDateByFormat runs
+  `moment(dateString,value).format(cookieObjectAppConfig.dateFormat.toUpperCase())` — the config's
+  dateFormat is NULL, so `.toUpperCase()` on null throws. The null source is DATA:
+  `t_unit_application_billing_configuration.start_date_format` is NULL (the single row, unit 1) — the
+  login DTO's dateFormat is null → the sessionStorage twin's dateFormat is null. The binding
+  `{{getDateByFormat(patientDocumentFlipBook.encounterDateWithTimeString != null ? ... : patientDocumentFlipBook.doa, false)}}`
+  (views/master/TheatreManagement/OT-completion.html:264) re-evaluates per digest — each evaluation
+  throws — the error volume tracks the digest activity (the store pick adds cycles). The same binding
+  shape exists on other screens (due-for-discharge.html:396, patient-issue-acceptance.html:1293,
+  out-patient-sales-worklist.html:1273, patient-indent.html:1102) — same latent exposure wherever the
+  config dateFormat is null and a string date reaches the else branch.
+- **Pre-existing on main — CONFIRMED, not assumed:** the deployed OTCompletion file is byte-identical to
+  source(main) and is NOT among the 21 store-accessor overlay files; app.js (getDateByFormat) is main's.
+  The conversion is not involved.
+- **Not fixed (owner: log it).** The unlock path: set start_date_format in the config row (a data
+  update, no schema change) — which would also unblock the OTCompletion parent grid for m1's
+  otBillingCompletionDetails fire-test.
+
 ## QF-AO — web.xml requestWrap mapping points at JwtTokenFilter; RequestWrapperFilter is wired nowhere (LOGGED, no fix)
 
 - web.xml registers three filters: rateLimitFilter (RateLimitFilter), requestWrap (filter-class
