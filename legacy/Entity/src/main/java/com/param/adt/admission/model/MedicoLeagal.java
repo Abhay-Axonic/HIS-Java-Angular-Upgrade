@@ -88,23 +88,9 @@ public class MedicoLeagal
 	@JoinColumn(name = "admission_id", insertable = false, nullable = false, updatable = false)
 	private Admission admission;
 	
-	@Column(name = "mlc_no")
-	private String mlcNo;
-	
-	@Column(name = "modeof_arrival")
-	private String modeOfArrival;
-	
 /*	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "priority_id", insertable = false, nullable = false, updatable = false)
 	private PriorityMaster priorityMaster;*/
-
-	public String getMlcNo() {
-		return mlcNo;
-	}
-
-	public void setMlcNo(String mlcNo) {
-		this.mlcNo = mlcNo;
-	}
 
 	public int getMedicoLegalId() {
 		return medicoLegalId;
@@ -244,12 +230,4 @@ public class MedicoLeagal
 		this.firNo = firNo;
 	}
 
-	public String getModeOfArrival() {
-		return modeOfArrival;
-	}
-
-	public void setModeOfArrival(String modeOfArrival) {
-		this.modeOfArrival = modeOfArrival;
-	}
-		
 }

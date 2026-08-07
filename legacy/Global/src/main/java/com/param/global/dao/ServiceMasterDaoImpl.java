@@ -180,6 +180,8 @@ public class ServiceMasterDaoImpl extends GenericDao<ServiceMaster, Integer>
 					|| !existingServiceMaster.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())) {
 				throw new ApplicationException("BR182-UPDATE-ORG-SERVICE-MASTER-OWNERSHIP: service master does not belong to the current organization");
 			}
+			// the loaded instance must leave the session before the detached-entity update below (NonUniqueObjectException otherwise)
+			sessionFactory.getCurrentSession().evict(existingServiceMaster);
 			// ----------- check if Service Name alreay exist ---------------//
 			Long count = (Long) sessionFactory.getCurrentSession()
 					.createQuery(
