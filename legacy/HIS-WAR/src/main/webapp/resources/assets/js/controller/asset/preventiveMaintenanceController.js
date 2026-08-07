@@ -23,7 +23,7 @@ angular
 									$state.go('login');
 									return;
 								}
-								var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+								var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
 								if(cookieObjectStore==undefined){
 									$rootScope.storePopup();
 									angular.element('#pharmacyPopupBeforLeftexpand').modal('show');
@@ -131,6 +131,7 @@ angular
 					        }
 							
 							$scope.getActiveAssetsByCriteria = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								$scope.assetList = [];
 								var data = {
 										unitId:$scope.unitId,
@@ -195,6 +196,7 @@ angular
 							}
 							
 							$scope.getAccessoryDetailsById = function(info) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 								var data = {
 									 	"assetTypeId": 2,
 								        "assetCategoryId": info.assetCategoryId,
