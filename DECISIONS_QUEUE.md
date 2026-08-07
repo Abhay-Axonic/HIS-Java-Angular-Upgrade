@@ -294,3 +294,35 @@ file remains the durable alert.*
   are SAFE (gated / comparison-only, no crash, no call) but not pattern-pure (the accessor owns
   the parse). Also preventiveMaintenance:26 is QF-AR-guarded (safe). Decision: convert on a later
   batch or leave as-is?
+
+---
+
+## 23. [2026-08-07 ~08:47 BST, OPEN — BLOCKER] Post-reboot boot FAILED-FAST — Postgres 14/16 port race (his_local offline)
+
+- REBOOT DONE 08:34:16 BST; /tmp wiped (the pre-merge backup copy /tmp/ROOT-backup-pre-pb4ab2-merge
+  is GONE; the same content survives as webapps/ROOT.pre-pb4ab2-merge — the deployed ROOT is
+  byte-identical to it, so the restored pre-merge build is intact in webapps).
+- BOOT RESULT: Tomcat auto-started by the brew LaunchAgent (PID 506, 08:35:10, PPID 1) on the
+  restored pre-merge ROOT — but the boot FAILED FAST (NOT the stuck-boot class: 0.1% CPU,
+  sleeping): spring-dispatcher init threw; chain revertAllocatedQuantity -> TimeZoneComponent.init
+  -> "Could not open Hibernate Session... Could not open connection" -> PSQLException FATAL:
+  database "his_local" does not exist (22x in localhost.2026-08-07.log). Every request on :8080
+  now returns 500.
+- ROOT CAUSE (verified read-only): TWO brew postgres services race for 5432 at login.
+  postgresql@16 OWNS his_local (its cluster has a 4-DB set incl. a 5,850-file user database; last
+  successful start Jul 15 — it ran continuously until the reboot killed it). postgresql@14 (EMPTY
+  cluster — psql -l shows only postgres/template0/template1; its log's FIRST successful start ever
+  was today 08:35:12 BST) WON the port; @16 failed to bind ("Address already in use" x5) and is
+  DOWN.
+- STUCK-BOOT CLASS: not reproduced today — the reboot-vs-orphans theory remains UNTESTED;
+  today's failure is a distinct, fully-explained class (database absent).
+- APP WILL NOT SELF-HEAL: the Spring context init already failed — even after the DB is restored,
+  Tomcat must be restarted to re-attempt the boot.
+- QUESTION (decision needed): authorize (a) `brew services stop postgresql@14` + (b) `brew services
+  start postgresql@16` (restores his_local on 5432), then (c) restart Tomcat (kill PID 506 +
+  startup.sh), confirm a normal boot on the restored ROOT — then the sequence resumes: fresh token
+  (Abhay mints) -> FULL deploy of merged main -> canonical proof chain -> push -> 9d ledger.
+  ALSO: why is postgresql@14 registered (LaunchAgent dated Aug 1)? If unused, keep it stopped so
+  the race cannot recur on the next login/reboot.
+- Nothing fixed, nothing merged, nothing pushed (limits held); the deploy sequence is stopped at
+  step 1 per the failure rule.
