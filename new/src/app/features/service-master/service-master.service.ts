@@ -116,8 +116,12 @@ export class ServiceMasterService {
     });
   }
 
-  /** POST /api/globals/items/typeahead/search {itemName} -> itemList */
-  searchItems(itemName: string): Observable<ApiResponse<never, ItemMaster>> {
-    return this.http.post<ApiResponse<never, ItemMaster>>(`${this.base}/api/globals/items/typeahead/search`, { itemName });
+  /** GET /api/globals/items/item/search/{string} — the ACTIVE item typeahead
+   *  (legacy `complete()`, controller.js:218-229; the POST
+   *  /api/globals/items/typeahead/search is dead code — `searchItems()` is
+   *  defined but never wired to the HTML). Returns a raw array.
+   */
+  searchItems(itemName: string): Observable<ItemMaster[]> {
+    return this.http.get<ItemMaster[]>(`${this.base}/api/globals/items/item/search/${itemName}`);
   }
 }

@@ -51,9 +51,13 @@ export interface GeneralLedgerMaster {
   [key: string]: unknown;
 }
 
-/** Item typeahead row (POST /api/globals/items/typeahead/search). */
+/** Item typeahead row (GET /api/globals/items/item/search/{string}). The
+ *  legacy typeahead displays `detail` ("<code>|<name>"); the add handler uses
+ *  itemId/itemName (controller.js:218-250). */
 export interface ItemMaster {
   itemId: number;
+  itemCode?: string;
+  detail?: string;
   itemName: string;
   [key: string]: unknown;
 }

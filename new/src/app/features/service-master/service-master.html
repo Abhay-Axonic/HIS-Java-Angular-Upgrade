@@ -115,7 +115,7 @@
             <td>{{ info.subSpecialityName }}</td>
             <td>{{ info.serviceStandardCode }}</td>
             <td>{{ info.serviceStandardName }}</td>
-            <td>{{ info.generalLedgerCode }}</td>
+            <td>{{ info.generalLedgerName }}</td>
             <td>
               <app-status-toggle [checked]="info.status === 'A'" (toggle)="onToggleStatus(info)"></app-status-toggle>
             </td>
@@ -170,7 +170,7 @@
             @if (itemList().length > 0) {
               <div class="typeahead">
                 @for (item of itemList(); track item.itemId) {
-                  <div class="typeahead-row" (click)="selectItem(item)">{{ item.itemName }}</div>
+                  <div class="typeahead-row" (click)="selectItem(item)">{{ item.detail ?? item.itemName }}</div>
                 }
               </div>
             }
@@ -203,12 +203,12 @@
               }
             }
           } @else {
-            @for (line of inventoryItems(); track $index; let i = $index) {
+            @for (line of inventoryItems().filter((l) => l.status !== 'I'); track line.itemId; let i = $index) {
               <tr>
                 <td>{{ line.itemName }}</td>
                 <td>{{ line.assignQty }}</td>
                 <td>
-                  <i class="fa fa-trash pointer" title="Remove" (click)="removeInventoryItem(i)"></i>
+                  <i class="fa fa-trash pointer" title="Remove" (click)="removeInventoryItem(line)"></i>
                 </td>
               </tr>
             }

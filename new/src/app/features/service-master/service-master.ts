@@ -46,6 +46,16 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  *    Successfully." (the org-trust side of this endpoint is COVERED — the
  *    BR-16x service rebind overrides the client org with the verified
  *    session org before the DAO call; live-proven during this batch).
+ *
+ * 3. The legacy save flow is TWO steps: the first click opens a custom
+ *    confirm popup (`showModal`/`popUpFlag`, controller.js:535-538) and only
+ *    the popup's OK re-invokes saveServiceMaster. Rebuilt as a direct save
+ *    (one click) — parity divergence, flagged, not silently hidden.
+ *
+ * 4. The edit flow calls `.toString()` on the returned ids, including
+ *    generalLedgerId after only clearing the name when null
+ *    (controller.js:630-633) — a crash on a ledger-less record. Rebuilt
+ *    null-safe (Number(...) with a guard) — divergence flagged.
  */
 @Component({
   selector: 'app-service-master',
@@ -335,16 +345,12 @@ export class ServiceMaster {
       return;
     }
     this.api.searchItems(keyword.trim()).subscribe((res) => {
-      // The typeahead endpoint returns a RAW ARRAY, not the app's envelope
-      // (confirmed live: [{itemId,itemName,...}] / []). The legacy controller's
-      // `response.data.status == "success"` check therefore never matches and
-      // its itemList stays empty — a legacy dead-typeahead. Rebuilt to accept
-      // the raw array (flagged parity fix, not a silent divergence).
-      if (Array.isArray(res)) {
-        this.itemList.set(res as unknown as ItemMaster[]);
-      } else if ((res as { status?: string }).status === 'success') {
-        this.itemList.set((res as { listObject?: ItemMaster[] }).listObject ?? []);
-      }
+      // The item search returns a RAW ARRAY (confirmed live: [{itemId,itemName,...}]
+      // / []), same as legacy `complete()` hands the typeahead. The legacy
+      // controller's `response.data.status == "success"` check never matches an
+      // array — its `searchItems()` (POST /typeahead/search) is dead code, and
+      // the active path is this GET. Accept the raw array here.
+      this.itemList.set(Array.isArray(res) ? res : []);
     });
   }
 
@@ -373,18 +379,14 @@ export class ServiceMaster {
     this.itemSearchTerm.set('');
   }
 
-  removeInventoryItem(index: number): void {
-    // legacy parity (controller.js:302-310): persisted lines keep their id
+  removeInventoryItem(line: InventoryItemLine): void {
+    // Legacy parity (controller.js:302-310): persisted lines keep their id
     // and are flagged 'I' so the mapper update deactivates them; new lines
-    // are spliced.
-    const rows = this.inventoryItems();
-    const line = rows[index];
+    // are spliced. The row list hides 'I' lines (legacy's `ng-if="item.status!='I'"`).
     if (line.serviceItemMapperId != null) {
-      rows[index] = { ...line, status: 'I' };
-      this.inventoryItems.set([...rows]);
+      this.inventoryItems.update((rows) => rows.map((r) => (r.itemId === line.itemId ? { ...r, status: 'I' } : r)));
     } else {
-      rows.splice(index, 1);
-      this.inventoryItems.set([...rows]);
+      this.inventoryItems.update((rows) => rows.filter((r) => r !== line));
     }
   }
 
