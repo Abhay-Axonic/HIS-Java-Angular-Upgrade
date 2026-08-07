@@ -10,6 +10,7 @@ import com.param.adt.admission.model.MedicoLeagal;
 import com.param.global.common.ICommonConstants;
 import com.param.global.common.Response;
 import com.param.global.dto.AdmissionDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -29,6 +30,9 @@ SessionFactory sessionFactory;
 @Autowired
 DozerBeanMapper mapper;
 
+@Autowired
+private VerifiedIdentityService verifiedIdentityService;
+
 public MedicolegalDaoImpl() {
 super(MedicoLeagal.class);
 
@@ -39,6 +43,12 @@ public Response updateMedicolegalDetails(AdmissionDto admissionDto) throws Appli
 	try {
 
 		MedicoLeagal medicoLeagal = findById(admissionDto.getMedicoLegalId());
+		// BR-182 ownership guard: the loaded record's org/unit must match the verified session identity
+		if (medicoLeagal == null
+				|| !medicoLeagal.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+				|| !medicoLeagal.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+			throw new ApplicationException("BR182-UPDATE-MEDICOLEGAL-OWNERSHIP: medicolegal record does not belong to the current organization/unit");
+		}
 		medicoLeagal.setAccompaniedBy(admissionDto.getAccompaniedBy());
 		medicoLeagal.setFirNo(admissionDto.getFirNo());
 		medicoLeagal.setPriorityId(admissionDto.getPriorityId());

@@ -304,6 +304,9 @@ public class PendingRequestServiceImpl implements IPendingRequestService, ICommo
 	@Override
 	public Response cancelPendingAdmissionRequest(AdmissionNoteDto admissionNoteDto) {
 		try {
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity
+			admissionNoteDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			admissionNoteDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			return iPendingRequestDao.cancelPendingAdmissionRequest(admissionNoteDto);
 		} catch (Exception e) {
 			

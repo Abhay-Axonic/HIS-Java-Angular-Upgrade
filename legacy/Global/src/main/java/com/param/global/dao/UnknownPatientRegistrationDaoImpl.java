@@ -39,6 +39,7 @@ import com.param.global.common.ServiceException;
 import com.param.global.dao.global.GlobalDao;
 import com.param.global.dto.AdmissionDto;
 import com.param.global.dto.PatientSearchDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.global.VisitDetails;
 import com.param.global.model.UnknownPatientRegistration;
 import com.param.global.org.common.dto.PriorityMasterDto;
@@ -62,6 +63,9 @@ public class UnknownPatientRegistrationDaoImpl extends GenericDao<UnknownPatient
 
 	@Autowired
 	DozerBeanMapper mapper;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	public UnknownPatientRegistrationDaoImpl() {
 		super(UnknownPatientRegistration.class);
@@ -160,6 +164,9 @@ public class UnknownPatientRegistrationDaoImpl extends GenericDao<UnknownPatient
 	@Override
 	public Response patientSearchByMultipleCriteria(PatientSearchDto patientSearchDto) throws ApplicationException {
 		try {
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity before the PHI search
+			patientSearchDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientSearchDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 
 			Date date = TimeZoneComponent.getDateByzone(patientSearchDto.getUnitId());
 			String currentDate=GlobalCommonDateUtils.getStringDate(date, "yyyy-MM-dd");

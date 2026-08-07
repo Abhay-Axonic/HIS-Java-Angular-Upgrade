@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.param.adt.admission.dto.UnreservedPatientDto;
+import com.param.adt.admission.model.AdmissionNote;
 import com.param.adt.admission.model.AdmissionPatientMapper;
 import com.param.adt.admission.model.UnreservedPatient;
 import com.param.adt.common.ADTCommonDateUtils;
@@ -19,6 +20,7 @@ import com.param.adt.common.ICommonConstants;
 import com.param.adt.common.Response;
 import com.param.global.dto.AdmissionDto;
 import com.param.global.dto.AdmissionNoteDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.utility.TimeZoneComponent;
 
 import in.param.common.dao.GenericDao;
@@ -39,6 +41,9 @@ public class BedReservationListDaoImpl extends GenericDao<UnreservedPatient, Int
 
 	@Autowired
 	SessionFactory sessoinFactory;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response getBedReservationList(AdmissionDto admissionDto) {
@@ -67,6 +72,13 @@ public class BedReservationListDaoImpl extends GenericDao<UnreservedPatient, Int
 		try {
 
 			Session session = sessionFactory.getCurrentSession();
+			// BR-182 ownership guard: load the note, verify org/unit against the verified session identity
+			AdmissionNote admissionNote = (AdmissionNote) session.get(AdmissionNote.class, unreservedPatientDto.getAdmissionNoteId());
+			if (admissionNote == null
+					|| !admissionNote.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| !admissionNote.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				throw new ApplicationException("BR182-CANCEL-RESERVATION-OWNERSHIP: admission note does not belong to the current organization/unit");
+			}
 			// <-----Updating status in AdmissionNote to I from A, activating is
 			// cancledBy Flag to Y
 			Query qr1 = session.createQuery(
@@ -139,6 +151,13 @@ public class BedReservationListDaoImpl extends GenericDao<UnreservedPatient, Int
 	public Response rescheduleReservation(UnreservedPatientDto unreservedPatientDto) throws ApplicationException {
 		try {
 			Session session = sessionFactory.getCurrentSession();
+			// BR-182 ownership guard: load the note, verify org/unit against the verified session identity
+			AdmissionNote admissionNote = (AdmissionNote) session.get(AdmissionNote.class, unreservedPatientDto.getAdmissionNoteId());
+			if (admissionNote == null
+					|| !admissionNote.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| !admissionNote.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				throw new ApplicationException("BR182-RESCHEDULE-RESERVATION-OWNERSHIP: admission note does not belong to the current organization/unit");
+			}
 			// <-----Updating status in AdmissionNote to I from A
 			Query qr1 = session.createQuery(
 					"update AdmissionNote an set " +

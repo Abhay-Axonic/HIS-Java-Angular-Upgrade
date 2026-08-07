@@ -34,6 +34,7 @@ import com.param.adt.transfer.dto.TransferDto;
 import com.param.adt.transfer.model.Transfer;
 import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.dto.AdmissionDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.AdmissionNoteDto;
 import com.param.global.dto.PatientSponsorDetailsDto;
 import com.param.global.model.CabinMaster;
@@ -59,6 +60,9 @@ public class BedAllocationDaoImpl extends GenericDao<AdmissionDetails, Integer>
 
 	@Autowired
 	DozerBeanMapper mapper;
+
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
 
 	@Override
 	public Response getActiveBedList(BedMasterDto bedMasterDto) throws ApplicationException {
@@ -207,6 +211,9 @@ public class BedAllocationDaoImpl extends GenericDao<AdmissionDetails, Integer>
 	@Override
 	public Response savePatientAdmission(AdmissionDto admissionDto) throws ApplicationException {
 		try {
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity before the INSERT
+			admissionDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			admissionDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Admission admission = mapper.map(admissionDto, Admission.class, "AdmissionDto_to_Admission");
 				admission.setIsFinancialCreance('N');
 				admission.setStatus('A');
@@ -574,6 +581,17 @@ public class BedAllocationDaoImpl extends GenericDao<AdmissionDetails, Integer>
 	public Response updateWatingListNumber(AdmissionDto admissionDto) throws ApplicationException {
 		try {
 			Session session = sessionFactory.openSession();
+			// BR-182 ownership guard: load the note, verify org/unit against the verified session identity
+			AdmissionNote admissionNote = (AdmissionNote) session.get(AdmissionNote.class, admissionDto.getAdmissionNoteId());
+			if (admissionNote == null
+					|| !admissionNote.getOrganizationId().equals(verifiedIdentityService.getVerifiedOrganizationId())
+					|| !admissionNote.getUnitId().equals(verifiedIdentityService.getVerifiedUnitId())) {
+				session.close();
+				throw new ApplicationException("BR182-UPDATE-WAITING-LIST-OWNERSHIP: admission note does not belong to the current organization/unit");
+			}
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity before the re-INSERT
+			admissionDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			admissionDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			Query qry = session.createQuery(
 					"update BedCategoryWaitingList bcwl set " +
 							"bcwl.status = :status, " +

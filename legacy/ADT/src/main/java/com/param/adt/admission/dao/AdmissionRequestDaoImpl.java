@@ -26,6 +26,7 @@ import com.param.global.common.GlobalCommonDateUtils;
 import com.param.global.dto.AdmissionNoteDto;
 import com.param.global.dto.DoctorSpecialityMapperDto;
 import com.param.global.dto.PatientRegistrationDto;
+import com.param.global.service.VerifiedIdentityService;
 import com.param.global.dto.SpecialityMasterDto;
 import com.param.utility.TimeZoneComponent;
 
@@ -48,11 +49,16 @@ public class AdmissionRequestDaoImpl extends GenericDao<AdmissionNote, Integer>
 	@Autowired
 	private DozerBeanMapper mapper;
 
+	@Autowired
+	private VerifiedIdentityService verifiedIdentityService;
+
 	@Override
 	public Response getPatientListLike(PatientRegistrationDto patientRegistrationDto) {
 		try {
-
-				List<PatientRegistrationDto> patientRegistrationDtosList = sessionFactory.getCurrentSession()
+			// BR-182 rebind: the client-supplied org is overridden with the verified session identity before the search
+			patientRegistrationDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			patientRegistrationDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
+			List<PatientRegistrationDto> patientRegistrationDtosList = sessionFactory.getCurrentSession()
 						.getNamedQuery("GET_PATIENT_LIST_LIKE")
 						.setParameter("firstName", patientRegistrationDto.getFirstName().toLowerCase() + "%")
 						.setParameter("organizationId", patientRegistrationDto.getOrganizationId())
@@ -107,6 +113,9 @@ public class AdmissionRequestDaoImpl extends GenericDao<AdmissionNote, Integer>
 	@Override
 	public Response saveAdmissionRequest(AdmissionNoteDto admissionNoteDto) {
 		try {
+			// BR-182 rebind: the client-supplied org/unit are overridden with the verified session identity before the INSERT
+			admissionNoteDto.setOrganizationId(verifiedIdentityService.getVerifiedOrganizationId());
+			admissionNoteDto.setUnitId(verifiedIdentityService.getVerifiedUnitId());
 			AdmissionNote admissionNote = mapper.map(admissionNoteDto, AdmissionNote.class,
 					"AdmissionNoteDto_to_AdmissionNote");
 			admissionNote.setCreatedDate(TimeZoneComponent.getDateByzone(admissionNoteDto.getUnitId()));
