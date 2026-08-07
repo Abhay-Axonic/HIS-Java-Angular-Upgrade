@@ -94,8 +94,8 @@
             self.model.ValidateQuantity = ValidateQuantity;
             self.model.ValidateReturnReason = ValidateReturnReason;
 
-            var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-            self.model.issueDetailList.store = cookieObjectStore.storeName;
+            var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+            self.model.issueDetailList.store = cookieObjectStore != null ? cookieObjectStore.storeName : '';
 
             $scope.patientSearchObj.uhidNumber = '';
 			$scope.patientSearchObj.patientName = '';
@@ -463,6 +463,7 @@
         }
 
         var GetIssueItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (validateStore()) {
                 var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.CONSUMABLE_ISSUE_SEARCH_API;
                 var visitNumber = '';
@@ -591,6 +592,7 @@
         }
 
         var GetItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (validateStore()) {
                 var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.CONSUMABLE_ITEM_SEARCH_API;
                 var visitNumber = '';
@@ -707,6 +709,7 @@
 
         $scope.dummyList = [];
         var AddItems = function () {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (ValidatePopupItems()) {
                 var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.MEDICATION_ADD_ITEMS_API;
                 self.model.reason = self.model.returnReasonList[0];
@@ -758,9 +761,9 @@
                             // if (!isFound) {
                             $scope.dummyList.push(item);
                             // }
-                            var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-                            self.model.issueDetailList.store = cookieObjectStore.storeName;
-                            self.model.issueDetailList.storeId = cookieObjectStore.storeId;
+                            var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                            self.model.issueDetailList.store = cookieObjectStore != null ? cookieObjectStore.storeName : '';
+                            self.model.issueDetailList.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
                         });
 
                         $scope.list = $scope.dummyList;
@@ -778,9 +781,9 @@
                             growl.error("Already Exits..!");
                         }*/
                         self.model.issueDetailList.items = $scope.list;
-                        var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-                        self.model.issueDetailList.store = cookieObjectStore.storeName;
-                        self.model.issueDetailList.storeId = cookieObjectStore.storeId;
+                        var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+                        self.model.issueDetailList.store = cookieObjectStore != null ? cookieObjectStore.storeName : '';
+                        self.model.issueDetailList.storeId = cookieObjectStore != null ? cookieObjectStore.storeId : undefined;
 
                         self.model.SelectedIssueIds = [];
                         self.model.SelectedItemIds = [];
@@ -861,6 +864,7 @@
         }
 
         var SaveIssueReturn = function (itemList) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
             if (ValidateIssueList(itemList)) {
 
                // var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.CONSUMABLE_SAVE_API;

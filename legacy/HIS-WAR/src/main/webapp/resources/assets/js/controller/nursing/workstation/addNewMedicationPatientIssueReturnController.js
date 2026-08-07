@@ -137,8 +137,8 @@
 			self.model.ValidateQuantity = ValidateQuantity;
 			self.model.ValidateReturnReason = ValidateReturnReason;
 
-			var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-			self.model.issueDetailList.store = cookieObjectStore.storeName;
+			var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+			self.model.issueDetailList.store = cookieObjectStore != null ? cookieObjectStore.storeName : '';
 			$scope.patientSearchObj.uhidNumber = '';
 			$scope.patientSearchObj.patientName = '';
 			$scope.patientSearchObj.genderId = '';
@@ -628,6 +628,7 @@
 		// }
 
 		var GetIssueItems = function() {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			// if (validateStore()) {
 			var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.MEDICATION_ISSUE_SEARCH_API;
 			var visitNumber = '';
@@ -785,6 +786,7 @@
 		}
 
 		var GetItems = function() {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			// if (validateStore()) {
 			var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.MEDICATION_ITEM_SEARCH_API;
 			var visitNumber = '';
@@ -913,6 +915,7 @@
 		
 	    $scope.dummyList = [];
 		var AddItems = function() {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			if (ValidatePopupItems()) {
 
 				var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.MEDICATION_ADD_ITEMS_API;
@@ -1142,6 +1145,7 @@
 		}
 
 		var SaveIssueReturn = function(itemList) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
 			if (ValidateIssueList(itemList)) {
 
 				var URI = CONSTANTS.PHARMACY.NURSING.PATIENT_ISSUE_RETURN.MEDICATION_SAVE_API;
