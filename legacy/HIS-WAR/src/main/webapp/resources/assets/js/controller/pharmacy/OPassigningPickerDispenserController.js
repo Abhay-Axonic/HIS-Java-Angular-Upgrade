@@ -47,7 +47,7 @@
                   }
             };
 
-            var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
+            var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
             if(cookieObjectStore==undefined){
               $rootScope.storePopup();
               angular.element('#pharmacyPopupBeforLeftexpand').modal('show');

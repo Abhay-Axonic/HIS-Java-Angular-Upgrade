@@ -12,8 +12,8 @@
         $scope.organizationId = cookieObject.organizationId;
         $scope.userId = cookieObject.userId;
         $scope.storeId = cookieObject.storeId; 
-        var cookieObjectStore = JSON.parse(sessionStorage.getItem('selectedTopStore'));
-        $scope.storeName = cookieObjectStore.storeName;
+        var cookieObjectStore = $rootScope.getStoreObj(); // store-accessor campaign: null-safe parse + picker trigger, one owner
+        $scope.storeName = cookieObjectStore != null ? cookieObjectStore.storeName : '';
         function initializeController() {
             $rootScope.loginpage = true;
 
@@ -684,6 +684,7 @@
         $scope.count = 0;
         $scope.saveBtnDisabled=false;
         var SavePatientReturnAcceptance = function (itemList) {
+            if(!$rootScope.storeReady()){ return; } // store-accessor campaign: no store-scoped call before the store pick (incl. load-time, QF-AS/AT)
         	$scope.saveBtnFlag1=true;
             $scope.saveBtnDisabled=true;
         	$scope.saveClick=$scope.saveClick+1;
