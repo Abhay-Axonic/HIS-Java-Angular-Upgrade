@@ -97,3 +97,7 @@ Everything else — code review passing, tests passing, PR merges where the Chec
 ## CRUD sibling-action rule (owner-approved 2026-08-04)
 
 Whenever a field-mapping or similar data-correctness bug is found and fixed on one CRUD action (Create, Edit, Toggle, etc.), explicitly check **every other CRUD action on that same screen** for the same underlying pattern before considering the screen fully verified. Same logic as the BR-160 sibling-endpoint rule for security vulnerabilities, now extended to correctness bugs — not just security.
+
+## Campaign 1 exit criterion (owner directive 2026-08-08, autonomous run)
+
+Campaign 1 ends when the contract deriver covers the rebuild's next 40 screens (Track A path) and phases 3 and 4 (shared reads, unscoped queries) have been run as QUERIES against the deriver's join table rather than as fresh sweeps. Phase 5 (swallowed exceptions) becomes a standing backlog, not a blocking run. Findings not on the rebuild's path are logged, not chased. Campaign 1 batch 2 (the next DQ-003 phantom-column batch) resumes only if the deriver's E5 error rate is too high to answer the phase 3-4 questions. Extension thresholds are the owner's call — the deriver scope is fixed at 40 + 220 (the next-40 + the rebuilt-223 validation set) and must NOT be extended regardless of the error rate; the rates are logged and the extension decision is queued for the owner.
