@@ -2712,9 +2712,9 @@ persist in a configured environment). The whitelist includes auth-exempt WRITE e
 - **Does a CCAvenue payment complete?** No — the log row cannot be INSERTED at payment-init (saveCCAvenueLog fails), the callback updates fail, and the sale-time bill linkage fails. The external gateway transaction may move money, but the local reconciliation never happens. The integration is broken in every environment, including production (CCAvenue is LIVE per BR-012 history).
 - **Options (owner decision, DQ-2026-08-08-001):** (a) create the two tables per the reference schema (schema gate — Phase 2/3); (b) remove the CCAvenue/razorpay log paths if the integration is actually dead; (c) leave broken + log-only.
 
-## BR-185 — m_sms_utility_cofiguration phantom-column removal (DQ-003 batch 1): mailConfiguration list/save/email/SMS paths move from ERROR to executing (FIXED — campaign/c1-drift 48dfbd8b)
+## BR-185 — m_sms_utility_cofiguration phantom-column removal (DQ-003 batch 1): mailConfiguration list/save/email/SMS paths move from ERROR to executing (MERGED — introducing commit 48dfbd8b, merge c29a5990)
 
-- **Status:** FIXED 2026-08-08 (campaign/c1-drift 48dfbd8b, unmerged). Behavioral change — logged per the constitution; the campaign's DQ-003 mandate (entity-side, BR-183 pattern) covers the removal, this entry records the observable change for the owner.
+- **Status:** MERGED 2026-08-08 (introducing commit 48dfbd8b; merge commit c29a5990). Rule 9a flip — approved by the owner 2026-08-08; the behavioral change was logged per the constitution at FIXED time (see below), the entry records the observable change for the owner.
 - **What changed (observable):** the mailConfiguration screen's paths executed against `public.m_sms_utility_cofiguration` previously threw ERROR envelopes for every caller (the query selected 6 columns that exist in NO schema — is_sms_send, is_whatsapp_send, user_defined_mail, critical_report, whatsapp_template_master_id, type — and LEFT JOINed the phantom table m_whatsapp_template_master). After: they execute.
 - **Before/after per path:**
   - LIST (getSmsUtilityConfigDetails): BEFORE — ERROR envelope (column/relation does not exist); AFTER — success, returns the table's rows (dev table empty → empty list).

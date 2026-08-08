@@ -1986,3 +1986,6 @@ DELIBERATE NON-FIX: per owner directive 2026-08-08, the ledger linkage is NOT
 seeded. Seeding would hide the condition the empty-state work is meant to make
 visible; the empty state must be observed rendering correctly on unlinked data
 before any data change. Revisit after the empty-state pattern lands.
+
+## QF-2026-08-08-M — check_ledger_merge_state.py: the FIXED-branch FAIL message reads "flipped before the merge landed" in BOTH directions (wording finding — no script change, owner direction 2026-08-08)
+- The message fires identically when (a) a FIXED line's cited commit lands in main WITHOUT the 9a flip having run — the merge landed, the flip is pending (the normal post-merge pre-flip state — this exact case at the BR-185 merge) — and (b) the pathological premature-flip case it was written for. The wording implies a premature flip in both cases, which is misleading in direction (a). Suggested later fix: split the message ("merge landed — 9a flip pending" vs "flipped before the merge landed"), or add the merge-commit context. Logged for later; the script is NOT to be edited without the owner's say-so.
