@@ -20,14 +20,10 @@ import javax.persistence.Table;
 				query = " SELECT suc.sms_utility_id as \"smsUtilityId\", suc.trigger_id as\"triggerId\", "
 				+ " suc.template_description as \"templateDescription\", suc.category_id as \"categoryId\", suc.org_id as \"orgId\", suc.unit_id as \"unitId\", "
 				+ " suc.status as \"status\", suc.created_by as \"createdBy\", suc.updated_by as \"updatedBy\",cm.category_name as \"categoryName\","
-				+ " tm.trigger_name as \"triggerName\", suc.is_email as \"isEmail\", suc.mail_subject as \"mailSubject\", suc.is_SMS_Send as \"isSMSSend\",suc.is_whatsapp_send as \"isWhatsappSend\","
-				+ " suc.user_defined_mail as \"userDefinedMail\", "
-				+ " suc.schedule_type_id as \"scheduleTypeId\", "
-				+ " suc.critical_report as \"criticalReport\", wtm.template_desc as \"whatsAppTemplateDesc\", "
-				+ " suc.type as  \"type\", suc.whatsapp_template_master_id as \"whatsAppTemplateMasterId\" "
+				+ " tm.trigger_name as \"triggerName\", suc.is_email as \"isEmail\", suc.mail_subject as \"mailSubject\" "
+				+ " suc.schedule_type_id as \"scheduleTypeId\" "
 				+ " FROM public.m_sms_utility_cofiguration suc "
 				+ " join public.m_sms_trigger_master tm on suc.trigger_id =tm.trigger_id "
-				+ " left join public.m_whatsapp_template_master wtm on suc.whatsapp_template_master_id =wtm.whatsapp_template_master_id "
 				+ " join public.m_sms_category_master cm on suc.category_id=cm.category_id "
 				+ " Where suc.org_id = :organizationId " 
 				+ " AND  suc.unit_id = :unitId "),
@@ -118,24 +114,6 @@ public class SmsUtilityConfiguration implements Serializable {
 	@Column(name = "mail_subject")
 	private String mailSubject;
 	
-	@Column(name = "is_whatsapp_send")
-	private Character isWhatsappSend;
-	
-	@Column(name = "user_defined_mail")
-	private String userDefinedMail;
-	
-	@Column(name = "is_SMS_send")
-	private Character isSMSSend;
-	
-	@Column(name = "type")
-	private String type;
-
-	@Column(name = "critical_report")
-	private Character criticalReport;
-
-	@Column(name = "whatsapp_template_master_id")
-	private Integer whatsAppTemplateMasterId;
-
 	public Integer getSmsUtilityId() {
 		return smsUtilityId;
 	}
@@ -146,14 +124,6 @@ public class SmsUtilityConfiguration implements Serializable {
 
 	public Integer getTriggerId() {
 		return triggerId;
-	}
-
-	public String getUserDefinedMail() {
-		return userDefinedMail;
-	}
-
-	public void setUserDefinedMail(String userDefinedMail) {
-		this.userDefinedMail = userDefinedMail;
 	}
 
 	public void setTriggerId(Integer triggerId) {
@@ -254,45 +224,5 @@ public class SmsUtilityConfiguration implements Serializable {
 
 	public void setMailSubject(String mailSubject) {
 		this.mailSubject = mailSubject;
-	}
-
-	public Character getIsWhatsappSend() {
-		return isWhatsappSend;
-	}
-
-	public void setIsWhatsappSend(Character isWhatsappSend) {
-		this.isWhatsappSend = isWhatsappSend;
-	}
-	
-	public Character getIsSMSSend() {
-		return isSMSSend;
-	}
-
-	public void setIsSMSSend(Character isSMSSend) {
-		this.isSMSSend = isSMSSend;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Character getCriticalReport() {
-		return criticalReport;
-	}
-
-	public void setCriticalReport(Character criticalReport) {
-		this.criticalReport = criticalReport;
-	}
-
-	public Integer getWhatsAppTemplateMasterId() {
-		return whatsAppTemplateMasterId;
-	}
-
-	public void setWhatsAppTemplateMasterId(Integer whatsAppTemplateMasterId) {
-		this.whatsAppTemplateMasterId = whatsAppTemplateMasterId;
 	}
 }

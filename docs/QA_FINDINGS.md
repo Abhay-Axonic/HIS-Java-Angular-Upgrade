@@ -1948,3 +1948,41 @@ parses; 15/15.
 
 - **mlc_no functional gap (MedicoLeagal):** the field held the ER encounter's generated number — `UnknownPatientRegistrationServiceImpl:201` generated it (`getGeneratedNo(0, unitId, ERENCOUNTER)`) and set it immediately before `saveMedicoLegalDetails` — but `mlc_no` never existed in the DDL or the live table, so the value was dropped at the INSERT and persisted nowhere. The ERENCOUNTER constant has exactly one consumer (that set call), and t_encounter_master's own encounter_number is a different counter. Removed with BR-183 (the phantom had to go); the intent — persist the ER encounter number against the medicolegal record — is recorded here as never having worked, so the gap is visible rather than silent.
 - **medall_service_id consumer gap (ServiceMaster):** the medall is a partner integration family (MedallRequestResponseDto/MedallRequestResponseDetails, ReferralMaster medall fields, the LabSample/Radiology/ServiceSearch DTOs). Eight JS controllers (nursingCoverSheet, dayCareNurshingCoversheet, erNursingCoverSheet, IPDCoverSheet, phlebotomyWorkList, postController, IPDChargesController, newOPDBillingController) read `$item.medallServiceId` and re-send it in the order payload (`newArr.medallServiceId = ...`) — the order-to-medall-service linkage. The column never existed in any table (DDL 0 hits, live DB 0 tables), so every query selecting it failed outright and the consumers received nothing. Removed with BR-183; the intended linkage and its never-worked state are recorded here for the partner workstream. The full blast radius found during the removal: FIVE named-query references (UnitServiceMapper x2, LabSampleMaster x3 — the fifth, in LabSampleMaster, surfaced only when the session-factory's named-query validation failed the boot) plus THREE raw-SQL references (MedallRequestResponseDaoImpl x1, InvestigationDAOImpl x2) — all removed. The LIS phlebotomy worklist's runtime search additionally returns HIS-400 on the same payload the app's own frontend sends (SearchCommonDto binding) — a separate pre-existing class, recorded for the LIS workstream.
+
+## QF-2026-08-07-K — Track A initial bundle 38.81 kB over the 500 kB budget (2026-08-07, owner-directed note)
+
+The first production AOT build of the rebuilt app (ng build --configuration production, serviceMaster screen batch) emitted the initial bundle 38.81 kB over the configured 500 kB budget warning. This is expected to GROW as screens are added (each routed screen adds its chunk; the initial bundle carries the shell, shared components, and the core services). Owner-directed note: someone should decide whether to raise the budget or split the bundle before it becomes a real problem — no action taken. (Other pre-existing build warnings, none belonging to the new screen after the DatePipe fix: mangled legacy bootstrap.min.css — ":not (" with a space, a broken minification; missing font-awesome stylesheet path; moment not being ESM.)
+
+## QF-2026-08-07-L — dev specialities unlinked to general ledger; GET_SPECIALITY_LIST INNER JOIN drops them (empty department dropdown)
+
+CONDITION: `/adt/getSpecialityList` (POST {organizationId, unitId}) returns
+`{"status":"success", "listObject":[]}` in the dev environment even though the
+data exists. Two org-1 specialities (General Medicine, Orthopedics, status 'A')
+sit in `doctor.m_speciality_master` and both are mapped to unit 1 in
+`public.t_unit_speciality_mapper` — but both have **NULL `general_ledger_id`**,
+and the named query `GET_SPECIALITY_LIST` (SpecialityMaster.java:59-78) does
+`INNER JOIN public.m_general_ledger_master ledgerMster ON
+specialityMaster.general_ledger_id = ledgerMster.general_ledger_id`, which
+drops any speciality without a ledger link. Verified live: the browser-level
+response body for the app's on-load call is exactly that empty success envelope.
+
+USER IMPACT (Track A serviceMaster): Choose Department / Choose Sub Department
+render blank. The call SUCCEEDS with zero rows — no error exists, so the
+load-error banner correctly does not fire. An empty dropdown means "no data" and
+"load failed" identically to a user; this finding is one instance of that class
+(see the empty-state work: three distinguishable states — loaded-with-data,
+loaded-empty, failed-to-load).
+
+LEGACY PARITY: confirmed identical by live click-through. Headless legacy run at
+`http://localhost:8080/#/serviceMaster` (admin login, org 1/unit 1): the
+`masterObj.specialityId` and `masterObj.subSpecialityId` selects each render
+exactly one blank placeholder option (count:1, text:[""]). Same endpoint
+(GETSPECIALITY = "/adt/getSpecialityList"), same backend method
+(SpecialityMasterDaoImpl.getSpecialityMasterList -> same named query), same data
+(NULL ledger ids). The rebuild is behaviorally identical to legacy here — the
+condition is data, not a rebuild defect.
+
+DELIBERATE NON-FIX: per owner directive 2026-08-08, the ledger linkage is NOT
+seeded. Seeding would hide the condition the empty-state work is meant to make
+visible; the empty state must be observed rendering correctly on unlinked data
+before any data change. Revisit after the empty-state pattern lands.

@@ -25,7 +25,8 @@ import sys
 from pathlib import Path
 
 HELD_MARKERS = re.compile(r"\b(held|HELD|pending merge|not merged|on branch|Pending\b)", re.IGNORECASE)
-MERGED_MARKERS = re.compile(r"\bmerged", re.IGNORECASE)
+FIXED_MARKERS = re.compile(r"\bfixed\b", re.IGNORECASE)
+MERGED_MARKERS = re.compile(r"\bmerged\b", re.IGNORECASE)
 HASH_RE = re.compile(r"\b[0-9a-f]{7,40}\b")
 BR_LINE_RE = re.compile(r"^BR-(\d+)\s*\|")
 
@@ -94,6 +95,7 @@ def main():
         # contain both "Merged" and a historical "previously said Held" note.
         pos_merged = MERGED_MARKERS.search(status)
         pos_held = HELD_MARKERS.search(status)
+        pos_fixed = FIXED_MARKERS.search(status)
         if pos_held is not None and (pos_merged is None or pos_held.start() < pos_merged.start()):
             # Assertion A: held => fix commits must NOT be ancestors of main
             bad = [c for c in commits if is_ancestor_of_main(repo, c, args.branch)]
@@ -103,6 +105,19 @@ def main():
                       f"{sorted(bad)} ARE ancestors of main — ledger lags reality (line {lineno})")
             else:
                 print(f"[PASS] BR-{br}: held, cited commits {sorted(commits)} not in main")
+        elif pos_fixed is not None and pos_merged is None:
+            # Assertion A-variant: FIXED without a merged marker = fixed-but-unmerged =>
+            # cited commits must NOT be ancestors of main yet (a FIXED line whose commit
+            # already landed in main was flipped before the merge — the premature-flip
+            # failure). Lines carrying BOTH "fixed" and "merged" (logged-then-merged
+            # histories like BR-171/177) fall through to the merged branch below.
+            bad = [c for c in commits if is_ancestor_of_main(repo, c, args.branch)]
+            if bad:
+                ok = False
+                print(f"[FAIL] BR-{br}: marked '{status.strip()}' but cited commit(s) "
+                      f"{sorted(bad)} ARE ancestors of main — flipped before the merge landed (line {lineno})")
+            else:
+                print(f"[PASS] BR-{br}: fixed, cited commits {sorted(commits)} not in main (pre-merge state)")
         else:
             # Assertion B: merged => every cited hash must be an ancestor of main
             bad = [c for c in commits if not is_ancestor_of_main(repo, c, args.branch)]
