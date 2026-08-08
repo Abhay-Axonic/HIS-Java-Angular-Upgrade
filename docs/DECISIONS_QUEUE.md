@@ -79,3 +79,16 @@ per the mandate.
   EVIDENCE (from the campaign's capture record): a valid save ALWAYS carries isSMSSend='Y' (auto-set, smsUtilityConfigurationController.js:244-246), and/or isWhatsappSend='Y' + whatsAppTemplateMasterId (when the whatsapp channel is on), type (required select, mail-utility-configuration.html:448), and userDefinedMail (comma-joined recipient list — any recipient makes it non-empty, :294-303 -> :322 sms / :230 mail). ALL are mandatory-on-valid-save phantoms with NO backing column — every valid save of these screens has silently dropped the core configuration in his_local, and the guard (final shape: critical_report alone) cannot cover them without blocking the screens.
   TRACK-A NOTE (rebuild-path item, not just backend): new/src/app/features/sms-configuration/ (the rebuilt screen — models.ts :20-27,:57 + html :34-56) is a REBUILT screen whose core function cannot persist — the rebuild inherits the never-persisted feature; the DQ resolution gates the rebuild path for this screen too. Flagged for Track A's screen inventory (ANGULAR_PHASE0_SCREEN_INVENTORY.md) at rebuild time.
   NOTE (queue hygiene): this entry collides with the pre-existing DQ-2026-08-08-004 at line 56 ("Batch 28 gating") — the numbering was reused across campaigns; renumbering deferred (the ledger is append-only this cycle).
+
+## Autonomous-run queue (carried every cycle — do not let these be absorbed)
+- **Q1 (TOP — blocks the proof chain):** FULL redeploy from merged main + owner click-through. OWNER-BLOCKED (browser login + token). The redeploy itself was executed (2026-08-08, cycle-2 of the prior run — boot 17.9s, all token-free checks PASS) BUT the two click-through checks are the owner's: (a) mailConfiguration save with criticalReport ticked must produce a growl ERROR, not a success toast (the final guard's rejection path); (b) the serviceMaster screen must load with populated dropdowns. The six verify_master_screen harnesses also need a fresh token (the established remint flow prints TOKEN-OK but does not expose the token value — a flow change would be needed, owner's call).
+- **Q2** DQ-2026-08-08-004: sms/mail channel gap — schema-add vs screen decommission. Control removal WITHDRAWN (leaves a shell). Phase-2/3.
+- **Q3** DQ-001: 35 phantom tables, per-case classification (CCAvenue pulled out — Q4).
+- **Q4** BR-184 CCAvenue: schema-add vs path removal (DQ-2026-08-08-001).
+- **Q5** module-1071 role (unblocks the held m1 branch).
+- **Q6** MRD 1068-1070 privilege data gap.
+- **Q7** 134 of 181 BR lines have no parseable hash — the ledger verifies ~a quarter of itself.
+- **Q8** ledger script wording (QF-2026-08-08-M — "flipped before the merge landed" reads misleading in the post-merge direction).
+- **Q9** t_message_queue @Scheduled task fires against a phantom table (DQ-001 class).
+- **Q10** deriver extension thresholds (after the back-test — the owner's call; scope fixed at 40+220).
+- **Q11** serviceMaster open divergences: the save two-step confirm popup + the ledger toString formatting (flagged in 288d0bb1, not in QA_FINDINGS — BR-186 carries them).
