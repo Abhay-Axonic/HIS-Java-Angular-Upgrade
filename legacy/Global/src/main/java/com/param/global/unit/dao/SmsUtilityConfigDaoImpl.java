@@ -45,18 +45,21 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 	public Response saveSmsUtilityConfig(SmsUtilityConfigurationDto smsUtilityConfigurationDto)
 			throws ApplicationException {
 		try {
-			// DQ-2026-08-08-003 guard: is_sms_send, is_whatsapp_send, critical_report,
-			// user_defined_mail, whatsapp_template_master_id and type have NO backing column
-			// (DQ-003 batch 1 removed the mappings; the columns exist in no schema).
-			// Reject meaningful values loudly instead of silently dropping them. 'N'/null pass.
-			if ((smsUtilityConfigurationDto.getIsSMSSend() != null && !"N".equals(smsUtilityConfigurationDto.getIsSMSSend()))
-					|| (smsUtilityConfigurationDto.getIsWhatsappSend() != null && !"N".equals(smsUtilityConfigurationDto.getIsWhatsappSend()))
-					|| (smsUtilityConfigurationDto.getCriticalReport() != null && !"N".equals(String.valueOf(smsUtilityConfigurationDto.getCriticalReport())))
+			// DQ-2026-08-08-003 guard (corrected 2026-08-08): the screen's validation
+			// auto-defaults isSmsSend='Y' when both channels are 'N' (smsUtilityConfiguration
+			// Controller.js:244-246) and requires a whatsapp template id when the whatsapp
+			// channel is on — so isSMSSend/isWhatsappSend/whatsAppTemplateMasterId are
+			// ALWAYS meaningful on a valid save and cannot be guard-checked without blocking
+			// the screen (empirically confirmed: untouched sms form sends isSMSSend='Y').
+			// Their silent drop is a screen-level functional gap (no backing column exists;
+			// DQ-2026-08-08-004 — schema add or screen removal is the owner's decision).
+			// The NON-mandatory phantoms ARE guard-checked: critical_report, user_defined_mail
+			// and type fire only on user-set values. 'N'/null pass.
+			if ((smsUtilityConfigurationDto.getCriticalReport() != null && !"N".equals(String.valueOf(smsUtilityConfigurationDto.getCriticalReport())))
 					|| (smsUtilityConfigurationDto.getUserDefinedMail() != null && !smsUtilityConfigurationDto.getUserDefinedMail().trim().isEmpty())
-					|| smsUtilityConfigurationDto.getWhatsAppTemplateMasterId() != null
 					|| (smsUtilityConfigurationDto.getType() != null && !smsUtilityConfigurationDto.getType().trim().isEmpty())) {
 				return new Response<>(ERROR, ERROR_CODE,
-						"Cannot save: SMS/WhatsApp send flags, critical report, user-defined mail, WhatsApp template and type have no backing column. Deselect them to save the configuration.",
+						"Cannot save: critical report, user-defined mail and type have no backing column. Deselect them to save the configuration.",
 						null, null);
 			}
 			Integer id=null;
