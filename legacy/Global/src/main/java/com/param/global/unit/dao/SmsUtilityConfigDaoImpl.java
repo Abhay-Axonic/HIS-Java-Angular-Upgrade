@@ -45,23 +45,24 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 	public Response saveSmsUtilityConfig(SmsUtilityConfigurationDto smsUtilityConfigurationDto)
 			throws ApplicationException {
 		try {
-			// DQ-2026-08-08-003 guard (corrected twice, 2026-08-08): three phantom-value
-			// families are REQUIRED by the screens on a valid save and cannot be guard-checked
-			// without blocking them (empirically confirmed): (a) isSMSSend is auto-defaulted
-			// to 'Y' by the sms screen's own validation when both channels are 'N'
-			// (smsUtilityConfigurationController.js:244-246 — untouched form sends isSMSSend='Y');
-			// (b) isWhatsappSend + whatsAppTemplateMasterId are required when the whatsapp
-			// channel is on (both screens); (c) type is a REQUIRED select on the mail screen
-			// (mail-utility-configuration.html:448 — Daily/Monthly/Weekly/Yearly). Their silent
-			// drop is a screen-level functional gap (DQ-2026-08-08-004 — schema add or control
-			// removal is the owner's decision; the owner chose control removal on 2026-08-08).
-			// The genuinely-optional phantoms ARE guard-checked: critical_report (mail screen
-			// checkbox, default 'N') and user_defined_mail (both screens' address lists, empty
-			// by default) fire only on user-set values. 'N'/null/empty pass.
-			if ((smsUtilityConfigurationDto.getCriticalReport() != null && !"N".equals(String.valueOf(smsUtilityConfigurationDto.getCriticalReport())))
-					|| (smsUtilityConfigurationDto.getUserDefinedMail() != null && !smsUtilityConfigurationDto.getUserDefinedMail().trim().isEmpty())) {
+			// DQ-2026-08-08-003 guard (final shape, corrected 3x 2026-08-08): every phantom
+			// value EXCEPT critical_report is mandatory-on-valid-save and cannot be guard-checked
+			// without blocking the screens (empirically confirmed, payload-trace level):
+			// (a) isSMSSend is auto-defaulted to 'Y' by the sms screen's own validation when
+			// both channels are 'N' (smsUtilityConfigurationController.js:244-246); (b)
+			// isWhatsappSend + whatsAppTemplateMasterId are required when the whatsapp channel
+			// is on (both screens); (c) type is a REQUIRED select on the mail screen
+			// (mail-utility-configuration.html:448); (d) userDefinedMail is the comma-joined
+			// RECIPIENT LIST (smsUtilityConfigurationController.js:294-303 -> payload :322;
+			// mailUtilityConfigurationController.js payload :230) — any recipient added makes
+			// it non-empty. Their silent drop is a screen-level functional gap (BR-185,
+			// resolution gated on DQ-2026-08-08-004: schema-add vs screen decommission,
+			// Phase-2/3 scope — the owner's call). The ONE genuinely-optional phantom IS
+			// guard-checked: critical_report (mail screen checkbox :99, default 'N') fires
+			// only when the user explicitly sets it. 'N'/null pass.
+			if (smsUtilityConfigurationDto.getCriticalReport() != null && !"N".equals(String.valueOf(smsUtilityConfigurationDto.getCriticalReport()))) {
 				return new Response<>(ERROR, ERROR_CODE,
-						"Cannot save: critical report and user-defined mail have no backing column. Deselect them to save the configuration.",
+						"Cannot save: critical report has no backing column. Deselect it to save the configuration.",
 						null, null);
 			}
 			Integer id=null;
