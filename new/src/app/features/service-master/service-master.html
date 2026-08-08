@@ -1,4 +1,7 @@
 <div class="service-master-page">
+  @if (loadError()) {
+    <div class="load-error-banner">{{ loadError() }}</div>
+  }
   <fieldset>
     <form #serviceMasterForm="ngForm" novalidate>
       <div class="row form-row">

@@ -78,6 +78,18 @@ export class ServiceMaster {
   ledgerList = signal<GeneralLedgerMaster[]>([]);
   itemList = signal<ItemMaster[]>([]);
 
+  // ---- load-failure state (Track A: a failed load must never render as an
+  // empty dropdown — a clinician cannot distinguish "no departments configured"
+  // from "the call failed"). Each on-load call sets this on error; the template
+  // shows the banner instead of a blank select. ---- 
+  loadError = signal<string | null>(null);
+
+  private setLoadError(what: string, err: unknown): void {
+    const status = (err as { status?: number } | null)?.status;
+    const reason = status ? `HTTP ${status}` : 'network error';
+    this.loadError.set(`${what} failed to load (${reason}).`);
+  }
+
   // ---- form state (mirrors $scope.masterObj / saveBtnFlag / updateBtnFlag) ----
   record = signal<ServiceMasterForm>(emptyServiceMaster(this.userId, this.organizationId));
   saveMode = signal(true); // true = saveBtnFlag, false = updateBtnFlag
@@ -111,30 +123,45 @@ export class ServiceMaster {
 
   // ---- init: speciality + ledger dropdowns (controller.js:104-157) ----
   private init(): void {
-    this.api.getSpecialityList(this.organizationId, this.unitId).subscribe((res) => {
-      if (res.status === 'success') {
-        this.specialityMasterList.set(res.listObject ?? []);
-      }
+    this.api.getSpecialityList(this.organizationId, this.unitId).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.specialityMasterList.set(res.listObject ?? []);
+          this.loadError.set(null);
+        }
+      },
+      error: (err) => this.setLoadError('Department list', err),
     });
-    this.api.getGeneralLedgerList(this.organizationId).subscribe((res) => {
-      if (res.status === 'success') {
-        this.ledgerList.set(res.listObject ?? []);
-      }
+    this.api.getGeneralLedgerList(this.organizationId).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.ledgerList.set(res.listObject ?? []);
+          this.loadError.set(null);
+        }
+      },
+      error: (err) => this.setLoadError('General ledger list', err),
     });
   }
 
   // ---- grid load (controller.js:374-429) ----
   loadList(): void {
     const offset = (this.currentPage() - 1) * this.pageSize();
-    this.api.getList(this.organizationId, offset, this.pageSize()).subscribe((res) => {
-      if (res.status === 'success') {
-        this.list.set(res.listObject ?? []);
-      }
+    this.api.getList(this.organizationId, offset, this.pageSize()).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.list.set(res.listObject ?? []);
+          this.loadError.set(null);
+        }
+      },
+      error: (err) => this.setLoadError('Service list', err),
     });
-    this.api.getCount(this.organizationId).subscribe((res) => {
-      if (res.status === 'success' && typeof res.object === 'number') {
-        this.totalCount.set(res.object);
-      }
+    this.api.getCount(this.organizationId).subscribe({
+      next: (res) => {
+        if (res.status === 'success' && typeof res.object === 'number') {
+          this.totalCount.set(res.object);
+        }
+      },
+      error: (err) => this.setLoadError('Service count', err),
     });
   }
 
@@ -172,10 +199,14 @@ export class ServiceMaster {
     const sid = this.record().specialityId;
     this.subSpecialityMasterList.set([]);
     if (sid != null) {
-      this.api.getSubSpeciality(this.organizationId, sid).subscribe((res) => {
-        if (res.status === 'success') {
-          this.subSpecialityMasterList.set(res.listObject ?? []);
-        }
+      this.api.getSubSpeciality(this.organizationId, sid).subscribe({
+        next: (res) => {
+          if (res.status === 'success') {
+            this.subSpecialityMasterList.set(res.listObject ?? []);
+            this.loadError.set(null);
+          }
+        },
+        error: (err) => this.setLoadError('Sub-department list', err),
       });
     }
   }
