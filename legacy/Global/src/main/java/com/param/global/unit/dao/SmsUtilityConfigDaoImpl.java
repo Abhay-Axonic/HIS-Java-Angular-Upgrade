@@ -45,21 +45,23 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 	public Response saveSmsUtilityConfig(SmsUtilityConfigurationDto smsUtilityConfigurationDto)
 			throws ApplicationException {
 		try {
-			// DQ-2026-08-08-003 guard (corrected 2026-08-08): the screen's validation
-			// auto-defaults isSmsSend='Y' when both channels are 'N' (smsUtilityConfiguration
-			// Controller.js:244-246) and requires a whatsapp template id when the whatsapp
-			// channel is on — so isSMSSend/isWhatsappSend/whatsAppTemplateMasterId are
-			// ALWAYS meaningful on a valid save and cannot be guard-checked without blocking
-			// the screen (empirically confirmed: untouched sms form sends isSMSSend='Y').
-			// Their silent drop is a screen-level functional gap (no backing column exists;
-			// DQ-2026-08-08-004 — schema add or screen removal is the owner's decision).
-			// The NON-mandatory phantoms ARE guard-checked: critical_report, user_defined_mail
-			// and type fire only on user-set values. 'N'/null pass.
+			// DQ-2026-08-08-003 guard (corrected twice, 2026-08-08): three phantom-value
+			// families are REQUIRED by the screens on a valid save and cannot be guard-checked
+			// without blocking them (empirically confirmed): (a) isSMSSend is auto-defaulted
+			// to 'Y' by the sms screen's own validation when both channels are 'N'
+			// (smsUtilityConfigurationController.js:244-246 — untouched form sends isSMSSend='Y');
+			// (b) isWhatsappSend + whatsAppTemplateMasterId are required when the whatsapp
+			// channel is on (both screens); (c) type is a REQUIRED select on the mail screen
+			// (mail-utility-configuration.html:448 — Daily/Monthly/Weekly/Yearly). Their silent
+			// drop is a screen-level functional gap (DQ-2026-08-08-004 — schema add or control
+			// removal is the owner's decision; the owner chose control removal on 2026-08-08).
+			// The genuinely-optional phantoms ARE guard-checked: critical_report (mail screen
+			// checkbox, default 'N') and user_defined_mail (both screens' address lists, empty
+			// by default) fire only on user-set values. 'N'/null/empty pass.
 			if ((smsUtilityConfigurationDto.getCriticalReport() != null && !"N".equals(String.valueOf(smsUtilityConfigurationDto.getCriticalReport())))
-					|| (smsUtilityConfigurationDto.getUserDefinedMail() != null && !smsUtilityConfigurationDto.getUserDefinedMail().trim().isEmpty())
-					|| (smsUtilityConfigurationDto.getType() != null && !smsUtilityConfigurationDto.getType().trim().isEmpty())) {
+					|| (smsUtilityConfigurationDto.getUserDefinedMail() != null && !smsUtilityConfigurationDto.getUserDefinedMail().trim().isEmpty())) {
 				return new Response<>(ERROR, ERROR_CODE,
-						"Cannot save: critical report, user-defined mail and type have no backing column. Deselect them to save the configuration.",
+						"Cannot save: critical report and user-defined mail have no backing column. Deselect them to save the configuration.",
 						null, null);
 			}
 			Integer id=null;
