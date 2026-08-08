@@ -59,7 +59,7 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
  */
 @Component({
   selector: 'app-service-master',
-  imports: [FormsModule, StatusToggle, DatePipe],
+  imports: [FormsModule, StatusToggle],
   templateUrl: './service-master.html',
   styleUrl: './service-master.scss',
 })
