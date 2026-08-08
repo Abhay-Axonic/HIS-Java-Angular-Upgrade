@@ -61,12 +61,6 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 			if(smsUtilityConfigurationDto.getIsEmail()!=null) {
 				stringQuery.append(" AND suc.is_email = " + smsUtilityConfigurationDto.getIsEmail() + " ");
 			}
-			if(smsUtilityConfigurationDto.getIsEmail()!=null) {
-				stringQuery.append(" AND suc.is_SMS_Send = '" + smsUtilityConfigurationDto.getIsSMSSend() + "' ");
-			}
-			if(smsUtilityConfigurationDto.getIsEmail()!=null) {
-				stringQuery.append(" AND suc.is_whatsapp_send = '" + smsUtilityConfigurationDto.getIsWhatsappSend() + "' ");
-			}
 			Query actualQuery = sessionFactory.getCurrentSession().createSQLQuery(stringQuery.toString());
 			SmsUtilityConfigurationDto smsUtilityConfigDto = (SmsUtilityConfigurationDto) actualQuery
 					.setParameter("organizationId", smsUtilityConfigurationDto.getOrgId())
@@ -94,12 +88,6 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 			smsUtilityConfiguration.setScheduleTypeId(smsUtilityConfigurationDto.getScheduleTypeId());
 			smsUtilityConfiguration.setIsEmail(smsUtilityConfigurationDto.getIsEmail()!= null ? smsUtilityConfigurationDto.getIsEmail() : false);
 			smsUtilityConfiguration.setMailSubject(smsUtilityConfigurationDto.getMailSubject()!=null ? smsUtilityConfigurationDto.getMailSubject() : null);
-			smsUtilityConfiguration.setIsWhatsappSend(smsUtilityConfigurationDto.getIsWhatsappSend());
-			smsUtilityConfiguration.setCriticalReport(smsUtilityConfigurationDto.getCriticalReport()!= null ? smsUtilityConfigurationDto.getCriticalReport(): null);
-			smsUtilityConfiguration.setIsSMSSend(smsUtilityConfigurationDto.getIsSMSSend());
-			smsUtilityConfiguration.setType(smsUtilityConfigurationDto.getType());
-			smsUtilityConfiguration.setUserDefinedMail(smsUtilityConfigurationDto.getUserDefinedMail() != null ?  smsUtilityConfigurationDto.getUserDefinedMail() : null);
-			smsUtilityConfiguration.setWhatsAppTemplateMasterId(smsUtilityConfigurationDto.getWhatsAppTemplateMasterId());
 			if(smsUtilityConfiguration.getSmsUtilityId()!=null && smsUtilityConfiguration.getSmsUtilityId()>0)
 				sessionFactory.getCurrentSession().update(smsUtilityConfiguration);
 			else
@@ -209,17 +197,11 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 						+ "  	suc.template_description as \"templateDescription\", "
 						+ " 	suc.category_id as \"categoryId\", "
 						+ " 	cm.category_name as \"categoryName\", "
-						+ "    suc.user_defined_mail as \"userDefinedMail\", "
 						+ "  	tm.trigger_name as \"triggerName\", "
-						+ "    suc.is_whatsapp_send as \"isWhatsappSend\", "
-						+ "    suc.is_SMS_send as \"isSMSSend\", "
-						+ "    suc.whatsapp_template_master_id as \"whatsAppTemplateMasterId\", "
-						+ "    wtm.template_desc as \"whatsAppTemplateName\", "
 						+ "    'abc' as \"senderId\" "
 						+ "  	FROM public.m_sms_utility_cofiguration suc "
 						+ "  	join public.m_sms_trigger_master tm on suc.trigger_id =tm.trigger_id "
 						+ "  	join public.m_sms_category_master cm on suc.category_id=cm.category_id "
-						+ "     left join public.m_whatsapp_template_master wtm on wtm.whatsapp_template_master_id = suc.whatsapp_template_master_id "
 						+ "  	where suc.trigger_id = :triggerId "
 						+ "	AND suc.status='A' "
 						+ "	AND suc.schedule_type_id=2 "
@@ -236,13 +218,7 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 						+"  	suc.template_description as \"templateDescription\", "
 						+" 	suc.category_id as \"categoryId\", "
 						+" 	cm.category_name as \"categoryName\","
-						+ "    suc.user_defined_mail as \"userDefinedMail\","
 						+"  	tm.trigger_name as \"triggerName\","
-						+ "    suc.is_whatsapp_send as \"isWhatsappSend\","
-						+ "    suc.is_SMS_send as \"isSMSSend\","
-						+ "    suc.whatsapp_template_master_id as \"whatsAppTemplateMasterId\", "
-						+ "    wtm.template_desc as \"whatsAppTemplateName\", "
-						+ "    abc.whats_app_option as \"whatsAppOption\","
 						+ " 	tm.rpt_report as \"rptReport\", "
 						+ " ("
 						+ "  select "
@@ -279,9 +255,8 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 						+"  	FROM public.m_sms_utility_cofiguration suc "
 						+"  	join public.m_sms_trigger_master tm on suc.trigger_id =tm.trigger_id "
 						+"  	join public.m_sms_category_master cm on suc.category_id=cm.category_id "
-						+"  	join t_unit_application_billing_configuration abc on abc.unit_id=suc.unit_id "
-						+"     left join public.m_whatsapp_template_master wtm on wtm.whatsapp_template_master_id = suc.whatsapp_template_master_id "
-						+"  	where  suc.unit_id = :unitId "
+						+ "  	join t_unit_application_billing_configuration abc on abc.unit_id=suc.unit_id "
+						+ "  	where  suc.unit_id = :unitId "
 						+"  	AND suc.trigger_id = :triggerId "
 						+ "	AND suc.status='A' "
 						+ "	AND suc.schedule_type_id=1 "
@@ -457,11 +432,8 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 						+ "  	suc.template_description as \"templateDescription\", "
 						+ " 	suc.category_id as \"categoryId\", "
 						+ " 	cm.category_name as \"categoryName\", "
-						+ "    suc.user_defined_mail as \"userDefinedMail\", "
 						+ "    suc.mail_subject  as \"mailSubject\", "
 						+ "  	tm.trigger_name as \"triggerName\", "
-						+ "    suc.is_whatsapp_send as \"isWhatsappSend\", "
-						+ "    suc.is_SMS_send as \"isSMSSend\", "
 						+ "    'abc' as \"senderId\" "
 						+ "  	FROM public.m_sms_utility_cofiguration suc "
 						+ "  	join public.m_sms_trigger_master tm on suc.trigger_id =tm.trigger_id "
@@ -484,7 +456,6 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 					 + " 	suc.category_id as \"categoryId\", "
 					 + " 	suc.mail_subject as \"mailSubject\", "
 					 + " 	cm.category_name as \"categoryName\", "
-					 + "    suc.user_defined_mail as \"userDefinedMail\","
 					 + " 	tm.trigger_name as \"triggerName\", "
 					 + " 	tm.rpt_report as \"rptReport\", "
 					 + " 	tuabc.sender_id as \"senderId\", "
@@ -693,9 +664,6 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 					 + " where "
 					 + " doctor_id =:treatingDocId "
 					 + " limit 1) as \"treatingDrMobileNo\","
-					 + "suc.is_whatsapp_send as \"isWhatsappSend\","
-					 + "suc.critical_report as \"criticalReport\","
-					 + "suc.is_SMS_send as \"isSMSSend\","
 					 + "	tuabc.pdf_generation_url as \"pdfGenerationUrl\" "
 					 + " from "
 					 + " 	public.m_sms_utility_cofiguration suc "
@@ -948,22 +916,20 @@ try {
 					 + " 	msuc.template_description as \"templateDescription\", "
 					 + " 	msuc.category_id as \"categoryId\", "
 					 + " 	msuc.mail_subject as \"mailSubject\", "
-					 + "    msuc.user_defined_mail as \"userDefinedMail\","
 					 + " 	msuc.trigger_id as \"triggerId\", "
 					 + " 	mstm.trigger_name as \"triggerName\", "
 					 + " 	mstm.rpt_report as \"rptReport\", "
 					 + " 	mscm.category_name as \"categoryName\", "
 					 + " 	msuc.org_id as \"organizationId\" "
-					+ " From public.m_sms_utility_cofiguration msuc  "
+					 + " From public.m_sms_utility_cofiguration msuc  "
 					 + " INNER JOIN public.m_sms_trigger_master mstm on mstm.trigger_id=msuc.trigger_id "
-					+ " INNER JOIN public.m_sms_category_master mscm on mscm.category_id=msuc.category_id "
-					 + " where  msuc.unit_id =:unitId and msuc.type=:execution " ;
-			 
-			List<SmsUtilityConfigInfoDto> smsUtilityConfigurationDto=sessionFactory.getCurrentSession()
-				.createSQLQuery(query)
-				.setParameter("unitId", unitId)
-				.setString("execution", execution)
-				.setResultTransformer(Transformers.aliasToBean(SmsUtilityConfigInfoDto.class)).list();
+					 + " INNER JOIN public.m_sms_category_master mscm on mscm.category_id=msuc.category_id "
+					 + " where  msuc.unit_id =:unitId " ;
+			
+					 List<SmsUtilityConfigInfoDto> smsUtilityConfigurationDto=sessionFactory.getCurrentSession()
+					 .createSQLQuery(query)
+					 .setParameter("unitId", unitId)
+					 .setResultTransformer(Transformers.aliasToBean(SmsUtilityConfigInfoDto.class)).list();
 		return new Response(SUCCESS, SUCCESS_CODE, null, smsUtilityConfigurationDto, null);
 		} catch (HibernateException he) {
 		logger.error("getMailUtilityByUnitId failed", he);
