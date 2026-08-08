@@ -45,6 +45,20 @@ public class SmsUtilityConfigDaoImpl extends GenericDao<SmsUtilityConfiguration,
 	public Response saveSmsUtilityConfig(SmsUtilityConfigurationDto smsUtilityConfigurationDto)
 			throws ApplicationException {
 		try {
+			// DQ-2026-08-08-003 guard: is_sms_send, is_whatsapp_send, critical_report,
+			// user_defined_mail, whatsapp_template_master_id and type have NO backing column
+			// (DQ-003 batch 1 removed the mappings; the columns exist in no schema).
+			// Reject meaningful values loudly instead of silently dropping them. 'N'/null pass.
+			if ((smsUtilityConfigurationDto.getIsSMSSend() != null && !"N".equals(smsUtilityConfigurationDto.getIsSMSSend()))
+					|| (smsUtilityConfigurationDto.getIsWhatsappSend() != null && !"N".equals(smsUtilityConfigurationDto.getIsWhatsappSend()))
+					|| (smsUtilityConfigurationDto.getCriticalReport() != null && !"N".equals(String.valueOf(smsUtilityConfigurationDto.getCriticalReport())))
+					|| (smsUtilityConfigurationDto.getUserDefinedMail() != null && !smsUtilityConfigurationDto.getUserDefinedMail().trim().isEmpty())
+					|| smsUtilityConfigurationDto.getWhatsAppTemplateMasterId() != null
+					|| (smsUtilityConfigurationDto.getType() != null && !smsUtilityConfigurationDto.getType().trim().isEmpty())) {
+				return new Response<>(ERROR, ERROR_CODE,
+						"Cannot save: SMS/WhatsApp send flags, critical report, user-defined mail, WhatsApp template and type have no backing column. Deselect them to save the configuration.",
+						null, null);
+			}
 			Integer id=null;
 //			Session session = sessionFactory.getCurrentSession();
 			StringBuilder stringQuery = new StringBuilder(
