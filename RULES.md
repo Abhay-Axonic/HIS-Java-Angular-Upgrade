@@ -120,3 +120,23 @@ A screen failing checks 1 or 2 is DEAD — do not extract its contract, do not w
 
 ## REACHABILITY GATE — THE LIMIT OF ITS USE (owner directive 2026-08-08, added to the standing rule)
 The gate is a REJECTION tool, never a confirmation tool. Its DEAD-side output (the app.js registration absence — a deterministic find) is reliable; its LIVE-side output is NOT (the bulk run failed its own control on the live side: the inventory-parse produced junk template anchors and the name-matching could not substitute for the actual state registrations; the resulting counts — LIVE 693 / MENU'D-UNROUTED 316 / registered-unmenued 395 / corrected denominator ~560 — are UNVALIDATED estimates and must not be cited as figures). A screen the gate calls LIVE must be HAND-CONFIRMED (the state's registration read from app.js + the menu node read from the privilege registry) before its contract is extracted. The gate may reject a candidate as dead; it may never qualify one as live.
+
+## STATIC-SHELL REBUILD RULE (owner-approved 2026-08-09, standing — screens 4 & 5)
+
+When a legacy screen is a DEAD SHELL — registered in app.js and present in the
+privilege tree, but its template has no (or only decorative) ng-bindings and no
+API calls, and its controller is the generic MasterController with no
+screen-specific logic — the rebuild IMPLEMENTS the screen rather than
+reproducing the shell, PROVIDED real backend endpoints exist for its fields.
+Mandatory obligations in every such rebuild:
+1. Every behaviour the rebuild ADDS that the legacy shell never had must be
+   listed in the screen README's divergences section (dropdowns wired, grid
+   populated, toggles/edits active, search filtering).
+2. Every endpoint that is MISSING (e.g. a save path that does not exist) must
+   be reported honestly in the UI (an error toast naming the gap), never a
+   silent dead button.
+3. The static-shell state itself is a legacy DEFECT — log it as a QA finding
+   and queue the owner decision for the missing backend path.
+4. The dev-data honesty standard still applies: empty data = "not erroring,
+   usefulness UNVERIFIED", never "working"; nothing is seeded to look better.
+
