@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'surgeryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 487, title: 'Surgery Master' },
+        loadComponent: () =>
+          import('./features/surgery-master/surgery-master').then((m) => m.SurgeryMaster),
+      },
+      {
         path: 'allergyTypeMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 488, title: 'Allergy Type Master' },
