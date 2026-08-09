@@ -47,58 +47,6 @@ def load_credentials():
     return username, password
 
 
-def legacy_login(page, username, password):
-    page.goto(f'{LEGACY}/index.html', wait_until='load', timeout=30000)
-    page.wait_for_timeout(1500)
-    page.fill('#userName', username)
-    page.fill('#password', password)
-    page.locator('#password').blur()
-    page.wait_for_function(
-        "() => document.querySelectorAll('#organizationId option').length > 1",
-        timeout=10000,
-    )
-    page.select_option('#organizationId', '1')
-    try:
-        page.wait_for_function(
-            "() => document.querySelectorAll('#unitId option').length > 1",
-            timeout=15000,
-        )
-    except Exception:  # noqa: BLE001
-        raise RuntimeError('UNIT-DROPDOWN-NEVER-POPULATED')
-    unit_vals = page.evaluate(
-        "Array.from(document.querySelectorAll('#unitId option')).map(o => o.value)")
-    if not unit_vals or len(unit_vals) < 2:
-        page.wait_for_timeout(2000)
-        unit_vals = page.evaluate(
-            "Array.from(document.querySelectorAll('#unitId option')).map(o => o.value)")
-    if not unit_vals or len(unit_vals) < 2:
-        raise RuntimeError('login failed: unit dropdown empty')
-    page.select_option('#unitId', unit_vals[1])
-    page.click('input[type="submit"]')
-    page.wait_for_timeout(1500)
-    # SESSION-COLLISION is a FAILURE: an ambient session must not be ridden.
-    confirm_ok = page.locator('button:has-text("Ok")').first
-    try:
-        if confirm_ok.is_visible():
-            raise RuntimeError(
-                'SESSION-COLLISION: an existing session is present; the login '
-                'cannot assert fresh authentication')
-    except RuntimeError:
-        raise
-    except Exception:  # noqa: BLE001
-        pass
-    try:
-        page.wait_for_function(
-            "() => !!window.sessionStorage.getItem('token')",
-            timeout=20000,
-        )
-    except Exception:  # noqa: BLE001
-        raise RuntimeError('login failed: no token returned')
-    token = page.evaluate("sessionStorage.getItem('token')")
-    cookie = page.evaluate('document.cookie')
-    return token, cookie, unit_vals[1]
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('route')
@@ -107,6 +55,11 @@ def main():
     args = ap.parse_args()
     route = args.route if args.route.startswith('/') else f'/{args.route}'
     username, password = load_credentials()
+
+    # the single source of truth for minting: get_dev_token (never mint here —
+    # a second mint path would reintroduce the login-group limiter problem)
+    import get_dev_token as gdt
+    from get_dev_token import login as legacy_login
 
     console_errors, console_warnings = [], []
     bad_requests, html_as_json = [], []
