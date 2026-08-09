@@ -69,6 +69,39 @@ export class AddNewDrugRecall {
   saving = signal(false);
   showItemModal = signal(false);
   showDetailsFor = signal<DrugRecallItem | null>(null);
+  /** The add-item modal's selection state (the sweep fix: the modal was a dead-end — the hit click fetched batches but nothing added the line). */
+  selectedHit = signal<ItemSearchHit | null>(null);
+  selectedBatch = signal<BatchRecord | null>(null);
+  selectedQty = signal<number>(0);
+  selectedReason = signal('');
+
+  /**
+   * Client-side grid sort, reproduced from the legacy template's
+   * `orderBy:sortType:sortReverse` (add-new-drug-recall.html:114) on the
+   * itemDetailList — the legacy sorts itemCode/itemName/reason client-side.
+   * The rebuild's header clicks set the key and toggle the direction.
+   */
+  sortType = signal<'itemCode' | 'itemName' | 'reason'>('itemCode');
+  sortReverse = signal(false);
+  readonly sortedItems = computed(() => {
+    const items = this.items();
+    const key = this.sortType();
+    const dir = this.sortReverse() ? -1 : 1;
+    return [...items].sort((a, b) => {
+      const av = String(a[key] ?? '');
+      const bv = String(b[key] ?? '');
+      return av.localeCompare(bv) * dir;
+    });
+  });
+
+  onSort(key: 'itemCode' | 'itemName' | 'reason'): void {
+    if (this.sortType() === key) {
+      this.sortReverse.update((r) => !r);
+    } else {
+      this.sortType.set(key);
+      this.sortReverse.set(false);
+    }
+  }
 
   readonly itemCount = computed(() => this.items().length);
 
@@ -119,6 +152,10 @@ export class AddNewDrugRecall {
     this.searchTerm.set('');
     this.itemSearchHits.set([]);
     this.batches.set([]);
+    this.selectedHit.set(null);
+    this.selectedBatch.set(null);
+    this.selectedQty.set(0);
+    this.selectedReason.set('');
     this.showItemModal.set(true);
     void this.searchDrugs('');
   }
@@ -142,6 +179,8 @@ export class AddNewDrugRecall {
 
   /** GET .../stock/dashboard/item/batch/{unitId}/{itemId} for the picked item. */
   onItemPick(item: ItemSearchHit): void {
+    this.selectedHit.set(item);
+    this.selectedBatch.set(null);
     const unit = this.unitId ?? 0;
     this.service.getItemWiseBatches(unit, item.itemId).subscribe({
       next: (res) => {

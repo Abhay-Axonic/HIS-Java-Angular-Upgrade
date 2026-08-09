@@ -49,16 +49,16 @@
     <table class="grid-table">
       <thead>
         <tr>
-          <th (click)="sortType = 'itemCode'">Item code</th>
-          <th (click)="sortType = 'itemName'">Item name</th>
+          <th (click)="onSort('itemCode')">Item code</th>
+          <th (click)="onSort('itemName')">Item name</th>
           <th>Batch no</th>
-          <th>Reason</th>
+          <th (click)="onSort('reason')">Reason</th>
           <th>Quantity</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of items(); let i = index">
+        <tr *ngFor="let item of sortedItems(); let i = index">
           <td>{{ item.itemCode }}</td>
           <td>{{ item.itemName }}</td>
           <td>{{ item.batchNo }}</td>
@@ -101,7 +101,36 @@
           </button>
         </li>
       </ul>
+      <div class="modal-fields" *ngIf="selectedHit()">
+        <label>
+          Batch
+          <select class="text-input" [ngModel]="selectedBatch()"
+            (ngModelChange)="selectedBatch.set($event)">
+            <option [ngValue]="null">No batch</option>
+            <option *ngFor="let b of batches()" [ngValue]="b">
+              {{ b.batchNo }}
+            </option>
+          </select>
+        </label>
+        <label>
+          Quantity
+          <input type="number" class="text-input" [ngModel]="selectedQty()"
+            (ngModelChange)="selectedQty.set($event)" />
+        </label>
+        <label>
+          Reason
+          <input type="text" class="text-input" [ngModel]="selectedReason()"
+            (ngModelChange)="selectedReason.set($event)" />
+        </label>
+      </div>
       <div class="modal-actions">
+        <button
+          class="btn btn-primary"
+          *ngIf="selectedHit()"
+          (click)="addItemToRecall(selectedHit()!, selectedBatch(), selectedQty(), selectedReason())"
+        >
+          Add to recall
+        </button>
         <button class="btn btn-secondary" (click)="showItemModal.set(false)">
           Cancel
         </button>

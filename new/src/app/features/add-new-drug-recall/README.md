@@ -46,6 +46,15 @@ DECISIONS_QUEUE.md tagged `add-new-drug-recall`.
   add-item modal with the drug search + batch fetch, the remove-line action,
   the save with the session org/unit (store-accessor pattern; the legacy read
   them from the cookie).
+- Grid sort: the legacy sorts the grid CLIENT-SIDE via
+  `ng-repeat="item in vm.model.itemDetailList | orderBy:sortType:sortReverse"`
+  (add-new-drug-recall.html:114) on the itemCode/itemName/reason columns, the
+  header clicks setting `sortType` and toggling `sortReverse`. The rebuild
+  reproduces it as the `sortedItems` computed + the `onSort` header handler
+  (a compile fix: the header clicks were initially copied without the sort,
+  which also left `sortType` undeclared and failed the build at
+  .html:52-53 — the sort is now implemented, not the binding removed, because
+  the legacy demonstrably sorts).
 
 ## Deliberate divergences (the serviceMaster model)
 
@@ -60,7 +69,10 @@ DECISIONS_QUEUE.md tagged `add-new-drug-recall`.
    popup; the rebuild shows a read-only line summary — flagged.
 4. **Item modal search**: the legacy loads categories (asset/product) into the
    modal; the rebuild searches the live drug-search endpoint directly — the
-   category filters are not rebuilt (flagged, not silently dropped).
+   category filters are not rebuilt (flagged, not silently dropped). The
+   add-item modal's batch/quantity/reason fields were completed in the
+   build-fix pass (the first version's hit-click fetched batches but added
+   nothing — a dead-end the template-vs-class sweep caught).
 
 ## Not yet done
 
