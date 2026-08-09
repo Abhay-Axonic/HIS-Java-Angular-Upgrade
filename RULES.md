@@ -171,6 +171,24 @@ reason, the report's FIRST LINE states whether the rebuild introduced it:
 "Gate 3 FAILs — backend-caused, not rebuild-introduced" is the shape (or the
 reverse if the rebuild is at fault).
 
+## SCOPED BACKEND CHECK — THE PER-SCREEN CLASSES AND THE CROSS-ORG REACHABILITY QUESTION (standing, owner directive 2026-08-09)
+
+Every screen rebuild runs the scoped backend check on its own path and reports
+EACH class explicitly (PASS or FINDING) in the README: phantom columns/tables,
+named-query shape (INNER JOIN null-FK drops), operator precedence on dup-checks,
+org-trust (payload-carried client org), twin queries, swallowed exceptions on
+write handlers. When the OPERATOR-PRECEDENCE class fires (a dup-check whose
+org+unit scope binds only one branch of an OR), the finding MUST also state
+whether the unscoped branch is reachable by a cross-org caller — i.e. whether
+the unscoped predicate reads rows the caller's org does not own (the
+existence-oracle shape, screen 8's Q29) or only blocks a legitimate save
+(ALREADY_EXIST). That reachability statement is what makes the finding
+actionable rather than theoretical; it is a required part of the class report.
+The precedence class is a confirmed recurring shape: BR-169 (Discharge Type)
+was the first instance, Q29 (surgeryMaster dup-check) the second — a third
+confirmed instance on a live save path makes it a campaign (a systematic sweep
+of dup-check named queries) rather than a queue item (Q29's owner decision).
+
 
 ## WRITE-VERIFICATION RULE (Q28 decided 2026-08-09, standing)
 
