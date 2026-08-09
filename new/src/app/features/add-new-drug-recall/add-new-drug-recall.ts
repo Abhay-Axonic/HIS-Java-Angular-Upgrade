@@ -9,6 +9,7 @@ import {
   DrugRecallForm,
   DrugRecallItem,
   ItemSearchHit,
+  PatientHit,
   ReasonOption,
   StoreOption,
   emptyDrugRecallForm,
@@ -67,6 +68,7 @@ export class AddNewDrugRecall {
   stores = signal<StoreOption[]>([]);
   items = signal<DrugRecallItem[]>([]);
   itemSearchHits = signal<ItemSearchHit[]>([]);
+  patients = signal<PatientHit[]>([]);
   batches = signal<BatchRecord[]>([]);
   searchTerm = signal('');
   saving = signal(false);
@@ -179,38 +181,51 @@ export class AddNewDrugRecall {
     this.selectedQty.set(0);
     this.selectedReason.set('');
     this.showItemModal.set(true);
-    void this.searchDrugs('');
+    void this.searchItems('');
   }
 
-  /** The live add-item search (see the FINDING note — not the dead RECALL_DRUG path). */
-  searchDrugs(term: string): void {
+  /** The add-item picker: the item-master search (the legacy searchNewItem ->
+   * POST /api/global/items/unit/{unitId}, ItemsController.getItemsList —
+   * 200 verified live). The old searchString call (searchDrugsForRecall ->
+   * the pharmacy DTO with no searchString field -> HIS-400) is REMOVED
+   * (QF-2026-08-09-D). Mirrors the legacy's >=3-char guard. */
+  searchItems(term: string): void {
+    if (term.trim().length < 3) {
+      this.itemSearchHits.set([]);
+      return;
+    }
     this.service
-      .searchDrugsForRecall({
-        searchString: term,
-        organizationId: this.organizationId,
-        unitId: this.unitId,
+      .searchItems(this.unitId ?? 1, {
+        assetTypeId: 1,
+        itemName: term,
+        itemCode: '',
       })
       .subscribe({
-        next: (res) => {
-          const list = (res as { listObject?: ItemSearchHit[] }).listObject ?? [];
-          this.itemSearchHits.set(list);
-        },
+        next: (list) => this.itemSearchHits.set(Array.isArray(list) ? list : []),
         error: () => this.notify.error('Item search failed'),
       });
   }
 
-  /** GET .../stock/dashboard/item/batch/{unitId}/{itemId} for the picked item. */
+  /** The pick: select the hit + fire the patients-billed-for-item lookup
+   * (DTO shape {itemId, unitId} — 200 verified live). The old batch fetch
+   * (getItemWiseBatches -> /stock/dashboard/item/batch/{unitId}/{itemId}) is
+   * REMOVED: that endpoint is ambiguously mapped in StoreStockController
+   * ({storeId}/{itemId} AND {unitId}/{itemId} both match) and 500s (Q24). */
   onItemPick(item: ItemSearchHit): void {
     this.selectedHit.set(item);
     this.selectedBatch.set(null);
-    const unit = this.unitId ?? 0;
-    this.service.getItemWiseBatches(unit, item.itemId).subscribe({
-      next: (res) => {
-        const list = (res as { listObject?: BatchRecord[] }).listObject ?? [];
-        this.batches.set(list);
-      },
-      error: () => this.notify.error('Batch fetch failed'),
-    });
+    this.fetchPatientsForItem(item.itemId);
+  }
+
+  /** POST /api/pharmacy/in/patient/consumable/issue/list/search/drug/recall
+   * with the DTO shape {itemId, unitId} — the patients billed for the item. */
+  fetchPatientsForItem(itemId: number): void {
+    this.service
+      .fetchPatientsForItem({ itemId, unitId: this.unitId ?? 1 })
+      .subscribe({
+        next: (list) => this.patients.set(Array.isArray(list) ? list : []),
+        error: () => this.notify.error('Patients lookup failed'),
+      });
   }
 
   /** The legacy grid's add-line: item + batch + quantity + reason. */

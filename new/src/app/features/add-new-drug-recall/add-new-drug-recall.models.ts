@@ -94,6 +94,19 @@ export interface ItemSearchHit {
   [key: string]: unknown;
 }
 
+/** One row of the patients-billed-for-item lookup (the pharmacy issue-search's
+ * PatientDetailsResponseForDrugRecall shape: uhid/patientDetail/batchNo/
+ * expiryDate/wardName/visitNo). */
+export interface PatientHit {
+  uhid?: string;
+  patientDetail?: string;
+  batchNo?: string;
+  expiryDate?: string;
+  wardName?: string;
+  visitNo?: string;
+  [key: string]: unknown;
+}
+
 export interface BatchRecord {
   batchId: number;
   batchNo?: string;

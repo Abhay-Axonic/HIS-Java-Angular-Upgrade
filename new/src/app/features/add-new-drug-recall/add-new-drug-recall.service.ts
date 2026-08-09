@@ -8,6 +8,7 @@ import {
   DrugRecallItem,
   DrugRecallRecord,
   ItemSearchHit,
+  PatientHit,
   ReasonOption,
   SaveDrugRecallPayload,
   UpdateDrugRecallPayload,
@@ -78,15 +79,15 @@ export class AddNewDrugRecallService {
     );
   }
 
-  /** GET /api/inventory/stores/stock/dashboard/item/batch/{unitId}/{itemId} */
-  getItemWiseBatches(
-    unitId: number,
-    itemId: number,
-  ): Observable<ApiResponse<never, BatchRecord>> {
-    return this.http.get<ApiResponse<never, BatchRecord>>(
-      `${this.base}/api/inventory/stores/stock/dashboard/item/batch/${unitId}/${itemId}`,
-    );
-  }
+  /**
+   * REMOVED (QF-2026-08-09-D follow-up): GET /api/inventory/stores/stock/
+   * dashboard/item/batch/{unitId}/{itemId} is AMBIGUOUSLY MAPPED in the backend
+   * — StoreStockController maps BOTH /item/batch/{storeId}/{itemId} and
+   * /item/batch/{unitId}/{itemId}, so any /item/batch/1/1 request throws
+   * IllegalStateException "Ambiguous handler methods mapped" -> HTTP 500
+   * (verified live with the cached token + the catalina.out stack). The pick
+   * flow no longer calls it; the defect is logged for the owner (Q24).
+   */
 
   /** GET /api/inventory/stores/stock/dashboard/item/batch/batch/{unitId}/{batchId} */
   getBatchWiseBatches(
@@ -99,13 +100,34 @@ export class AddNewDrugRecallService {
   }
 
   /**
-   * POST /api/pharmacy/in/patient/consumable/issue/list/search/drug/recall
-   * The add-item flow's drug search (the legacy's RECALL_DRUG constant points
-   * at /stores/recall/drug/search which has NO controller — FINDING; this
-   * endpoint is the live one the legacy also calls for the same purpose).
+   * POST /api/global/items/unit/{unitId} — the item-master search (the legacy
+   * add-item picker: addNewDrugRecallController.searchNewItem ->
+   * ITEM_API + "unit/" + unitId, ItemsController.getItemsList). Returns a BARE
+   * array of ItemsDetailsListResponse (itemId/itemCode/itemName/...). This is
+   * the drug-name search; verified live: HTTP 200 with the cached token.
+   * The old searchDrugsForRecall call (searchString -> the pharmacy issue-search
+   * DTO which has no searchString field -> HIS-400) is REMOVED (QF-2026-08-09-D).
    */
-  searchDrugsForRecall(payload: Record<string, unknown>): Observable<ApiResponse<never, ItemSearchHit>> {
-    return this.http.post<ApiResponse<never, ItemSearchHit>>(
+  searchItems(
+    unitId: number,
+    payload: Record<string, unknown>,
+  ): Observable<ItemSearchHit[]> {
+    return this.http.post<ItemSearchHit[]>(
+      `${this.base}/api/global/items/unit/${unitId}`,
+      payload,
+    );
+  }
+
+  /**
+   * POST /api/pharmacy/in/patient/consumable/issue/list/search/drug/recall —
+   * the patients billed for an item (the legacy getPatientsListForItem).
+   * DTO shape {itemId, unitId} — verified live: HTTP 200 with the cached token
+   * (the frontend's old {searchString,...} shape was the HIS-400 source).
+   */
+  fetchPatientsForItem(
+    payload: Record<string, unknown>,
+  ): Observable<PatientHit[]> {
+    return this.http.post<PatientHit[]>(
       `${this.base}/api/pharmacy/in/patient/consumable/issue/list/search/drug/recall`,
       payload,
     );

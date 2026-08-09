@@ -102,7 +102,7 @@
         class="text-input"
         placeholder="Search drug…"
         [(ngModel)]="searchTerm"
-        (ngModelChange)="searchDrugs($event)"
+        (ngModelChange)="searchItems($event)"
       />
       <ul class="hit-list">
         @for (hit of itemSearchHits(); track hit.itemId) {
@@ -113,6 +113,11 @@
         </li>
         }
       </ul>
+      @if (selectedHit()) {
+        <div class="patients-line">
+          {{ patients().length }} patient(s) billed for {{ selectedHit()!.itemName }}
+        </div>
+      }
       @if (selectedHit()) {
       <div class="modal-fields">
         <label>
