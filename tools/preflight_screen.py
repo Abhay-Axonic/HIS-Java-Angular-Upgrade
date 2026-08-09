@@ -199,6 +199,41 @@ def check_c5(folder, appjs_path, screen_name):
     return 'PASS', f"registered (app.js:{idx}) + menu node {node.get('id')} chain: {' -> '.join(chain)}"
 
 
+def _conflict_markers():
+    """The four git conflict-marker patterns, built without literal occurrences
+    so the scan does not flag its own source file."""
+    return ('<' * 7, '>' * 7, 'Updated ' + 'upstream', 'Stashed ' + 'changes')
+
+
+def check_c6():
+    """C6 COMMITTED MARKERS — any git conflict marker in any committed
+    .md/.py/.json/.yaml/.yml/.sh under docs/ or tools/ is an immediate FAIL.
+    Reads the COMMITTED blobs at HEAD (git ls-tree + git show), so a marker
+    that was committed (the DECISIONS_QUEUE stash markers, origin 63f759e4)
+    is caught even if the worktree was edited around it."""
+    bad = []
+    markers = _conflict_markers()
+    try:
+        files = subprocess.run(
+            ['git', 'ls-tree', '-r', '--name-only', 'HEAD', '--', 'docs', 'tools'],
+            capture_output=True, text=True, cwd=ROOT).stdout.splitlines()
+    except Exception as ex:  # noqa: BLE001
+        return 'FAIL', f'scan error: {ex}'
+    for f in files:
+        if not f.endswith(('.md', '.py', '.json', '.yaml', '.yml', '.sh')):
+            continue
+        blob = subprocess.run(['git', 'show', f'HEAD:{f}'],
+                              capture_output=True, text=True, cwd=ROOT).stdout
+        for m in markers:
+            if m in blob:
+                bad.append(f'{f} ({m})')
+                break
+    if bad:
+        shown = '; '.join(bad[:5]) + (' …' if len(bad) > 5 else '')
+        return 'FAIL', f'{len(bad)} committed file(s) carry conflict markers: {shown}'
+    return 'PASS', f'{len(files)} committed file(s) scanned, 0 conflict markers'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('feature')           # e.g. add-new-drug-recall
@@ -214,6 +249,7 @@ def main():
         ('C3 MODULE ID', check_c3(args.route, args.appjs)),
         ('C4 ENDPOINT HANDLERS', check_c4(folder, args.backend_root)),
         ('C5 LEGACY REACHABILITY', check_c5(folder, args.appjs, args.feature)),
+        ('C6 COMMITTED MARKERS', check_c6()),
     ]
     any_fail = False
     dead_flag = False
@@ -224,12 +260,17 @@ def main():
         if status == 'DEAD':
             dead_flag = True
     if dead_flag:
-        # C5 DEAD is a FLAG, not a blocking FAIL: whether to rebuild a
-        # legacy-unreachable screen is the owner's decision (Q16 / the
-        # resurrection pages), not the preflight's. State it prominently.
-        print('RESULT: passes with DEAD-legacy flag — C5 reports the screen is '
-              'unreachable in the legacy app; this does NOT block the rebuild, '
-              'but it must be surfaced to the owner before shipping.')
+        if any_fail:
+            # a FAIL alongside the DEAD flag must NOT print "passes"
+            print('RESULT: FAIL — C5 reports the screen is unreachable in the '
+                  'legacy app (a flag, not blocking), but another check FAILED')
+        else:
+            # C5 DEAD is a FLAG, not a blocking FAIL: whether to rebuild a
+            # legacy-unreachable screen is the owner's decision (Q16 / the
+            # resurrection pages), not the preflight's. State it prominently.
+            print('RESULT: passes with DEAD-legacy flag — C5 reports the screen is '
+                  'unreachable in the legacy app; this does NOT block the rebuild, '
+                  'but it must be surfaced to the owner before shipping.')
     else:
         print(f'RESULT: {"FAIL" if any_fail else "PASS"}')
     sys.exit(1 if any_fail else 0)
