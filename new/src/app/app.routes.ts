@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'combinationMedicationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 472, title: 'Combination Medication Master' },
+        loadComponent: () =>
+          import('./features/combination-medication-master/combination-medication-master').then((m) => m.CombinationMedicationMaster),
+      },
+      {
         path: 'ageGroupMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 416, title: 'Age Group Master' },
