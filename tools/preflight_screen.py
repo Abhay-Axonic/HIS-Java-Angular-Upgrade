@@ -59,9 +59,16 @@ def check_c1(folder):
         return 'UNVALIDATED', 'screen files not found'
     t = re.sub(r"<!--.*?-->", "", t, flags=re.S)
     t = re.sub(r"<[a-zA-Z][^>]*>", " ", t)
-    t = re.sub(r"@[a-zA-Z]+\s*\(", "(", t)
-    binds = set(re.findall(r"(?<![\w.])([a-zA-Z_$][\w$]*)\s*\(", t))
-    binds |= set(re.findall(r"\[ngModel\]=\"([a-zA-Z_$][\w$]*)", t))
+    # A call-like identifier is a real binding only inside {{ ... }}
+    # interpolations and @if/@for/@switch(...) conditions — never in prose
+    # (prose like "patient(s)" must not read as a call: the old whole-text
+    # scan false-positived on it).
+    exprs = set(re.findall(r"\{\{\s*([^{}]+?)\s*\}\}", t))
+    exprs |= set(re.findall(r"@(?:if|for|else|switch|case|let)\s*\(([^)]*)\)", t))
+    binds = set()
+    for e in exprs:
+        binds |= set(re.findall(r"(?<![\w.])([a-zA-Z_$][\w$]*)\s*\(", e))
+    binds |= set(re.findall(r"\[ngModel\]=\"([a-zA-Z_$][\w$]*)\"", t))
     members = set(re.findall(r"(?:readonly\s+|private\s+readonly\s+)?([a-zA-Z_$][\w$]*)\s*=", c))
     members |= set(re.findall(r"\n\s*(?:private\s+)?([a-zA-Z_$][\w$]*)\s*\([^)]*\)\s*[:{]", c))
     skip = {"ngIf", "ngFor", "ngModel", "ngModelChange", "ngValue", "let", "of", "as",
