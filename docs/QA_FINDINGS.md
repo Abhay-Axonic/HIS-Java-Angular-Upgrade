@@ -2065,3 +2065,6 @@ NOT FIXED (Rule 10). Q25 queued.
 3. BROKEN LEGACY MENU LINK: node 466's actionLink '#/unitofMeasurement' targets a route that does not exist in app.js (only 'uomMaster' is registered) — the legacy menu cannot reach the screen; the rebuild registers the working route.
 4. REJECTED CANDIDATES (screen 5 selection): genericStrengthMaster and strengthMaster — ABSENT from app.js (no .state registration, no references) — DEAD per the reachability gate's rejection side (RULES.md); logged, not rebuilt. uomMaster was the first LIVE candidate.
 NOT FIXED (Rule 10). Q26 queued.
+
+## QF-2026-08-09-G (ADDENDUM) — the MENU-BROKEN shape, the third legacy dead-end, counted
+Node 466's actionLink '#/unitofMeasurement' (a nonexistent route) is not an isolated case: of the 1,077 privilege nodes, 571 carry an actionLink, and 198 of those link to a route with NO .state registration in app.js — 190 with no suffix resolution either (8 possibly resolve via a nested-route last segment). The MENU-BROKEN shape (registered state + privileged node + broken menu link) is the third legacy dead-end alongside MENU'D-UNROUTED (QF-2026-08-08-O: node exists, no state) and STATIC-SHELL (QF-2026-08-09-F/G: state + node exist, no behaviour). Count only — no tooling built (owner's ask).

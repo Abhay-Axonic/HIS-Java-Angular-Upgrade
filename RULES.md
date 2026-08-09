@@ -140,3 +140,16 @@ Mandatory obligations in every such rebuild:
 4. The dev-data honesty standard still applies: empty data = "not erroring,
    usefulness UNVERIFIED", never "working"; nothing is seeded to look better.
 
+## C5 NODE LOOKUP — UNVALIDATED IS NEVER A PASS (owner directive 2026-08-09)
+
+Preflight C5's automatic menu-node lookup matches the node's actionLink to the
+route (the exact token) first, then falls back to the display-name heuristic —
+the class the parked reachability gate failed on. Neither can succeed when the
+node's metadata is internally inconsistent (e.g. node 466's actionLink
+`#/unitofMeasurement` while the route is /uomMaster — the MENU-BROKEN shape).
+When C5 returns UNVALIDATED that is NOT a pass: the preflight output says so
+(the NOTE line and a RESULT that is not a clean PASS), and the screen's report
+MUST carry the two hand greps (the app.js registration + the privilege-tree
+node with id and parent chain) regardless. Hand-confirmation is the
+authoritative check; C5 is an aid that must never read as a soft pass.
+

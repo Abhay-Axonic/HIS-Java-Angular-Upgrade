@@ -190,9 +190,23 @@ def check_c5(folder, appjs_path, screen_name):
     if tree is None:
         return 'UNVALIDATED', 'privilege tree unreadable'
     name_norm = norm(screen_name)
-    node = next((n for n in tree if norm(n.get('name')) == name_norm), None)
+    route_token = screen_name.lower()
+    # The EXACT token first: a node's actionLink maps node -> route
+    # ("#/combinationMedicationMaster" -> the state url "/combinationMedicationMaster").
+    # Display-name matching is the heuristic class the parked reachability gate
+    # failed on (QF-2026-08-08-P) — never trust it alone.
+    node = next((n for n in tree
+                 if (n.get('actionLink') or '').replace('#', '').strip('/').lower() == route_token),
+                None)
     if node is None:
-        return 'UNVALIDATED', f'registered in app.js but no menu node named "{screen_name}" (check by hand)'
+        node = next((n for n in tree if norm(n.get('name')) == name_norm), None)
+    if node is None:
+        return 'UNVALIDATED', ('registered in app.js but NO menu node resolves to this route: '
+                               'actionLink mismatch (e.g. node 466 actionLink '
+                               '"#/unitofMeasurement" while the route is /uomMaster — the '
+                               'MENU-BROKEN shape) and the display-name match failed too. '
+                               'HAND-CONFIRMATION REQUIRED (the two greps, RULES.md) — '
+                               'UNVALIDATED is NOT a pass')
     chain = []
     cur, par = node.get('id'), node.get('parentId')
     for _ in range(6):
@@ -255,17 +269,24 @@ def main():
         ('C2 DIRECTIVE IMPORTS', check_c2(folder)),
         ('C3 MODULE ID', check_c3(args.route, args.appjs)),
         ('C4 ENDPOINT HANDLERS', check_c4(folder, args.backend_root)),
-        ('C5 LEGACY REACHABILITY', check_c5(folder, args.appjs, args.feature)),
+        ('C5 LEGACY REACHABILITY', check_c5(folder, args.appjs, args.route)),
         ('C6 COMMITTED MARKERS', check_c6()),
     ]
     any_fail = False
     dead_flag = False
+    unvalidated = 0
     for name, (status, detail) in results:
         print(f'{name}: {status} — {detail}')
         if status == 'FAIL':
             any_fail = True
         if status == 'DEAD':
             dead_flag = True
+        if status == 'UNVALIDATED':
+            unvalidated += 1
+    if unvalidated:
+        print(f'NOTE: {unvalidated} check(s) returned UNVALIDATED — that is NOT a pass. '
+              'The reachability hand-confirmation (the two greps) is REQUIRED and must '
+              'appear in the screen report (RULES.md).')
     if dead_flag:
         if any_fail:
             # a FAIL alongside the DEAD flag must NOT print "passes"
@@ -279,7 +300,11 @@ def main():
                   'unreachable in the legacy app; this does NOT block the rebuild, '
                   'but it must be surfaced to the owner before shipping.')
     else:
-        print(f'RESULT: {"FAIL" if any_fail else "PASS"}')
+        if unvalidated and not any_fail:
+            print(f'RESULT: PASS with {unvalidated} UNVALIDATED check(s) — see the NOTE above; '
+                  'hand-confirmation is required, this is NOT a clean pass')
+        else:
+            print(f'RESULT: {"FAIL" if any_fail else "PASS"}')
     sys.exit(1 if any_fail else 0)
 
 
