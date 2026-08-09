@@ -1,0 +1,88 @@
+<div class="page-content">
+  <h2 class="page-title">UOM Master</h2>
+
+  <div class="form-row">
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        [(ngModel)]="form().code"
+        name="code"
+      />
+      <label for="code">Code</label>
+    </div>
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        [(ngModel)]="form().units"
+        name="units"
+      />
+      <label for="units">Unit Of Measurement</label>
+    </div>
+  </div>
+
+  <div class="toolbar-row">
+    <div class="toolbar-right">
+      <button class="btn btn-primary btn-save" (click)="onSave()" title="Save">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+      <input
+        type="text"
+        class="text-search-box"
+        placeholder="Search"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+      />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="width5">Code</th>
+          <th class="width20">Unit Of Measurement</th>
+          <th class="width1 text-center">Status</th>
+          <th class="width1 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of filteredRows(); track row.id) {
+          <tr>
+            <td>{{ row.code }}</td>
+            <td>{{ row.units }}</td>
+            <td class="text-center">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [checked]="row.status === true"
+                  (change)="onToggle()"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
+            <td class="text-center">
+              <a class="btn btn-link" (click)="onEdit(row)" title="Edit">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="empty-cell">
+              @if (loading()) {
+                Loading…
+              } @else {
+                No units of measurement found
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
