@@ -1,0 +1,165 @@
+<div class="page-content">
+  <h2 class="page-title">Surgery Master</h2>
+
+  <form #surgeryMasterForm="ngForm" novalidate>
+    <div class="form-row">
+      <div class="form-field">
+        <select
+          class="text-input"
+          [(ngModel)]="form().specialityId"
+          name="specialityId"
+          required
+        >
+          <option [ngValue]="null" disabled>Select</option>
+          @for (s of specialities(); track s.specialityId) {
+            <option [ngValue]="s.specialityId">{{ s.specialityName }}</option>
+          }
+        </select>
+        <label for="specialityId">Specialty <span class="star">*</span></label>
+      </div>
+      <div class="form-field">
+        <input
+          type="text"
+          class="text-input"
+          autocomplete="off"
+          [(ngModel)]="form().surgeryCode"
+          name="surgeryCode"
+          required
+        />
+        <label for="surgeryCode">Surgery Code <span class="star">*</span></label>
+      </div>
+      <div class="form-field">
+        <input
+          type="text"
+          class="text-input"
+          autocomplete="off"
+          [(ngModel)]="form().surgeryCodeCpt"
+          name="surgeryCodeCpt"
+          required
+        />
+        <label for="surgeryCodeCpt">Surgery Code CPT4 <span class="star">*</span></label>
+      </div>
+      <div class="form-field">
+        <input
+          type="text"
+          class="text-input"
+          autocomplete="off"
+          [(ngModel)]="form().surgeryName"
+          name="surgeryName"
+          required
+        />
+        <label for="surgeryName">Name <span class="star">*</span></label>
+      </div>
+      <div class="form-field">
+        <select
+          class="text-input"
+          [(ngModel)]="form().surgeryGradeId"
+          name="surgeryGradeId"
+          required
+        >
+          <option [ngValue]="null" disabled>Select</option>
+          @for (g of surgeryGrades(); track g.surgeryGradeId) {
+            <option [ngValue]="g.surgeryGradeId">{{ g.surgeryGrade }}</option>
+          }
+        </select>
+        <label for="surgeryGradeId">Grade <span class="star">*</span></label>
+      </div>
+      <div class="form-field form-field-action">
+        <button class="btn btn-primary btn-save" (click)="onSave()" [disabled]="saving()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+          {{ editing() ? 'Update' : 'Save' }}
+        </button>
+        @if (editing()) {
+          <button class="btn btn-link" (click)="resetForm()">Cancel</button>
+        }
+      </div>
+    </div>
+  </form>
+
+  @if (dropdownError()) {
+    <div class="load-error">{{ dropdownError() }}</div>
+  }
+
+  <div class="toolbar-row">
+    <div class="toolbar-left">
+      <label class="show-entries">
+        Show
+        <select class="page-size" [(ngModel)]="pageSize" name="pageSize" (ngModelChange)="onPageSizeChange()">
+          @for (n of pageSizeOptions; track n) {
+            <option [ngValue]="n">{{ n }}</option>
+          }
+        </select>
+        records
+      </label>
+    </div>
+    <div class="toolbar-right">
+      <input
+        type="text"
+        class="text-search-box"
+        placeholder="Search"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+      />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="width10">Specialty</th>
+          <th class="width10">Surgery Code</th>
+          <th class="width10">Surgery Code CPT4</th>
+          <th class="width10">Name</th>
+          <th class="width10">Grade</th>
+          <th class="width10 text-center">Status</th>
+          <th class="width3 text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of pagedRows(); track row.surgery_id) {
+          <tr>
+            <td>{{ row.specialityName }}</td>
+            <td>{{ row.surgeryCode }}</td>
+            <td>{{ row.surgeryCodeCpt }}</td>
+            <td>{{ row.surgeryName }}</td>
+            <td>{{ row.surgeryGrade }}</td>
+            <td class="text-center">
+              <app-status-toggle
+                [checked]="row.status === 'A'"
+                [disabled]="togglingId() === row.surgery_id"
+                (toggled)="onToggle(row)"
+              ></app-status-toggle>
+            </td>
+            <td class="text-center">
+              <a
+                class="btn btn-link"
+                (click)="onEdit(row)"
+                title="Edit"
+              >
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-cell">No surgery masters found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="pager-row">
+      <span>Total: {{ totalCount() }}</span>
+      <button class="btn btn-link" (click)="setPage(page() - 1)" [disabled]="page() <= 1">Prev</button>
+      @for (p of pages(); track p) {
+        <button
+          class="btn btn-link page-num"
+          [class.active]="p === page()"
+          (click)="setPage(p)"
+        >{{ p }}</button>
+      }
+      <button class="btn btn-link" (click)="setPage(page() + 1)" [disabled]="page() >= totalPages()">Next</button>
+    </div>
+  </div>
+</div>
