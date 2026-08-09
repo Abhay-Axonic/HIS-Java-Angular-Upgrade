@@ -199,6 +199,12 @@ def check_c5(folder, appjs_path, screen_name):
     return 'PASS', f"registered (app.js:{idx}) + menu node {node.get('id')} chain: {' -> '.join(chain)}"
 
 
+def _conflict_markers():
+    """The four git conflict-marker patterns, built without literal occurrences
+    so the scan does not flag its own source file."""
+    return ('<' * 7, '>' * 7, 'Updated ' + 'upstream', 'Stashed ' + 'changes')
+
+
 def check_c6():
     """C6 COMMITTED MARKERS — any git conflict marker in any committed
     .md/.py/.json/.yaml/.yml/.sh under docs/ or tools/ is an immediate FAIL.
@@ -206,6 +212,7 @@ def check_c6():
     that was committed (the DECISIONS_QUEUE stash markers, origin 63f759e4)
     is caught even if the worktree was edited around it."""
     bad = []
+    markers = _conflict_markers()
     try:
         files = subprocess.run(
             ['git', 'ls-tree', '-r', '--name-only', 'HEAD', '--', 'docs', 'tools'],
@@ -217,7 +224,7 @@ def check_c6():
             continue
         blob = subprocess.run(['git', 'show', f'HEAD:{f}'],
                               capture_output=True, text=True, cwd=ROOT).stdout
-        for m in ('<<<<<<<', '>>>>>>>', 'Updated upstream', 'Stashed changes'):
+        for m in markers:
             if m in blob:
                 bad.append(f'{f} ({m})')
                 break
