@@ -76,6 +76,7 @@ def main():
         cached = gdt.read_cache()
         if cached:
             token, cookie, unit = cached['token'], cached.get('cookie', ''), cached.get('unit', '1')
+            permissions = cached.get('permissions', '')
         else:
             login_page = context.new_page()
             try:
@@ -85,31 +86,31 @@ def main():
                 browser.close()
                 sys.exit(1)
             gdt.write_cache(token, unit, cookie)
-        # release the login-log row so the NEXT invocation does not self-collide
-        try:
-            login_page.evaluate("""async () => {
-                try {
-                    const co = (() => { try { return JSON.parse(decodeURIComponent(
-                        document.cookie.split('cookieObject=')[1].split(';')[0])); }
-                        catch (e) { return {}; } })();
-                    await fetch('/adt/saveUserLogDetails', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            userId: sessionStorage.getItem('userId') || co.userId || 0,
-                            unitId: sessionStorage.getItem('unitId') || co.unitId || 0,
-                            organizationId: sessionStorage.getItem('organizationId') || co.organizationId || 0,
-                            isLogin: 'N',
-                            macAddress: localStorage.getItem('macAddress') || ''
-                        })
-                    });
-                } catch (e) { /* best-effort */ }
-            }""")
-        except Exception:  # noqa: BLE001
-            pass
-        permissions = login_page.evaluate(
-            "localStorage.getItem('permissions') || localStorage.getItem('PermissionList') || ''")
-        login_page.close()
+            # release the login-log row so the NEXT invocation does not self-collide
+            try:
+                login_page.evaluate("""async () => {
+                    try {
+                        const co = (() => { try { return JSON.parse(decodeURIComponent(
+                            document.cookie.split('cookieObject=')[1].split(';')[0])); }
+                            catch (e) { return {}; } })();
+                        await fetch('/adt/saveUserLogDetails', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                userId: sessionStorage.getItem('userId') || co.userId || 0,
+                                unitId: sessionStorage.getItem('unitId') || co.unitId || 0,
+                                organizationId: sessionStorage.getItem('organizationId') || co.organizationId || 0,
+                                isLogin: 'N',
+                                macAddress: localStorage.getItem('macAddress') || ''
+                            })
+                        });
+                    } catch (e) { /* best-effort */ }
+                }""")
+            except Exception:  # noqa: BLE001
+                pass
+            permissions = login_page.evaluate(
+                "localStorage.getItem('permissions') || localStorage.getItem('PermissionList') || ''")
+            login_page.close()
 
         # seed the token + cookieObject into the new-app origin
         cookie_entries = []

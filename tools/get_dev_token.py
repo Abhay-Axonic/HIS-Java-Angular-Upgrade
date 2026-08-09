@@ -267,7 +267,11 @@ def main():
             sys.stderr.write(f'{exc}\n')
             browser.close()
             sys.exit(1)
-        write_cache(token, unit, cookie)
+        try:
+            permissions = page.evaluate("localStorage.getItem('permissions') || ''")
+        except Exception:  # noqa: BLE001
+            permissions = ''
+        write_cache(token, unit, cookie, permissions)
         if args.check:
             logout(page)
             print('LOGIN-OK')
