@@ -66,20 +66,28 @@ def login(page, username, password):
     except Exception:  # noqa: BLE001
         raise RuntimeError('UNIT-DROPDOWN-NEVER-POPULATED')
     unit_vals = page.eval_on_selector_all('#unitId option', 'os => os.map(o => o.value)')
-    if len(unit_vals) < 2:
+    if not unit_vals or len(unit_vals) < 2:
         # the dropdown re-populates after the wait (a mid-update race); re-wait within
         # this SAME attempt, then re-read — no second login, no retry loop.
         page.wait_for_timeout(2000)
         unit_vals = page.eval_on_selector_all('#unitId option', 'os => os.map(o => o.value)')
-    if len(unit_vals) < 2:
-        raise RuntimeError('UNIT-DROPDOWN-EMPTY')
+    if not unit_vals or len(unit_vals) < 2:
+        raise RuntimeError('login failed: unit dropdown empty')
     page.select_option('#unitId', unit_vals[1])
     page.click('input[type="submit"]')
     page.wait_for_timeout(1500)
+    # SESSION-COLLISION is a FAILURE, not a success path: the "You are already
+    # logged in" dialog means an ambient session is present and the login is
+    # riding it — the wrong-credentials control proved this returns a token
+    # without authenticating. Do not click Ok; raise instead.
     confirm_ok = page.locator('button:has-text("Ok")').first
     try:
         if confirm_ok.is_visible():
-            confirm_ok.click()
+            raise RuntimeError(
+                'SESSION-COLLISION: an existing session is present; the login '
+                'cannot assert fresh authentication — clear the legacy session first')
+    except RuntimeError:
+        raise
     except Exception:  # noqa: BLE001
         pass
     try:
@@ -88,7 +96,7 @@ def login(page, username, password):
             timeout=20000,
         )
     except Exception:  # noqa: BLE001
-        raise RuntimeError('NO-TOKEN')
+        raise RuntimeError('login failed: no token returned')
     value = page.evaluate("sessionStorage.getItem('token')")
     cookie = page.evaluate('document.cookie')
     unit_id = unit_vals[1]

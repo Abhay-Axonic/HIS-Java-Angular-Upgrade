@@ -216,10 +216,22 @@ def main():
         ('C5 LEGACY REACHABILITY', check_c5(folder, args.appjs, args.feature)),
     ]
     any_fail = False
+    dead_flag = False
     for name, (status, detail) in results:
         print(f'{name}: {status} — {detail}')
-        if status == 'FAIL' or status == 'DEAD':
+        if status == 'FAIL':
             any_fail = True
+        if status == 'DEAD':
+            dead_flag = True
+    if dead_flag:
+        # C5 DEAD is a FLAG, not a blocking FAIL: whether to rebuild a
+        # legacy-unreachable screen is the owner's decision (Q16 / the
+        # resurrection pages), not the preflight's. State it prominently.
+        print('RESULT: passes with DEAD-legacy flag — C5 reports the screen is '
+              'unreachable in the legacy app; this does NOT block the rebuild, '
+              'but it must be surfaced to the owner before shipping.')
+    else:
+        print(f'RESULT: {"FAIL" if any_fail else "PASS"}')
     sys.exit(1 if any_fail else 0)
 
 

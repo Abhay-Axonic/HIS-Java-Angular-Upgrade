@@ -72,14 +72,19 @@ def legacy_login(page, username, password):
         unit_vals = page.evaluate(
             "Array.from(document.querySelectorAll('#unitId option')).map(o => o.value)")
     if not unit_vals or len(unit_vals) < 2:
-        raise RuntimeError('UNIT-DROPDOWN-EMPTY')
+        raise RuntimeError('login failed: unit dropdown empty')
     page.select_option('#unitId', unit_vals[1])
     page.click('input[type="submit"]')
     page.wait_for_timeout(1500)
+    # SESSION-COLLISION is a FAILURE: an ambient session must not be ridden.
     confirm_ok = page.locator('button:has-text("Ok")').first
     try:
         if confirm_ok.is_visible():
-            confirm_ok.click()
+            raise RuntimeError(
+                'SESSION-COLLISION: an existing session is present; the login '
+                'cannot assert fresh authentication')
+    except RuntimeError:
+        raise
     except Exception:  # noqa: BLE001
         pass
     try:
@@ -88,7 +93,7 @@ def legacy_login(page, username, password):
             timeout=20000,
         )
     except Exception:  # noqa: BLE001
-        raise RuntimeError('NO-TOKEN')
+        raise RuntimeError('login failed: no token returned')
     token = page.evaluate("sessionStorage.getItem('token')")
     cookie = page.evaluate('document.cookie')
     return token, cookie, unit_vals[1]
