@@ -1,0 +1,116 @@
+<div class="page-content">
+  <h2 class="page-title">Allergy Type Master</h2>
+
+  <div class="form-row">
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        [(ngModel)]="form().allergyTypeName"
+        name="allergyTypeName"
+      />
+      <label for="allergyTypeName">Allergy Type Name <span class="star">*</span></label>
+    </div>
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        [(ngModel)]="form().allergyTypeDesc"
+        name="allergyTypeDesc"
+      />
+      <label for="allergyTypeDesc">Description</label>
+    </div>
+    <div class="form-field">
+      <select
+        class="text-input"
+        [(ngModel)]="form().isGeneric"
+        name="isGeneric"
+      >
+        <option value="N">No</option>
+        <option value="Y">Yes</option>
+      </select>
+      <label for="isGeneric">Generic</label>
+    </div>
+  </div>
+
+  <div class="toolbar-row">
+    <div class="toolbar-right">
+      <button class="btn btn-primary btn-save" (click)="onSave()" [disabled]="saving()">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        {{ editing() ? 'Update' : 'Save' }}
+      </button>
+      @if (editing()) {
+        <button class="btn btn-link" (click)="resetForm()">Cancel</button>
+      }
+      <select class="page-size" [(ngModel)]="pageSize" name="pageSize" (ngModelChange)="onPageSizeChange()">
+        @for (n of pageSizeOptions; track n) {
+          <option [ngValue]="n">{{ n }}</option>
+        }
+      </select>
+      <input
+        type="text"
+        class="text-search-box"
+        placeholder="Search"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+      />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="width20">Code</th>
+          <th class="width30">Description</th>
+          <th class="width8 text-center">Status</th>
+          <th class="width8 text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of filteredRows(); track row.allergyTypeId) {
+          <tr>
+            <td>{{ row.allergyTypeName }}</td>
+            <td>{{ row.allergyTypeDesc }}</td>
+            <td class="text-center">
+              <app-status-toggle
+                [checked]="row.status === 'A'"
+                [disabled]="togglingId() === row.allergyTypeId"
+                (toggled)="onToggle(row)"
+              ></app-status-toggle>
+            </td>
+            <td class="text-center">
+              <a
+                class="btn btn-link"
+                [class.disabled]="row.status === 'I'"
+                (click)="onEdit(row)"
+                title="Edit"
+              >
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="empty-cell">No allergy types found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="pager-row">
+      <span>Total: {{ totalCount() }}</span>
+      <button class="btn btn-link" (click)="setPage(page() - 1)" [disabled]="page() <= 1">Prev</button>
+      @for (p of pages(); track p) {
+        <button
+          class="btn btn-link page-num"
+          [class.active]="p === page()"
+          (click)="setPage(p)"
+        >{{ p }}</button>
+      }
+      <button class="btn btn-link" (click)="setPage(page() + 1)" [disabled]="page() >= totalPages()">Next</button>
+    </div>
+  </div>
+</div>
