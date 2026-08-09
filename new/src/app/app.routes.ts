@@ -1610,6 +1610,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/service-master/service-master').then((m) => m.ServiceMaster),
       },
       {
+        path: 'addNewDrugRecall',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 220, title: 'Add New Drug Recall' },
+        loadComponent: () => import('./features/add-new-drug-recall/add-new-drug-recall').then((m) => m.AddNewDrugRecall),
+      },
+      {
         path: 'doctorSlabMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 1020, title: 'Doctor Slab Master' },

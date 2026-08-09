@@ -126,3 +126,4 @@ OPTION (b) — declare campaign 1 complete at phases 1-2; queue the remaining fi
 - What it costs: zero sessions now; the deferred cost is whatever the post-rebuild discoveries cost later.
 
 The two options trade the same asset: pre-rebuild visibility of the query landscape versus immediate return to Track A. The owner decides.
+- **Q15 NEW (add-new-drug-recall finding):** the legacy screen calls `inventoryApi + '/stores/recall/drug/search'` (DRUG_RECALL.RECALL_DRUG) which has NO backend controller (0 hits across legacy/*Controller.java) — the legacy add-item recall-drug search is already broken. The rebuild replaces it with the live POST /api/pharmacy/in/patient/consumable/issue/list/search/drug/recall. Decision: keep the replacement (recommended — the legacy path is dead) or restore the dead path for byte-parity. OPEN.

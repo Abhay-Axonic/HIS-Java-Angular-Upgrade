@@ -1,0 +1,128 @@
+<div class="recall-screen">
+  <div class="recall-header">
+    <h3>Add New Drug Recall</h3>
+    <div class="recall-actions">
+      <button
+        class="btn btn-primary"
+        [disabled]="saving()"
+        (click)="saveRecall()"
+      >
+        {{ saving() ? 'Saving…' : 'Save' }}
+      </button>
+      <button class="btn btn-secondary" (click)="openAddItemModal()">
+        Add Item
+      </button>
+    </div>
+  </div>
+
+  <div class="recall-form">
+    <label>
+      Store
+      <select
+        [(ngModel)]="form().storeId"
+        (ngModelChange)="onStoreChange()"
+        class="text-input"
+      >
+        <option [ngValue]="null" disabled>Select store</option>
+      </select>
+    </label>
+    <label>
+      Reason
+      <select [(ngModel)]="form().reasonId" class="text-input">
+        <option [ngValue]="null" disabled>Select reason</option>
+        <option *ngFor="let r of reasons()" [ngValue]="r.reasonId">
+          {{ r.reasonName }}
+        </option>
+      </select>
+    </label>
+    <label>
+      Recall date
+      <input
+        type="date"
+        class="text-input"
+        [(ngModel)]="form().recallDate"
+      />
+    </label>
+  </div>
+
+  <div class="recall-grid">
+    <table class="grid-table">
+      <thead>
+        <tr>
+          <th (click)="sortType = 'itemCode'">Item code</th>
+          <th (click)="sortType = 'itemName'">Item name</th>
+          <th>Batch no</th>
+          <th>Reason</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items(); let i = index">
+          <td>{{ item.itemCode }}</td>
+          <td>{{ item.itemName }}</td>
+          <td>{{ item.batchNo }}</td>
+          <td>{{ item.reason }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>
+            <button class="btn btn-link" (click)="showDetailsFor.set(item)">
+              Details
+            </button>
+            <button class="btn btn-link" (click)="removeItem(i)">
+              Remove
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="items().length === 0">
+          <td colspan="6" class="grid-empty">
+            No items added yet — click Add Item.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="grid-count">{{ itemCount() }} item(s)</div>
+  </div>
+
+  <!-- add-item modal (simplified from the legacy popup) -->
+  <div *ngIf="showItemModal()" class="modal-backdrop" (click)="showItemModal.set(false)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+      <h4>Add item to recall</h4>
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Search drug…"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="searchDrugs($event)"
+      />
+      <ul class="hit-list">
+        <li *ngFor="let hit of itemSearchHits()">
+          <button class="btn btn-link" (click)="onItemPick(hit)">
+            {{ hit.itemName }}
+          </button>
+        </li>
+      </ul>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="showItemModal.set(false)">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- details popup (read-only line summary, parity simplification) -->
+  <div *ngIf="showDetailsFor()" class="modal-backdrop" (click)="showDetailsFor.set(null)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+      <h4>Recall line details</h4>
+      <p><strong>Item:</strong> {{ showDetailsFor()?.itemName }}</p>
+      <p><strong>Code:</strong> {{ showDetailsFor()?.itemCode }}</p>
+      <p><strong>Batch:</strong> {{ showDetailsFor()?.batchNo }}</p>
+      <p><strong>Reason:</strong> {{ showDetailsFor()?.reason }}</p>
+      <p><strong>Quantity:</strong> {{ showDetailsFor()?.quantity }}</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="showDetailsFor.set(null)">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
