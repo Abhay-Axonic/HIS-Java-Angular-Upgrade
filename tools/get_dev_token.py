@@ -50,9 +50,10 @@ def read_cache():
     return None
 
 
-def write_cache(token, unit, cookie=None):
+def write_cache(token, unit, cookie=None, permissions=None):
     json.dump({'token': token, 'unit': unit,
                'cookie': cookie or '',
+               'permissions': permissions or '',
                'expires': time.time() + TOKEN_TTL},
               open(CACHE_FILE, 'w', encoding='utf-8'))
 
