@@ -81,9 +81,12 @@ def main():
                     help='override the route moduleId from app.routes.ts')
     ap.add_argument('--cookie-json', default=None,
                     help='raw cookieObject JSON to inject (controls: forced-empty store, etc.)')
+    ap.add_argument('--role-id', type=int, default=None,
+                    help='override roleId in the cached cookieObject (control: a role with no '
+                         'privilege row => the bootstrap writes an empty store)')
     args = ap.parse_args()
     route = args.route if args.route.startswith('/') else f'/{args.route}'
-    module_id = args.module_id if args.module_id is not None else route_module_id(route)
+    module_id = args.module_id if args.module_id is not None else route_module_id(route.lstrip('/'))
 
     # ---- credentials / session artifact (single mint source: get_dev_token) ----
     import get_dev_token as gdt
@@ -100,6 +103,17 @@ def main():
     for part in cookie.split(';'):
         if part.strip().startswith('cookieObject='):
             cookie_object = part.strip().split('=', 1)[1]
+    if args.role_id is not None:
+        # control: swap the roleId in the real login's cookieObject — a role
+        # with no privilege row makes the bootstrap write an EMPTY store
+        try:
+            import urllib.parse as _up
+            co = json.loads(_up.unquote(cookie_object))
+            co['roleId'] = args.role_id
+            cookie_object = _up.quote(json.dumps(co))
+        except Exception:
+            sys.stderr.write('ROLE-OVERRIDE-FAILED: could not rewrite the cached cookieObject\n')
+            sys.exit(2)
     if args.cookie_json is not None:
         cookie_object = args.cookie_json  # control override (e.g. roleId=2)
     if not cookie_object:
@@ -138,22 +152,8 @@ def main():
             else None))
 
         base = f'http://localhost:{args.port}'
-        bootstrap_seen = False
-        if module_id is not None:
-            # the guard awaits the /privilege/role bootstrap for moduleId
-            # routes; wait for the app's OWN fetch (fresh context => empty
-            # store => the fetch fires when the guard engages). On timeout the
-            # page already loaded — never re-navigate (double-load corrupts
-            # the run); just record that the bootstrap never fired.
-            try:
-                with page.expect_response(lambda r: '/privilege/role/' in r.url, timeout=15000):
-                    page.goto(f'{base}{route}', wait_until='load', timeout=30000)
-                bootstrap_seen = True
-            except Exception:
-                pass
-        else:
-            page.goto(f'{base}{route}', wait_until='load', timeout=30000)
-        page.wait_for_timeout(3000)  # settle: the screen's own data fetches
+        page.goto(f'{base}{route}', wait_until='load', timeout=30000)
+        page.wait_for_timeout(3000)  # settle: the bootstrap + the screen's data fetches
 
         url_now = page.url
         body_text = page.evaluate('document.body ? document.body.innerText.slice(0, 300) : ""')
@@ -167,6 +167,11 @@ def main():
                         ids: mods.map(m => m.id)};
             } catch (e) { return {present: true, corrupt: String(e).slice(0, 60)}; }
         }""")
+        # the bootstrap's ground truth: the app's OWN write of the store
+        # (fresh context => empty localStorage => a present non-empty store
+        # can only have been written by fetchPermissions after a successful
+        # /privilege/role fetch)
+        bootstrap_seen = store.get('present') and store.get('count', 0) > 0
         selector_counts = {}
         for sel in args.selectors:
             selector_counts[sel] = page.locator(sel).count()
