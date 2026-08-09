@@ -112,6 +112,10 @@ A legacy screen is only rebuildable if it is REACHABLE in the legacy. Before ext
 3. Controller gate: does the controller carry a permission/module check?
 4. Module id: does the screen resolve to a module id?
 
+REACHABILITY IS CONFIRMED BY HAND, PER SCREEN, AT SELECTION TIME (owner directive 2026-08-08 — the bulk gate is PARKED, QF-2026-08-08-P; no tool, no bulk pass, no inferred classification): two direct greps before any extraction —
+  - the legacy app.js: is there a .state registration for this screen? Registered, commented, or absent — the grep output goes in the screen's report.
+  - the privilege registry (privilege.privilege modules JSON): is there a menu node? Give its id and its parent chain.
+A screen that is commented or absent is DEAD — do not extract, do not write; log it and take the next candidate. Every screen's reachability evidence goes in its report.
 A screen failing checks 1 or 2 is DEAD — do not extract its contract, do not write it. Log it as a dead-screen finding (tagged with the screen, queued), and take the next screen on the path instead. This rule exists because two of the first three Track A rebuild screens (the implant opening balance pair) were rebuilds of legacy screens that no user can open: routes commented out in app.js, zero menu nodes, no permission check — dead in legacy (2026-08-08, logged Q16/Q17).
 
 ## REACHABILITY GATE — THE LIMIT OF ITS USE (owner directive 2026-08-08, added to the standing rule)
