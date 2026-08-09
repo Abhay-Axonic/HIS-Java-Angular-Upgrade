@@ -94,3 +94,19 @@ per the mandate.
 - **Q11** serviceMaster open divergences: the save two-step confirm popup + the ledger toString formatting (flagged in 288d0bb1, not in QA_FINDINGS — BR-186 carries them).
 - **Q10 (updated) — DERIVER FIX DECISION (owner, queued 2026-08-08):** the diagnosis pinned THREE fixable deriver defects + one inherent asymmetry: (1) the E1 tokenizer's missing-semicolon crossings (1,521 ASI sites; 117+85 of the 347 misses); (2) the E2 matcher's double-slash join (the mpath's leading slash — the 582 'broken' + the 0.996 + the 215 disagreement bases — ONE bug); (3) the shared-controller fan-out (23 DISPATCHER misses); (4) NOT FIXABLE: the 116 rebuild-new misses (the rebuild calls endpoints the legacy never had — the E1-from-legacy design cannot see them; the back-test comparison is inherently asymmetric). The E1 error rate 0.859 is NOT lowered by the stale-legacy class (0 found); after fixes 1-3 the rate would recompute. Owner decides: fix the deriver (the three classes), or accept the E1/E2 as aggregate-only inventory, or stop phase 0. Also: E2 error rate on the truth = 0.996 pre-fix (the join bug dominates).
 - **Q10 (updated 2026-08-08, 2nd pass):** the deriver's CONTINUATION DECISION — the owner: "both fixes demonstrated at unit level — accepted. The map is not." The bounded check: ASI's 202 = 38 true + 164 constants-file class (the owner's hypothesis #3 — my earlier 'handled' retracted); the restricted delta is not interpretable (the sets moved); the intersection's phantom flags = the entity-name artifacts (insuranceMaster -> t_insurance exists live; no independent defect found); E3-E5 (18/254) cannot answer phase 3/4. The decision on whether the map continues is the owner's, depending on the bounded-check + the E3-E5 answer. NO further deriver fixes pending the decision.
+
+## Queue state — 2026-08-08, deriver parked (the re-list)
+- Q1 (TOP, unchanged): FULL redeploy + owner click-through — the redeploy RAN (boot 17,898 ms) but the two checks are outstanding: mailConfiguration save with criticalReport ticked must produce a growl ERROR not a success toast; serviceMaster must load with populated dropdowns. The six verify_master_screen harnesses also need a token.
+- Q2 DQ-2026-08-08-004: sms/mail channel gap — schema-add vs screen decommission (control removal WITHDRAWN). OPEN.
+- Q3 DQ-001: 35 phantom tables, per-case classification. OPEN (held).
+- Q4 BR-184 CCAvenue: schema-add vs path removal. OPEN.
+- Q5 module-1071 role (unblocks the held m1 branch). OPEN.
+- Q6 MRD 1068-1070 privilege data gap. OPEN.
+- Q7 134 of 181 BR lines have no parseable hash. OPEN.
+- Q8 ledger script wording (QF-2026-08-08-M). OPEN (no script edits without say-so).
+- Q9 t_message_queue @Scheduled against a phantom table. OPEN.
+- Q10 DERIVER CONTINUATION — DECIDED: PARKED (2026-08-08). The constants bounded count: a lookup would resolve 103/164 (63%) — the majority but with a substantial residual (25 not-defined + 36 further-concat); the owner decides whether the single narrow constants lookup is ever worth one attempt, or runtime capture replaces static derivation. CLOSED as decided, sub-decision pending.
+- Q11 serviceMaster open divergences (save two-step confirm popup + ledger toString). OPEN (BR-186 carries them).
+- Q12 NEW: the constants-class decision — 103/164 resolvable via a config lookup; the residual 61 resist; the owner's call (narrow fix vs runtime capture). OPEN.
+- Q13 NEW: the campaign-1 exit criterion's precondition FAILED (E5 = 18 tables; phases 3/4 unanswerable from the table) — the exit condition is an OPEN OWNER DECISION; no replacement criterion invented (RULES.md amendment 2026-08-08). OPEN.
+- Q14 NEW: the runtime-capture option — 40-screen browser network-log capture (owner time, not agent) as the alternative to static derivation. OPEN.
