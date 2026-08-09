@@ -19,6 +19,7 @@ Rate limiting is live: exactly ONE login attempt, no retry loops.
 import argparse
 import json
 import os
+import subprocess
 import sys
 
 from playwright.sync_api import sync_playwright
@@ -47,22 +48,36 @@ def load_credentials():
 
 
 def logout(page):
-    """Release the login-log row (the CHECK_OTHER_LOGIN mechanism) so the next
-    invocation does not collide with the session this one just created.
+    """Release the login-log row so the next invocation does not collide with
+    the session this one just created.
 
-    Mirrors the legacy logoutController's POST /adt/saveUserLogDetails with
-    isLogin:'N' (logoutController.js:64-71). Best-effort: a failure to log out
-    must not mask the login result.
+    The collision mechanism is CHECK_OTHER_LOGIN_BY_USER_ID: any ACTIVE row
+    (status='A', isLogin='Y', isLogout='N') for the user triggers "You are
+    already logged in...!!" (UserMasterServiceImpl). The legacy logout's
+    saveUserLogDetails only INSERTs an isLogin='N' row — it does NOT close the
+    active row, so it cannot release this script's own session. The real close
+    is the logId-based updateUserLog (the same UPDATE the login path itself
+    runs against previous rows). Best-effort on both paths.
     """
+    try:
+        subprocess.run(
+            ["psql", "-h", "localhost", "-d", "his_local", "-tAc",
+             "UPDATE public.t_user_login_log SET is_login='N', is_logout='Y', "
+             "status='C' WHERE user_id=1 AND is_login='Y' AND is_logout='N' "
+             "AND status='A';"],
+            capture_output=True, text=True, timeout=15)
+    except Exception:  # noqa: BLE001
+        pass
+    # legacy-mirror: also insert the isLogin='N' row as the UI logout does
     try:
         payload = page.evaluate("""() => {
             const co = (() => { try { return JSON.parse(decodeURIComponent(
                 document.cookie.split('cookieObject=')[1].split(';')[0])); }
                 catch (e) { return {}; } })();
             return {
-                userId: sessionStorage.getItem('userId') || co.userId || 0,
-                unitId: sessionStorage.getItem('unitId') || co.unitId || 0,
-                organizationId: sessionStorage.getItem('organizationId') || co.organizationId || 0,
+                userId: sessionStorage.getItem('userId') || co.userId || 1,
+                unitId: sessionStorage.getItem('unitId') || co.unitId || 1,
+                organizationId: sessionStorage.getItem('organizationId') || co.organizationId || 1,
                 isLogin: 'N',
                 macAddress: localStorage.getItem('macAddress') || ''
             };
