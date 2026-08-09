@@ -127,3 +127,5 @@ OPTION (b) — declare campaign 1 complete at phases 1-2; queue the remaining fi
 
 The two options trade the same asset: pre-rebuild visibility of the query landscape versus immediate return to Track A. The owner decides.
 - **Q15 NEW (add-new-drug-recall finding):** the legacy screen calls `inventoryApi + '/stores/recall/drug/search'` (DRUG_RECALL.RECALL_DRUG) which has NO backend controller (0 hits across legacy/*Controller.java) — the legacy add-item recall-drug search is already broken. The rebuild replaces it with the live POST /api/pharmacy/in/patient/consumable/issue/list/search/drug/recall. Decision: keep the replacement (recommended — the legacy path is dead) or restore the dead path for byte-parity. OPEN.
+
+- Q20 NEW (2026-08-09, the owner's note — LOGGED, NOT BUILT): preflight C4 could become a LIVE check — with the cached token available, verify each endpoint by CALLING it (a real response instead of a 404/405) rather than the static @RequestMapping grep. That is the whole point of removing the build/token/browser constraints. Candidate improvement only; do not build until the owner says so.
