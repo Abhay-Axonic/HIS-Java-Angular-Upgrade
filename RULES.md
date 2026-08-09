@@ -171,3 +171,33 @@ reason, the report's FIRST LINE states whether the rebuild introduced it:
 "Gate 3 FAILs — backend-caused, not rebuild-introduced" is the shape (or the
 reverse if the rebuild is at fault).
 
+
+## WRITE-VERIFICATION RULE (Q28 decided 2026-08-09, standing)
+
+A screen's save/update/status claims are verified by an OWNER-SANCTIONED
+write test only. Without the owner's sanction, a save that returns the
+success envelope is reported as "not erroring", NEVER "working" — "working"
+requires a write AND a read-back of the written row. Any write test must
+satisfy ALL six conditions:
+1. One row per verification — exactly one probe row is written, never a batch.
+2. An unmistakable marker string — the probe payload carries a unique marker
+   (e.g. 'Probe <Screen> YYYY-MM-DD') so the written row is identifiable in
+   any later query.
+3. Deleted in the SAME run, with a re-query verification — the probe row is
+   deleted before the run ends and a re-query proves its absence (never
+   "deleted later").
+4. Before/after row counts reported — the count before the write, after the
+   write, and after the delete are all reported; a count mismatch is a
+   FINDING, not a pass.
+5. his_local only — a write test never runs against a real-clinical-data
+   table or environment; the dev database only.
+6. The probe payload must match the LEGACY contract exactly — every field
+   the legacy controller sends (createdDate/updatedDate/user ids formatted
+   as the legacy formats them). An incomplete probe is WORSE than no probe:
+   it produces a false backend defect (the QF-2026-08-09-I dateString-null
+   NPE class — the probe omitted the dates the legacy always sends, and the
+   DAO's GlobalCommonDateUtils.getDate NPE'd on the null).
+The Q28 no-seed rule and this rule are the same rule: the dev-data honesty
+standard. A screen whose write paths were NOT write-tested reports "not
+erroring" (the call returns the backend's own envelope; success with real
+data is UNVERIFIED), never "working".
