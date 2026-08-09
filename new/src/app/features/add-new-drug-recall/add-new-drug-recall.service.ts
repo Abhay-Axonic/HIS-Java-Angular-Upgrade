@@ -111,6 +111,17 @@ export class AddNewDrugRecallService {
     );
   }
 
+  /** GET /api/global/user/stores/{orgId}/{unitId}/{userId} -> the user's stores. */
+  getUserStores(
+    organizationId: number,
+    unitId: number,
+    userId: number,
+  ): Observable<unknown> {
+    return this.http.get(
+      `${this.base}/api/global/user/stores/${organizationId}/${unitId}/${userId}`,
+    );
+  }
+
   /** POST /api/global/items/unit/ {organizationId, unitId} -> item list */
   getItemsByUnit(
     organizationId: number,

@@ -10,6 +10,7 @@ import {
   DrugRecallItem,
   ItemSearchHit,
   ReasonOption,
+  StoreOption,
   emptyDrugRecallForm,
 } from './add-new-drug-recall.models';
 
@@ -62,6 +63,8 @@ export class AddNewDrugRecall {
 
   form = signal<DrugRecallForm>(emptyDrugRecallForm());
   reasons = signal<ReasonOption[]>([]);
+  /** The user's stores (GET /api/global/user/stores/{orgId}/{unitId}/{userId}). */
+  stores = signal<StoreOption[]>([]);
   items = signal<DrugRecallItem[]>([]);
   itemSearchHits = signal<ItemSearchHit[]>([]);
   batches = signal<BatchRecord[]>([]);
@@ -107,16 +110,35 @@ export class AddNewDrugRecall {
 
   constructor() {
     void this.loadReasons();
+    void this.loadStores();
   }
 
   /** GET .../drug/recall/reason/dropdown — the recall reason options. */
   loadReasons(): void {
     this.service.getRecallReasons().subscribe({
       next: (res) => {
-        const list = (res as { listObject?: ReasonOption[] }).listObject ?? [];
-        this.reasons.set(list);
+        // the endpoint's real shape is { reason: [{ reasonMasterId, reasonDesc, ... }] }
+        // (captured live: HTTP 200 with the reason array) — not listObject.
+        const raw = (res as { reason?: Array<{ reasonMasterId: number; reasonDesc: string }> })
+          .reason ?? [];
+        this.reasons.set(raw.map((r) => ({ reasonId: r.reasonMasterId, reasonName: r.reasonDesc })));
       },
       error: () => this.notify.error('Failed to load recall reasons'),
+    });
+  }
+
+  /** GET .../api/global/user/stores/{orgId}/{unitId}/{userId} — the user's stores. */
+  loadStores(): void {
+    const org = this.organizationId ?? 1;
+    const unit = this.unitId ?? 1;
+    this.service.getUserStores(org, unit, 1).subscribe({
+      next: (res) => {
+        const raw = Array.isArray(res)
+          ? res
+          : (res as { listObject?: Array<{ id: number; store: string }> }).listObject ?? [];
+        this.stores.set(raw.map((st) => ({ storeId: st.id, storeName: st.store })));
+      },
+      error: () => this.notify.error('Failed to load stores'),
     });
   }
 

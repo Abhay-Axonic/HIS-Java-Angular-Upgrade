@@ -128,3 +128,8 @@ export const emptyDrugRecallForm = (): DrugRecallForm => ({
   reasonId: null,
   items: [],
 });
+
+export interface StoreOption {
+  storeId: number;
+  storeName: string;
+}

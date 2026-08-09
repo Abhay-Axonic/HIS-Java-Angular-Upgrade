@@ -24,6 +24,9 @@
         class="text-input"
       >
         <option [ngValue]="null" disabled>Select store</option>
+        @for (s of stores(); track s.storeId) {
+          <option [ngValue]="s.storeId">{{ s.storeName }}</option>
+        }
       </select>
     </label>
     <label>
