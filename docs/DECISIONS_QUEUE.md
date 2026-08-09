@@ -110,3 +110,19 @@ per the mandate.
 - Q12 NEW: the constants-class decision — 103/164 resolvable via a config lookup; the residual 61 resist; the owner's call (narrow fix vs runtime capture). OPEN.
 - Q13 NEW: the campaign-1 exit criterion's precondition FAILED (E5 = 18 tables; phases 3/4 unanswerable from the table) — the exit condition is an OPEN OWNER DECISION; no replacement criterion invented (RULES.md amendment 2026-08-08). OPEN.
 - Q14 NEW: the runtime-capture option — 40-screen browser network-log capture (owner time, not agent) as the alternative to static derivation. OPEN.
+
+## Q13 — Campaign 1 exit options (prepared 2026-08-08; NOT decided — the owner decides)
+
+Context: the RULES.md campaign-1 exit criterion required phases 3/4 (shared reads, unscoped queries) to run as QUERIES against the deriver's join table. The deriver's E5 resolved only 18 tables — the criterion's precondition FAILED (recorded in the RULES.md amendment). The exit condition is now an open decision. Campaign 1's phases 1-2 (the DQ-003 phantom-column entity-side batch + the silent-save guard) took roughly 2-3 working sessions (2026-08-07/08), including the guard's three empirical false-positive corrections.
+
+OPTION (a) — run phases 3/4 as FRESH SWEEPS (not queries against a table)
+- What gets covered: the remaining phantom-column classes (the entity-vs-schema raw count is 601, DDL-filtered ~234 true + 60 typo-class, batch 1 removed 6), the unscoped/shared-query audit, and the swallowed-exception surface (4,928 silent/empty catch blocks, phase 5's standing backlog).
+- What gets left open: screen-level runtime behavior (what a user sees when a shared/unscoped query is hit) — no map, no pre-rebuild lookahead.
+- What it costs: the sweep tooling already exists (the drift checks, the query audits, the catch-scan) — an estimated 1-2 sessions to re-run + classify, plus the owner's review of each finding class. No deriver work.
+
+OPTION (b) — declare campaign 1 complete at phases 1-2; queue the remaining findings; return to Track A
+- What gets covered: nothing new — phases 1-2's outcomes stand (batch 1's 6 columns removed, the guard live, DQ-003 partially discharged, the ledger + BR records in place).
+- What gets left open: everything phases 3/4 would have surfaced — the ~234 remaining phantom columns, the unscoped/shared-query classes, the swallowed-exception backlog — queued as findings (DQ-001 holds the phantom-table class; the column class would need its own DQ), with the runtime risk that a rebuilt screen hits an unscoped query or a phantom column during Track A and the discovery happens post-rebuild instead of pre-rebuild (the sms-configuration case, found by accident on cycle six).
+- What it costs: zero sessions now; the deferred cost is whatever the post-rebuild discoveries cost later.
+
+The two options trade the same asset: pre-rebuild visibility of the query landscape versus immediate return to Track A. The owner decides.
