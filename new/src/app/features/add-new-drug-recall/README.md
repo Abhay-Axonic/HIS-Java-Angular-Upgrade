@@ -3,10 +3,11 @@
 Legacy source:
 - template: `views/PharmacyInventory/Store/add-new-drug-recall.html` (1,166 lines)
 - controller: `resources/assets/js/controller/Inventory/addNewDrugRecallController.js` (28 KB)
-- legacy state: `AddNewDrugRecall`, module id **220 assumed** (the Inventory
-  family, same as add-fixed-asset-master) — VERIFY at click-through against
-  the legacy menu tree; if the module differs, the single-line change is in
-  `app.routes.ts`.
+- legacy state: `AddNewDrugRecall`, module id **139** — RESOLVED 2026-08-08
+  from the Admin privilege tree (privilege.privilege modules JSON: the "Drug
+  Recall" leaf, parent Store(123) -> Inventory(121)). The prior 220 assumption
+  is retracted. The Admin role's tree contains 139 (role_id=1), so the guard's
+  permission row exists for the owner's login.
 
 ## Endpoints (all verified against the backend)
 

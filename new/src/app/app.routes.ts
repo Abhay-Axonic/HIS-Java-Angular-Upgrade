@@ -1612,7 +1612,7 @@ export const routes: Routes = [
       {
         path: 'addNewDrugRecall',
         canActivate: [moduleAccessGuard],
-        data: { moduleId: 220, title: 'Add New Drug Recall' },
+        data: { moduleId: 139, title: 'Add New Drug Recall' },
         loadComponent: () => import('./features/add-new-drug-recall/add-new-drug-recall').then((m) => m.AddNewDrugRecall),
       },
       {

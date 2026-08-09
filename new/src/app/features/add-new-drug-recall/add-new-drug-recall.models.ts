@@ -2,9 +2,9 @@
  * add-new-drug-recall — legacy state `AddNewDrugRecall`
  *   views/PharmacyInventory/Store/add-new-drug-recall.html +
  *   resources/assets/js/controller/Inventory/addNewDrugRecallController.js
- * (module id 220 assumed — the Inventory family, same as add-fixed-asset-master;
- *  VERIFY against the legacy menu tree at click-through, single-line change in
- *  app.routes.ts if different).
+ * (module id 139 — RESOLVED 2026-08-08 from the Admin privilege tree
+ *  (privilege.privilege modules JSON: the "Drug Recall" leaf, parent
+ *  Store(123) -> Inventory(121)); the prior 220 assumption is RETRACTED).
  *
  * Endpoint paths taken from the legacy controller's serviceAction calls and
  * the constants.js values (pharmacyApi = rootUrl + '/api/pharmacy',

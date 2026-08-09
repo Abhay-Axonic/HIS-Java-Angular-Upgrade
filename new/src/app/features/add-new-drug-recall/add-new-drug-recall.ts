@@ -17,8 +17,9 @@ import {
  * Parity rebuild of
  *   views/PharmacyInventory/Store/add-new-drug-recall.html +
  *   resources/assets/js/controller/Inventory/addNewDrugRecallController.js
- * (state `AddNewDrugRecall`, module id 220 assumed — the Inventory family;
- * verify at click-through).
+ * (state `AddNewDrugRecall`, module id 139 — RESOLVED 2026-08-08 from the
+ * Admin privilege tree (Drug Recall leaf, 139 under Store/Inventory); the
+ * prior 220 assumption is RETRACTED).
  *
  * Legacy behaviors reproduced faithfully (flagged, not silently fixed):
  *
