@@ -1,0 +1,130 @@
+<div class="page-content">
+  <h2 class="page-title">Combination Medication Master</h2>
+
+  <fieldset>
+    <div class="form-row">
+      <div class="form-field">
+        <select
+          class="text-input"
+          [(ngModel)]="form().combinationMedicineId"
+          name="combinationMedicineId"
+        >
+          <option [ngValue]="null"></option>
+          @for (item of combinationMedicines(); track item.id) {
+            <option [ngValue]="item.id">{{ item.name }}</option>
+          }
+        </select>
+        <label for="combinationMedicineId">Combination Medicine <span class="star">*</span></label>
+      </div>
+
+      <div class="form-field">
+        <select
+          class="text-input"
+          [(ngModel)]="form().genericId"
+          name="genericId"
+        >
+          <option [ngValue]="null"></option>
+          @for (item of generics(); track item.id) {
+            <option [ngValue]="item.id">{{ item.name }}</option>
+          }
+        </select>
+        <label for="genericId">Generic <span class="star">*</span></label>
+      </div>
+
+      <div class="form-field">
+        <input
+          type="number"
+          class="text-input"
+          [(ngModel)]="form().strength"
+          name="strength"
+          placeholder="0"
+        />
+        <label for="strength">Strength <span class="star">*</span></label>
+      </div>
+
+      <div class="form-field">
+        <select
+          class="text-input"
+          [(ngModel)]="form().strengthUnitId"
+          name="strengthUnitId"
+        >
+          <option [ngValue]="null"></option>
+          @for (item of uomUnits(); track item.id) {
+            <option [ngValue]="item.id">{{ item.name }}</option>
+          }
+        </select>
+        <label for="strengthUnitId">Clinical Unit of Measurement <span class="star">*</span></label>
+      </div>
+
+      <div class="form-field">
+        <input
+          type="text"
+          class="text-input"
+          autocomplete="off"
+          [(ngModel)]="form().displayGenericName"
+          name="displayGenericName"
+        />
+        <label for="displayGenericName">Display Generic Name <span class="star">*</span></label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="toolbar-row">
+    <div class="toolbar-right">
+      <button class="btn btn-primary btn-save" (click)="onSave()" title="Save">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+      <input
+        type="text"
+        class="text-search-box"
+        placeholder="Search"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+      />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="width15">Combination medicine</th>
+          <th class="width15">Generic</th>
+          <th class="width10">Strength</th>
+          <th class="width10">Clinical Unit of Measurement</th>
+          <th class="width15">Display Generic Name</th>
+          <th class="width8 text-center">Status</th>
+          <th class="width8 text-center">Action taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of filteredRows(); track row.id) {
+          <tr [class.selected]="selectedRowId() === row.id">
+            <td>{{ row.name }}</td>
+            <td>{{ row.genericName ?? '—' }}</td>
+            <td>{{ row.strength ?? '—' }}</td>
+            <td>{{ row.strengthUnitName ?? '—' }}</td>
+            <td>{{ row.displayGenericName ?? '—' }}</td>
+            <td class="text-center">
+              <app-status-toggle
+                [checked]="row.status === true"
+                [disabled]="togglingId() === row.id"
+                (toggled)="onToggle(row)"
+              ></app-status-toggle>
+            </td>
+            <td class="text-center">
+              <a class="btn btn-link" (click)="onEdit(row)" title="Edit">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-cell">No combination medications found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
