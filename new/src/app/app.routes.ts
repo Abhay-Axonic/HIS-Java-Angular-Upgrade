@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'immunizationSchedule',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 483, title: 'Immunization Schedule' },
+        loadComponent: () =>
+          import('./features/immunization-schedule/immunization-schedule').then((m) => m.ImmunizationSchedule),
+      },
+      {
         path: 'surgeryMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 487, title: 'Surgery Master' },
