@@ -126,3 +126,5 @@ OPTION (b) — declare campaign 1 complete at phases 1-2; queue the remaining fi
 - What it costs: zero sessions now; the deferred cost is whatever the post-rebuild discoveries cost later.
 
 The two options trade the same asset: pre-rebuild visibility of the query landscape versus immediate return to Track A. The owner decides.
+
+- Q16 NEW (2026-08-08, module-id resolution): the implant-opening-balance screens' module id is UNDETERMINED. Sources: the Admin privilege tree (privilege.privilege modules JSON) has NO "Implant Opening Balance" leaf (the closest is "154 Opening balance" under Stock(153) -> Inventory(121) — the general opening-balance module, not a confirmed match); the legacy app.js has the `addNewImplantOpeningBalance`/`detailsImplantOpeningBalance` states COMMENTED OUT (the legacy routes disabled). The route placeholders stay 220 until the owner decides (seed/registration — OWNER-BLOCKED, not seeded). The add-new-drug-recall module IS resolved: 139 (the Drug Recall leaf under Store/Inventory; the 220 assumption retracted; the route corrected on the screen's branch; the Admin role's permission row confirmed).
