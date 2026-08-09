@@ -44,7 +44,7 @@ for p, src in JAVA.items():
     prefix = pre.group(1) if pre else ""
     for m in re.finditer(
             r"@(RequestMapping|GetMapping|PostMapping|PutMapping|DeleteMapping)\s*\(([^)]*)\)\s*"
-            r"[\s\S]{0,200}?public\s+(?:[\w<>,\[\] ]+\s+)?(\w+)\s*\(", src):
+            r"[\s\S]{0,200}?public\s+(?:(?:@[\w\.]+|[\w<>,\[\] ])+\s+)*?(\w+)\s*\(", src):
         ann, args, mname = m.group(1), m.group(2), m.group(3)
         mval = re.search(r'value\s*=\s*"([^"]*)"', args)
         mpath = mval.group(1) if mval else ""
@@ -60,14 +60,22 @@ print("controller method mappings:", len(CTRL))
 
 def e2_match(http, path):
     """match an (http, path) endpoint to a controller method. Parameterized
-    templates ({orgId} etc.) normalize to a wildcard for the comparison."""
+    templates ({orgId} etc.) normalize to a wildcard for the comparison.
+    The rebuild's HTTP calls carry an '/api[/<module>]' base the backend
+    controllers do not map, so the stripped variant is also compared."""
     path = path.rstrip("/")
-    path_norm = re.sub(r"\{[^}]+\}", "*", path)
+    candidates = [path]
+    stripped = re.sub(r"^/api(?:/[a-zA-Z]+)?", "", path)
+    if stripped != path and stripped:
+        candidates.append(stripped)
+    path_norm = [re.sub(r"\{[^}]+\}", "*", c) for c in candidates]
     hits = []
     for c in CTRL:
-        full = (c["prefix"].rstrip("/") + "/" + c["mpath"]).rstrip("/") if c["prefix"] else c["mpath"].rstrip("/")
+        # prefix may carry no leading slash ("api/global") and mpath may start
+        # with one — normalize both to exactly one slash
+        full = ("/" + c["prefix"].lstrip("/") + "/" + c["mpath"].lstrip("/")).rstrip("/") if c["prefix"] else c["mpath"].rstrip("/")
         full_norm = re.sub(r"\{[^}]+\}", "*", full)
-        if full_norm == path_norm:
+        if full_norm in path_norm:
             if c["http"] in (http, "ANY"):
                 hits.append(c)
     return hits

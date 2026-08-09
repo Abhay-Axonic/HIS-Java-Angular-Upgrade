@@ -18,8 +18,8 @@ rebuilt = set(index["new_features"])
 def norm(s):
     return re.sub(r"[-_\s]", "", s).lower()
 built_norm = {norm(f): f for f in rebuilt}
-e1 = json.load(open(f"{OUT}/e1_edges.json"))
-print("E1 edges loaded:", len(e1))
+e1 = json.load(open(f"{OUT}/e1_edges_parser.json"))
+print("E1 edges loaded (parser):", len(e1))
 
 # ---------- E5: named queries -> the entity's query string -> tables ----------
 # entities' @NamedQuery/@NamedNativeQuery definitions

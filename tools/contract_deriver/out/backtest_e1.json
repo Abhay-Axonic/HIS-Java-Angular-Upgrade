@@ -1,9 +1,9 @@
 {
- "screens_compared": 158,
- "agree": 123,
- "disagree": 401,
- "miss": 347,
- "total": 871,
+ "screens_compared": 159,
+ "agree": 160,
+ "disagree": 451,
+ "miss": 312,
+ "total": 923,
  "disagreements": [
   [
    "disagree",
@@ -21,11 +21,6 @@
    "/api/billing/getContractGradeMasterList"
   ],
   [
-   "missed",
-   "gradecreationmaster",
-   "/api/billing/updateContractGradeMaster"
-  ],
-  [
    "disagree",
    "armaster",
    "/global/billing/getARCodeMasterById"
@@ -39,16 +34,6 @@
    "disagree",
    "armaster",
    "/global/billing/getARCodeMasterList"
-  ],
-  [
-   "missed",
-   "armaster",
-   "/global/billing/updateARCodeMaster"
-  ],
-  [
-   "missed",
-   "armaster",
-   "/global/billing/updateARCodeMasterStatus"
   ],
   [
    "disagree",
@@ -113,17 +98,17 @@
   [
    "disagree",
    "coupontemplatemaster",
-   "<dynamic:URI>"
+   "/api/billing/coupon/getCouponTemplateDetails"
+  ],
+  [
+   "disagree",
+   "coupontemplatemaster",
+   "/api/billing/coupon/getCouponTemplateMaster"
   ],
   [
    "missed",
    "coupontemplatemaster",
    "/api/billing/coupon/saveCouponTemplateMaster"
-  ],
-  [
-   "missed",
-   "coupontemplatemaster",
-   "/api/billing/coupon/updateStatus"
   ],
   [
    "disagree",
@@ -143,7 +128,7 @@
   [
    "disagree",
    "detailsassetreturn",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -168,7 +153,7 @@
   [
    "disagree",
    "assetcategorymaster",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -248,7 +233,7 @@
   [
    "disagree",
    "assetissueacceptance",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -303,7 +288,7 @@
   [
    "disagree",
    "linenissueacceptance",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -342,6 +327,26 @@
   ],
   [
    "disagree",
+   "inputoutputcharts",
+   "/api/common/getShiftlistByTime"
+  ],
+  [
+   "disagree",
+   "inputoutputcharts",
+   "/api/global/getIntakeFluidMasterList"
+  ],
+  [
+   "disagree",
+   "inputoutputcharts",
+   "/api/global/getIntakeFluidTypeMasterListById"
+  ],
+  [
+   "disagree",
+   "campmaster",
+   "/api/billing/getPatientType"
+  ],
+  [
+   "disagree",
    "campmaster",
    "/global/bloodBank/getCampMasterListCount"
   ],
@@ -351,9 +356,9 @@
    "/global/bloodBank/getCampMasterListPaginationList"
   ],
   [
-   "missed",
-   "campmaster",
-   "/global/bloodBank/updateCampMaster"
+   "disagree",
+   "rolecreation",
+   "/api/getDashboardMasterList"
   ],
   [
    "disagree",
@@ -367,23 +372,18 @@
   ],
   [
    "disagree",
-   "rolecreation",
-   "/api/global/getUserRoleMasterList"
+   "cardtypemaster",
+   "/api/billing/getCardTypeMasterList"
   ],
   [
    "disagree",
-   "cardtypemaster",
-   "<dynamic:URI>"
+   "wardmaster",
+   ""
   ],
   [
    "disagree",
    "wardmaster",
    "/adt/getActiveICUTypeList"
-  ],
-  [
-   "disagree",
-   "wardmaster",
-   "/api/global/user/stores"
   ],
   [
    "disagree",
@@ -421,11 +421,6 @@
    "/api/pharmacy/getQMSDeptMasterCount"
   ],
   [
-   "missed",
-   "qmsdepartmentmaster",
-   "/api/pharmacy/updateQMSDeptMasterStatus"
-  ],
-  [
    "disagree",
    "tariffmaster",
    "/api/unit/getBillingBedCategoryListByTariffId"
@@ -454,6 +449,11 @@
    "missed",
    "tariffmaster",
    "/api/unit/updateTariffMasterStatus"
+  ],
+  [
+   "disagree",
+   "bankbranch",
+   ""
   ],
   [
    "disagree",
@@ -503,6 +503,11 @@
   [
    "disagree",
    "reasontypemaster",
+   ""
+  ],
+  [
+   "disagree",
+   "reasontypemaster",
    "<dynamic:URI1>"
   ],
   [
@@ -532,13 +537,8 @@
   ],
   [
    "disagree",
-   "doctorslabmaster",
-   "/unit/DoctorSlab/getdoctorSlabList"
-  ],
-  [
-   "disagree",
-   "doctorslabmaster",
-   "/unit/DoctorSlab/getdoctorSlabListByDoctorId"
+   "specialitymaster",
+   "/adt/departmentMasterUniversalSearch"
   ],
   [
    "disagree",
@@ -548,7 +548,7 @@
   [
    "disagree",
    "specialitymaster",
-   "/api/global/user/stores"
+   "<dynamic:URI1>"
   ],
   [
    "missed",
@@ -573,27 +573,7 @@
   [
    "disagree",
    "boxmasters",
-   "<dynamic:URI1>"
-  ],
-  [
-   "disagree",
-   "boxmasters",
-   "<dynamic:URI2>"
-  ],
-  [
-   "missed",
-   "boxmasters",
-   "/mrdbox/saveMrdBox"
-  ],
-  [
-   "missed",
-   "boxmasters",
-   "/mrdbox/updateMrdBox"
-  ],
-  [
-   "missed",
-   "boxmasters",
-   "/mrdbox/updateMrdBoxStatus"
+   "/mrdbox/getMrdBoxList"
   ],
   [
    "disagree",
@@ -611,16 +591,6 @@
    "/api/global/unit/getWeekendMasterCount"
   ],
   [
-   "missed",
-   "weekendmaster",
-   "/api/global/unit/updateWeekendMaster"
-  ],
-  [
-   "missed",
-   "weekendmaster",
-   "/api/global/unit/updateWeekendMasterStatus"
-  ],
-  [
    "disagree",
    "apmaster",
    "/global/billing/getAPCodeMasterById"
@@ -634,16 +604,6 @@
    "disagree",
    "apmaster",
    "/global/billing/getAPCodeMasterList"
-  ],
-  [
-   "missed",
-   "apmaster",
-   "/global/billing/updateAPCodeMaster"
-  ],
-  [
-   "missed",
-   "apmaster",
-   "/global/billing/updateAPCodeMasterStatus"
   ],
   [
    "disagree",
@@ -688,17 +648,17 @@
   [
    "disagree",
    "doctorcabinmapper",
+   "/api/global/unit/getActiveCabinMaster"
+  ],
+  [
+   "disagree",
+   "doctorcabinmapper",
    "<dynamic:URI1>"
   ],
   [
    "disagree",
    "doctorcabinmapper",
    "<dynamic:URI2>"
-  ],
-  [
-   "disagree",
-   "doctorcabinmapper",
-   "<dynamic:URI>"
   ],
   [
    "missed",
@@ -731,14 +691,9 @@
    "/adt/getWingMasterListCount"
   ],
   [
-   "missed",
-   "wingmaster",
-   "/adt/saveWingMaster"
-  ],
-  [
-   "missed",
-   "wingmaster",
-   "/adt/updateWingMasterStatus"
+   "disagree",
+   "organizationmaster",
+   ""
   ],
   [
    "disagree",
@@ -751,9 +706,9 @@
    "/adt/getAllCountryMasterList"
   ],
   [
-   "disagree",
+   "missed",
    "organizationmaster",
-   "/allArganizationList"
+   "/organization/image"
   ],
   [
    "missed",
@@ -928,12 +883,12 @@
   [
    "disagree",
    "frequencymaster",
-   "/frequencies"
+   "/api/globals/frequency/getConvertedLanguageListById"
   ],
   [
    "disagree",
    "frequencymaster",
-   "/listLanguageMaster"
+   "/frequencies"
   ],
   [
    "missed",
@@ -948,7 +903,7 @@
   [
    "disagree",
    "reasonmaster",
-   "/reasons"
+   ""
   ],
   [
    "disagree",
@@ -974,6 +929,11 @@
    "missed",
    "reasonmaster",
    "/api/common/updateReasonMasterStatus"
+  ],
+  [
+   "disagree",
+   "currencydenomination",
+   ""
   ],
   [
    "disagree",
@@ -1016,11 +976,6 @@
    "/api/pharmacy/getQMSMasterList"
   ],
   [
-   "missed",
-   "qmskioskmaster",
-   "/api/pharmacy/updateQMSMasterStatus"
-  ],
-  [
    "disagree",
    "pmschedule",
    "/api/assetManagement/maintenance/fetchCheckListByAssetScheduleId"
@@ -1028,12 +983,12 @@
   [
    "disagree",
    "pmschedule",
-   "/api/assetManagement/maintenance/fetchScheduledAndCompletionData"
+   "/api/assetManagement/maintenance/fetchScheduledCompletionAssignedData"
   ],
   [
    "disagree",
    "pmschedule",
-   "/api/assetManagement/maintenance/fetchScheduledCompletionAssignedData"
+   "/api/assetManagement/maintenance/getAssetDetailsByCriteria"
   ],
   [
    "missed",
@@ -1048,32 +1003,17 @@
   [
    "disagree",
    "passtypemaster",
+   "/api/unit/visitor/getPassTypeMasterById"
+  ],
+  [
+   "disagree",
+   "passtypemaster",
    "/api/unit/visitor/getPassTypeMasterCount"
   ],
   [
    "disagree",
    "passtypemaster",
    "/api/unit/visitor/getPassTypeMasterList"
-  ],
-  [
-   "disagree",
-   "multicounterpackage",
-   "/PackageTypeId/*/activeInactive"
-  ],
-  [
-   "disagree",
-   "multicounterpackage",
-   "/Unit/Service/EHCpackage/getPackgeType"
-  ],
-  [
-   "disagree",
-   "multicounterpackage",
-   "/billing/service/getConsultationDeptByServiceId"
-  ],
-  [
-   "missed",
-   "multicounterpackage",
-   "/api/packages/inActivePackage/parentPkgId"
   ],
   [
    "disagree",
@@ -1099,6 +1039,11 @@
    "missed",
    "employeecategorymaster",
    "/billing/updateEmployeeCategoryMasterStatus"
+  ],
+  [
+   "disagree",
+   "systemmaster",
+   "/api/global/getSystemGenderListById"
   ],
   [
    "disagree",
@@ -1203,32 +1148,12 @@
   [
    "disagree",
    "rackmasters",
-   "<dynamic:URI1>"
-  ],
-  [
-   "disagree",
-   "rackmasters",
-   "<dynamic:URI2>"
-  ],
-  [
-   "missed",
-   "rackmasters",
-   "/mrdrack/saveMrdRack"
-  ],
-  [
-   "missed",
-   "rackmasters",
-   "/mrdrack/updateMrdRack"
-  ],
-  [
-   "missed",
-   "rackmasters",
-   "/mrdrack/updateMrdRackStatus"
+   "/mrdrack/getMrdRackList"
   ],
   [
    "disagree",
    "assetreturn",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -1328,11 +1253,6 @@
   [
    "disagree",
    "ambulancetypemaster",
-   "<dynamic:URI1>"
-  ],
-  [
-   "disagree",
-   "ambulancetypemaster",
    "<dynamic:URI>"
   ],
   [
@@ -1378,7 +1298,7 @@
   [
    "disagree",
    "assetissueindent",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -1398,27 +1318,7 @@
   [
    "disagree",
    "rowmasters",
-   "<dynamic:URI1>"
-  ],
-  [
-   "disagree",
-   "rowmasters",
-   "<dynamic:URI2>"
-  ],
-  [
-   "missed",
-   "rowmasters",
-   "/mrdrow/saveMrdRow"
-  ],
-  [
-   "missed",
-   "rowmasters",
-   "/mrdrow/updateMrdRow"
-  ],
-  [
-   "missed",
-   "rowmasters",
-   "/mrdrow/updateMrdRowStatus"
+   "/mrdrow/getMrdRowList"
   ],
   [
    "disagree",
@@ -1476,14 +1376,9 @@
    "/api/global/getStoreTypeList"
   ],
   [
-   "missed",
-   "storetypemaster",
-   "/api/global/updateStoreTypeStatus"
-  ],
-  [
    "disagree",
    "addfixedassetmaster",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -1523,6 +1418,11 @@
   [
    "disagree",
    "nursingstationmaster",
+   ""
+  ],
+  [
+   "disagree",
+   "nursingstationmaster",
    "<dynamic:URI1>"
   ],
   [
@@ -1543,6 +1443,11 @@
   [
    "disagree",
    "genericmaster",
+   ""
+  ],
+  [
+   "disagree",
+   "genericmaster",
    "<dynamic:URI>"
   ],
   [
@@ -1559,6 +1464,11 @@
    "missed",
    "genericmaster",
    "/api/global/products/categories"
+  ],
+  [
+   "disagree",
+   "mealpreferencemaster",
+   ""
   ],
   [
    "disagree",
@@ -1588,11 +1498,6 @@
   [
    "disagree",
    "ambulancetarrifmaster",
-   "<dynamic:URI1>"
-  ],
-  [
-   "disagree",
-   "ambulancetarrifmaster",
    "<dynamic:URI>"
   ],
   [
@@ -1618,12 +1523,17 @@
   [
    "disagree",
    "hospitalmaster",
-   "/adt/getSuperAdminUser"
+   "/global/getSuperAdminUser"
   ],
   [
    "disagree",
    "hospitalmaster",
-   "/global/getSuperAdminUser"
+   "/licenceDetailsByOrganization"
+  ],
+  [
+   "missed",
+   "hospitalmaster",
+   "/unit/image"
   ],
   [
    "missed",
@@ -1678,7 +1588,7 @@
   [
    "disagree",
    "assettypemaster",
-   "<dynamic:URI>"
+   "/assets/types"
   ],
   [
    "missed",
@@ -1688,12 +1598,12 @@
   [
    "disagree",
    "aibuttonmaster",
-   "/api/global/getButtonMaster"
+   "/api/global/getAiButtonConfigMaster"
   ],
   [
    "disagree",
    "aibuttonmaster",
-   "<dynamic:URI>"
+   "/api/global/getButtonMaster"
   ],
   [
    "disagree",
@@ -1704,11 +1614,6 @@
    "disagree",
    "correctivemaintenance",
    "/api/global/getDetailedStoreList"
-  ],
-  [
-   "missed",
-   "correctivemaintenance",
-   "/api/assetManagement/maintenance/cancelCorrectiveMaintenanceRequest"
   ],
   [
    "disagree",
@@ -1743,17 +1648,22 @@
   [
    "disagree",
    "wardstoremapper",
-   "/api/globals/getWardStoremappedList"
+   "/api/globals/getWardStoremappedListPagination"
   ],
   [
    "disagree",
    "wardstoremapper",
-   "/api/globals/getWardStoremappedListPagination"
+   "/api/globals/getWardStoremappedListPaginationCount"
   ],
   [
    "missed",
    "wardstoremapper",
    "/api/globals/activeInactiveWardStoreMapper"
+  ],
+  [
+   "disagree",
+   "qualificationmaster",
+   ""
   ],
   [
    "disagree",
@@ -1804,6 +1714,11 @@
    "missed",
    "shortleavereasonmaster",
    "/adt/updateStatusForShortLeaveReason"
+  ],
+  [
+   "disagree",
+   "employeecategory",
+   ""
   ],
   [
    "disagree",
@@ -1876,11 +1791,6 @@
    "/api/global/unit/getIncidentCategoryMasterList"
   ],
   [
-   "missed",
-   "incidentcategorymaster",
-   "/api/global/unit/updateIncidentCategoryMaster"
-  ],
-  [
    "disagree",
    "instructionmaster",
    "/LIS/global/getTotalLanguageMasterRecordActive"
@@ -1888,17 +1798,12 @@
   [
    "disagree",
    "instructionmaster",
-   "/api/common/getInspectionMasterCount"
+   "/api/common/getConvertedLanguageListById"
   ],
   [
    "disagree",
    "instructionmaster",
-   "/api/common/getInspectionMasterList"
-  ],
-  [
-   "missed",
-   "instructionmaster",
-   "/api/common/updateInspectionMasterStatus"
+   "/api/common/getDeptSpecilityById"
   ],
   [
    "disagree",
@@ -1907,13 +1812,13 @@
   ],
   [
    "disagree",
-   "otimsrolecreation",
-   "/api/global/otimsRole/getAllOtimsRoleMasterList"
+   "checklistmaster",
+   "/global/otims/searchChecklistItemName"
   ],
   [
-   "missed",
+   "disagree",
    "otimsrolecreation",
-   "/api/global/otimsRole/updateOtimsRoleMaster"
+   "/api/global/otimsRole/getAllOtimsRoleMasterList"
   ],
   [
    "disagree",
@@ -2008,17 +1913,17 @@
   [
    "disagree",
    "bankmaster",
+   ""
+  ],
+  [
+   "disagree",
+   "bankmaster",
    "<dynamic:URI1>"
   ],
   [
    "disagree",
    "bankmaster",
    "<dynamic:URI2>"
-  ],
-  [
-   "disagree",
-   "bankmaster",
-   "<dynamic:URI>"
   ],
   [
    "missed",
@@ -2087,6 +1992,21 @@
   ],
   [
    "disagree",
+   "icpccodesconfiguration",
+   "/adt/getActiveSpecialityList"
+  ],
+  [
+   "disagree",
+   "icpccodesconfiguration",
+   "/api/adt/getICPCCodesConfigurationMapperList"
+  ],
+  [
+   "disagree",
+   "icpccodesconfiguration",
+   "/api/adt/getSpecialityListByIcpcSystemId"
+  ],
+  [
+   "disagree",
    "occupationmaster",
    "<dynamic:URI1>"
   ],
@@ -2126,6 +2046,11 @@
    "/api/unit/billing/getInsuranceMasterCount"
   ],
   [
+   "missed",
+   "insurancemaster",
+   "/api/unit/billing/insurance/image"
+  ],
+  [
    "disagree",
    "referralmaster",
    "<dynamic:URI1>"
@@ -2153,12 +2078,12 @@
   [
    "disagree",
    "modalitymaster",
-   "<dynamic:URI1>"
+   "/api/opd/equipments"
   ],
   [
    "disagree",
    "modalitymaster",
-   "<dynamic:URI>"
+   "<dynamic:URI1>"
   ],
   [
    "missed",
@@ -2174,6 +2099,11 @@
    "missed",
    "modalitymaster",
    "/api/opd/updateStatusForModality"
+  ],
+  [
+   "disagree",
+   "rejectionmaster",
+   ""
   ],
   [
    "disagree",
@@ -2243,7 +2173,7 @@
   [
    "disagree",
    "linenissuependingdetails",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -2254,6 +2184,16 @@
    "missed",
    "linenissuependingdetails",
    "/api/linenLaundry/linen/issue"
+  ],
+  [
+   "disagree",
+   "bookappointment",
+   "/adt/getSpecialityListByDoctorIdByOrg"
+  ],
+  [
+   "disagree",
+   "bookappointment",
+   "/api/billing/kiosk/saveAndPay/future"
   ],
   [
    "disagree",
@@ -2293,17 +2233,17 @@
   [
    "disagree",
    "hospitalaccountmaster",
+   ""
+  ],
+  [
+   "disagree",
+   "hospitalaccountmaster",
    "<dynamic:URI1>"
   ],
   [
    "disagree",
    "hospitalaccountmaster",
    "<dynamic:URI2>"
-  ],
-  [
-   "disagree",
-   "hospitalaccountmaster",
-   "<dynamic:URI>"
   ],
   [
    "missed",
@@ -2336,14 +2276,9 @@
    "/api/global/getActionMasterList"
   ],
   [
-   "missed",
-   "newaccesscontrol",
-   "/api/global/updateActionMaster"
-  ],
-  [
    "disagree",
    "rackmaster",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -2391,11 +2326,6 @@
    "/api/kitchen/master/mealMaster/getAllMealMasterListPaginationListCount"
   ],
   [
-   "disagree",
-   "mealmaster",
-   "<dynamic:URI>"
-  ],
-  [
    "missed",
    "mealmaster",
    "/api/kitchen/master/mealMaster"
@@ -2419,11 +2349,6 @@
    "disagree",
    "qmscountermaster",
    "/api/pharmacy/getQMSCounterMasterById"
-  ],
-  [
-   "missed",
-   "qmscountermaster",
-   "/api/pharmacy/updateQMSCounterMasterStatus"
   ],
   [
    "disagree",
@@ -2453,12 +2378,12 @@
   [
    "disagree",
    "transactiontypemaster",
-   "<dynamic:URI>"
+   "/api/billing/getTransactionTypeMasterList"
   ],
   [
    "disagree",
    "linenissue",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -2469,6 +2394,11 @@
    "missed",
    "linenissue",
    "/api/linenLaundry/linen/issue/search"
+  ],
+  [
+   "disagree",
+   "designationmaster",
+   ""
   ],
   [
    "disagree",
@@ -2518,17 +2448,17 @@
   [
    "disagree",
    "usercountermapper",
+   "/api/global/unit/counter/organization//unit"
+  ],
+  [
+   "disagree",
+   "usercountermapper",
    "<dynamic:URI1>"
   ],
   [
    "disagree",
    "usercountermapper",
    "<dynamic:URI2>"
-  ],
-  [
-   "disagree",
-   "usercountermapper",
-   "<dynamic:URI>"
   ],
   [
    "missed",
@@ -2539,6 +2469,11 @@
    "missed",
    "usercountermapper",
    "/api/global/userCounterMapper/status"
+  ],
+  [
+   "disagree",
+   "currencymaster",
+   ""
   ],
   [
    "disagree",
@@ -2623,7 +2558,7 @@
   [
    "disagree",
    "bedcategorymaster",
-   "/unitId"
+   "/orgId//unitId"
   ],
   [
    "disagree",
@@ -2648,6 +2583,11 @@
   [
    "disagree",
    "implantmaster",
+   ""
+  ],
+  [
+   "disagree",
+   "implantmaster",
    "/unitId"
   ],
   [
@@ -2668,17 +2608,22 @@
   [
    "disagree",
    "servicemaster",
-   "/billing"
+   ""
   ],
   [
    "disagree",
    "servicemaster",
-   "/billing/getServiceItemMapperDetails"
+   "/adt/subspeciality/orgId//specialityId"
   ],
   [
    "disagree",
    "servicemaster",
-   "/specialityId"
+   "/api/globals/items/typeahead/search"
+  ],
+  [
+   "missed",
+   "servicemaster",
+   "/api/globals/items/item/search"
   ],
   [
    "missed",
@@ -2689,11 +2634,6 @@
    "missed",
    "servicemaster",
    "/billing/saveOrganizationServiceMaster"
-  ],
-  [
-   "missed",
-   "servicemaster",
-   "/billing/updateGlobalServiceMaster"
   ],
   [
    "disagree",
@@ -2788,6 +2728,11 @@
   [
    "disagree",
    "doctorcategory",
+   ""
+  ],
+  [
+   "disagree",
+   "doctorcategory",
    "<dynamic:URI1>"
   ],
   [
@@ -2826,14 +2771,14 @@
    "/api/global/getVitalQualifireMasterCount"
   ],
   [
-   "missed",
-   "vitalqualifiermaster",
-   "/api/global/updateVitalQualifireMaster"
+   "disagree",
+   "subspecialitymaster",
+   "/adt/getSpecialityListForSubSpeciality"
   ],
   [
    "disagree",
    "subspecialitymaster",
-   "/adt/getSpecialityListForSubSpeciality"
+   "/adt/subSpecialityMasterUniversalSearch"
   ],
   [
    "disagree",
@@ -2858,7 +2803,7 @@
   [
    "disagree",
    "grn",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -2883,17 +2828,17 @@
   [
    "disagree",
    "employeesurvey",
-   "<dynamic:'resources/assets/js/nabhJSON/employee-satisfication-survey.json'>"
-  ],
-  [
-   "missed",
-   "employeesurvey",
-   "/api/common/empSurvey/saveEmployeeSurvey"
+   "<dynamic:"
   ],
   [
    "missed",
    "employeesurvey",
    "/resources/assets/js/nabhJSON/employee-satisfication-survey"
+  ],
+  [
+   "disagree",
+   "bedmaster",
+   "/api/adt/bedMasterUniversalSearch"
   ],
   [
    "disagree",
@@ -2904,11 +2849,6 @@
    "disagree",
    "bedmaster",
    "/api/adt/movingBedListCount"
-  ],
-  [
-   "disagree",
-   "bedmaster",
-   "<dynamic:URI1>"
   ],
   [
    "missed",
@@ -2928,6 +2868,11 @@
   [
    "disagree",
    "outsidehospitalmaster",
+   "/api/global/getOutsideHospitalDoctorMapperById"
+  ],
+  [
+   "disagree",
+   "outsidehospitalmaster",
    "/api/global/getOutsideHospitalDoctorMapperList"
   ],
   [
@@ -2937,13 +2882,8 @@
   ],
   [
    "disagree",
-   "outsidehospitalmaster",
-   "/api/global/getOutsideHospitalMasterCount"
-  ],
-  [
-   "missed",
-   "outsidehospitalmaster",
-   "/api/global/updateOutsideHospitalMaster"
+   "roommaster",
+   ""
   ],
   [
    "disagree",
@@ -2969,6 +2909,11 @@
    "missed",
    "roommaster",
    "/api/adt/updateRoomMasterStatus"
+  ],
+  [
+   "disagree",
+   "fixedassetmaster",
+   ""
   ],
   [
    "disagree",
@@ -3068,17 +3013,17 @@
   [
    "disagree",
    "roommodality",
-   "/api/global/getRoomModalityList"
+   "/api/adt/getActiveModalityRoom"
   ],
   [
    "disagree",
    "roommodality",
-   "/api/global/updateRoomModalityMasterCount"
+   "/api/global/getRoomModalityById"
   ],
   [
-   "missed",
+   "disagree",
    "roommodality",
-   "/api/global/updateRoomModalityMasterStatus"
+   "/api/global/getRoomModalityList"
   ],
   [
    "disagree",
@@ -3131,6 +3076,11 @@
    "/cssd/updateSterilizationTypeStatus"
   ],
   [
+   "disagree",
+   "departmentmasterunit",
+   "/adt/unitDepartmentMasterUniversalSearch"
+  ],
+  [
    "missed",
    "departmentmasterunit",
    "/adt/saveUnitSpecialtiy"
@@ -3174,16 +3124,6 @@
    "disagree",
    "amenitymaster",
    "/adt/getAmenityMasterListCount"
-  ],
-  [
-   "missed",
-   "amenitymaster",
-   "/adt/saveAmenityMaster"
-  ],
-  [
-   "missed",
-   "amenitymaster",
-   "/adt/updateAmenityMasterStatus"
   ],
   [
    "disagree",
@@ -3231,14 +3171,14 @@
    "/api/global/unit/template/tabular/getActiveTabularTemplateMaster"
   ],
   [
-   "missed",
+   "disagree",
    "createtabulardatatemplates",
-   "/api/global/unit/template/tabular/mapper/saveTabularTemplateDataMapper"
+   "/api/global/unit/template/tabular/mapper/getTabularTemplateDataMapperById"
   ],
   [
    "disagree",
    "assetreturnacceptance",
-   "<dynamic:URI>"
+   ""
   ],
   [
    "missed",
@@ -3249,6 +3189,11 @@
    "missed",
    "assetreturnacceptance",
    "/api/asset/management/asset/return/acceptance/search"
+  ],
+  [
+   "disagree",
+   "degreemaster",
+   ""
   ],
   [
    "disagree",
@@ -3291,11 +3236,6 @@
    "/api/global/unit/template/tabular/getTabularTemplateMasterList"
   ],
   [
-   "missed",
-   "createtabulartemplates",
-   "/api/global/unit/template/tabular/updateTabularTemplateMaster"
-  ],
-  [
    "disagree",
    "icpcmapper",
    "/api/opd/getGenderListByICPCSystemId"
@@ -3303,17 +3243,12 @@
   [
    "disagree",
    "icpcmapper",
-   "/api/opd/getICPCMapperCount"
+   "/api/opd/getICPCMapperById"
   ],
   [
    "disagree",
    "icpcmapper",
-   "/api/opd/getICPCMapperList"
-  ],
-  [
-   "missed",
-   "icpcmapper",
-   "/api/opd/updateICPCMapperStatus"
+   "/api/opd/getICPCMapperCount"
   ]
  ]
 }
