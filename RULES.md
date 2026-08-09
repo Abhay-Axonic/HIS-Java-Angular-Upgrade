@@ -103,3 +103,13 @@ Whenever a field-mapping or similar data-correctness bug is found and fixed on o
 Campaign 1 ends when the contract deriver covers the rebuild's next 40 screens (Track A path) and phases 3 and 4 (shared reads, unscoped queries) have been run as QUERIES against the deriver's join table rather than as fresh sweeps. Phase 5 (swallowed exceptions) becomes a standing backlog, not a blocking run. Findings not on the rebuild's path are logged, not chased. Campaign 1 batch 2 (the next DQ-003 phantom-column batch) resumes only if the deriver's E5 error rate is too high to answer the phase 3-4 questions. Extension thresholds are the owner's call — the deriver scope is fixed at 40 + 220 (the next-40 + the rebuilt-223 validation set) and must NOT be extended regardless of the error rate; the rates are logged and the extension decision is queued for the owner.
 
 **STATUS AMENDMENT (2026-08-08, owner decision): the criterion's PRECONDITION FAILED.** The deriver's E5 resolution reached 18 tables across the scope (254 E4 / 828 E2), which cannot answer the phase 3-4 questions; the deriver's back-test error rate never fell below 0.78-0.83 and the intersection list produced zero true positives. The static deriver is PARKED. The campaign-1 exit condition is now an OPEN OWNER DECISION (queued, Q13) — no replacement criterion has been invented; phases 3/4 as fresh sweeps and the runtime-capture option (40-screen browser network-log capture, owner time) are the live alternatives.
+
+## REACHABILITY GATE (standing rule, owner directive 2026-08-08) — step 1b of every screen rebuild, BEFORE contract extraction
+
+A legacy screen is only rebuildable if it is REACHABLE in the legacy. Before extracting any contract, run the four checks:
+1. State registration: is the state registered in the legacy app.js, or commented out / absent?
+2. Menu node: does a node for the screen exist in the privilege registry (privilege.privilege modules JSON)?
+3. Controller gate: does the controller carry a permission/module check?
+4. Module id: does the screen resolve to a module id?
+
+A screen failing checks 1 or 2 is DEAD — do not extract its contract, do not write it. Log it as a dead-screen finding (tagged with the screen, queued), and take the next screen on the path instead. This rule exists because two of the first three Track A rebuild screens (the implant opening balance pair) were rebuilds of legacy screens that no user can open: routes commented out in app.js, zero menu nodes, no permission check — dead in legacy (2026-08-08, logged Q16/Q17).
