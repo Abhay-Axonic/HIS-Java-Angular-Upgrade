@@ -96,3 +96,52 @@ the token must be from a login at least as fresh as the checks.
 
 Report the two growl/load outcomes and the six harness results back to the
 session; nothing merges or pushes from here.
+
+## Check C — the combinationMedicationMaster screen (screen 4)
+
+**URL:** http://localhost:4201/combinationMedicationMaster (the REBUILT screen in the
+NEW Angular build; the route is registered with the module-472 guard).
+
+**What should load:** the combination medication master screen — the form row (Combination
+Medicine, Generic, Strength, Clinical Unit of Measurement, Display Generic Name — all marked
+required per the legacy labels), the Save button + Search box, and the 7-column grid
+(Combination medicine, Generic, Strength, CUM, Display Generic Name, Status, Action).
+
+**Dropdowns that should populate:** the Generic select (GET /api/globals/generics/1 — dev
+data has real rows: Paracetamol…). The Combination Medicine select and the grid
+(GET /api/globals/generics/IsCombination/1) and the Clinical Unit of Measurement select
+(GET /api/global/uom/units/1) come up EMPTY on dev data — no combination generics, no UOM
+rows seeded. That is the known dev-data gap (screen-4 README finding 2), not a regression.
+
+**The sequence:**
+1. The screen loads; the Generic select populates with the real generics.
+2. Type in the Search box — the loaded grid rows filter client-side (an empty grid stays
+   empty — the legit dev-data state).
+3. A row's status toggle — PATCH /api/globals/generics/{id} — a success growl ("Generic
+   Updated Successfully"). NOTE: the grid is empty on dev data, so there is no row to toggle
+   in the UI; the endpoint itself is 201-verified.
+4. The pencil on a row — the edit fetch (getCombinationDetail/{id}) populates the form.
+5. Save — an ERROR growl "Save not wired — no combination-medication save endpoint exists".
+   This is INTENTIONAL (the finding), NOT a regression.
+
+**PASS looks like:** the screen loads with no red toasts; the Generic select populates; the
+network tab shows the three calls (/api/globals/generics/1, /IsCombination/1,
+/api/global/uom/units/1) all HTTP 200; the Save click shows the honest "not wired" notice;
+the empty grid shows "No combination medications found".
+
+**FAIL looks like:** the guard denies (FINAL URL /accessDenied — module-472 permission
+missing from the store); a red toast on load ("…load failed"); a non-2xx on any of the
+three calls.
+
+**Known divergences (do not mistake for regressions):**
+1. The Strength field is a NUMBER input (the legacy's select had no options and no data
+   source; the rebuild binds m_combination_generic.strength_unit — a double).
+2. The Search box filters the loaded list client-side (the legacy's was inert).
+3. The grid's detail cells (Generic/Strength/CUM/Display name) fill from the edit's detail
+   fetch; the IsCombination list rows carry only id/code/name/status.
+4. Save is intentionally not wired (no endpoint exists — the finding); the legacy's save
+   anchor was a dead link to a nonexistent modal too.
+5. The rebuild ADDS behaviour the legacy never had (the legacy is a static shell) — the
+   sign-off list is in the screen-4 session report: dropdowns load real data, the grid
+   renders the IsCombination list, the status toggle calls the PATCH, the edit fetches the
+   detail, the search filters, and the Save reports honestly.
