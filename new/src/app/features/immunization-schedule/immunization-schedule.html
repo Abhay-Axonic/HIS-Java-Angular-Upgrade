@@ -1,0 +1,84 @@
+<div class="page-content">
+  <h2 class="page-title">Immunization Schedule</h2>
+
+  <form class="form-row">
+    <div class="form-field">
+      <select class="text-input" name="ageUnit" [(ngModel)]="form().ageUnit">
+        <option>Day</option>
+        <option>Month</option>
+        <option>Year</option>
+      </select>
+      <label for="ageUnit">Age *</label>
+    </div>
+    <div class="form-field form-field-narrow">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        name="ageValue"
+        [(ngModel)]="form().ageValue"
+      />
+      <label for="ageValue">Age Value</label>
+    </div>
+    <div class="form-field">
+      <select class="text-input" name="vaccine" [(ngModel)]="form().vaccineId">
+        <option [ngValue]="null">Select Vaccine</option>
+        @for (v of vaccines(); track v.vaccinationId) {
+          <option [ngValue]="v.vaccinationId">
+            {{ v.abbreviation || v.vaccinationCode || ('Vaccine #' + v.vaccinationId) }}
+          </option>
+        } @empty {
+          @if (!loadingVaccines()) {
+            <option disabled>No vaccines available</option>
+          }
+        }
+      </select>
+      <label for="vaccine">Vaccine *</label>
+      @if (!loadingVaccines() && vaccines().length === 0) {
+        <div class="field-note">Vaccine list is empty on dev data (the feed is live)</div>
+      }
+    </div>
+    <div class="form-field form-field-narrow">
+      <select class="text-input" name="sequence" [(ngModel)]="form().sequence">
+        <option value="">Select Sequence</option>
+      </select>
+      <label for="sequence">Sequence *</label>
+    </div>
+    <div class="form-field form-field-narrow">
+      <button type="button" class="btn btn-info" (click)="onDiseaseList()">
+        Disease List
+      </button>
+    </div>
+  </form>
+
+  <div class="toolbar-row">
+    <div class="toolbar-right">
+      <button class="btn btn-primary btn-save" (click)="onSave()" title="Save">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+      <input type="text" class="text-search-box" placeholder="Search" name="search" />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="width10">Age</th>
+          <th class="width15">Vaccine</th>
+          <th class="width6">Disease</th>
+          <th class="width8">Sequence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" class="empty-cell">
+            No immunization schedules loaded — no list endpoint exists on this
+            screen's path (finding logged; nothing seeded)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
