@@ -84,6 +84,10 @@ def main():
     ap.add_argument('--role-id', type=int, default=None,
                     help='override roleId in the cached cookieObject (control: a role with no '
                          'privilege row => the bootstrap writes an empty store)')
+    ap.add_argument('--exercise-modal', nargs='?', const='para', default=None, metavar='TERM',
+                    help='after load, open the screen\'s modal ("Add Item" button) and type TERM '
+                         'into its first text input — exercises the modal search path so a '
+                         'rendered error toast can be caught')
     args = ap.parse_args()
     route = args.route if args.route.startswith('/') else f'/{args.route}'
     module_id = args.module_id if args.module_id is not None else route_module_id(route.lstrip('/'))
@@ -131,6 +135,16 @@ def main():
         # the session artifact ONLY: cookieObject. No token, no permissions,
         # no sessionStorage — the app's own bootstrap decides (Q21).
         page.add_init_script(build_cookie_script(cookie_object))
+        # error-toast observer: record EVERY rendered error notice for the
+        # whole session (a toast may auto-dismiss before the end scan)
+        page.add_init_script("""window.__hermesToasts = [];
+            const __mo = new MutationObserver(() => {
+                document.querySelectorAll('.notice--error').forEach(el => {
+                    const t = (el.textContent || '').trim();
+                    if (t && !window.__hermesToasts.includes(t)) window.__hermesToasts.push(t);
+                });
+            });
+            __mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });""")
 
         page.on('console', lambda m: (console_errors.append(m.text)
                                       if m.type == 'error' else
@@ -155,6 +169,19 @@ def main():
         page.goto(f'{base}{route}', wait_until='load', timeout=30000)
         page.wait_for_timeout(3000)  # settle: the bootstrap + the screen's data fetches
 
+        if args.exercise_modal is not None:
+            # exercise the modal search path so a rendered error toast can be
+            # caught (the modal's search fires on input; a broken search shows
+            # a red "… failed" toast — a state a user would call broken)
+            try:
+                page.click('button:has-text("Add Item")', timeout=8000)
+                page.wait_for_timeout(700)
+                box = page.locator('.modal-panel input[type="text"]').first
+                box.fill(args.exercise_modal, timeout=8000)
+                page.wait_for_timeout(2500)
+            except Exception as exc:
+                page_errors.append(f'modal exercise failed: {str(exc)[:80]}')
+
         url_now = page.url
         body_text = page.evaluate('document.body ? document.body.innerText.slice(0, 300) : ""')
         store = page.evaluate("""() => {
@@ -172,6 +199,14 @@ def main():
         # can only have been written by fetchPermissions after a successful
         # /privilege/role fetch)
         bootstrap_seen = store.get('present') and store.get('count', 0) > 0
+        toasts = page.evaluate("""() => {
+            const seen = window.__hermesToasts || [];
+            document.querySelectorAll('.notice--error').forEach(el => {
+                const t = (el.textContent || '').trim();
+                if (t && !seen.includes(t)) seen.push(t);
+            });
+            return seen;
+        }""")
         selector_counts = {}
         for sel in args.selectors:
             selector_counts[sel] = page.locator(sel).count()
@@ -208,6 +243,8 @@ def main():
         reasons.append(f'{len(bad_requests)} non-2xx response(s)')
     if html_as_json:
         reasons.append(f'{len(html_as_json)} HTML-where-JSON-expected response(s)')
+    if toasts:
+        reasons.append(f'{len(toasts)} rendered error toast(s)')
     for sel in args.selectors:
         if selector_counts.get(sel, 0) == 0:
             reasons.append(f'selector missing: {sel}')
@@ -236,6 +273,8 @@ def main():
         print(f'[BAD-REQ] {b}')
     for h in html_as_json[:3]:
         print(f'[HTML-AS-JSON] {h}')
+    for t in toasts:
+        print(f'[TOAST] {t}')
 
     ok = not reasons
     print(f'RESULT: {"PASS" if ok else "FAIL"}'
