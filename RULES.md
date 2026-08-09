@@ -153,3 +153,21 @@ MUST carry the two hand greps (the app.js registration + the privilege-tree
 node with id and parent chain) regardless. Hand-confirmation is the
 authoritative check; C5 is an aid that must never read as a soft pass.
 
+## BACKEND-DEFECT MERGE RULE (owner-approved 2026-08-09, standing — screen 6)
+
+A screen MAY merge with a documented backend defect on its path, provided all
+four hold:
+1. The rebuild did not introduce it (the defect exists in the legacy backend
+   on the same path).
+2. The failure surfaces honestly in the UI (the backend's own message), never
+   silently and never as a crash.
+3. The defect is logged with its mechanism (the live stack / the named cause)
+   and queued for the owner's decision.
+4. The README states the honest verification state (nothing seeded, the
+   defect named, "not erroring" only when true).
+A smoke FAIL caused SOLELY by a documented backend defect does not block the
+merge, but the merge message must name it. When any gate fails for a backend
+reason, the report's FIRST LINE states whether the rebuild introduced it:
+"Gate 3 FAILs — backend-caused, not rebuild-introduced" is the shape (or the
+reverse if the rebuild is at fault).
+
