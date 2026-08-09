@@ -117,14 +117,21 @@ def main():
         context = browser.new_context()
         page = context.new_page()
 
-        # the login (legacy origin) — one attempt
-        login_page = context.new_page()
-        try:
-            token, cookie, unit = legacy_login(login_page, username, password)
-        except Exception as exc:  # noqa: BLE001
-            print(f'LOGIN-FAILED: {exc}')
-            browser.close()
-            sys.exit(1)
+        # the token cache first (one login per 8h — the rate limiter 429s
+        # the login-group bucket on consecutive logins); the login only on a miss
+        import get_dev_token as gdt
+        cached = gdt.read_cache()
+        if cached:
+            token, cookie, unit = cached['token'], cached.get('cookie', ''), cached.get('unit', '1')
+        else:
+            login_page = context.new_page()
+            try:
+                token, cookie, unit = legacy_login(login_page, username, password)
+            except Exception as exc:  # noqa: BLE001
+                print(f'LOGIN-FAILED: {exc}')
+                browser.close()
+                sys.exit(1)
+            gdt.write_cache(token, unit, cookie)
         # release the login-log row so the NEXT invocation does not self-collide
         try:
             login_page.evaluate("""async () => {

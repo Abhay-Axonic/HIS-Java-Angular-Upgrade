@@ -21,10 +21,40 @@ import json
 import os
 import subprocess
 import sys
+import time
 
 from playwright.sync_api import sync_playwright
 
 LEGACY = 'http://localhost:8080'
+CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.token_cache.json')
+TOKEN_TTL = 8 * 3600  # the legacy tokens last 8 hours
+
+
+def read_cache():
+    """Return the cached token if present and unexpired, else None.
+
+    The cache exists to stop the repeated-login pattern that trips the
+    login-group rate limiter (getUnitByCredentials 429s on consecutive
+    invocations). A corrupt or expired cache is a MISS — the caller re-mints.
+    """
+    try:
+        with open(CACHE_FILE, encoding='utf-8') as f:
+            d = json.load(f)
+        if d.get('token') and d.get('expires') and time.time() < d['expires'] - 60:
+            # JWT-shape check: three dot-separated segments starting with 'ey' —
+            # a corrupt/truncated cached token must be a MISS, not a stale hit
+            if d['token'].count('.') == 2 and d['token'].startswith('ey'):
+                return d
+    except Exception:  # noqa: BLE001
+        pass
+    return None
+
+
+def write_cache(token, unit, cookie=None):
+    json.dump({'token': token, 'unit': unit,
+               'cookie': cookie or '',
+               'expires': time.time() + TOKEN_TTL},
+              open(CACHE_FILE, 'w', encoding='utf-8'))
 
 
 def load_credentials():
@@ -57,7 +87,14 @@ def logout(page):
     saveUserLogDetails only INSERTs an isLogin='N' row — it does NOT close the
     active row, so it cannot release this script's own session. The real close
     is the logId-based updateUserLog (the same UPDATE the login path itself
-    runs against previous rows). Best-effort on both paths.
+    runs against previous rows).
+
+    STOPGAP (QF-2026-08-09-A): the psql UPDATE below compensates for the
+    backend defect by closing the active row directly. No real client does
+    this — the login path exercised here is NOT representative of the user
+    path (a real user would hit the collision dialog and click Ok). Scoped to
+    user_id=1 (the dev credential) ONLY: the WHERE clause pins user_id=1, so
+    no other user's rows can be touched. Revisit when Q19 is decided.
     """
     try:
         subprocess.run(
@@ -201,8 +238,25 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--endpoint')
+    ap.add_argument('--force', action='store_true',
+                    help='re-mint a token, ignoring any cached one')
     args = ap.parse_args()
     username, password = load_credentials()
+
+    cached = None if args.force else read_cache()
+    if cached and not args.endpoint and not args.check:
+        # token path: the cache IS the answer — no login at all
+        print(cached['token'])
+        sys.exit(0)
+    if cached and args.check:
+        print('LOGIN-OK (cached)')
+        sys.exit(0)
+    if cached and args.endpoint:
+        # the cached token + unit + cookie satisfy the full header set
+        _endpoint_proof(args.endpoint, cached['token'], cached.get('unit', '1'),
+                        cached.get('cookie', ''))
+        sys.exit(0)
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -213,30 +267,14 @@ def main():
             sys.stderr.write(f'{exc}\n')
             browser.close()
             sys.exit(1)
+        write_cache(token, unit, cookie)
         if args.check:
             logout(page)
             print('LOGIN-OK')
             browser.close()
             sys.exit(0)
         if args.endpoint:
-            import urllib.request
-            req = urllib.request.Request(
-                args.endpoint,
-                headers={
-                    'Authorization': f'Bearer {token}',
-                    'userid': '1',
-                    'unitid': unit,
-                    'Cookie': cookie,
-                },
-            )
-            try:
-                with urllib.request.urlopen(req, timeout=10) as resp:
-                    print(resp.status)
-            except urllib.error.HTTPError as exc:
-                print(exc.code)
-                logout(page)
-                browser.close()
-                sys.exit(3)
+            _endpoint_proof(args.endpoint, token, unit, cookie)
             logout(page)
             browser.close()
             sys.exit(0)
@@ -244,6 +282,25 @@ def main():
         logout(page)
         browser.close()
         sys.exit(0)
+
+
+def _endpoint_proof(endpoint, token, unit, cookie):
+    import urllib.request
+    req = urllib.request.Request(
+        endpoint,
+        headers={
+            'Authorization': f'Bearer {token}',
+            'userid': '1',
+            'unitid': unit,
+            'Cookie': cookie,
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            print(resp.status)
+    except urllib.error.HTTPError as exc:
+        print(exc.code)
+        sys.exit(3)
 
 
 if __name__ == '__main__':
