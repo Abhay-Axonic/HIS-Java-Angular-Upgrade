@@ -1667,6 +1667,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/deposit-matrix-configuration/deposit-matrix-configuration').then((m) => m.DepositMatrixConfiguration),
       },
+      {
+        path: 'unitServiceMapping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 584, title: 'Unit Service Mapping' },
+        loadComponent: () =>
+          import('./features/unit-service-mapping/unit-service-mapping').then((m) => m.UnitServiceMapping),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

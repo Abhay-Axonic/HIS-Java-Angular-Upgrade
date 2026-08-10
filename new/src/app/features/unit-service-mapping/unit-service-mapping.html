@@ -1,0 +1,27 @@
+<div class="usm2-page">
+  <header class="usm2-header">
+    <h2>Unit Service Mapping</h2>
+    <p class="usm2-sub">Screen 36 — module 584 (Billing, parent 570). Org-level service master to unit mapping.</p>
+  </header>
+
+  <section class="usm2-list card">
+    <h3>Sub-specialities (speciality 1)</h3>
+    @if (subSpecialities().length === 0) {
+      <p class="usm2-empty">No sub-specialities loaded (dev data).</p>
+    } @else {
+      <ul class="usm2-list-ul">
+        @for (ss of subSpecialities(); track ss.subSpecialityMasterId) {
+          <li>{{ ss.subSpecialityMasterName }} ({{ ss.subSpecialityMasterId }})</li>
+        }
+      </ul>
+    }
+    <h3>Mapped services (speciality 1 / sub-speciality 1)</h3>
+    @if (loading()) {
+      <p class="usm2-loading">Loading…</p>
+    } @else if (mappings().length === 0) {
+      <p class="usm2-empty">No mapped services found (dev data).</p>
+    } @else {
+      <p class="usm2-empty">Mapped services loaded ({{ mappings().length }}).</p>
+    }
+  </section>
+</div>
