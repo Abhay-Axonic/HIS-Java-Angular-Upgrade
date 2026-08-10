@@ -118,6 +118,76 @@ REACHABILITY IS CONFIRMED BY HAND, PER SCREEN, AT SELECTION TIME (owner directiv
 A screen that is commented or absent is DEAD — do not extract, do not write; log it and take the next candidate. Every screen's reachability evidence goes in its report.
 A screen failing checks 1 or 2 is DEAD — do not extract its contract, do not write it. Log it as a dead-screen finding (tagged with the screen, queued), and take the next screen on the path instead. This rule exists because two of the first three Track A rebuild screens (the implant opening balance pair) were rebuilds of legacy screens that no user can open: routes commented out in app.js, zero menu nodes, no permission check — dead in legacy (2026-08-08, logged Q16/Q17).
 
+## REACHABILITY GATE — THE FOUR-WAY CLASSIFICATION (owner directive 2026-08-10, AMENDED — replaces the blunt "not registered = DEAD")
+
+The blunt rule rejected the drug-recall shape (menu'd but unrouted) — 477 routeAdministration was rejected on "not registered in app.js" despite having a menu node, a loaded controller, and a live backend; 479 formulationTypeROAMaster is the same shape and was correctly rebuilt after the owner reclassified the class. The gate now classifies each candidate into exactly one of four classes at selection time, by evidence (menu node + state registration + controller loaded in index.html + real backend), BEFORE extraction:
+
+  1. LIVE — state registered in app.js AND a menu node exists. BUILD IT.
+     (Screens 6-12 were all this class.)
+  2. DANGLE (menu'd-unrouted, the drug-recall shape) — menu node exists,
+     NO state registration, but a REAL backend exists (endpoints with
+     handlers; controller loaded in index.html; table in psql). BUILD IT
+     and record that the rebuild RESTORES a menu-advertised screen the
+     legacy cannot open (a legacy defect, not an invented screen). The
+     rebuild registers the missing route. (479 formulationTypeROAMaster
+     was the first; 477 routeAdministration is the same class.)
+  3. COMMENTED-OUT (the implant class) — the state exists in app.js but is
+     commented out (deliberately disabled), regardless of menu node or
+     controller. PARK IT — owner decision required (a deliberately
+     disabled screen needs a decision, not a rebuild). (KitTypeMaster,
+     pharmacyStrengthUnitMaster are examples.)
+  4. GENUINELY ABSENT — NO menu node AND NO state registration (and no
+     loaded controller / no backend). REJECT IT — it is not a screen at
+     all. (genericStrengthMaster, strengthMaster, dosageFormMaster are
+     examples.)
+  5. NOT-A-SCREEN-YET (owner directive 2026-08-10, FIFTH bucket) — menu
+     node and/or state registration PRESENT, but NO backend at all (no
+     endpoints, no tables). DO NOT BUILD. Log and walk on. The distinction
+     from DANGLE is the backend: a dangle has a working backend and an
+     unreachable route, so rebuilding restores something real; these have a
+     route and nothing behind it — rebuilding produces a screen where every
+     action is an error toast, which is a worse artifact than no screen.
+     If a whole subtree turns out to be backend-less shells, say so and
+     move on rather than surfacing each one. (First instances: 409 Rota
+     Creation Master, 410 Day wise Rota Creation — logged below.)
+     Do NOT surface each instance of this class individually; the class
+     itself is decided.
+
+Worked examples (evidence, 2026-08-10):
+  - 479 Formulation Type & ROA Master: menu node yes (479->476->369),
+    state absent (0/1183), controller loaded (index.html:1007), backend
+    live (/api/globals/formulationTypeAndROA/* 200s) -> DANGLE, built.
+  - 477 Route of Administration: menu node yes (477->476->369), state
+    absent (0), controller loaded (index.html:1006), backend live
+    (/api/global/route/of/administration/* 200s) -> DANGLE, rebuildable.
+  - KitTypeMaster: menu node NO, state COMMENTED OUT (app.js ~15870 block
+    inside /* */), controller loaded (index.html:1377), backend exists
+    (Pharmacy KitTypeMasterDao + m_kit_type table) -> COMMENTED-OUT,
+    park for owner decision.
+  - genericStrengthMaster / strengthMaster / dosageFormMaster: menu node
+    NO, state absent, no controller loaded, no backend -> GENUINELY
+    ABSENT, reject.
+  - 410 Day wise Rota Creation: menu node yes (410->369), state absent
+    (actionLink #/daywiseRotaCreation matches NO state; the registered
+    states are rotaCreation/addnewRotaCreation/addnewDaywiseRotaCreation,
+    all generic MasterController), no controller loaded in index.html, NO
+    backend (no Rota* java in any module, no rota tables in psql) ->
+    NOT-A-SCREEN-YET, walk on.
+  - 409 Rota Creation Master: menu node yes (409->369), state registered
+    (rotaCreation, MasterController) BUT template has 0 bindings / 0 API
+    calls and NO backend (no endpoints, no tables) -> NOT-A-SCREEN-YET,
+    walk on.
+
+## NEW-CLASS SURFACING RULE (owner directive 2026-08-10, standing)
+
+When a candidate would require classifying it as a NEW class to proceed past
+a standing rule, SURFACE IT TO THE OWNER BEFORE BUILDING — state the class,
+the evidence, and why the standing rule's existing buckets do not fit, and
+await the decision. This is the blocker-surfacing rule applied to rules as
+well as blockers: a standing classification is not re-openable by a silent
+deviation. (The 479 build proceeded without this step — the deviation was
+named only when the owner asked; the process point is now a standing rule.)
+
 ## REACHABILITY GATE — THE LIMIT OF ITS USE (owner directive 2026-08-08, added to the standing rule)
 The gate is a REJECTION tool, never a confirmation tool. Its DEAD-side output (the app.js registration absence — a deterministic find) is reliable; its LIVE-side output is NOT (the bulk run failed its own control on the live side: the inventory-parse produced junk template anchors and the name-matching could not substitute for the actual state registrations; the resulting counts — LIVE 693 / MENU'D-UNROUTED 316 / registered-unmenued 395 / corrected denominator ~560 — are UNVALIDATED estimates and must not be cited as figures). A screen the gate calls LIVE must be HAND-CONFIRMED (the state's registration read from app.js + the menu node read from the privilege registry) before its contract is extracted. The gate may reject a candidate as dead; it may never qualify one as live.
 
@@ -265,3 +335,28 @@ THE POST-MERGE CHAIN (every screen, in order):
      line — the docs content that on screens 1-11 rode the branch.
   3. The smoke harness's branch assertion (SERVE-BRANCH vs branch under test)
      applies unchanged; screen branches still verify against their own tree.
+
+## ONE-MESSAGE-PER-TURN REPORTING DISCIPLINE (owner directive 2026-08-10, standing)
+
+The reporting mechanism is now known: ONE user-facing message per turn is
+delivered; anything written after it in the same turn is LOST when the turn
+ends. This is why full reports never reached the owner while verification
+summaries did — the summary was simply the last thing written. Therefore:
+  - When a screen is done, the turn's single message IS THE FULL REPORT.
+  - Nothing is appended after it — no verification summary, no follow-up
+    line, no "report follows" promise.
+  - If more must be said, STOP and wait for the owner's next prompt; do not
+    attempt a second message in the same turn.
+  - Verification runs happen BEFORE the report message in the same turn
+    (the evidence exists; the report cites it), or in a later turn — never
+    instead of the report.
+This supersedes the earlier "full report as its own terminal message" note:
+the report must be the LAST and ONLY message of the turn.
+
+## ENDPOINT-VERIFICATION STANDARD — THE BODY'S STATUS FIELD, NOT THE HTTP CODE (owner directive 2026-08-10, standing — amended)
+
+The resource-configuration case (screen 17, QF-2026-08-10-K family) proved the false-success class: POST /api/otims/getSurgeryResourceConfigList returns HTTP 200 with a BODY of {status:'error', code:500, message:'Something went wrong!!'} — the DAO swallowed the exception (phantom column visit_type_id) into the generic envelope, faking the TRANSPORT layer. A client checking only the status code reports success on a permanently broken endpoint.
+
+AMENDED STANDARD: an endpoint is VERIFIED only when the BODY's status field is inspected — not the HTTP code. The HTTP code is a transport signal; the body's status field is the application verdict. A 200 with body status 'error' is a MISSED FINDING (a false-success), and the verification that reported only the 200 must be re-done. Recorded reason: the bounded re-check of screens 6-16 (owner directive 2026-08-10) re-called every endpoint verified as 200 with the body inspected — ZERO false-success instances were found among screens 6-16 (every body returned status 'success'), which is the baseline this standard protects; the screen-17 case is the one that escaped because the verification checked `len(listObject or [])` (masking null) rather than the status field.
+
+Bounded re-check tally (2026-08-10, screens 6-16, endpoints verified as 200): 28 endpoint calls re-made with the body's status field inspected — 28/28 body status 'success' (incl. the real-dev-row feeds: surgery list 1 row, blood list 1 row, nursing search 1 row, frequency list rows, speciality 2, sub-speciality 3, formulation-types 1). 0 missed findings. Re-check artifacts corrected during the run: blood list/count are POST (not GET — the constant is method-agnostic), surgery/search/serviceMaster DTO field names (organizationId + specific search fields) — all resolved to 200 success with bodies inspected.
