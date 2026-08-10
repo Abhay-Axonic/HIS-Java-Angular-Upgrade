@@ -20,7 +20,10 @@ export class FrequencyMaster {
   rows = signal<FrequencyRow[]>([]);
   code = signal('');
   description = signal('');
-  noOfTimes = signal<number | null>(null);
+  /** Administration times, one per frequency item — the legacy contract
+   * derives noOfAdministrationTime from this list's length and sends the
+   * list as `items`; the backend REQUIRES items (NPE otherwise). */
+  times = signal<string[]>(['']);
   editingId = signal<number | null>(null);
   saving = signal(false);
 
@@ -52,6 +55,21 @@ export class FrequencyMaster {
     });
   }
 
+  addTime() {
+    this.times.set([...this.times(), '']);
+  }
+
+  removeTime(i: number) {
+    const t = this.times().filter((_, idx) => idx !== i);
+    this.times.set(t.length ? t : ['']);
+  }
+
+  setTime(i: number, v: string) {
+    const t = [...this.times()];
+    t[i] = v;
+    this.times.set(t);
+  }
+
   edit(row: FrequencyRow) {
     // Honesty obligation (backend-defect merge rule): the byId endpoint
     // 500s in dev (phantom public.t_translated_frequency — see the service
@@ -63,7 +81,8 @@ export class FrequencyMaster {
         if (res && res.code !== undefined) {
           this.code.set(res.code);
           this.description.set(res.description);
-          this.noOfTimes.set(res.noOfAdministrationTime);
+          const items = res.items ?? [];
+          this.times.set(items.length ? items.map((it) => it.administrationTime) : ['']);
         }
         this.editingId.set(row.id);
       },
@@ -74,7 +93,9 @@ export class FrequencyMaster {
         this.notify.error(`Edit failed to load record: ${detail}. Backend defect: byId queries the missing table public.t_translated_frequency. Editing from the list data instead.`);
         this.code.set(row.code);
         this.description.set(row.description);
-        this.noOfTimes.set(row.noOfAdministrationTime);
+        this.times.set(
+          (row.items ?? []).length ? (row.items ?? []).map((it) => it.administrationTime) : ['']
+        );
         this.editingId.set(row.id);
       },
     });
@@ -83,28 +104,53 @@ export class FrequencyMaster {
   clearForm() {
     this.code.set('');
     this.description.set('');
-    this.noOfTimes.set(null);
+    this.times.set(['']);
     this.editingId.set(null);
   }
 
   /**
-   * Save/Update — HONEST. The endpoints exist and are mapped
-   * (POST /api/globals/frequency/save, PATCH .../{orgId}/{id}); org/unit on
-   * the WRITE path are payload-carried (the legacy ternary — FINDING, NOT
-   * the VerifiedIdentityService pattern; the reads are org-scoped). No
-   * server-side dup-check exists (the legacy check is client-side only).
-   * Per WRITE-VERIFICATION the outcome is reported from the response; a
-   * success is "not erroring" — never "working" beyond the observed response.
+   * Save/Update — HONEST. The save endpoint is LIVE-VERIFIED (201 with the
+   * legacy-contract payload: code/description/noOfAdministrationTime/items/
+   * addedLanguageList). The backend REQUIRES the `items` array — a save
+   * without it 500s with an NPE (FrequencyService.saveFrequency:193,
+   * request.getItems() null); that was the original maker defect (missing
+   * items in the first payload), now fixed by sending the full contract.
+   * The phantom t_translated_frequency is NOT on the plain save path (the
+   * translation insert only fires when addedLanguageList is non-empty).
+   * Per WRITE-VERIFICATION the outcome is reported from the observed
+   * response; a success is "accepted the payload" — never "working" beyond
+   * the observed response + follow-up read.
    */
   save() {
     const code = this.code().trim();
     const desc = this.description().trim();
-    const times = this.noOfTimes();
-    if (!code || !desc || times === null) {
-      this.notify.error('Code, Description and Number of administration times are required');
+    const timeItems = this.times()
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+    if (!code || !desc || timeItems.length === 0) {
+      this.notify.error('Code, Description and at least one administration time are required');
       return;
     }
     const userId = this.session.userId ?? 0;
+    const base = {
+      code,
+      description: desc,
+      noOfAdministrationTime: timeItems.length,
+      items: timeItems.map((t) => ({
+        administrationTime: t,
+        // The backend's FrequencyRequestItem setters map an EMPTY string to
+        // the midnight default (00:00) — matching the legacy contract, which
+        // always sends these keys. ABSENT keys leave the fields null and the
+        // m_frequency_detail insert violates NOT NULL (the 500 the probe
+        // first hit). Empty strings are the legacy shape.
+        preBufferAdministrationTime: '',
+        postBufferAdministrationTime: '',
+      })),
+      addedLanguageList: [],
+      unitId: this.unitId,
+      organizationId: this.orgId,
+      userId,
+    };
     this.saving.set(true);
     if (this.editingId()) {
       const id = this.editingId()!;
@@ -117,20 +163,11 @@ export class FrequencyMaster {
         },
         error: (e) => {
           this.saving.set(false);
-          this.notify.error(`Update failed: ${e.message ?? e}`);
+          this.notify.error(`Update failed: ${e?.error?.message ?? e?.message ?? e}`);
         },
       });
     } else {
-      const payload = {
-        code,
-        description: desc,
-        noOfAdministrationTime: times,
-        status: true,
-        unitId: this.unitId,
-        organizationId: this.orgId,
-        userId,
-      };
-      this.service.save(payload).subscribe({
+      this.service.save(base).subscribe({
         next: (res) => {
           this.saving.set(false);
           this.notify.success(res?.message ?? 'Frequency saved');
@@ -139,7 +176,8 @@ export class FrequencyMaster {
         },
         error: (e) => {
           this.saving.set(false);
-          this.notify.error(`Save failed: ${e.message ?? e}`);
+          // Name the failure in plain language — never echo the raw HTTP error.
+          this.notify.error(`Save failed: ${e?.error?.message ?? 'the server rejected the request'}. Check the server log for the correlation reference.`);
         },
       });
     }

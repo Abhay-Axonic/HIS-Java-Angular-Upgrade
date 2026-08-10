@@ -22,15 +22,26 @@
         required
       />
     </div>
-    <div class="form-field form-field-narrow">
-      <input
-        type="number"
-        class="text-input"
-        placeholder="No. of times *"
-        [(ngModel)]="noOfTimes"
-        name="noOfTimes"
-        min="1"
-      />
+    <div class="form-field form-field-wide">
+      <label class="field-label">Administration times (one per item):</label>
+      <div class="time-list">
+        @for (t of times(); track $index) {
+          <div class="time-row">
+            <input
+              type="text"
+              class="text-input time-input"
+              placeholder="HH:MM (e.g. 08:00)"
+              [ngModel]="t"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="setTime($index, $event)"
+            />
+            @if (times().length > 1) {
+              <button type="button" class="btn-secondary btn-small" (click)="removeTime($index)">−</button>
+            }
+          </div>
+        }
+        <button type="button" class="btn-secondary btn-small" (click)="addTime()">+ Add time</button>
+      </div>
     </div>
     <div class="form-actions">
       <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">

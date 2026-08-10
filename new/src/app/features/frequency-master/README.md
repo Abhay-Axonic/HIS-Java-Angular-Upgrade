@@ -97,12 +97,29 @@ unfired — no-seed).
   /frequencyMaster, moduleId 478 present, SERVE-BRANCH matches the branch
   under test); interaction probe PASS (form renders, grid renders with the
   real dev row, 0 page errors).
-- Write verification: NO write test ran (no-seed rule). Save is "not
-  erroring" at most — the endpoint is wired and its response is reported;
-  never "working". (The write path is payload-org-trusting per source —
-  QF; its success with real data is UNVERIFIED — Q28.)
+- WRITE-VERIFICATION (Q28 — the claim was corrected after the owner's
+  click-through found a 500): the probe FIRES the real save through the UI
+  with the legacy contract (code/description/times/items/addedLanguageList)
+  and records the OBSERVED response — success toast "Frequency saved
+  successfully" + the PROBE-TIMES row visible in the list feed; the probe
+  row is then DELETEd (dev table back to its prior state). Save is reported
+  as "the endpoint accepted the payload and the row is visible in the list
+  feed" — the observed behavior, never "working" beyond it.
+- The save-500 incident (2026-08-10, owner click-through): the first
+  rebuild payload OMITTED the items list entirely (500: NPE at
+  FrequencyService.saveFrequency:193, request.getItems() null), and the
+  first items shape omitted the buffer keys (500: m_frequency_detail
+  NOT NULL violation on pre/post_buffer_administration_time — absent keys
+  leave the DTO fields null; the legacy always sends them, and its String
+  setters map an empty string to the midnight 00:00 default). Both were
+  MAKER defects in the probe/rebuild payload, NOT backend defects — the
+  save endpoint is healthy (201 with the legacy contract). The rebuild now
+  sends the full legacy item shape. The toast names any failure in plain
+  language ("Save failed: <server message>. Check the server log for the
+  correlation reference.") — never the raw HTTP error.
 - Endpoint verification: list live-verified (200, real row); byId
-  live-verified FAILING (500, root-caused); save/update MAPPED, not fired.
+  live-verified FAILING (500, root-caused — the phantom, see the FINDING
+  section); save live-verified (201, row created + read back + cleaned).
 
 ## Deliberate divergences (flagged, not silent)
 

@@ -13,20 +13,29 @@
  * classification) a DANGLE screen with a real backend is BUILDABLE: the
  * rebuild RESTORES a menu-advertised screen the legacy cannot open.
  */
+export interface FrequencyItem {
+  id?: number;
+  administrationTime: string;
+  preBufferAdministrationTime?: string | null;
+  postBufferAdministrationTime?: string | null;
+}
+
 export interface FrequencyRow {
   id: number;
   code: string;
   description: string;
   noOfAdministrationTime: number;
   status: boolean;
-  items?: Array<{ id: number; administrationTime: string; status: boolean }>;
+  items?: FrequencyItem[];
 }
 
 export interface FrequencySavePayload {
   code: string;
   description: string;
   noOfAdministrationTime: number;
-  status: boolean;
+  items: FrequencyItem[];
+  addedLanguageList: unknown[];
+  status?: boolean;
   organizationId: number;
   unitId: number;
   userId: number;

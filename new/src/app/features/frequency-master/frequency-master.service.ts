@@ -24,7 +24,10 @@ export class FrequencyMasterService {
 
   /** POST /api/globals/frequency/save — create (payload-carried org —
    * FINDING QF, org-trust on writes is the legacy ternary, not
-   * VerifiedIdentityService). */
+   * VerifiedIdentityService). LIVE-VERIFIED: 201 with the legacy contract
+   * (code/description/noOfAdministrationTime/items/addedLanguageList). The
+   * backend REQUIRES `items` (a save without it 500s with an NPE at
+   * FrequencyService.saveFrequency:193). */
   save(payload: FrequencySavePayload): Observable<{ id?: number; message?: string }> {
     return this.http.post<{ id?: number; message?: string }>(
       `${this.base}/api/globals/frequency/save`,
