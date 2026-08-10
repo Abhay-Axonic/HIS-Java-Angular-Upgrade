@@ -43,6 +43,18 @@ def main():
     appjs = open(APPJS, encoding="utf-8").read()
     index = open(INDEX, encoding="utf-8").read()
     routes = open(ROUTES, encoding="utf-8").read()
+    # default PARENT = 570 (Billing — the MASTER subtree the walk targets);
+    # pass --parent 7 for the Billing_Finance reports/store forest, or any
+    # other parent id for a different subtree. DIRECT CHILDREN ONLY by
+    # default (parity with the hand-verified classification); --deep adds
+    # grandchildren.
+    parent_id = 570
+    deep = False
+    for a in sys.argv[1:]:
+        if a.isdigit():
+            parent_id = int(a)
+        elif a == "--deep":
+            deep = True
     try:
         r = subprocess.run(["psql", "-h", "localhost", "-d", "his_local", "-tAc",
                             "select modules from privilege.privilege where role_id=1 limit 1;"],
@@ -51,13 +63,14 @@ def main():
     except Exception:
         tree = None
 
-    # the Billing_Finance subtree: children of parent 7, plus deeper
-    children = [n for n in tree if n.get("parentId") == 7] if tree else []
-    # also grab grandchildren (billing often nests one level deeper)
-    child_ids = {n.get("id") for n in children}
-    grandchildren = [n for n in tree if n.get("parentId") in child_ids] if tree else []
+    # the subtree: children of parent_id (+ grandchildren only with --deep)
+    children = [n for n in tree if n.get("parentId") == parent_id] if tree else []
+    grandchildren = []
+    if deep:
+        child_ids = {n.get("id") for n in children}
+        grandchildren = [n for n in tree if n.get("parentId") in child_ids] if tree else []
     nodes = children + grandchildren
-    print(f"Billing_Finance subtree: {len(children)} direct children, "
+    print(f"Subtree parent {parent_id}: {len(children)} direct children, "
           f"{len(grandchildren)} grandchildren — {len(nodes)} nodes total\n")
 
     nodes_by_link = {}
@@ -73,7 +86,7 @@ def main():
         name = (n.get("name") or "").strip()
         link = (n.get("actionLink") or "").strip()
         link_state = link.replace("#", "").strip("/")
-        st = link_state.split("/")[-1] if link_state else ""
+        st = link_state.split("/")[0] if link_state else ""  # the ROUTE ROOT (the state name); later segments are sub-paths/params
         parent = n.get("parentId")
         parent_name = next((x.get("name", "").strip() for x in (tree or []) if x.get("id") == parent), "?")
         if not st:
@@ -119,14 +132,16 @@ def main():
             cls = "COMMENTED-OUT"
         elif hits and not backend_files and not ctrl_loaded:
             cls = "NOT-A-SCREEN-YET (no backend)"
-        elif hits and backend_files:
-            # registered + backend: check the decoy/second-view shapes
+        elif hits and (backend_files or ctrl_loaded):
+            # registered + backend OR loaded controller JS: the controller-JS
+            # load (index.html) is the endpoint-truth signal the class-name
+            # grep misses (Java class names differ from state roots — e.g.
+            # unitServiceBasePrice -> /api/unit/billing/getServiceBasePriceList
+            # lives in a differently-named Java controller)
             node = nodes_by_link.get(st.lower())
             if node is None:
                 cls = "LIVE-ORPHANED (state+backend, no menu link)"
             else:
-                # shell vs real: if the template has zero bindings AND the
-                # backend controller is a real CRUD, it may be a decoy
                 cls = "LIVE (state+node+backend)"
         else:
             cls = f"LIVE (state+node+backend)" if hits else "NOT-A-SCREEN-YET"
