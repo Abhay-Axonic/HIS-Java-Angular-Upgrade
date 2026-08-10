@@ -1,0 +1,71 @@
+<div class="page-content">
+  <h2 class="page-title">Route of Administration</h2>
+
+  <form class="form-row">
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Code *"
+        [(ngModel)]="code"
+        name="code"
+        required
+      />
+    </div>
+    <div class="form-field form-field-wide">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Description *"
+        [(ngModel)]="description"
+        name="description"
+        required
+      />
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : editingId() ? 'Update' : 'Save' }}
+      </button>
+      @if (editingId()) {
+        <button type="button" class="btn-secondary" (click)="clearForm()">Clear</button>
+      }
+    </div>
+  </form>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredRows(); track row.id) {
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.description }}</td>
+          <td>{{ row.status ? 'Active' : 'Inactive' }}</td>
+          <td>
+            <button type="button" class="btn-secondary" (click)="edit(row)">Edit</button>
+          </td>
+        </tr>
+      }
+      @if (!filteredRows().length) {
+        <tr>
+          <td colspan="4" class="empty-cell">No routes of administration found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
