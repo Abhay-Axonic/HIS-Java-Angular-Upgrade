@@ -173,6 +173,20 @@ The blunt rule rejected the drug-recall shape (menu'd but unrouted) — 477 rout
      default to build. (The screen-10 vaccinationMaster case, node 482
      reaching the shell while vaccinationMAster at app.js:17050 was
      orphaned, is the same class — retroactively logged.)
+     7. SECOND-VIEW (owner directive 2026-08-10, SEVENTH bucket) — a NEW
+     component sharing a module id with an ALREADY-REBUILT screen (the
+     DRILL-DOWN/DETAIL-view shape: e.g. procedureTemplate/515 is the
+     drill-down detail behind procedureConfiguration/515 — the legacy
+     privilege tree gates them together, so they legitimately share 515).
+     The screen is real and buildable — the decision is whether the second
+     view is WANTED, not whether it is buildable. Surfacing BEFORE building
+     is required, like the already-rebuilt case: the C8 MODULE-ID COLLISION
+     check (preflight_screen.py) flags the shared moduleId at selection,
+     naming the existing route. A second view does NOT increment the
+     distinct-rebuild count (the count is by SCREEN, and the module is
+     already counted); the README and the merge message must say
+     "second view of <module>" — never "new screen". (First instance:
+     procedureTemplate/515, screen-25 audit 2026-08-10.)
 
 Worked examples (evidence, 2026-08-10):
   - 479 Formulation Type & ROA Master: menu node yes (479->476->369),
