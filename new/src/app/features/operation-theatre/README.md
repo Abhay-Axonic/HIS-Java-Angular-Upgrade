@@ -32,6 +32,34 @@ route (moduleId 519) under the menu's actionLink token.
   organizationId — an initial probe with organizationId 400'd; the
   probe-payload class, caught BEFORE code, same lesson as screen 17).
 
+## FINDING (by calling, the strongest of the screen) — the SAVE reports SUCCESS while writing NOTHING when the payload is incomplete
+
+The save endpoint (POST /api/otims/saveOperationTheatre) was CALLED with the
+BODY inspected (the new standard):
+- FULL DTO (theatreCode/name/desc/typeId/status/orgId/unitId/createdBy/
+  createdDate/updatedBy/updatedDate): HTTP 200 body status 'success'
+  "Added Successfully." AND the row REALLY LANDED (probe row id 9 in
+  otims.m_operation_theatre, sequence 8->9; then DELETEd — table back to
+  the 1 dev row).
+- INCOMPLETE DTO (updatedDate omitted): HTTP 200 body status 'success'
+  "Added Successfully." BUT the sequence did NOT advance and NO row was
+  written (verified: psql found nothing, DELETE 0). The server log shows
+  the cause: NPE at OperationTheatreDaoImpl:53 (getDate(updatedDate) with a
+  null dateString) — the DAO catch (line 59-63) logs and returns the ERROR
+  envelope, but the SERVICE's SUCCESS return (line 73) sits OUTSIDE the
+  `if(res.getObject()!=null)` guard and fires unconditionally whenever no
+  exception PROPAGATES — and the DAO's catch means no exception propagates.
+  The swallow fakes the transport layer AGAIN (screen-17 class), now on a
+  WRITE path: a client sees "Added Successfully." for a save that wrote
+  nothing.
+- THE CONSEQUENCE for this rebuild: a bare create form sending a partial
+  DTO would produce exactly this silent no-write false success — the
+  strongest possible reason the save is NOT wired (the divergence, now with
+  its mechanism). Wiring the create form requires the full DTO contract AND
+  the false-success class fixed server-side (or surfaced honestly).
+- NOT FIXED (Rule 10). Backend BR candidate: move the SUCCESS return inside
+  the guard / rethrow on the DAO failure.
+
 ## Scoped backend check (per the standing rule, every class)
 
 - Phantom columns/tables: PASS — the live 200s with 1 real row prove
@@ -43,13 +71,14 @@ route (moduleId 519) under the menu's actionLink token.
   THIRD list-path INNER-JOIN instance (after formulationTypeROAMaster
   getAll QF-2026-08-10-G and procedureConfiguration QF-2026-08-10-Q). The
   store join is LEFT (safe). NOT FIXED (Rule 10).
-- Dup-check operator precedence: FINDING (partial) — GET_OPERATION_THEATRE_BY_NAME
-  (save path, DAO:199) IS properly scoped (LOWER(name)=:n AND orgId AND
-  unitId — all-AND, PASS); but GET_OPERATION_THEATRE_BY_NAME_NOT_ID (update
-  path, DAO:218) has NO org/unit predicate at all (`WHERE
-  operationTheatreId != :id`) — the Q32 class: a cross-org existence oracle
-  on updates (any org's theatre with that name blocks a legit update in
-  another org). NOT FIXED (Rule 10); Q32 campaign scope.
+- Dup-check operator precedence: PASS — GET_OPERATION_THEATRE_BY_NAME (save
+  path, DAO:199) AND GET_OPERATION_THEATRE_BY_NAME_NOT_ID (update path,
+  DAO:218) are BOTH properly scoped all-AND queries: BY_NAME is
+  `LOWER(name)=:n AND orgId=:o AND unitId=:u`; BY_NAME_NOT_ID is
+  `id!=:id AND LOWER(name)=:n AND orgId=:o AND unitId=:u` (entity lines
+  67-71 — the full query continues past line 70; an earlier truncated read
+  mischaracterized it as unscoped; CORRECTED here). NOT the Q32 class. The
+  dup-check family count stays at 4 (BR-169, Q29, Q32, screen-12 search).
 - Org-trust: FINDING — NO VerifiedIdentityService in the module; orgId/unitId
   come from the request DTO on reads (list/count bind :orgId/:unitId) AND
   writes (setOrgId/setUnitId from the DTO at DAO:47/77) — the payload-carried
@@ -79,9 +108,13 @@ route (moduleId 519) under the menu's actionLink token.
 
 ## Deliberate divergences (flagged, not silent)
 
-1. READ-ONLY REBUILD: list + search only; the create/edit form (theatre-type
-   + store feeds, save/update/status) is NOT wired — needs the full DTO
-   contract verified first (a follow-up queue item, not silently dropped).
+1. READ-ONLY REBUILD: list + search only. The create/edit form (save/
+   update/status + theatre-type/store feeds) is NOT wired for a REASON WITH
+   A MECHANISM (see the save false-success FINDING above): a bare form
+   sending a partial DTO produces a silent no-write false success — the
+   endpoint claims "Added Successfully." while writing nothing (NPE
+   swallowed at DAO:53, SUCCESS fired unconditionally at service:73). The
+   create form is a follow-up queue item, not silently dropped.
 2. Route token: the rebuild registers `operation_Theatre` (the menu's
    actionLink token, underscore included) — NOT the normalized
    `operationTheatre` — so the menu click resolves in the new app.
