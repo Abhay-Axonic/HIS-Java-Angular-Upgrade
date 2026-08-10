@@ -152,6 +152,27 @@ The blunt rule rejected the drug-recall shape (menu'd but unrouted) — 477 rout
      Creation Master, 410 Day wise Rota Creation — logged below.)
      Do NOT surface each instance of this class individually; the class
      itself is decided.
+     6. DECOY-ROUTED (owner directive 2026-08-10, SIXTH bucket) — the INVERSE
+     of DANGLE: the menu node REACHES a shell (state registered, template
+     with ZERO ng-bindings / zero API calls, generic MasterController)
+     while the REAL screen — a dedicated full-CRUD controller + a working
+     backend — exists elsewhere and self-registers NO state, so it is
+     UNREACHABLE by any path. The menu advertises a shell; the real screen
+     is orphaned. (First instance: 528 Consent Type — node 528 reaches the
+     MasterController shell state at app.js:12585 with a 0-binding
+     template, while consentTypeMasterController.js — 396 lines, loaded
+     index.html:526 — with the ConsentTypeMasterController /adt/* backend
+     (save/list/update/byId/status/active/count, live-verified by CALLING:
+     HTTP 400 HIS-400 on {orgId,unitId} — the real payload is
+     {organizationId,unitId,offset,noOfRecordsPerPage}, probe-payload
+     class) self-registers ZERO states. The real screen is unreachable by
+     any menu path.)
+     REBUILDING means building the REAL screen and pointing the existing
+     node at it — it is NOT the same decision as a dangle rebuild (which
+     merely restores a route). Requires OWNER DECISION per screen; do not
+     default to build. (The screen-10 vaccinationMaster case, node 482
+     reaching the shell while vaccinationMAster at app.js:17050 was
+     orphaned, is the same class — retroactively logged.)
 
 Worked examples (evidence, 2026-08-10):
   - 479 Formulation Type & ROA Master: menu node yes (479->476->369),

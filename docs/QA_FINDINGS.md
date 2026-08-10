@@ -2287,3 +2287,13 @@ NOT FIXED further (the harness fix is in); the quiet-checkout class gets its own
 2. THE CONSEQUENCE: this query is the FIRST bill-payee fetch inside collectPayment (BillingMasterServiceImpl:1942). It 500s unconditionally in dev — the collectPayment happy path is permanently broken BEFORE it reaches the appointment branches where the BR-188 catch-SUCCESS sites (2388/2441) live. The BR-188 ATTACK (fire failing payload -> show 200 body SUCCESS + DB unchanged) CANNOT reach its target in this environment: the phantom fires first and the outer catch (2455) rethrows a BillingException -> HTTP 500 (observed: ERR-382e4f32 and ERR-d8b10858).
 3. CLASS: the walk's FOURTH phantom (after t_translated_frequency on frequency byId, emr.m_allergy_master cims, visit_type_id on resourceConfiguration) — the SECOND on a billing path, found BY CALLING during the BR-188 attack, not by grep.
 4. NOT FIXED (Rule 10). Blocks the BR-188 attack demonstration; the catch-SUCCESS sites remain SOURCE-CONFIRMED but ATTACK-BLOCKED in dev until either the phantom is fixed (a new backend BR) or the attack is demonstrated by another route.
+
+## QF-2026-08-10-AG — LEGACY ROUTING DEFECT: notesMaster (529 'Anaesthesia Note') node links #/noteMaster, the state's url is /notesMaster (one-character mismatch, 2026-08-10)
+
+**Class:** legacy menu-routing defect — the node's actionLink and the state's url disagree, so clicking 'Anaesthesia Note' in the legacy menu navigates to a route that does not exist (nothing renders). Fixable in the legacy app independently of any rebuild.
+
+**Evidence:** privilege-tree node 529 'Anaesthesia Note' carries actionLink `#/noteMaster`; the registered state is `.state('notesMaster')` with `url: '/notesMaster'` (app.js). Node token `notemaster` matches NO state url; state token `notesmaster` matches NO node actionLink. Anyone clicking the menu item gets nothing (NG04002-class). A real backend exists (NotesMasterController, OTIMS module), so this is not a dead screen — it is a routable screen with a broken link.
+
+**Fix (legacy, independent of the rebuild):** either the node's actionLink becomes `#/notesMaster` or the state's url becomes `/noteMaster` — one character in one file. Owner to choose which spelling is canonical (the state name notesMaster and the controller notesMasterController suggest the state is canonical; the node is the typo).
+
+**Rebuild implication:** the rebuild registers the route matching the NODE's actionLink (`#/noteMaster` → path noteMaster) so the menu click resolves, per the dangle convention — or the legacy fix lands first and the rebuild matches the corrected link. Decision queued with the owner.
