@@ -33,12 +33,29 @@ angular.json wires proxyConfig (the /privilege/** -> :8080 proxy). Without it,
 bootstrap cannot fetch, and the harness correctly FAILS with
 permissionsUnavailable — that failure is the harness working, not a bug.
 
+Q32 TREE-INTEGRITY CHECKS (2026-08-10 — the third harness blindness: the
+smoke passed against a branch tree while the 4201 serve was silently
+compiling main, so the owner's click hit NG04002 on a route that did not
+exist in the served tree). The smoke now FAILS loudly on all three:
+  * BRANCH MISMATCH — before the browser even launches, the smoke resolves
+    the ng-serve process for --port, reads its working directory, and
+    compares `git branch --show-current` THERE against the branch under test
+    (--branch, defaulting to the repo root's current branch). A mismatch
+    (or an unverifiable serve cwd) is a FAIL: a PASS against the wrong tree
+    is worse than a FAIL.
+  * UNMATCHED ROUTE — the route MUST exist in new/src/app/app.routes.ts as
+    read from the repo root; if route_module_id() returns None the smoke
+    fails on "route absent" instead of silently skipping the store check.
+  * EMPTY BODY — an empty rendered body is a FAIL independent of the branch
+    check (already present; kept as its own reason).
+
 Exit: 0 = PASS, 1 = FAIL, 2 = no credentials/cache and mint failed.
 """
 import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 from typing import Optional
 
@@ -46,7 +63,56 @@ from playwright.sync_api import sync_playwright
 
 LEGACY = 'http://localhost:8080'
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROUTES_SRC = os.path.normpath(os.path.join(HERE, '..', 'new', 'src', 'app', 'app.routes.ts'))
+ROOT = os.path.normpath(os.path.join(HERE, '..'))
+ROUTES_SRC = os.path.normpath(os.path.join(ROOT, 'new', 'src', 'app', 'app.routes.ts'))
+
+
+def git_branch(cwd: str) -> Optional[str]:
+    """`git branch --show-current` in cwd; None if not a repo / detached."""
+    try:
+        r = subprocess.run(['git', '-C', cwd, 'branch', '--show-current'],
+                           capture_output=True, text=True, timeout=10)
+        if r.returncode != 0:
+            return None
+        b = r.stdout.strip()
+        return b or None  # detached HEAD -> empty string -> None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def serve_branch(port: str) -> tuple[Optional[str], str]:
+    """Resolve the ng-serve process for --port and report its cwd's branch.
+
+    Returns (branch, detail) — detail is the cwd or a human-readable reason
+    the branch could not be resolved. (branch=None, detail) = unverifiable.
+    """
+    try:
+        # the process line contains the port, e.g. 'ng serve --port 4201'
+        out = subprocess.run(['pgrep', '-fl', 'ng serve'],
+                             capture_output=True, text=True, timeout=10).stdout
+        pid = None
+        for line in out.splitlines():
+            if f'--port {port}' in line:
+                pid = line.split()[0]
+                break
+        if pid is None:
+            return None, f'no ng-serve process found for --port {port}'
+        # cwd of the serve process (macOS lsof -Fn: 'n<path>' line)
+        lsof = subprocess.run(['lsof', '-a', '-p', pid, '-d', 'cwd', '-Fn'],
+                              capture_output=True, text=True, timeout=10).stdout
+        cwd = None
+        for line in lsof.splitlines():
+            if line.startswith('n') and len(line) > 1:
+                cwd = line[1:]
+                break
+        if cwd is None:
+            return None, f'serve pid {pid} cwd unreadable'
+        b = git_branch(cwd)
+        if b is None:
+            return None, f'serve cwd {cwd} is not on a git branch (detached/not a repo)'
+        return b, cwd
+    except Exception as exc:  # noqa: BLE001
+        return None, f'could not resolve serve branch: {str(exc)[:80]}'
 
 
 def route_module_id(route: str) -> Optional[int]:
@@ -84,6 +150,10 @@ def main():
     ap.add_argument('--role-id', type=int, default=None,
                     help='override roleId in the cached cookieObject (control: a role with no '
                          'privilege row => the bootstrap writes an empty store)')
+    ap.add_argument('--branch', default=None,
+                    help='the git branch under test (the tree the serve must be compiling). '
+                         'Defaults to the repo root\'s current branch. A serve compiling any '
+                         'other branch is a FAIL (Q32 tree-integrity).')
     ap.add_argument('--exercise-modal', nargs='?', const='para', default=None, metavar='TERM',
                     help='after load, open the screen\'s modal ("Add Item" button) and type TERM '
                          'into its first text input — exercises the modal search path so a '
@@ -91,6 +161,30 @@ def main():
     args = ap.parse_args()
     route = args.route if args.route.startswith('/') else f'/{args.route}'
     module_id = args.module_id if args.module_id is not None else route_module_id(route.lstrip('/'))
+
+    # ---- Q32 tree-integrity: the branch under test vs the serve's tree ----
+    branch_under_test = args.branch or git_branch(ROOT)
+    serve_b, serve_detail = serve_branch(args.port)
+    print(f'SERVE-BRANCH: {serve_b or "UNRESOLVED"} (cwd: {serve_detail})')
+    print(f'BRANCH-UNDER-TEST: {branch_under_test or "UNRESOLVED"}')
+    tree_reasons = []
+    if not branch_under_test:
+        tree_reasons.append('branch under test unresolved (repo root not on a branch?)')
+    if serve_b is None:
+        tree_reasons.append(f'serve tree unverifiable: {serve_detail}')
+    elif branch_under_test and serve_b != branch_under_test:
+        tree_reasons.append(
+            f'serve is compiling branch {serve_b!r} (cwd {serve_detail!r}) but the branch '
+            f'under test is {branch_under_test!r} — a PASS here would be a green light for '
+            f'a tree that does not contain the route')
+    if module_id is None:
+        tree_reasons.append(f'route {route!r} ABSENT from {os.path.relpath(ROUTES_SRC, ROOT)} '
+                            f'— the repo tree does not contain this route (unmatched route)')
+    if tree_reasons:
+        for tr in tree_reasons:
+            print(f'[TREE-FAIL] {tr}')
+        print(f'RESULT: FAIL — ' + '; '.join(tree_reasons))
+        sys.exit(1)
 
     # ---- credentials / session artifact (single mint source: get_dev_token) ----
     import get_dev_token as gdt

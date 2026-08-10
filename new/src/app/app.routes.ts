@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'bloodComponent',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 481, title: 'Blood Component Master' },
+        loadComponent: () =>
+          import('./features/blood-component/blood-component').then((m) => m.BloodComponent),
+      },
+      {
         path: 'vaccinationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 482, title: 'Vaccination Master' },
