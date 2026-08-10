@@ -23,7 +23,7 @@ export class ProcedureType {
   protected rows = signal<ProcedureTypeRow[]>([]);
   protected loading = signal(false);
   protected saving = signal(false);
-  protected searchTerm = '';
+  protected searchTerm = signal('');
 
   protected form = {
     procedureTypeId: 0,
@@ -69,7 +69,7 @@ export class ProcedureType {
   }
 
   protected filteredRows = computed(() => {
-    const term = this.searchTerm.trim().toLowerCase();
+    const term = this.searchTerm().trim().toLowerCase();
     const all = this.rows();
     if (!term) {
       return all;

@@ -1,27 +1,26 @@
 #!/usr/bin/env python3
-"""probe_procedure_type.py — browser probe for screen 21 (procedureType,
-module 520). Injected real-login token (stated plainly per
-browser-smoke-harness): the token cache from a real login is placed in the
-cookieObject cookie the SessionService reads, plus the permissions store
-seeded with moduleId 520 (the guard's read path). Zero backend seeding.
+"""probe_procedure_type.py — both-directions search probe for screen 21
+(procedureType, module 520). Injected real-login token (stated plainly per
+browser-smoke-harness). Zero backend seeding; the dev row is real
+(7|GNRL|GENERAL PROCEDURE|DESCP123, otims.m_procedure_type_master).
 
-Asserts: route renders (final URL == /procedureType, no accessDenied),
-the grid renders (empty state for dev-empty data is the honest render), 0
-page errors.
+BOTH DIRECTIONS (the QF-AN standing requirement): a matching term ('GENERAL')
+must INCLUDE the row; a non-matching term ('abc') must EXCLUDE it with the
+counter reading '0 row(s)'; clearing must restore the row.
 """
 import json
 import sys
 import time
 import urllib.parse
 
-CACHE = "tools/.token_cache.json"
-TOKEN = json.load(open(CACHE))["token"]
-
 try:
     from playwright.sync_api import sync_playwright
 except ImportError:
     print("FAIL: playwright not installed")
     sys.exit(1)
+
+CACHE = "tools/.token_cache.json"
+TOKEN = json.load(open(CACHE))["token"]
 
 BASE = "http://localhost:4201"
 ROUTE = "/procedureType"
@@ -46,27 +45,48 @@ def main():
         page.evaluate(
             "() => localStorage.setItem('permissions', JSON.stringify({modules: [{id: 520}]}))"
         )
-
         page.goto(BASE + ROUTE, wait_until="domcontentloaded")
-        time.sleep(4)
+        time.sleep(5)
         final_url = page.url
         print(f"FINAL URL: {final_url}")
-        if "accessDenied" in final_url:
-            FAILS.append(f"guard denial: {final_url}")
-        if ROUTE not in final_url:
-            FAILS.append(f"not on route: {final_url}")
+        if "accessDenied" in final_url or ROUTE not in final_url:
+            FAILS.append(f"route not reached: {final_url}")
 
         body = page.inner_text("body")
-        has_form = "Type Code" in body and "Save" in body
-        print(f"FORM RENDERED: {has_form}")
-        if not has_form:
-            FAILS.append("form not rendered")
-        # grid: either dev rows or the honest empty state — both are the
-        # screen's contract; the empty state proves the list call completed
-        grid_ok = "No procedure types found" in body or "row(s)" in body
-        print(f"GRID STATE RENDERED: {grid_ok}")
-        if not grid_ok:
-            FAILS.append("grid state not rendered")
+        row_present = "GENERAL PROCEDURE" in body
+        print(f"DEV ROW VISIBLE (positive baseline): {row_present}")
+        if not row_present:
+            FAILS.append("dev row GENERAL PROCEDURE not visible initially")
+
+        # POSITIVE: matching term includes the row
+        s = page.locator('input.pt-search')
+        s.click()
+        s.press_sequentially("GENERAL", delay=40)
+        time.sleep(1)
+        body2 = page.inner_text("body")
+        pos = "GENERAL PROCEDURE" in body2 and "1 row(s)" in body2
+        print(f"POSITIVE (GENERAL includes): {pos}")
+        if not pos:
+            FAILS.append("matching term did not include the row")
+
+        # NEGATIVE: non-matching term excludes + counter zero
+        s.fill("")
+        s.press_sequentially("abc", delay=40)
+        time.sleep(1)
+        body3 = page.inner_text("body")
+        neg = "GENERAL PROCEDURE" not in body3 and "0 row(s)" in body3
+        print(f"NEGATIVE (abc excludes, counter 0): {neg}")
+        if not neg:
+            FAILS.append("non-matching term did not exclude the row (counter/row visible)")
+
+        # CLEAR restores
+        s.fill("")
+        time.sleep(1)
+        body4 = page.inner_text("body")
+        restored = "GENERAL PROCEDURE" in body4
+        print(f"CLEAR RESTORES: {restored}")
+        if not restored:
+            FAILS.append("clearing did not restore the row")
 
         page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
         print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")
@@ -79,7 +99,7 @@ def main():
     if FAILS:
         print("PROBE: FAIL —", "; ".join(FAILS))
         sys.exit(1)
-    print("PROBE: PASS (route renders, form + grid state render, 0 page errors)")
+    print("PROBE: PASS (route renders, dev row visible, matching term includes, 'abc' excludes with counter 0, clear restores, 0 page errors)")
 
 
 if __name__ == "__main__":

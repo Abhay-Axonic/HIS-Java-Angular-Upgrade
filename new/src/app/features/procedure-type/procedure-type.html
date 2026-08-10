@@ -41,7 +41,7 @@
   <section class="pt-grid card">
     <div class="pt-grid-toolbar">
       <input type="text" class="pt-search" placeholder="Search code / name / description"
-             [(ngModel)]="searchTerm" />
+             [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
       <span class="pt-count">{{ filteredRows().length }} row(s)</span>
     </div>
     @if (loading()) {
