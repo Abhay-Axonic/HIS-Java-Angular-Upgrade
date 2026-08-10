@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'formulationTypeROAMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 479, title: 'Formulation Type & ROA Master' },
+        loadComponent: () =>
+          import('./features/formulation-type-roa/formulation-type-roa').then((m) => m.FormulationTypeRoa),
+      },
+      {
         path: 'nursingOrderMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 480, title: 'Nursing Order Master' },
