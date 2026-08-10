@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'cancellationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 518, title: 'Cancellation Master' },
+        loadComponent: () =>
+          import('./features/cancellation-master/cancellation-master').then((m) => m.CancellationMaster),
+      },
+      {
         path: 'resourceConfiguration',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 517, title: 'Resource Configuration' },
