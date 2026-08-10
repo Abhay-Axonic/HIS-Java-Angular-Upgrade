@@ -118,6 +118,54 @@ REACHABILITY IS CONFIRMED BY HAND, PER SCREEN, AT SELECTION TIME (owner directiv
 A screen that is commented or absent is DEAD — do not extract, do not write; log it and take the next candidate. Every screen's reachability evidence goes in its report.
 A screen failing checks 1 or 2 is DEAD — do not extract its contract, do not write it. Log it as a dead-screen finding (tagged with the screen, queued), and take the next screen on the path instead. This rule exists because two of the first three Track A rebuild screens (the implant opening balance pair) were rebuilds of legacy screens that no user can open: routes commented out in app.js, zero menu nodes, no permission check — dead in legacy (2026-08-08, logged Q16/Q17).
 
+## REACHABILITY GATE — THE FOUR-WAY CLASSIFICATION (owner directive 2026-08-10, AMENDED — replaces the blunt "not registered = DEAD")
+
+The blunt rule rejected the drug-recall shape (menu'd but unrouted) — 477 routeAdministration was rejected on "not registered in app.js" despite having a menu node, a loaded controller, and a live backend; 479 formulationTypeROAMaster is the same shape and was correctly rebuilt after the owner reclassified the class. The gate now classifies each candidate into exactly one of four classes at selection time, by evidence (menu node + state registration + controller loaded in index.html + real backend), BEFORE extraction:
+
+  1. LIVE — state registered in app.js AND a menu node exists. BUILD IT.
+     (Screens 6-12 were all this class.)
+  2. DANGLE (menu'd-unrouted, the drug-recall shape) — menu node exists,
+     NO state registration, but a REAL backend exists (endpoints with
+     handlers; controller loaded in index.html; table in psql). BUILD IT
+     and record that the rebuild RESTORES a menu-advertised screen the
+     legacy cannot open (a legacy defect, not an invented screen). The
+     rebuild registers the missing route. (479 formulationTypeROAMaster
+     was the first; 477 routeAdministration is the same class.)
+  3. COMMENTED-OUT (the implant class) — the state exists in app.js but is
+     commented out (deliberately disabled), regardless of menu node or
+     controller. PARK IT — owner decision required (a deliberately
+     disabled screen needs a decision, not a rebuild). (KitTypeMaster,
+     pharmacyStrengthUnitMaster are examples.)
+  4. GENUINELY ABSENT — NO menu node AND NO state registration (and no
+     loaded controller / no backend). REJECT IT — it is not a screen at
+     all. (genericStrengthMaster, strengthMaster, dosageFormMaster are
+     examples.)
+
+Worked examples (evidence, 2026-08-10):
+  - 479 Formulation Type & ROA Master: menu node yes (479->476->369),
+    state absent (0/1183), controller loaded (index.html:1007), backend
+    live (/api/globals/formulationTypeAndROA/* 200s) -> DANGLE, built.
+  - 477 Route of Administration: menu node yes (477->476->369), state
+    absent (0), controller loaded (index.html:1006), backend live
+    (/api/global/route/of/administration/* 200s) -> DANGLE, rebuildable.
+  - KitTypeMaster: menu node NO, state COMMENTED OUT (app.js ~15870 block
+    inside /* */), controller loaded (index.html:1377), backend exists
+    (Pharmacy KitTypeMasterDao + m_kit_type table) -> COMMENTED-OUT,
+    park for owner decision.
+  - genericStrengthMaster / strengthMaster / dosageFormMaster: menu node
+    NO, state absent, no controller loaded, no backend -> GENUINELY
+    ABSENT, reject.
+
+## NEW-CLASS SURFACING RULE (owner directive 2026-08-10, standing)
+
+When a candidate would require classifying it as a NEW class to proceed past
+a standing rule, SURFACE IT TO THE OWNER BEFORE BUILDING — state the class,
+the evidence, and why the standing rule's existing buckets do not fit, and
+await the decision. This is the blocker-surfacing rule applied to rules as
+well as blockers: a standing classification is not re-openable by a silent
+deviation. (The 479 build proceeded without this step — the deviation was
+named only when the owner asked; the process point is now a standing rule.)
+
 ## REACHABILITY GATE — THE LIMIT OF ITS USE (owner directive 2026-08-08, added to the standing rule)
 The gate is a REJECTION tool, never a confirmation tool. Its DEAD-side output (the app.js registration absence — a deterministic find) is reliable; its LIVE-side output is NOT (the bulk run failed its own control on the live side: the inventory-parse produced junk template anchors and the name-matching could not substitute for the actual state registrations; the resulting counts — LIVE 693 / MENU'D-UNROUTED 316 / registered-unmenued 395 / corrected denominator ~560 — are UNVALIDATED estimates and must not be cited as figures). A screen the gate calls LIVE must be HAND-CONFIRMED (the state's registration read from app.js + the menu node read from the privilege registry) before its contract is extracted. The gate may reject a candidate as dead; it may never qualify one as live.
 
@@ -265,28 +313,3 @@ THE POST-MERGE CHAIN (every screen, in order):
      line — the docs content that on screens 1-11 rode the branch.
   3. The smoke harness's branch assertion (SERVE-BRANCH vs branch under test)
      applies unchanged; screen branches still verify against their own tree.
-
-## OWNER MERGE WORKFLOW — FROM THE GOV WORKTREE (owner directive 2026-08-10)
-
-The governance worktree (.claude/worktrees/gov-main) now owns main. The repo
-root CANNOT check out main (git: "already used by worktree"), so the owner's
-merge-and-push routine runs from the gov worktree, not the repo root.
-
-Exact command shape (run once per screen merge):
-
-  cd /Users/axonichealth/Downloads/His_Java_Angular_Pgrade/HIS_Java_Angular_upgrade/.claude/worktrees/gov-main
-  git merge --no-ff rebuild/add-new-<screen>          # e.g. rebuild/add-new-nursing-order-master
-  git push
-
-(If the merge is from a branch that has already been merged — e.g. a
-follow-up — git will say "Already up to date"; that is correct, not an error.)
-
-Notes:
-- The screen branch under test lives at the repo root. It may be checked out
-  and verified there; the gov worktree is where main moves.
-- The post-merge docs chain (convention (a): QF entries, queue items,
-  session-log lines) also runs in the gov worktree — the repo root stays on
-  the next screen branch.
-- The guard (tools/gov.py post-checkout hook) allows leaving a MERGED
-  branch: once the merge lands, checking the repo root off the screen branch
-  is permitted.
