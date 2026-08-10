@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'nursingOrderMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 480, title: 'Nursing Order Master' },
+        loadComponent: () =>
+          import('./features/nursing-order-master/nursing-order-master').then((m) => m.NursingOrderMaster),
+      },
+      {
         path: 'bloodComponent',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 481, title: 'Blood Component Master' },

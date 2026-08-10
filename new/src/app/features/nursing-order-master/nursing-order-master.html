@@ -1,0 +1,110 @@
+<div class="page-content">
+  <h2 class="page-title">Nursing Order Master</h2>
+
+  <form class="form-row" #f="ngForm">
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Nursing Order Code *"
+        [(ngModel)]="code"
+        name="nursingOrderCode"
+        required
+      />
+    </div>
+    <div class="form-field form-field-wide">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Nursing Order Description *"
+        [(ngModel)]="desc"
+        name="nursingOrderDesc"
+        required
+      />
+    </div>
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Service Code (type 'a' to search)"
+        (input)="onServiceSearch()"
+      />
+    </div>
+    @if (serviceResults().length) {
+      <div class="form-field">
+        <select class="text-input" (change)="pickService($any($event.target).value)">
+          <option value="">Select service…</option>
+          @for (s of serviceResults(); track s.serviceMasterId) {
+            <option [value]="s.serviceMasterId">
+              {{ s.serviceStandardName }} | {{ s.serviceStandardCode }}
+            </option>
+          }
+        </select>
+      </div>
+    }
+    <div class="form-field">
+      <select class="text-input" [(ngModel)]="selectedSpecialityId" name="specialityId" (change)="onSpecialityChange()">
+        <option [ngValue]="null">Select specialty…</option>
+        @for (sp of specialities(); track sp.specialityId) {
+          <option [ngValue]="sp.specialityId">
+            {{ sp.specialityName }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="form-field">
+      <select class="text-input" [(ngModel)]="selectedSubSpecialityId" name="subSpecialityId">
+        <option [ngValue]="null">Select sub-specialty…</option>
+        @for (ss of subSpecialities(); track ss.subSpecialityId) {
+          <option [ngValue]="ss.subSpecialityId">
+            {{ ss.subSpecialityName }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Nursing Order Code</th>
+        <th>Nursing Order Description</th>
+        <th>Service Name</th>
+        <th>Speciality</th>
+        <th>Sub-speciality</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredRows(); track row.nursingOrderId) {
+        <tr>
+          <td>{{ row.nursingOrderCode }}</td>
+          <td>{{ row.nursingOrderDesc }}</td>
+          <td>{{ row.serviceStandardName ?? '—' }}</td>
+          <td>{{ row.specialityName ?? '—' }}</td>
+          <td>{{ row.subSpecialityName ?? '—' }}</td>
+          <td>{{ row.status }}</td>
+        </tr>
+      }
+      @if (!filteredRows().length) {
+        <tr>
+          <td colspan="6" class="empty-cell">No nursing orders found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
