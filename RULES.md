@@ -140,6 +140,18 @@ The blunt rule rejected the drug-recall shape (menu'd but unrouted) — 477 rout
      loaded controller / no backend). REJECT IT — it is not a screen at
      all. (genericStrengthMaster, strengthMaster, dosageFormMaster are
      examples.)
+  5. NOT-A-SCREEN-YET (owner directive 2026-08-10, FIFTH bucket) — menu
+     node and/or state registration PRESENT, but NO backend at all (no
+     endpoints, no tables). DO NOT BUILD. Log and walk on. The distinction
+     from DANGLE is the backend: a dangle has a working backend and an
+     unreachable route, so rebuilding restores something real; these have a
+     route and nothing behind it — rebuilding produces a screen where every
+     action is an error toast, which is a worse artifact than no screen.
+     If a whole subtree turns out to be backend-less shells, say so and
+     move on rather than surfacing each one. (First instances: 409 Rota
+     Creation Master, 410 Day wise Rota Creation — logged below.)
+     Do NOT surface each instance of this class individually; the class
+     itself is decided.
 
 Worked examples (evidence, 2026-08-10):
   - 479 Formulation Type & ROA Master: menu node yes (479->476->369),
@@ -155,6 +167,16 @@ Worked examples (evidence, 2026-08-10):
   - genericStrengthMaster / strengthMaster / dosageFormMaster: menu node
     NO, state absent, no controller loaded, no backend -> GENUINELY
     ABSENT, reject.
+  - 410 Day wise Rota Creation: menu node yes (410->369), state absent
+    (actionLink #/daywiseRotaCreation matches NO state; the registered
+    states are rotaCreation/addnewRotaCreation/addnewDaywiseRotaCreation,
+    all generic MasterController), no controller loaded in index.html, NO
+    backend (no Rota* java in any module, no rota tables in psql) ->
+    NOT-A-SCREEN-YET, walk on.
+  - 409 Rota Creation Master: menu node yes (409->369), state registered
+    (rotaCreation, MasterController) BUT template has 0 bindings / 0 API
+    calls and NO backend (no endpoints, no tables) -> NOT-A-SCREEN-YET,
+    walk on.
 
 ## NEW-CLASS SURFACING RULE (owner directive 2026-08-10, standing)
 
