@@ -80,6 +80,28 @@ def main():
         if not by_price:
             FAILS.append("search by base price did not find the row")
 
+        # NEGATIVE direction (the owner's measurement, 2026-08-10): type a
+        # string that matches NOTHING — assert zero rows AND a zero counter.
+        # A filter that returns everything passes positive-only assertions;
+        # only the negative assertion catches a dead filter.
+        s.fill("")
+        s.press_sequentially("abc", delay=40)
+        time.sleep(1)
+        body4 = page.inner_text("body")
+        neg_rows = "Cardiology Consultation" not in body4
+        neg_count = "0 row(s)" in body4
+        print(f"NEGATIVE FILTER: row excluded: {neg_rows}, counter 0: {neg_count}")
+        if not (neg_rows and neg_count):
+            FAILS.append(f"non-matching search did NOT exclude the row (rows visible: {not neg_rows}, counter zero: {neg_count})")
+        # clear restores the row
+        s.fill("")
+        time.sleep(1)
+        body5 = page.inner_text("body")
+        restored = "Cardiology Consultation" in body5
+        print(f"CLEAR RESTORES: {restored}")
+        if not restored:
+            FAILS.append("clearing the search did not restore the row")
+
         page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
         print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")
         if page_errors:

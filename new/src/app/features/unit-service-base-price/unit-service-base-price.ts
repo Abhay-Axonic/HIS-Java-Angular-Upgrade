@@ -18,7 +18,7 @@ export class UnitServiceBasePrice {
 
   protected rows = signal<ServiceBasePriceRow[]>([]);
   protected loading = signal(false);
-  protected searchTerm = '';
+  protected searchTerm = signal('');
 
   private orgId(): number {
     return Number(this.session.current?.organizationId ?? 1);
@@ -50,17 +50,17 @@ export class UnitServiceBasePrice {
   }
 
   protected filteredRows = computed(() => {
-    const q = this.searchTerm.toLowerCase();
+    const q = this.searchTerm().toLowerCase();
     return this.rows().filter((r) =>
       !q || (r.serviceName || '').toLowerCase().includes(q) || String(r.basePrice ?? '').includes(q)
     );
   });
 
-  protected onSearch(): void {
-    // live-filter via computed
+  protected onSearch(value: string): void {
+    this.searchTerm.set(value);
   }
 
   protected clearSearch(): void {
-    this.searchTerm = '';
+    this.searchTerm.set('');
   }
 }

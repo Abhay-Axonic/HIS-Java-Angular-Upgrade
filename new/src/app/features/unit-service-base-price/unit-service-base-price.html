@@ -6,7 +6,7 @@
 
   <section class="usbp-list card">
     <div class="usbp-list-toolbar">
-      <input type="text" name="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearch()"
+      <input type="text" name="search" [ngModel]="searchTerm()" (ngModelChange)="onSearch($event)"
              placeholder="Search service name or base price…" />
       <button class="usbp-btn" (click)="clearSearch()">Clear</button>
       <span class="usbp-count">{{ filteredRows().length }} row(s)</span>
