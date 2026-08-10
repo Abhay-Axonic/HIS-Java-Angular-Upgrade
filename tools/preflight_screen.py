@@ -171,21 +171,32 @@ def check_c4(folder, backend_root):
 
 
 def check_c5(folder, appjs_path, screen_name):
-    """Legacy reachability: registered in app.js + a menu node (hand greps)."""
+    """Legacy reachability: the STATE NAME registered in app.js + a menu node
+    (hand greps).
+
+    Matches on the STATE NAME from the route (`.state('cancellationMaster'`),
+    NOT the rebuild's template filename. QF-2026-08-10-Y (owner directive,
+    pre-screen-19): the old check matched the rebuild template filename
+    (e.g. cancellation-master.html) against app.js, but the legacy state's
+    templateUrl is the LEGACY filename (cancellation-reason.html) — a live
+    screen whose template filename differs reported a FALSE DEAD. The
+    dangerous direction: a false DEAD invites walking past a live screen
+    (the 477 lesson). The state name is the route's own token — the
+    actionLink and the state url both target it.
+    """
     try:
         appjs = open(appjs_path, encoding="utf-8").read()
     except OSError:
         return 'UNVALIDATED', 'app.js not found'
-    base = os.path.basename(folder)
-    tpl = f"{base.replace('-', '-')}.html"
-    hits = [m.start() for m in re.finditer(re.escape(tpl), appjs)]
+    token = f".state('{screen_name}'"
+    hits = [m.start() for m in re.finditer(re.escape(token), appjs)]
     if not hits:
-        return 'DEAD', f'template {tpl} ABSENT from app.js (no state registration)'
+        return 'DEAD', f"state '{screen_name}' ABSENT from app.js (no state registration)"
     idx = hits[0]
     before = appjs[max(0, idx - 400):idx]
     commented = before.rfind("/*") > before.rfind("*/")
     if commented:
-        return 'DEAD', f'template {tpl} found at app.js:{idx} but inside a COMMENTED region'
+        return 'DEAD', f"state '{screen_name}' found at app.js:{idx} but inside a COMMENTED region"
     tree = load_privilege_tree()
     if tree is None:
         return 'UNVALIDATED', 'privilege tree unreadable'
