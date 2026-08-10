@@ -597,7 +597,10 @@ public class MedicationServiceImpl implements IMedicationService, ICommonConstan
 				dto.setOrderQty(dto2.getOrderQty());
 				dto.setAuthorisedDate(dto2.getAuthorisedDate());
 
-				iMedicationHistoryDao.saveMedicationHistory(dto);
+				Response res = iMedicationHistoryDao.saveMedicationHistory(dto);
+				if (res == null || res.getStatus() == null || !res.getStatus().equals(SUCCESS)) {
+					return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+				}
 			}
 
 			return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);

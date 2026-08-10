@@ -79,6 +79,9 @@ public class EncounterAssignmenMapperServiceImpl implements IEncounterAssignmenM
 		try{
 			
 			Response enDtls = iEncounterAssignmenMapperDao.saveEncounterAssignment(encounterAssignmenMapperDto);
+			if (enDtls == null || enDtls.getStatus() == null || !enDtls.getStatus().equals(SUCCESS)) {
+				return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
+			}
 			
 			if(encounterAssignmenMapperDto.getIsAssignmentCompStatus()!=null && encounterAssignmenMapperDto.getIsAssignmentCompStatus()=='Y') {
 			if(encounterAssignmenMapperDto.getEncounterMasterDto()!=null && encounterAssignmenMapperDto.getEncounterMasterDto().getVisitTypeId()!=null && encounterAssignmenMapperDto.getEncounterMasterDto().getVisitTypeId().intValue()!=1) {
