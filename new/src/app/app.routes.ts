@@ -1576,6 +1576,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/surgical-calendar/surgical-calendar').then((m) => m.SurgicalCalendar),
       },
+      {
+        path: 'resourceChargesConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 761, title: 'Resource Charges Configuration' },
+        loadComponent: () =>
+          import('./features/resource-charges-configuration/resource-charges-configuration').then((m) => m.ResourceChargesConfiguration),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

@@ -1,0 +1,101 @@
+<div class="rcc-page">
+  <header class="rcc-header">
+    <h2>Resource Charges Configuration</h2>
+    <p class="rcc-sub">Screen 23 — module 761 (OTIMS). Configure resource charges by speciality, role, and service.</p>
+  </header>
+
+  <section class="rcc-form card">
+    <h3>{{ editingId() ? 'Edit Resource Charge' : 'Add Resource Charge' }}</h3>
+    <div class="rcc-form-row">
+      <label>
+        Speciality *
+        <select name="specialityId" [(ngModel)]="form.specialityId">
+          <option [ngValue]="0">— Select speciality —</option>
+          @for (sp of specialities(); track sp.specialityId) {
+            <option [ngValue]="sp.specialityId">{{ sp.specialityName }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Role *
+        <select name="roleId" [(ngModel)]="form.roleId">
+          <option [ngValue]="0">— Select role —</option>
+          @for (role of roles(); track role.id) {
+            <option [ngValue]="role.id">{{ role.name }}</option>
+          }
+        </select>
+      </label>
+    </div>
+    <div class="rcc-form-row">
+      <label>
+        Service *
+        <select name="serviceId" [(ngModel)]="form.serviceId" (ngModelChange)="onServiceSelect()">
+          <option [ngValue]="0">— Select service —</option>
+          @for (svc of services(); track svc.serviceId) {
+            <option [ngValue]="svc.serviceId">{{ svc.serviceStandardName }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Amount *
+        <input type="number" name="amount" [(ngModel)]="form.amount" placeholder="0.00" />
+      </label>
+    </div>
+    <div class="rcc-actions">
+      @if (editingId()) {
+        <button class="rcc-btn rcc-btn-update" (click)="update()">Update</button>
+        <button class="rcc-btn rcc-btn-ghost" (click)="clearForm()">Cancel</button>
+      } @else {
+        <button class="rcc-btn rcc-btn-primary" (click)="save()">Save</button>
+      }
+    </div>
+    @if (!formValid()) {
+      <p class="rcc-inline-error">{{ formError() }}</p>
+    }
+  </section>
+
+  <section class="rcc-grid card">
+    <div class="rcc-grid-toolbar">
+      <input type="text" class="rcc-search" placeholder="Search speciality / service / role"
+             [(ngModel)]="searchTerm" />
+      <span class="rcc-count">{{ filteredRows().length }} row(s)</span>
+    </div>
+    @if (loading()) {
+      <p class="rcc-loading">Loading…</p>
+    } @else if (filteredRows().length === 0) {
+      <p class="rcc-empty">No resource charges configured.</p>
+    } @else {
+      <table class="rcc-table">
+        <thead>
+          <tr>
+            <th>Speciality</th>
+            <th>Service</th>
+            <th>Role</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of filteredRows(); track row.resourceChargeConfigurationId) {
+            <tr>
+              <td>{{ row.specialityName }}</td>
+              <td>{{ row.serviceStandardName }}</td>
+              <td>{{ row.procedureRoleName }}</td>
+              <td>{{ row.amount }}</td>
+              <td>
+                <button class="rcc-status" [class.rcc-status-active]="row.status === 'A'"
+                        (click)="toggleStatus(row)">
+                  {{ row.status === 'A' ? 'Active' : 'Inactive' }}
+                </button>
+              </td>
+              <td>
+                <button class="rcc-edit" (click)="edit(row)">Edit</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
