@@ -111,6 +111,24 @@ def main():
                     hits = [appjs.find(f".state('{cand}'")]
                     break
         ctrl_loaded = bool(re.search(rf"controller/[^\"']*{re.escape(st)}[^\"']*\.js", index))
+        # DECOY test (the 580 correction, 2026-08-10): a LIVE candidate must
+        # have its OWN controller JS (not MasterController) AND a template
+        # with Angular bindings. MasterController + 0 bindings = the shell
+        # (the consentType/580 class).
+        shell_state = False
+        if hits:
+            seg = appjs[hits[0]:hits[0] + 500]
+            shell_state = "MasterController" in seg or "masterController" in seg
+        # template bindings: find the templateUrl and count ng- bindings
+        tpl_bindings = 0
+        tm = re.search(r"templateUrl\s*:\s*'([^']+)'", appjs[hits[0]:hits[0] + 500] if hits else "")
+        if tm:
+            tpl_path = f"{ROOT}/legacy/HIS-WAR/src/main/webapp/{tm.group(1)}"
+            try:
+                tpl = open(tpl_path, encoding="utf-8").read()
+                tpl_bindings = len(re.findall(r"ng-(model|click|bind|repeat|change|show|if)", tpl))
+            except Exception:
+                tpl_bindings = -1  # template missing
         root_pascal = "".join(w.capitalize() for w in re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", st).split())
         bfind = subprocess.run(
             ["grep", "-rl", "--include=*.java", f"class {root_pascal}",
@@ -139,7 +157,13 @@ def main():
             # unitServiceBasePrice -> /api/unit/billing/getServiceBasePriceList
             # lives in a differently-named Java controller)
             node = nodes_by_link.get(st.lower())
-            if node is None:
+            if shell_state and tpl_bindings == 0:
+                # MasterController + 0-binding template = the SHELL — the
+                # DECOY-ROUTED class (consentType / 580): the menu reaches a
+                # shell while the real screen (a sibling with its own
+                # controller + backend) holds the CRUD. Needs owner decision.
+                cls = "DECOY-ROUTED (shell state + 0-bind template)"
+            elif node is None:
                 cls = "LIVE-ORPHANED (state+backend, no menu link)"
             else:
                 cls = "LIVE (state+node+backend)"
