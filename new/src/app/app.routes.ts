@@ -1646,6 +1646,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/global-doctor-share/global-doctor-share').then((m) => m.GlobalDoctorShare),
       },
+      {
+        path: 'doctorwiseShare',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 614, title: 'Doctorwise Share' },
+        loadComponent: () =>
+          import('./features/doctorwise-share/doctorwise-share').then((m) => m.DoctorwiseShare),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

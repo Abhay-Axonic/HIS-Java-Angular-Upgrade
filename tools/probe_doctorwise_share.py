@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""probe_doctorwise_share.py — browser probe for screen 33 (doctorwiseShare,
+module 614). Injected real-login token (stated plainly per
+browser-smoke-harness). Zero backend seeding.
+
+The screen surfaces a FALSE-SUCCESS finding (the walk's most serious class —
+saveDoctorShareList returns SUCCESS + ERROR_MESSAGE after a failed voucher
+write, on the doctor-share money path) and renders the live dev-empty grid.
+The probe asserts BOTH directions: the finding banner IS present and names
+the mechanism (SUCCESS + ERROR_MESSAGE / voucher); the honest dev-empty list
+renders; 0 page errors.
+"""
+import json
+import sys
+import time
+import urllib.parse
+
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:
+    print("FAIL: playwright not installed")
+    sys.exit(1)
+
+CACHE = "tools/.token_cache.json"
+TOKEN = json.load(open(CACHE))["token"]
+
+BASE = "http://localhost:4201"
+ROUTE = "/doctorwiseShare"
+FAILS = []
+
+
+def main():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        ctx = browser.new_context()
+        page = ctx.new_page()
+        errors = []
+        page.on("pageerror", lambda e: errors.append(str(e)))
+        page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+
+        co = urllib.parse.quote(json.dumps({
+            "unitId": 1, "organizationId": 1, "userId": 1,
+            "isSuperUser": "Y", "authToken": TOKEN,
+        }))
+        ctx.add_cookies([{"name": "cookieObject", "value": co, "url": BASE}])
+        page.goto(BASE, wait_until="domcontentloaded")
+        page.evaluate(
+            "() => localStorage.setItem('permissions', JSON.stringify({modules: [{id: 614}]}))"
+        )
+        page.goto(BASE + ROUTE, wait_until="domcontentloaded")
+        time.sleep(6)
+        final_url = page.url
+        print(f"FINAL URL: {final_url}")
+        if "accessDenied" in final_url or ROUTE not in final_url:
+            FAILS.append(f"route not reached: {final_url}")
+
+        body = page.inner_text("body")
+        banner = "False-success surfaced" in body
+        mechanism = "saveDoctorShareList" in body and "ERROR_MESSAGE" in body and "voucher" in body
+        print(f"FALSE-SUCCESS BANNER: {banner}, names the mechanism: {mechanism}")
+        if not (banner and mechanism):
+            FAILS.append("false-success finding not rendered (banner/mechanism)")
+
+        honest = "No doctorwise share rows found" in body
+        print(f"HONEST DEV-EMPTY LIST: {honest}")
+        if not honest:
+            FAILS.append("dev-empty list state not rendered")
+
+        page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
+        print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")
+        if page_errors:
+            FAILS.append(f"page errors: {page_errors[:2]}")
+
+        browser.close()
+
+    print()
+    if FAILS:
+        print("PROBE: FAIL —", "; ".join(FAILS))
+        sys.exit(1)
+    print("PROBE: PASS (route renders, false-success finding names the SUCCESS+ERROR_MESSAGE mechanism, honest dev-empty list, 0 page errors)")
+
+
+if __name__ == "__main__":
+    main()
