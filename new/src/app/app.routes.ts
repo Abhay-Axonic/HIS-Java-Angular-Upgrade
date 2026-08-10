@@ -1583,6 +1583,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/resource-charges-configuration/resource-charges-configuration').then((m) => m.ResourceChargesConfiguration),
       },
+      {
+        path: 'notesMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 529, title: 'Notes Master' },
+        loadComponent: () =>
+          import('./features/notes-master/notes-master').then((m) => m.NotesMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
