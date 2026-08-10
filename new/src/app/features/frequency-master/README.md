@@ -113,10 +113,27 @@ unfired — no-seed).
   leave the DTO fields null; the legacy always sends them, and its String
   setters map an empty string to the midnight 00:00 default). Both were
   MAKER defects in the probe/rebuild payload, NOT backend defects — the
-  save endpoint is healthy (201 with the legacy contract). The rebuild now
-  sends the full legacy item shape. The toast names any failure in plain
-  language ("Save failed: <server message>. Check the server log for the
-  correlation reference.") — never the raw HTTP error.
+  save endpoint is healthy (201 with the legacy contract).
+- The save-400 incident (2026-08-10, owner click-through): entering a
+  single-digit hour ("8:00") produced HIS-400 "Bad Request - Invalid
+  parameters". Root cause (server log correlation): HttpMessageNotReadable
+  Exception "Text '8:00' could not be parsed at index 0" through
+  FrequencyRequestItem["administrationTime"], Caused by DateTimeParse
+  Exception at setAdministrationTime (FrequencyRequestItem.java:73) —
+  LocalTime.parse requires ISO-8601 HH:MM. The rebuild NORMALIZES human
+  input to HH:MM before sending ("8:00" -> "08:00") and rejects genuinely
+  invalid times ("25:99") client-side with a plain-language toast, firing
+  no request. The backend's rejection of raw "8:00" is real and unchanged
+  (verified by calling) — the form simply no longer sends it (Rule 10:
+  the backend's parse strictness is a backend note, not fixed here).
+  The toast names any failure in plain language ("Save failed: <server
+  message>. Check the server log for the correlation reference.") — never
+  the raw HTTP error.
+- Probe discipline: the interaction probe DRIVES THE FORM — fills the real
+  inputs, clicks the real button, asserts the real result (it never
+  constructs a payload). It reproduces the user's exact failing inputs
+  (regression) and carries a negative control (an invalid time must be
+  rejected client-side with ZERO requests on the wire).
 - Endpoint verification: list live-verified (200, real row); byId
   live-verified FAILING (500, root-caused — the phantom, see the FINDING
   section); save live-verified (201, row created + read back + cleaned).
