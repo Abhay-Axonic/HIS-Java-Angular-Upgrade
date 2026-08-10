@@ -266,6 +266,71 @@ def check_c6():
     return 'PASS', f'{len(files)} committed file(s) scanned, 0 conflict markers'
 
 
+def check_c7(feature, route):
+    """C7 ALREADY-REBUILT — the NEW-CLASS SURFACING rule applied to screens
+    (owner directive 2026-08-10, screen-20 audit: the walk rewrote two
+    pre-existing rebuilds — frequency-master (batch 10) and
+    operation-theatre-type (batch 22) — because selection never checked
+    whether a REBUILD already existed on main; only the legacy side was
+    checked).
+
+    Reads MAIN's CURRENT committed tree (git ls-tree main / git show main:...).
+    The tool is run BEFORE selecting/building a screen — at selection time,
+    main is the pre-work baseline: a genuinely new screen is absent from main
+    (PASS), a screen a prior batch already rebuilt is present (flag). Reading
+    current main (NOT the branch merge-base) is correct: the branch may have
+    merged main mid-work (the merge-readiness preconditions), which would make
+    the merge-base post-selection and hide the prior rebuild. Flags when BOTH:
+      (1) new/src/app/features/<feature>/ already has files on main, AND
+      (2) app.routes.ts on main already has a loadComponent pointing at a
+          feature dir for the route path.
+    If either is true the screen is ALREADY REBUILT (or partially so) — this
+    is a FLAG, not a blocking FAIL (a rewrite MAY be warranted — e.g. the
+    false-success mitigation on operation-theatre-type), but it MUST be
+    surfaced to the owner BEFORE any rewrite work, per the NEW-CLASS
+    SURFACING rule. Do not rewrite an owner-approved screen without that
+    surfacing.
+    """
+    try:
+        feats = subprocess.run(
+            ['git', 'ls-tree', '-r', '--name-only', 'main', '--',
+             f'new/src/app/features/{feature}'],
+            capture_output=True, text=True, cwd=ROOT).stdout.splitlines()
+        routes = subprocess.run(
+            ['git', 'show', 'main:new/src/app/app.routes.ts'],
+            capture_output=True, text=True, cwd=ROOT).stdout
+    except Exception as ex:  # noqa: BLE001
+        return 'UNVALIDATED', f'main tree unreadable: {ex}'
+    dir_hits = len(feats)
+    route_token = f"path: '{route}'"
+    route_hits = routes.count(route_token)
+    # the loadComponent must point at a features/ dir for this screen
+    comp_ref = f"features/{feature}/"
+    comp_hits = routes.count(comp_ref)
+    if dir_hits > 0 and route_hits > 0:
+        return ('ALREADY-REBUILT',
+                f'{dir_hits} file(s) exist on MAIN under features/{feature}/ '
+                f'AND the route {route_token!r} exists on main '
+                f'(loadComponent refs to {comp_ref!r}: {comp_hits}). '
+                'A REBUILD ALREADY EXISTS on main — do NOT rewrite it without '
+                'surfacing what exists and why a rewrite is warranted (the '
+                'NEW-CLASS SURFACING rule). If this is a genuine rewrite, the '
+                'report must name the owner-approved behaviour being changed.')
+    if dir_hits > 0:
+        return ('ALREADY-REBUILT-PARTIAL',
+                f'{dir_hits} file(s) exist on MAIN under features/{feature}/ '
+                'but no route for this path — check whether a prior batch '
+                'built the component without wiring the route.')
+    if route_hits > 0:
+        return ('ALREADY-REBUILT-PARTIAL',
+                f'the route {route_token!r} exists on MAIN but no feature dir '
+                'under features/{feature}/ — a pre-registered route awaiting '
+                'its component (the batch-22 tell).')
+    return ('PASS',
+            f'no feature dir under features/{feature}/ and no route '
+            f'{route_token!r} on main — genuinely new screen.')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('feature')           # e.g. add-new-drug-recall
@@ -282,9 +347,11 @@ def main():
         ('C4 ENDPOINT HANDLERS', check_c4(folder, args.backend_root)),
         ('C5 LEGACY REACHABILITY', check_c5(folder, args.appjs, args.route)),
         ('C6 COMMITTED MARKERS', check_c6()),
+        ('C7 ALREADY-REBUILT', check_c7(args.feature, args.route)),
     ]
     any_fail = False
     dead_flag = False
+    rebuilt_flag = False
     unvalidated = 0
     for name, (status, detail) in results:
         print(f'{name}: {status} — {detail}')
@@ -292,12 +359,24 @@ def main():
             any_fail = True
         if status == 'DEAD':
             dead_flag = True
+        if status == 'ALREADY-REBUILT':
+            rebuilt_flag = True
         if status == 'UNVALIDATED':
             unvalidated += 1
     if unvalidated:
         print(f'NOTE: {unvalidated} check(s) returned UNVALIDATED — that is NOT a pass. '
               'The reachability hand-confirmation (the two greps) is REQUIRED and must '
               'appear in the screen report (RULES.md).')
+    if rebuilt_flag:
+        # C7 ALREADY-REBUILT is a FLAG, not a blocking FAIL: a rewrite MAY be
+        # warranted, but the NEW-CLASS SURFACING rule requires it to be surfaced
+        # to the owner BEFORE any rewrite work — what exists and why a rewrite
+        # is warranted. Never rewrite an owner-approved screen silently.
+        print('RESULT: ALREADY-REBUILT — a rebuild exists on main for this screen. '
+              'DO NOT rewrite it without surfacing to the owner what exists and '
+              'why a rewrite is warranted. This is the NEW-CLASS SURFACING rule '
+              'applied to screens (owner directive 2026-08-10).')
+        sys.exit(2)
     if dead_flag:
         if any_fail:
             # a FAIL alongside the DEAD flag must NOT print "passes"
