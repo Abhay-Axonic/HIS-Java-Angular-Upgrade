@@ -2387,7 +2387,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 							
 						} catch (Exception e) {
 						    logger.error(e.getMessage(), e);
-						    return new Response<>(SUCCESS, SUCCESS_CODE, "Payment collected successfully !!!", null, dto1);
+						    return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 						}
 
 						} else if (appointment.getIsAppointmentFromMylife() == 'N') {
@@ -2440,7 +2440,7 @@ public class BillingMasterServiceImpl implements IBillingMasterService, ICommonC
 								
 							} catch (Exception e) {
 							    logger.error(e.getMessage(), e);
-							    return new Response<>(SUCCESS, SUCCESS_CODE, "Payment collected successfully !!!", null, dto1);
+							    return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 							}
 							}
 						}
