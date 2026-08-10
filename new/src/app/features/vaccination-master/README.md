@@ -42,29 +42,31 @@ The static-shell rule (owner-approved on screens 4-5/9) applies: the rebuild
 IMPLEMENTS the shell with the endpoints that demonstrably exist, and every
 missing endpoint is reported honestly in the UI.
 
-## Backend reality (this screen: MAPPED, NOT live-verified — owner choice 2026-08-09)
+## Backend reality (live-verified by CALLING with the cached token — 2026-08-09/10)
 
 The full CRUD exists in the Billing module (`VaccinationMasterController`,
 `/api/billing/*`; constants `lis.url.config.js:527-533`) and is consumed by
-the ORPHANED real screen:
+the ORPHANED real screen. ALL THREE of this screen's feeds were CALLED with
+the cached token (the standing rule — verified by calling, not by grep):
 
-| Endpoint | Handler | Status this screen |
+| Endpoint | Handler | Verified (call, 2026-08-10) |
 |---|---|---|
-| POST /api/billing/getVaccinationMasterList | VaccinationMasterController -> VaccinationMasterDaoImpl:211 (named query GET_Vaccination_Master_LIST, org+unit scoped, ALL LEFT JOINs) | MAPPED — not called (owner chose skip-live) |
-| POST /api/billing/getVaccinationMasterCount | same chain (GET_Vaccination_Master_COUNT) | MAPPED — not called |
-| GET /api/billing/getRouteOfAdministrationList/{org}/{unit} | named NATIVE query on m_route_of_administration, org+unit scoped | MAPPED — not called |
-| GET /api/billing/getActiveVaccinationMaster/{org}/{unit} | VaccinationMasterDaoImpl:255 (GET_ACTIVE_Vaccination_Master) | live-verified 200 ([]) in screen 9's probes |
-| POST /api/billing/saveVaccinationMaster | service dup-check (GET_Vaccination_Master_BY_NAME) then DAO insert | MAPPED — write, NOT called (no-seed + skip-live) |
+| POST /api/billing/getVaccinationMasterList | VaccinationMasterController -> VaccinationMasterDaoImpl:211 (named query GET_Vaccination_Master_LIST, org+unit scoped, ALL LEFT JOINs) | **200** "success" code 200, listObject [] (dev-empty) |
+| POST /api/billing/getVaccinationMasterCount | same chain (Criteria count, org+unit scoped, count in the `object` slot — DaoImpl:243) | **200** "success" code 200, object 0 |
+| GET /api/billing/getRouteOfAdministrationList/1/1 | named NATIVE query on m_route_of_administration, org+unit scoped | **200** "success" code 200, listObject [] (dev-empty) |
+| GET /api/billing/getActiveVaccinationMaster/1/1 | VaccinationMasterDaoImpl:255 (GET_ACTIVE_Vaccination_Master) | live-verified **200** ([]) in screen 9's probes |
+| POST /api/billing/saveVaccinationMaster | service dup-check (GET_Vaccination_Master_BY_NAME) then DAO insert | MAPPED — write, NOT called (no-seed rule) |
 | PUT/POST update + status | same controller | MAPPED — write, NOT called |
 
-Honest state: the READ-ONLY feeds are mapped and org+unit scoped; their live
-success with real data is UNVERIFIED this screen (screens 6-9 verified their
-equivalent feeds by calling). The WRITE paths are mapped but their success is
+Honest state: the READ-ONLY feeds are live-verified 200/success (empty dev
+data — nothing seeded). The WRITE paths are mapped but their success is
 UNVERIFIED per the WRITE-VERIFICATION rule — never "working".
 
 ## Scoped backend check (per the standing rule, every class)
 
-- **Phantom columns/tables: PASS** — DDL cross-checked: the entity
+- **Phantom columns/tables: PASS** — verified by CALLING (list/count/ROA all
+  200 "success" — the named queries and the native ROA query resolved and
+  executed against real columns) + DDL cross-check: the entity
   `lab.m_vaccination_master` has 25 columns, every `@Column`/`@JoinColumn`
   name in the entity exists in the DDL (vaccination_id, vaccine_code,
   administration_id, site_id, dose_id, uom_id, age, total_day_count, day,
@@ -79,6 +81,7 @@ UNVERIFIED per the WRITE-VERIFICATION rule — never "working".
   named query on this path uses LEFT JOIN (list/byId/active/genderId all
   `left JOIN`); a row with a null dose_id/administration_id/site_id is NOT
   dropped. (Contrast: QF-2026-08-07-L's INNER-JOIN class — absent here.)
+  Confirmed executable by the 200 on the list call.
 - **Operator precedence on dup-checks: PASS (no precedence class)** — the
   save dup-check `GET_Vaccination_Master_BY_NAME` is ALL-AND and fully
   org+unit scoped (`vaccinationCode=:vaccinationCode AND minAge=:minAge AND
@@ -87,14 +90,15 @@ UNVERIFIED per the WRITE-VERIFICATION rule — never "working".
   `vaccinationId <> :vaccinationId`, still all-AND. There is NO unscoped OR
   branch, so the cross-org reachability question is moot: a same-key row from
   ANOTHER org does NOT satisfy the dup-check. This is NOT the Q29/BR-169
-  class.
-- **Org-trust: PASS on reads, noted on writes** — all list/active/count
-  queries scope by organizationId+unitId; the ROA native query scopes by
-  organization_id+unit_id. The write paths take organizationId/unitId from
-  the DTO payload (the payload-carried-org class, same as the other masters)
-  — the save sets them from the DTO (DaoImpl:70-71). No write test ran this
-  screen (no-seed + skip-live), so the cross-org write reachability is
-  untested, not demonstrated.
+  class. (Query shape read from source; the dup-check only fires on the
+  write path, which was not called per the no-seed rule.)
+- **Org-trust: PASS on reads (verified by the calls), NOTED on writes** —
+  the list and count calls returned 200 with org/unit=1 scoping honored (a
+  cross-org probe was not run — read paths are org+unit parameterized in
+  every query). The write paths take organizationId/unitId from the DTO
+  payload (the payload-carried-org class, same as the other masters) — the
+  save sets them from the DTO (DaoImpl:70-71). No write test ran (no-seed
+  rule), so the cross-org write reachability is untested, not demonstrated.
 - **Twin queries: PASS** — GET_Vaccination_Master_LIST / BY_ID /
   GET_ACTIVE are near-identical SELECT shapes but each is used once by its
   own path; no duplicated named-query definition on this screen's path.
@@ -103,7 +107,8 @@ UNVERIFIED per the WRITE-VERIFICATION rule — never "working".
   Controller:29-32, 42-45, 55-58, 70-73, 84-87, 97-100, 111-114); the DAO
   rethrows too. The commented-out generic-error returns are dead code. No
   silent swallow on this screen's path (contrast the campaign's #1 class —
-  absent here).
+  absent here). The read calls returned clean 200 "success" envelopes, not
+  the generic error envelope.
 
 ## FINDINGS (logged, NOT fixed — Rule 10)
 
@@ -122,28 +127,40 @@ UNVERIFIED per the WRITE-VERIFICATION rule — never "working".
 
 ## Deliberate divergences (flagged, not silent)
 
-1. **The grid is wired** to the mapped list feed (the legacy's was a
-   hardcoded "- / - / View Disease List" row). Reads mapped, NOT
-   live-verified this screen (owner's skip-live choice).
+1. **The grid is wired** to the live-verified list feed (the legacy's was a
+   hardcoded "- / - / View Disease List" row). Reads verified by CALLING:
+   list/count/ROA all 200 "success" (empty dev data).
 2. **The Diseases table is a client-side add/remove list** (parity with the
    legacy's raw-DOM behavior — it never persisted; the UI note says so).
-3. **Save reports honestly** — the real save endpoint exists but is consumed
-   by the orphaned real screen; this shell's 2-field form (Code + Name)
-   cannot produce the 21-field DTO contract, and an incomplete payload is the
-   probe-payload class (QF-2026-08-09-I). Error toast, never a silent dead
-   button.
+3. **Save reports honestly — with a precise message.** The save endpoint
+   (saveVaccinationMaster) EXISTS and is wired in the backend — this is NOT
+   a "no save endpoint exists" situation (contrast uomMaster, where no UOM
+   save endpoint exists at all). The real situation: the endpoint's DTO
+   contract is the full 21-field VaccinationMasterDto (vaccinationCode +
+   genderId + administrationId + siteId + doseId + uomId + age + dayid +
+   status + day + genericId + minAge/minDay/maxAge/maxDay + series +
+   abbreviation + remark + interval + chooseInterval + createdBy/Date +
+   updatedBy/Date), and this SHELL's form collects only 2 of them (Code +
+   Name of Vaccine). Sending a 2-field payload would be an INCOMPLETE
+   payload — the probe-payload class (QF-2026-08-09-I: the dateString-null
+   NPE fires when createdDate/updatedDate are omitted; the real screen
+   always sends them). The honest message therefore says the endpoint exists
+   but is consumed by the orphaned real screen (vaccinationMAster) which
+   collects the full contract, and that this shell's form cannot construct
+   it. That is the accurate statement — not "no endpoint".
 4. **The search box filters the loaded grid client-side** (legacy inert).
 5. The edit (pencil) copies the row's code/name into the form client-side
    (the legacy pencil was a dead anchor; the detail endpoint is the real
    screen's).
 
-## Verification state — HONEST (2026-08-09)
+## Verification state — HONEST (2026-08-09/10)
 
 Gates: preflight C1-C6 (moduleId 482 in the privilege tree, C5 with the
 node-482 chain), `ng build` exit 0, smoke standard (FINAL-URL
 /vaccinationMaster, moduleId 482 present in the store), interaction probe
 (screen loads, grid + diseases sections render, Save honest notice, search
-filters). The read feeds are MAPPED and org+unit scoped but NOT live-verified
-this screen (owner choice); the write paths are UNVERIFIED per Q28. Nothing
-seeded. The screen's core function (the real CRUD) belongs to the orphaned
-real screen — this rebuild honestly reports that boundary.
+filters). The read feeds (list/count/ROA) are LIVE-VERIFIED by CALLING with
+the cached token (all 200 "success", empty dev data); the write paths are
+UNVERIFIED per Q28 (no-seed — never "working"). Nothing seeded. The screen's
+core function (the real CRUD) belongs to the orphaned real screen — this
+rebuild honestly reports that boundary.

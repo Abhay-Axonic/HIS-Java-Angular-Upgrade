@@ -105,13 +105,16 @@ export class VaccinationMaster {
     this.form.set({ code: row.vaccinationCode?.toString() ?? '', name: row.name ?? '' });
   }
 
-  /** The save: HONEST — the real save endpoint exists but is consumed by the
-   * orphaned real screen (vaccinationMAster); this shell's 2-field form cannot
-   * produce the 21-field DTO contract, and an incomplete payload is the
-   * probe-payload class (QF-2026-08-09-I). Reported, not faked. */
+  /** The save: HONEST — the save endpoint EXISTS (saveVaccinationMaster) and
+   * is wired in the backend, but its payload is the full vaccination-master
+   * record (vaccine, route, site, dose, age ranges, series, gender, dates…)
+   * and this shell's form collects only Code + Name of Vaccine. Sending a
+   * 2-field payload would be an incomplete payload (the probe-payload class,
+   * QF-2026-08-09-I). The complete form lives on the orphaned real screen
+   * (vaccinationMAster). Reported precisely, not faked, never a dead button. */
   onSave(): void {
     this.notify.error(
-      'Save not wired — the real save endpoint (saveVaccinationMaster) is consumed by the orphaned real screen vaccinationMAster; this shell form cannot supply its 21-field contract (finding logged)',
+      'Save not wired on this screen — the save endpoint expects the full vaccination record (vaccine, route, site, dose, age, series, gender…), which this shell form cannot supply; the complete form exists on the real Vaccination Master screen (finding logged)',
     );
   }
 }
