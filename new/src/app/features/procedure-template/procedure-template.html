@@ -1,0 +1,28 @@
+<div class="pt-page">
+  <header class="pt-header">
+    <h2>Procedure Configuration</h2>
+    <p class="pt-sub">Screen 25 — module 515 (OTIMS). Procedure template / configuration detail (the drill-down from Procedure Configurations).</p>
+  </header>
+
+  @if (backendError()) {
+    <section class="pt-backend-error">
+      <h3>Backend defect surfaced</h3>
+      <p>The procedure configuration core cannot load: the legacy checklist query selects a column that does not exist in the database.</p>
+      <p class="pt-error-detail">
+        Missing column in public.m_role_master: role_desc (the DDL has role_name; the
+        entity maps roleDesc at RoleMaster.java:25 — a field/DDL mismatch). Selected by
+        GET_CHECKLIST_LIST_BY_PROCEDURE_CONFIG_ID (ProcedureConfigurationChecklist.java:27),
+        breaking getProcedureConfigTemplate AND saveProcedureConfigTemplate (both 500 loudly).
+      </p>
+      <p class="pt-error-message">{{ backendError() }}</p>
+      @if (backendErrorRef()) {
+        <p class="pt-error-ref">Reference: {{ backendErrorRef() }}</p>
+      }
+      <button class="pt-btn pt-btn-primary" (click)="retry()">Retry</button>
+    </section>
+  } @else if (loading()) {
+    <p class="pt-loading">Loading…</p>
+  } @else {
+    <p class="pt-empty">Procedure configuration list loaded successfully.</p>
+  }
+</div>

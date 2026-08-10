@@ -1590,6 +1590,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/notes-master/notes-master').then((m) => m.NotesMaster),
       },
+      {
+        path: 'procedureTemplate',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 515, title: 'Procedure Configuration' },
+        loadComponent: () =>
+          import('./features/procedure-template/procedure-template').then((m) => m.ProcedureTemplate),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
