@@ -1625,6 +1625,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/charge-conversion/charge-conversion').then((m) => m.ChargeConversion),
       },
+      {
+        path: 'serviceTariffMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 610, title: 'Service Tariff Master' },
+        loadComponent: () =>
+          import('./features/service-tariff-master/service-tariff-master').then((m) => m.ServiceTariffMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

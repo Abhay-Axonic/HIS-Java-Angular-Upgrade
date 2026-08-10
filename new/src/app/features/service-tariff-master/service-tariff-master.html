@@ -1,0 +1,37 @@
+<div class="stm-page">
+  <header class="stm-header">
+    <h2>Service Tariff Master</h2>
+    <p class="stm-sub">Screen 30 — module 610 (Billing, parent 570). Tariff configuration per service.</p>
+  </header>
+
+  <section class="stm-finding">
+    <h3>Backend defect surfaced — the legacy primary grid endpoint is broken</h3>
+    <p>
+      The endpoint the legacy frontend calls for this grid
+      (getUnitServiceTariffMasterList) returns a masked HTTP-200 error for
+      every default (empty-filter) load — the grid cannot load.
+    </p>
+    <p class="stm-detail">
+      Mechanism: UnitServiceTariffMasterDaoImpl appends
+      <code>AND ustm.tariffId IN (:tariffMasterIdList)</code> and binds the
+      EMPTY filter list — generated SQL <code>IN ()</code> — PostgreSQL
+      syntax error. The DAO rethrows cleanly, but the controller's catch is
+      EMPTY (UnitServiceTariffMasterController:51-52), so the exception is
+      swallowed into {{ '{' }}status: error, code: null, message: null{{ '}' }} with
+      HTTP 200. The ForWeb variant (its DAO uses the no-op placeholder
+      <code>IN (1)</code>) works — this rebuild calls it.
+    </p>
+    <p class="stm-note">Not fixed (Rule 10 — backend BR candidate; the fix pattern is the ForWeb DAO's placeholder).</p>
+  </section>
+
+  <section class="stm-list card">
+    <h3>Tariff list</h3>
+    @if (loading()) {
+      <p class="stm-loading">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="stm-empty">No tariff rows found (dev data).</p>
+    } @else {
+      <p class="stm-empty">Tariff rows loaded ({{ rows().length }}).</p>
+    }
+  </section>
+</div>
