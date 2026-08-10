@@ -90,6 +90,11 @@ def main():
             continue
         # resolve the base — most controllers use BASE_URL+ROOT_URL+"/api/..."
         full = url if url.startswith("/api") or url.startswith("/unit") or url.startswith("/adt") else "/api" + url
+        # fill path params {orgId}/{unitId}/{org}/{unit} with 1/1 where the
+        # URL carries them (the recheck's 404 bug — path-param endpoints)
+        if "/{" in full:
+            full = re.sub(r"\{[^}]*\}", "1", full)
+        full = full.rstrip("/")
         # try POST org payload (the standard), GET if POST 400s
         def attempt(payload, method="POST"):
             req = urllib.request.Request("http://localhost:8080" + full,
