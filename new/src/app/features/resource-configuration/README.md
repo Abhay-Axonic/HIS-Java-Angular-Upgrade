@@ -95,7 +95,9 @@ and its LEFT JOINs).
   "working" — it is a broken backend feed, reported as such.
 - Write verification: NO write test ran (no-seed; save/status write real
   rows). The save/update/status endpoints are MAPPED but NOT wired in the
-  rebuild (read-only by design, see divergences) — they were not fired.
+  rebuild (read-only by design, see divergences) — they were not fired, so
+  they are never claimed as "not erroring" either: their behavior is
+  UNVERIFIED (Q28).
 
 ## Deliberate divergences (flagged, not silent)
 
