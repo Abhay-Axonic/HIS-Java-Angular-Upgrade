@@ -1660,6 +1660,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/doctor-referral-share/doctor-referral-share').then((m) => m.DoctorReferralShare),
       },
+      {
+        path: 'depositMatrixConfig',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 621, title: 'Deposit Matrix Configuration' },
+        loadComponent: () =>
+          import('./features/deposit-matrix-configuration/deposit-matrix-configuration').then((m) => m.DepositMatrixConfiguration),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
