@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'resourceConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 517, title: 'Resource Configuration' },
+        loadComponent: () =>
+          import('./features/resource-configuration/resource-configuration').then((m) => m.ResourceConfiguration),
+      },
+      {
         path: 'procedureConfiguration',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 515, title: 'Procedure Configuration' },

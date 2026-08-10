@@ -1,0 +1,54 @@
+<div class="page-content">
+  <h2 class="page-title">Resource Configuration</h2>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="loading-hint">Loading…</div>
+  }
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Procedure</th>
+        <th>Speciality</th>
+        <th>Service</th>
+        <th>Tariff</th>
+        <th>Visit Type</th>
+        <th>Surgeon %</th>
+        <th>Asst %</th>
+        <th>Anaesth %</th>
+        <th>OT %</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredRows(); track row.surgeryResourceConfigId) {
+        <tr>
+          <td>{{ row.procedureName }}</td>
+          <td>{{ row.specialityName }}</td>
+          <td>{{ row.serviceId }}</td>
+          <td>{{ row.tariffDesc }}</td>
+          <td>{{ row.visitTypeName }}</td>
+          <td>{{ row.surgeonPercentage }}</td>
+          <td>{{ row.asstSurgeonPercentage }}</td>
+          <td>{{ row.anesthesiologistPercentage }}</td>
+          <td>{{ row.otPercentage }}</td>
+          <td>{{ row.status === 'A' ? 'Active' : 'Inactive' }}</td>
+        </tr>
+      }
+      @if (!filteredRows().length && !loading()) {
+        <tr>
+          <td colspan="10" class="empty-cell">No resource configurations found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
