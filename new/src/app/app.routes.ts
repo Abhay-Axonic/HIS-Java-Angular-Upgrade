@@ -1632,6 +1632,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/service-tariff-master/service-tariff-master').then((m) => m.ServiceTariffMaster),
       },
+      {
+        path: 'doctorConsultation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 612, title: 'Doctor Consultation' },
+        loadComponent: () =>
+          import('./features/doctor-consultation/doctor-consultation').then((m) => m.DoctorConsultation),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

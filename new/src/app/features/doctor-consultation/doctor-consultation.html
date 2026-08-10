@@ -1,0 +1,17 @@
+<div class="dc-page">
+  <header class="dc-header">
+    <h2>Doctor Consultation</h2>
+    <p class="dc-sub">Screen 31 — module 612 (Billing, parent 570). Doctor consultation service mapping.</p>
+  </header>
+
+  <section class="dc-list card">
+    <h3>Doctor consultation service mapping</h3>
+    @if (loading()) {
+      <p class="dc-loading">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="dc-empty">No doctor consultation mappings found (dev data; count: {{ count() ?? '?' }}).</p>
+    } @else {
+      <p class="dc-empty">Doctor consultation mappings loaded ({{ rows().length }}).</p>
+    }
+  </section>
+</div>
