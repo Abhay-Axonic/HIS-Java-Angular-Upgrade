@@ -34,17 +34,26 @@ offset:0,noOfRecordsPerPage:20} -> HTTP 500 body {"status":"error",
 POST /global/otims/getNotesMasterList -> 500 ERR-7f29a04a. Both reads
 unconditionally 500 ("could not extract ResultSet" — a SQLGrammarException).
 
-ROOT CAUSE: GET_NOTELIST_MASTER_LIST (NotesMaster.java:47-63) selects 8
-columns that DO NOT EXIST in the DDL. otims.m_note_master has exactly 12
-columns (note_master_id, code, description, note_type, template,
+ROOT CAUSE (the four answers, per the owner's ask): (a) the missing columns
+are SIX — template_format_id, form_template_id, form_template_keywords,
+title, template_type_id, template_id — in otims.m_note_master (the DDL has
+exactly 12 columns: note_master_id, code, description, note_type, template,
 created_date, created_by, status, updated_by, updated_date, unit_id,
-organization_id — information_schema-verified) while the entity maps
-template_format_id, form_template_id, form_template_keywords,
-template_type_id, template_id, title (@Column at NotesMaster.java:129-147)
-and the query selects them. The phantom columns were never added to the DDL.
-Same class as screen 17 (resourceConfiguration's visit_type_id phantom) and
-the walk's t_translated_frequency / allergy cims phantoms. NOT FIXED
-(Rule 10) — backend BR candidate (BR-190 class: phantom columns).
+organization_id; information_schema-verified; the entity maps the six at
+NotesMaster.java:129-147). (b) The query is GET_NOTELIST_MASTER_LIST
+(NotesMaster.java:47-63) selecting all six phantoms; GET_NOTELIST_MASTER_
+LIST_BY_NOTE_TYPE_ID (65-90) selects the same six. (c) ALL three read/write
+paths break: list + byNoteType 500 on the SELECT (could not extract
+ResultSet); saveNotesMaster 500s on the INSERT (could not execute statement;
+SQLGrammarException at NotesMasterController.java:34 — verified live with the
+correct Integer noteType: ERR-d85de88c). The save's DTO contract also
+requires noteType as Integer (a string 400s HIS-400 at Jackson binding — the
+probe-payload class). (d) LOUD failure, NOT the screen-17 masked shape: every
+path returns HTTP 500 with a correlation-id envelope (ERR-...), not HTTP 200
+with a body error. Same class as screen 17 (resourceConfiguration's
+visit_type_id phantom) and the walk's t_translated_frequency / allergy cims
+phantoms. NOT FIXED (Rule 10) — backend BR candidate (BR-190 class: phantom
+columns).
 
 THE REBUILD surfaces this honestly (the screen-17 pattern): it CALLS the
 list, detects the error envelope (both the HTTP-200-error and the

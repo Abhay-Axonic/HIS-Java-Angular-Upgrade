@@ -56,10 +56,11 @@ def main():
         body = page.inner_text("body")
         banner = "Backend defect surfaced" in body
         named = "columns that do not exist" in body
+        col = "template_format_id" in body and "form_template_keywords" in body
         ref = "ERR-" in body
-        print(f"PHANTOM BANNER: {banner}, names the defect: {named}, correlation ref: {ref}")
-        if not (banner and named and ref):
-            FAILS.append("phantom-defect banner not rendered honestly")
+        print(f"PHANTOM BANNER: {banner}, names the defect: {named}, names the columns: {col}, correlation ref: {ref}")
+        if not (banner and named and col and ref):
+            FAILS.append("phantom-defect banner not rendered honestly (missing banner/named-defect/columns/ref)")
 
         page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
         print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")

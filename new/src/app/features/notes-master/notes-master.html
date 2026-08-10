@@ -8,6 +8,10 @@
     <section class="nm-backend-error">
       <h3>Backend defect surfaced</h3>
       <p>The notes list cannot load: the legacy query selects columns that do not exist in the database.</p>
+      <p class="nm-error-detail">
+        Missing columns in otims.m_note_master: template_format_id, form_template_id,
+        form_template_keywords, title, template_type_id, template_id.
+      </p>
       <p class="nm-error-message">{{ backendError() }}</p>
       @if (backendErrorRef()) {
         <p class="nm-error-ref">Reference: {{ backendErrorRef() }}</p>
