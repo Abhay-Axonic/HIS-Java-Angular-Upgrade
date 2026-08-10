@@ -387,6 +387,23 @@ IMMEDIATELY BEFORE it is handed to the owner as ready:
 The diff-before-merge step remains the owner's final gate — but it should be
 catching nothing, because the branch is current when handed over.
 
+**FOURTH INSTANCE (2026-08-10, screen 22 — the check ran but the tree went
+stale AFTER it):** the readiness demonstration passed (merge + diff = exactly
+the intended files + dry run clean), but a MAIN-SIDE docs record commit
+(screen record in DECISIONS_QUEUE.md) landed in the SAME turn BETWEEN the
+demonstration and the handoff report — advancing main past the branch's
+merge and making the docs file read as 2 branch-side deletions. The check
+was not skipped; it was invalidated by a main-side write after it ran.
+HARDENING (binding): (a) the readiness sequence is the turn's LAST
+main-interacting step — NO main-side commits (docs records, tooling,
+session-log) may land between the demonstration and the handoff report; if
+one is needed, the merge+diff+dry-run sequence runs AGAIN after it, and the
+report reflects the LAST run. (b) Write screen/BR records to main BEFORE the
+branch's readiness demonstration, not after — the record precedes the demo;
+the demo is what must be last. (c) Any main-side write after the demo is an
+automatic handoff-block: the branch is not reported ready until the sequence
+is re-run.
+
 ## ONE-MESSAGE-PER-TURN REPORTING DISCIPLINE (owner directive 2026-08-10, standing)
 
 The reporting mechanism is now known: ONE user-facing message per turn is
