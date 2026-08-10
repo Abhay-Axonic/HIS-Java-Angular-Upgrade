@@ -1604,6 +1604,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/account-payable-master/account-payable-master').then((m) => m.AccountPayableMaster),
       },
+      {
+        path: 'unitServiceMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 583, title: 'Unit Service Master' },
+        loadComponent: () =>
+          import('./features/unit-service-master/unit-service-master').then((m) => m.UnitServiceMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
