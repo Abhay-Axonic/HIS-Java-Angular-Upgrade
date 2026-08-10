@@ -1,0 +1,32 @@
+<div class="usm-page">
+  <header class="usm-header">
+    <h2>Unit Service Master</h2>
+    <p class="usm-sub">Screen 27 — module 583 (Billing, parent 570). Clinical Unit Service Master.</p>
+  </header>
+
+  @if (backendError()) {
+    <section class="usm-backend-error">
+      <h3>Backend defect surfaced</h3>
+      <p>The unit service list cannot load: the legacy list query fails on every call.</p>
+      <p class="usm-error-detail">
+        The DTO field isOutsourceJob (and isOutsource) is typed char
+        (UnitServiceMasterDetailsDto.java:15/17) but the SQL column
+        is_outsource_job returns a String ('N') — Hibernate's AliasToBean
+        cannot set String into char, so the list 501s; the DAO's
+        catch-and-return (UnitServiceMasterDetailsDaoImpl.java:101-106)
+        swallows the exception and returns the error envelope with HTTP 200
+        (the masked-error shape — the count still works and shows
+        {{ count() ?? '?' }} row(s), so the data is real).
+      </p>
+      <p class="usm-error-message">{{ backendError() }}</p>
+      @if (backendErrorRef()) {
+        <p class="usm-error-ref">Reference: {{ backendErrorRef() }}</p>
+      }
+      <button class="usm-btn usm-btn-primary" (click)="retry()">Retry</button>
+    </section>
+  } @else if (loading()) {
+    <p class="usm-loading">Loading…</p>
+  } @else {
+    <p class="usm-empty">Unit service list loaded successfully.</p>
+  }
+</div>
