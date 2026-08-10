@@ -1,0 +1,46 @@
+<div class="page-content">
+  <h2 class="page-title">Operation Theatre</h2>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="loading-hint">Loading…</div>
+  }
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Store</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredRows(); track row.operationTheatreId) {
+        <tr>
+          <td>{{ row.theatreCode }}</td>
+          <td>{{ row.theatreName }}</td>
+          <td>{{ row.theatreDesc }}</td>
+          <td>{{ row.theatreTypeName }}</td>
+          <td>{{ row.storeName }}</td>
+          <td>{{ row.status === 'A' ? 'Active' : 'Inactive' }}</td>
+        </tr>
+      }
+      @if (!filteredRows().length && !loading()) {
+        <tr>
+          <td colspan="6" class="empty-cell">No operation theatres found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

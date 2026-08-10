@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'operation_Theatre',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 519, title: 'Operation Theatre' },
+        loadComponent: () =>
+          import('./features/operation-theatre/operation-theatre').then((m) => m.OperationTheatre),
+      },
+      {
         path: 'cancellationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 518, title: 'Cancellation Master' },
