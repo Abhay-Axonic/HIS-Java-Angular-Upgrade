@@ -2190,3 +2190,25 @@ NOT FIXED further (the harness fix is in); the quiet-checkout class gets its own
 2. 409 Rota Creation Master: menu node 409->369, state rotaCreation IS registered (url /rotaCreation, MasterController, title 'Rota Creation Master') — but the template (rota-creation.html) has 0 bindings / 0 API calls and NO backend exists (no endpoints, no tables). A registered route with nothing behind it.
 3. CLASS (new fifth bucket, owner directive): NOT-A-SCREEN-YET — menu node and/or state registration present, but NO backend at all. Do not build: a rebuild would produce a screen where every action is an error toast, a worse artifact than no screen. The distinction from DANGLE is the backend (a dangle restores something real; these have a route and nothing behind it).
 4. NOT FIXED / NOT BUILT — logged and walked past. RULES.md now carries the fifth bucket so future instances need no surfacing.
+
+## QF-2026-08-10-P — the DANGLE shape, FOURTH instance: node 515 advertises #/procedureConfiguration, no state registration exists (screen 16)
+1. THE FINDING: node 515 'Procedure Configuration' (parent 514 OTIMS -> 369 Global Master) carries actionLink #/procedureConfiguration, but NO `.state('procedureConfiguration')` is registered anywhere in app.js (0/1183). Controller loaded (index.html:1744 procedureConfigurationsController.js), template exists, backend LIVE (OTIMS ProcedureTemplateController /api/otims + Global ProcedureConfigurationController /api/procedure) — the legacy menu navigates to NG04002.
+2. CLASS: DANGLE (menu'd-unrouted — the drug-recall shape), FOURTH instance after 479 (QF-2026-08-10-F), 477 (QF-2026-08-10-I), 478 (QF-2026-08-10-N). The rebuild REGISTERS the route (moduleId 515) and RESTORES a menu-advertised screen.
+3. SELECTION NOTE: the Clinical Workstation (476) subtree is EXHAUSTED; the walk moved to the next 369 subtree (OTIMS 514). The 409/410 rota siblings were walked past per the fifth bucket NOT-A-SCREEN-YET (QF-2026-08-10-O).
+4. NOT FIXED further — the rebuild IS the fix.
+
+## QF-2026-08-10-Q — INNER-JOIN drop on the procedure-configuration list path, SECOND instance (screen 16)
+1. THE FINDING: GET_PROCEDURE_CONFIG_LIST_ON_TEMPLATE (ProcedureConfiguration entity named native query) INNER JOINs otims.m_procedure_type_master, m_anesthesia_type_master, speciality and service. A configuration row whose procedure-type / anesthesia-type / speciality / service join-partner is missing is DROPPED from the list — such rows are invisible in the grid and cannot be edited/re-activated from the screen.
+2. MECHANISM: the INNER JOIN (not LEFT) drops rows rather than returning them with null names. Deliberate (only fully-configured rows are meaningful) but the drop is real. The walk's SECOND INNER-JOIN list-path instance (after FormulationTypeAndROADao.getAll, QF-2026-08-10-G).
+3. SEVERITY: low (a deliberate filter, not a leak); dev table empty — not exercised with rows; the join TYPE is source-definitive.
+4. NOT FIXED (Rule 10). Same campaign-scope note as QF-2026-08-10-G (join-condition drop, distinct from OR-precedence/missing-scope).
+
+## QF-2026-08-10-R — no dup-check on the procedure-configuration save path (screen 16): duplicate configurations possible
+1. THE FINDING: saveProcedureConfiguration (Global ProcedureConfigurationService) inserts with NO existence check before insert — no getByServiceOrgUnit query precedes the save.
+2. MECHANISM: the same (service, org, unit) configuration can be inserted twice; nothing prevents duplicates. The dup-check ABSENCE class (no dup-check query to be unscoped), distinct from OR-precedence (BR-169/Q29) and no-scope (Q32).
+3. NOT FIXED (Rule 10). Backend BR candidate: a server-side existence check (service + org + unit + procedure type) before insert.
+
+## QF-2026-08-10-S — payload-carried org on the procedure-configuration save DTO (screen 16, SOURCE NOTE — save not wired)
+1. THE NOTE: the save DTO (ProcedureConfigurationDto) carries organizationId/unitId in the request body (the vaccinationMaster shape), NOT the VerifiedIdentityService override pattern the DANGLE siblings (477/479) use. Reads are org-scoped (path-var bound in the named query); the status endpoint is id-scoped.
+2. STATUS: SOURCE NOTE, NOT a live finding — the save is deliberately NOT wired in the rebuild (the create form needs feed endpoints verified first; see the DECISIONS_QUEUE create-form follow-up). Recorded so the write path's org-trust is checked when the create form is built.
+3. NOT FIXED (Rule 10). Backend BR candidate with the create-form follow-up.
