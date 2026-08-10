@@ -63,6 +63,7 @@ export interface RoleRow {
 
 export interface ResourceChargeSavePayload {
   orgId: number;
+  unitId: number;
   specialityId: number;
   roleId: number;
   serviceId: number;

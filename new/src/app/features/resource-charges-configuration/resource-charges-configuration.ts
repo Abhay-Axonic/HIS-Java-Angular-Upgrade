@@ -196,6 +196,7 @@ export class ResourceChargesConfiguration {
     const now = `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     const payload = {
       orgId: this.orgId(),
+      unitId: this.unitId(),
       specialityId: this.form.specialityId,
       roleId: this.form.roleId,
       serviceId: this.form.serviceId,
@@ -240,6 +241,7 @@ export class ResourceChargesConfiguration {
     const now = `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     const payload = {
       orgId: this.orgId(),
+      unitId: this.unitId(),
       specialityId: this.form.specialityId,
       roleId: this.form.roleId,
       serviceId: this.form.serviceId,

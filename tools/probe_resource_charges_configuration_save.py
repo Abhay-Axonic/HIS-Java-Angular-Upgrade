@@ -89,6 +89,18 @@ def main():
         print(f"POSITIVE: save fired, wire save posts: {len(pos_posts)}")
         if len(pos_posts) != 1:
             FAILS.append(f"expected exactly 1 save post, saw {len(pos_posts)}")
+        # ---- FINDABILITY (the owner's item 4): the saved row must be VISIBLE
+        # to the user — the list reloads after save, so the row must appear in
+        # the grid. (The list requires unitId on the row; a save that writes
+        # unit_id NULL lands in the DB but is filtered out of the list — the
+        # screen-23 defect this assertion exists to catch.) The grid renders
+        # the numeric amount WITHOUT trailing zeros ('250' not '250.00').
+        body = page.inner_text("body")
+        rendered = AMOUNT.split(".")[0]  # '250'
+        found = rendered in body and "General Medicine" in body
+        print(f"FINDABILITY: saved row visible in the grid: {found}")
+        if not found:
+            FAILS.append(f"saved row (amount {rendered}) not visible in the grid after save")
         browser.close()
 
     print()

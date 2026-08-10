@@ -60,6 +60,20 @@ index.html:1657).
   specified date format' (verified live, ServiceException at
   ServiceImpl:39). The rebuild sends the legacy format. The walk's first
   date-format contract on a write path.
+- UNIT-ID OMISSION — FINDABILITY DEFECT (owner click-through, 2026-08-10,
+  fixed): a green success toast with a search that found nothing. The toast
+  was TRUE (rows verified in psql — NOT the BR-187 false-success class),
+  but the saved rows carried unit_id NULL because the rebuild's save
+  payload OMITTED unitId (the legacy sends `unitId: $scope.unitId` —
+  controller JS:65). The list query requires `rcc.unitId=:unitId`, so
+  NULL = 1 filters every saved row OUT of the list — the row exists in the
+  DB but is INVISIBLE to the user (grid + search). Fixed by adding unitId
+  to both save and update payloads. Verified end to end: with unitId the
+  API list returns the row with all join names resolved, and the grid shows
+  it. PROBE STANDARD EXTENDED (owner item 4): save probes must now assert
+  FINDABILITY — the saved row appears in the reloaded grid (the amount
+  renders without trailing zeros — '250' not '250.00'). A save probe that
+  verifies only psql checks half the path.
 
 ## Divergences from legacy (named)
 
