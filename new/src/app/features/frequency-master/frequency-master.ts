@@ -70,6 +70,23 @@ export class FrequencyMaster {
     this.times.set(t);
   }
 
+  /**
+   * Normalize a human-entered time to the backend's required ISO-8601
+   * HH:MM shape. "8:00" -> "08:00". Returns null when not a valid time.
+   * The backend rejects anything LocalTime.parse cannot read (observed:
+   * HIS-400 "Text '8:00' could not be parsed" — FrequencyRequestItem
+   * setAdministrationTime). We normalize BEFORE sending so the user's
+   * natural input works.
+   */
+  private normalizeTime(raw: string): string | null {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(raw.trim());
+    if (!m) return null;
+    const h = parseInt(m[1], 10);
+    const min = parseInt(m[2], 10);
+    if (h > 23 || min > 59) return null;
+    return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+  }
+
   edit(row: FrequencyRow) {
     // Honesty obligation (backend-defect merge rule): the byId endpoint
     // 500s in dev (phantom public.t_translated_frequency — see the service
@@ -124,13 +141,22 @@ export class FrequencyMaster {
   save() {
     const code = this.code().trim();
     const desc = this.description().trim();
-    const timeItems = this.times()
+    const rawTimes = this.times()
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
-    if (!code || !desc || timeItems.length === 0) {
+    if (!code || !desc || rawTimes.length === 0) {
       this.notify.error('Code, Description and at least one administration time are required');
       return;
     }
+    // Normalize each time to the backend's HH:MM contract BEFORE sending;
+    // reject invalid times in plain language (the backend's LocalTime.parse
+    // would otherwise 400 the whole save — observed with "8:00").
+    const normalized = rawTimes.map((t) => this.normalizeTime(t));
+    if (normalized.some((t) => t === null)) {
+      this.notify.error('Save not sent: each administration time must be HH:MM (e.g. 08:00, 23:30). No valid time was rejected server-side.');
+      return;
+    }
+    const timeItems = normalized as string[];
     const userId = this.session.userId ?? 0;
     const base = {
       code,
