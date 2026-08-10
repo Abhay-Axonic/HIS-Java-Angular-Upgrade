@@ -1,0 +1,63 @@
+<div class="apm-page">
+  <header class="apm-header">
+    <h2>Account Payable Master</h2>
+    <p class="apm-sub">Screen 26 — module 579 (Billing, parent 570). Master list + create.</p>
+  </header>
+
+  <section class="apm-form card">
+    <h3>Add Account Payable</h3>
+    <div class="apm-form-row">
+      <label>
+        Account Code *
+        <input type="text" name="accCode" [(ngModel)]="form.accCode" placeholder="e.g. AP-001" />
+      </label>
+      <label>
+        Payable Code *
+        <input type="text" name="accPayableCode" [(ngModel)]="form.accPayableCode" placeholder="e.g. VEND-001" />
+      </label>
+      <label>
+        Description
+        <input type="text" name="accDesc" [(ngModel)]="form.accDesc" />
+      </label>
+    </div>
+    @if (!formValid()) {
+      <p class="apm-inline-error">{{ formError() }}</p>
+    }
+    <button class="apm-btn apm-btn-primary" (click)="save()">Save</button>
+  </section>
+
+  <section class="apm-list card">
+    <div class="apm-list-toolbar">
+      <input type="text" name="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearch()"
+             placeholder="Search account code or description…" />
+      <button class="apm-btn" (click)="clearSearch()">Clear</button>
+      <span class="apm-count">{{ filteredRows().length }} row(s)</span>
+    </div>
+    @if (loading()) {
+      <p class="apm-loading">Loading…</p>
+    } @else if (filteredRows().length === 0) {
+      <p class="apm-empty">No account payable rows found.</p>
+    } @else {
+      <table class="apm-table">
+        <thead>
+          <tr>
+            <th>Account Code</th>
+            <th>Payable Code</th>
+            <th>Description</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of filteredRows(); track row.accPayableMstId) {
+            <tr>
+              <td>{{ row.accCode }}</td>
+              <td>{{ row.accPayableCode }}</td>
+              <td>{{ row.accDesc }}</td>
+              <td>{{ row.status }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
