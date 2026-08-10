@@ -87,6 +87,8 @@ def post_checkout(prev_ref: str, new_ref: str, flag: str) -> int:
     """
     if os.environ.get('GOV_RESTORING') == '1':
         return 0  # this is our own restore — never recurse
+    if flag == '0':
+        return 0  # file checkout (checkout -- <path>) — no branch switch to protect
     # the branch we LEFT = the branch(es) pointing at the PREVIOUS HEAD ($1).
     r = subprocess.run(['git', '-C', REPO_ROOT, 'for-each-ref',
                         '--points-at', prev_ref, 'refs/heads/',
