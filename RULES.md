@@ -352,3 +352,11 @@ summaries did — the summary was simply the last thing written. Therefore:
     instead of the report.
 This supersedes the earlier "full report as its own terminal message" note:
 the report must be the LAST and ONLY message of the turn.
+
+## ENDPOINT-VERIFICATION STANDARD — THE BODY'S STATUS FIELD, NOT THE HTTP CODE (owner directive 2026-08-10, standing — amended)
+
+The resource-configuration case (screen 17, QF-2026-08-10-K family) proved the false-success class: POST /api/otims/getSurgeryResourceConfigList returns HTTP 200 with a BODY of {status:'error', code:500, message:'Something went wrong!!'} — the DAO swallowed the exception (phantom column visit_type_id) into the generic envelope, faking the TRANSPORT layer. A client checking only the status code reports success on a permanently broken endpoint.
+
+AMENDED STANDARD: an endpoint is VERIFIED only when the BODY's status field is inspected — not the HTTP code. The HTTP code is a transport signal; the body's status field is the application verdict. A 200 with body status 'error' is a MISSED FINDING (a false-success), and the verification that reported only the 200 must be re-done. Recorded reason: the bounded re-check of screens 6-16 (owner directive 2026-08-10) re-called every endpoint verified as 200 with the body inspected — ZERO false-success instances were found among screens 6-16 (every body returned status 'success'), which is the baseline this standard protects; the screen-17 case is the one that escaped because the verification checked `len(listObject or [])` (masking null) rather than the status field.
+
+Bounded re-check tally (2026-08-10, screens 6-16, endpoints verified as 200): 28 endpoint calls re-made with the body's status field inspected — 28/28 body status 'success' (incl. the real-dev-row feeds: surgery list 1 row, blood list 1 row, nursing search 1 row, frequency list rows, speciality 2, sub-speciality 3, formulation-types 1). 0 missed findings. Re-check artifacts corrected during the run: blood list/count are POST (not GET — the constant is method-agnostic), surgery/search/serviceMaster DTO field names (organizationId + specific search fields) — all resolved to 200 success with bodies inspected.
