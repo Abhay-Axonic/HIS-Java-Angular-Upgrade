@@ -52,7 +52,7 @@ export class UnitServiceBasePrice {
   protected filteredRows = computed(() => {
     const q = this.searchTerm.toLowerCase();
     return this.rows().filter((r) =>
-      !q || (r.serviceStandardName || '').toLowerCase().includes(q) || String(r.basePrice ?? '').includes(q)
+      !q || (r.serviceName || '').toLowerCase().includes(q) || String(r.basePrice ?? '').includes(q)
     );
   });
 

@@ -44,7 +44,7 @@ import { inject } from '@angular/core';
 export interface ServiceBasePriceRow {
   serviceBasePriceId: number;
   serviceMasterId: number;
-  serviceStandardName?: string;
+  serviceName?: string;
   visitTypeId?: number | null;
   basePrice: number;
   fromDate?: string;

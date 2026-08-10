@@ -54,22 +54,31 @@ def main():
             FAILS.append(f"not on route: {final_url}")
 
         body = page.inner_text("body")
-        live = "250" in body or "2 row(s)" in body
-        print(f"LIVE LIST: rows visible: {live}")
+        live = "250" in body and "Cardiology Consultation" in body
+        print(f"LIVE LIST: base price + SERVICE NAME visible: {live}")
         if not live:
-            FAILS.append("live base-price rows not visible (expected the real dev rows)")
+            FAILS.append("service name not visible (expected 'Cardiology Consultation')")
 
-        # search filter: type a value and assert the grid narrows (no page
-        # errors, the computed filter runs)
+        # search filter — BY SERVICE NAME (the owner's interaction): type the
+        # name and assert the row narrows to it
         s = page.locator('input[name="search"]')
         s.click()
-        s.press_sequentially("250", delay=40)
+        s.press_sequentially("Cardiology", delay=40)
         time.sleep(1)
         body2 = page.inner_text("body")
-        filtered = "1 row(s)" in body2 or "row(s)" in body2
-        print(f"SEARCH FILTER: ran: {filtered}")
-        if not filtered:
-            FAILS.append("search filter did not update the count")
+        by_name = "Cardiology Consultation" in body2 and "1 row(s)" in body2
+        print(f"SEARCH BY SERVICE NAME: {by_name}")
+        if not by_name:
+            FAILS.append("search by service name did not find the row")
+        # clear, then search by base price still works
+        s.fill("")
+        s.press_sequentially("250", delay=40)
+        time.sleep(1)
+        body3 = page.inner_text("body")
+        by_price = "Cardiology Consultation" in body3 and "1 row(s)" in body3
+        print(f"SEARCH BY BASE PRICE: {by_price}")
+        if not by_price:
+            FAILS.append("search by base price did not find the row")
 
         page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
         print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")

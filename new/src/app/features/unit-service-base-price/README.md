@@ -30,10 +30,19 @@ controller unitServiceBasePriceController loaded index.html:878).
   catches BOTH RETHROW ServiceException (the global-handler pattern;
   SUCCESS only after the real update). The BR-188 collectPayment class is
   NOT present.
-- INNER-JOIN drop: PRESENT (FINDING — the walk's SIXTH list-path instance):
-  GET_SERVICE_BASE_PRICE_LIST INNER JOINs serviceMaster -> specialityMaster
-  -> subSpecialityMaster; a base-price row whose service/speciality/sub-
-  speciality partner is missing is silently dropped from the grid.
+- INNER-JOIN drop: PRESENT BY CONSTRUCTION but NOT OBSERVED — the list
+  INNER JOINs serviceMaster -> specialityMaster -> subSpecialityMaster; a
+  base-price row with a missing join partner would be silently dropped.
+  Live-verified the join partners EXIST for the dev rows (row 1 -> service
+  'Cardiology Consultation' rendered with the joined name); the drop risk is
+  noted, not demonstrated.
+- FIELD-NAME MISMATCH (agent defect, fixed 2026-08-10): the rebuild initially
+  bound row.serviceStandardName, but the query aliases sm.serviceStandardName
+  AS serviceName (DTO field serviceName, ServiceBasePriceMasterDto.java:33) —
+  the Service column rendered EMPTY while the data was present. Fixed to
+  row.serviceName. The To column's emptiness is DEV-DATA NULL (row 1's
+  to_date is NULL in psql; the query selects it via to_char) — the standard
+  dev-data treatment, not a defect.
 - DDL: CLEAN — service.m_service_base_price_master has 14 columns incl.
   visit_type_id (EXISTS — the screen-17 contrast; no phantom here).
 - PAYLOAD CONTRACT (named divergence): the legacy list/save payload key is
