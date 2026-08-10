@@ -1597,6 +1597,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/procedure-template/procedure-template').then((m) => m.ProcedureTemplate),
       },
+      {
+        path: 'accountPayableMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 579, title: 'Account Payable Master' },
+        loadComponent: () =>
+          import('./features/account-payable-master/account-payable-master').then((m) => m.AccountPayableMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
