@@ -63,7 +63,6 @@ public class OperationTheatreDaoImpl extends GenericDao<OperationTheatre, Intege
 			logger.error("saveOperationTheatre failed", e);
 			throw new ApplicationException(e.getMessage(), e);
 		}
-		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
 	@Override
