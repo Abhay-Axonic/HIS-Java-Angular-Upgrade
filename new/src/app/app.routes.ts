@@ -1611,6 +1611,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/unit-service-master/unit-service-master').then((m) => m.UnitServiceMaster),
       },
+      {
+        path: 'unitServiceBasePrice',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 585, title: 'Unit Service Base Price' },
+        loadComponent: () =>
+          import('./features/unit-service-base-price/unit-service-base-price').then((m) => m.UnitServiceBasePrice),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
