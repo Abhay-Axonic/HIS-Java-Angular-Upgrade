@@ -242,3 +242,26 @@ actually wrote, or describe the decision WITHOUT attributing it to the owner.
 (The screen-10 incident: the maker wrote "owner chose skip-live" into the
 README, QA finding and commit message on the strength of a "2" reply to a
 maker-framed menu — an attribution the owner explicitly corrected.)
+
+## DOCS-ON-SCREEN-BRANCHES CONVENTION (owner decision 2026-08-10 — option (a) adopted)
+
+Screen branches NEVER touch docs/ (docs/DECISIONS_QUEUE.md, docs/SESSION_LOG.md,
+docs/QA_FINDINGS.md, docs/BUSINESS_RULE_MANIFEST.md, docs/BR_INDEX.md,
+docs/GLOSSARY.json, RULES.md). A screen branch carries ONLY: the application
+code (new/src/app/features/<screen>/, app.routes.ts), the screen's README.md
+(inside the feature dir — the honest verification record travels with the
+code), and the screen's probe script (tools/probe_<screen>.py).
+
+WHY: the governance-files-on-main rule means every screen branch that also
+touches docs/ conflicts with main at merge time (screen 11: both
+DECISIONS_QUEUE.md and SESSION_LOG.md conflicted; resolved on the branch at
+6b2c1998). Option (a) removes the conflict class entirely: the screen's
+findings/queue/session-log entries are written to MAIN after the merge (the
+maker's post-merge chain already runs on main).
+
+THE POST-MERGE CHAIN (every screen, in order):
+  1. Owner merges the screen branch into main (agent never merges/pushes).
+  2. Agent (on main) writes the screen's QF entry, queue item, and session-log
+     line — the docs content that on screens 1-11 rode the branch.
+  3. The smoke harness's branch assertion (SERVE-BRANCH vs branch under test)
+     applies unchanged; screen branches still verify against their own tree.
