@@ -1,0 +1,56 @@
+<div class="page-content">
+  <h2 class="page-title">Procedure Configuration</h2>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="loading-hint">Loading…</div>
+  }
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>CPT Code</th>
+        <th>CPT Description</th>
+        <th>Service</th>
+        <th>Speciality</th>
+        <th>Procedure Type</th>
+        <th>Anesthesia Type</th>
+        <th>Duration</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredRows(); track row.procedureConfigId) {
+        <tr>
+          <td>{{ row.cptCode }}</td>
+          <td>{{ row.cptDescription }}</td>
+          <td>{{ row.service }}</td>
+          <td>{{ row.speciality }}</td>
+          <td>{{ row.procedureType }}</td>
+          <td>{{ row.anesthesiaType }}</td>
+          <td>{{ row.duration }}</td>
+          <td>{{ row.status === 'A' ? 'Active' : 'Inactive' }}</td>
+          <td>
+            <button type="button" class="btn-secondary" (click)="toggle(row)">
+              {{ row.status === 'A' ? 'Deactivate' : 'Activate' }}
+            </button>
+          </td>
+        </tr>
+      }
+      @if (!filteredRows().length && !loading()) {
+        <tr>
+          <td colspan="9" class="empty-cell">No procedure configurations found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
