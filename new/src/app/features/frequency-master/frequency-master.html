@@ -1,294 +1,83 @@
-<section class="page">
-  <fieldset>
-    <div class="form-row">
-      <div class="field">
-        <label for="frequencyCode">Frequency Code<span class="required">*</span></label>
-        <input
-          id="frequencyCode"
-          type="text"
-          autocomplete="off"
-          maxlength="10"
-          [ngModel]="form().frequencyCode"
-          (ngModelChange)="updateFormField('frequencyCode', $event)"
-          name="frequencyCode"
-        />
-      </div>
+<div class="page-content">
+  <h2 class="page-title">Frequency Master</h2>
 
-      <div class="field wide">
-        <label for="frequencyDescription">Frequency Description<span class="required">*</span></label>
-        <input
-          id="frequencyDescription"
-          type="text"
-          autocomplete="off"
-          maxlength="100"
-          [ngModel]="form().frequencyDescription"
-          (ngModelChange)="updateFormField('frequencyDescription', $event)"
-          name="frequencyDescription"
-        />
-      </div>
-
-      <button type="button" class="btn-primary" title="Add Administration Time" [disabled]="!canAct()" (click)="openAdminTimeModal()">
-        Add
-      </button>
-
-      <button type="button" class="btn-primary" title="Customize Language" [disabled]="!canAct()" (click)="openLanguageModal()">
-        Customize Language
-      </button>
+  <form class="form-row">
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Code *"
+        [(ngModel)]="code"
+        name="code"
+        required
+      />
     </div>
-  </fieldset>
+    <div class="form-field form-field-wide">
+      <input
+        type="text"
+        class="text-input"
+        placeholder="Description *"
+        [(ngModel)]="description"
+        name="description"
+        required
+      />
+    </div>
+    <div class="form-field form-field-narrow">
+      <input
+        type="number"
+        class="text-input"
+        placeholder="No. of times *"
+        [(ngModel)]="noOfTimes"
+        name="noOfTimes"
+        min="1"
+      />
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : editingId() ? 'Update' : 'Save' }}
+      </button>
+      @if (editingId()) {
+        <button type="button" class="btn-secondary" (click)="clearForm()">Clear</button>
+      }
+    </div>
+  </form>
 
   <div class="toolbar">
-    <label class="show-entries">
-      Show
-      <select [(ngModel)]="pagination().pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select>
-      records
-    </label>
-
-    <!-- Legacy quirk preserved (see class doc comment): this filters only
-         the currently-displayed page, not the full dataset. -->
     <input
       type="text"
-      class="search-box"
-      placeholder="Search"
-      [ngModel]="search()"
-      (ngModelChange)="search.set($event)"
-      name="search"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
     />
-    <button type="button" class="btn-primary" (click)="clearAll()">Clear</button>
-
-    <button type="button" class="btn-primary icon-btn" title="Save" [disabled]="!canAct()" (click)="openConfirmSave()">
-      <i class="fa fa-floppy-o" aria-hidden="true"></i>
-    </button>
   </div>
 
   <table class="data-table">
     <thead>
       <tr>
-        <th (click)="sortBy('code')" title="Frequency Code">Frequency Code</th>
-        <th (click)="sortBy('description')" title="Frequency Description">Frequency Description</th>
-        <th (click)="sortBy('noOfAdministrationTime')" title="Administration Times">Administration Times</th>
-        <th class="text-center">Status(n)</th>
-        <th class="text-center">Action taken</th>
+        <th>Code</th>
+        <th>Description</th>
+        <th>No. of times</th>
+        <th>Status</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      @for (row of displayedRows(); track row.id) {
+      @for (row of filteredRows(); track row.id) {
         <tr>
           <td>{{ row.code }}</td>
           <td>{{ row.description }}</td>
           <td>{{ row.noOfAdministrationTime }}</td>
-          <td class="text-center">
-            <app-status-toggle [checked]="row.status" (toggled)="toggleStatus(row)" />
-          </td>
-          <td class="text-center" [class.disabled]="!row.status">
-            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
-          </td>
-          <td class="text-center">
-            <i class="fa fa-info-circle" aria-hidden="true" title="Frequency Administrator Details" (click)="openViewTimes(row)"></i>
+          <td>{{ row.status ? 'Active' : 'Inactive' }}</td>
+          <td>
+            <button type="button" class="btn-secondary" (click)="edit(row)">Edit</button>
           </td>
         </tr>
       }
-      @if (!displayedRows().length) {
+      @if (!filteredRows().length) {
         <tr>
-          <td colspan="6" class="text-center">No Record Found</td>
+          <td colspan="5" class="empty-cell">No frequencies found.</td>
         </tr>
       }
     </tbody>
   </table>
-
-  @if (pagination().totalPages > 1) {
-    <ul class="pagination">
-      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('first')">First</a></li>
-      <li [class.disabled]="pagination().currentPage === 1"><a (click)="page('prev')">Previous</a></li>
-      @for (p of pagesList(); track p) {
-        <li [class.active]="pagination().currentPage === p"><a (click)="page(p)">{{ p }}</a></li>
-      }
-      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('next')">Next</a></li>
-      <li [class.disabled]="pagination().currentPage === pagination().totalPages"><a (click)="page('last')">Last</a></li>
-    </ul>
-  }
-</section>
-
-<!-- Add Administration Time modal -- plain, real, working close (native
-     Bootstrap-equivalent in legacy too, see class doc comment). -->
-@if (showAdminTimeModal()) {
-  <div class="modal-backdrop" (click)="showAdminTimeModal.set(false)">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <header>
-        Frequency Administrator
-        <button type="button" (click)="showAdminTimeModal.set(false)">&times;</button>
-      </header>
-      <div class="modal-body">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Administration Time</th>
-              <th>Pre Administration Time</th>
-              <th>Post Administration Time</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of clockList(); track $index) {
-              <tr>
-                <td>
-                  <input
-                    type="text"
-                    [class.invalid]="item.isAdminTime"
-                    [ngModel]="item.adminTime"
-                    (ngModelChange)="updateClockRow($index, 'adminTime', $event)"
-                    name="adminTime{{ $index }}"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    [class.invalid]="item.isPreAdminTime"
-                    [ngModel]="item.preAdminTime"
-                    (ngModelChange)="updateClockRow($index, 'preAdminTime', $event)"
-                    name="preAdminTime{{ $index }}"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    [class.invalid]="item.isPostAdminTime"
-                    [ngModel]="item.postAdminTime"
-                    (ngModelChange)="updateClockRow($index, 'postAdminTime', $event)"
-                    name="postAdminTime{{ $index }}"
-                  />
-                </td>
-                <td>
-                  <button type="button" [disabled]="$index !== clockList().length - 1" (click)="addClockRow()">+</button>
-                  @if ($index !== 0) {
-                    <button type="button" (click)="removeClockRow($index)">-</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-primary" (click)="confirmAdminTimes()">Ok</button>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- View Times modal (read-only) -->
-@if (showViewTimesModal()) {
-  <div class="modal-backdrop" (click)="closeViewTimes()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <header>
-        Details
-        <button type="button" (click)="closeViewTimes()">&times;</button>
-      </header>
-      <div class="modal-body">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th (click)="popupSortBy('administrationTime')">Administration Times</th>
-              <th (click)="popupSortBy('preBufferAdministrationTime')">Pre Administration Times</th>
-              <th (click)="popupSortBy('postBufferAdministrationTime')">Post Administration Times</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (t of sortedViewTimesRows(); track $index) {
-              <tr>
-                <td>{{ t.administrationTime }}</td>
-                <td>{{ t.preBufferAdministrationTime }}</td>
-                <td>{{ t.postBufferAdministrationTime }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- Customize Language modal -->
-@if (showLanguageModal()) {
-  <div class="modal-backdrop" (click)="closeLanguageModal()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <header>
-        Details
-        <button type="button" (click)="closeLanguageModal()">&times;</button>
-      </header>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="field">
-            <label for="languageSelect">Language</label>
-            <select
-              id="languageSelect"
-              [ngModel]="selectedLanguage()"
-              (ngModelChange)="selectedLanguage.set($event)"
-              name="languageSelect"
-            >
-              <option [ngValue]="null"></option>
-              @for (lang of languageList(); track lang.languageId) {
-                <option [ngValue]="lang">{{ lang.desc }}</option>
-              }
-            </select>
-          </div>
-          <div class="field wide">
-            <label for="convertedText">Converted Text</label>
-            <input
-              id="convertedText"
-              type="text"
-              [ngModel]="convertedText()"
-              (ngModelChange)="convertedText.set($event)"
-              name="convertedText"
-            />
-          </div>
-          <button type="button" class="btn-primary" (click)="addLanguageDetail()">Add</button>
-        </div>
-
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Language</th>
-              <th>Converted Text</th>
-              <th class="text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (entry of addedLanguageList(); track $index) {
-              <tr>
-                <td>{{ entry.desc }}</td>
-                <td>{{ entry.convertedText }}</td>
-                <td class="text-center"><i class="fa fa-times" aria-hidden="true" title="Remove" (click)="removeLanguage($index)"></i></td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- Confirm Save modal -->
-@if (showConfirmSaveModal()) {
-  <div class="modal-backdrop" (click)="closeConfirmSave()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <header>
-        Confirm
-        <button type="button" (click)="closeConfirmSave()">&times;</button>
-      </header>
-      <div class="modal-body">
-        <span>Are you sure you want to Save?</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
-        <button type="button" class="btn-primary" (click)="closeConfirmSave()">Cancel</button>
-      </div>
-    </div>
-  </div>
-}
+</div>

@@ -1598,6 +1598,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
       },
       {
+        path: 'frequencyMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 478, title: 'Frequency Master' },
+        loadComponent: () =>
+          import('./features/frequency-master/frequency-master').then((m) => m.FrequencyMaster),
+      },
+      {
         path: 'routeAdministration',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 477, title: 'Route of Administration' },

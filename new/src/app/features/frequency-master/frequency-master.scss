@@ -1,36 +1,100 @@
-// Screen-specific layout only -- shared table/pagination/modal/toolbar/
-// status-toggle styles live in src/styles.scss and
-// shared/status-toggle/status-toggle.scss.
+.page-content {
+  padding: 16px;
+}
+
+.page-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
 
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
-.icon-btn {
-  padding: 6px 10px;
+.form-field {
+  min-width: 180px;
 }
 
-.invalid {
-  border: 2px solid red !important;
+.form-field-wide {
+  min-width: 280px;
 }
 
-.modal-footer {
+.form-field-narrow {
+  min-width: 120px;
+}
+
+.text-input,
+.text-search-box {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 100%;
+}
+
+.text-search-box {
+  width: 220px;
+  margin-bottom: 10px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  padding: 6px 18px;
+  background: #2f6fed;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-secondary {
+  padding: 6px 14px;
+  background: #eee;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.toolbar {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 12px 16px;
-  border-top: 1px solid #eee;
 }
 
-th {
-  cursor: pointer;
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
 }
 
-.fa-info-circle,
-.fa-times {
-  cursor: pointer;
+.data-table th,
+.data-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.data-table th {
+  background: #f2f2f2;
+}
+
+.empty-cell {
+  text-align: center;
+  color: #888;
+  padding: 18px;
 }
