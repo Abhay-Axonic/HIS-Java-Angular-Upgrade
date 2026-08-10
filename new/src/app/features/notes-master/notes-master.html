@@ -1,0 +1,22 @@
+<div class="nm-page">
+  <header class="nm-header">
+    <h2>Notes Master</h2>
+    <p class="nm-sub">Screen 24 — module 529 (OTIMS). Anaesthesia Note / notes templates.</p>
+  </header>
+
+  @if (backendError()) {
+    <section class="nm-backend-error">
+      <h3>Backend defect surfaced</h3>
+      <p>The notes list cannot load: the legacy query selects columns that do not exist in the database.</p>
+      <p class="nm-error-message">{{ backendError() }}</p>
+      @if (backendErrorRef()) {
+        <p class="nm-error-ref">Reference: {{ backendErrorRef() }}</p>
+      }
+      <button class="nm-btn nm-btn-primary" (click)="retry()">Retry</button>
+    </section>
+  } @else if (loading()) {
+    <p class="nm-loading">Loading…</p>
+  } @else {
+    <p class="nm-empty">Notes list loaded successfully.</p>
+  }
+</div>
