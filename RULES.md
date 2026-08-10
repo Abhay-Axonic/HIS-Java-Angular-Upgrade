@@ -396,7 +396,16 @@ IMMEDIATELY BEFORE it is handed to the owner as ready:
   3. `git merge --no-commit --no-ff <branch>` dry run from the gov worktree
      reports "Automatic merge went well" (then abort). This is the standing
      step the owner reads before every merge.
-  4. Only then is the branch reported merge-ready, with the `git diff --stat`
+  4. THE BRANCH IDENTITY MUST MATCH THE HANDOFF (owner directive 2026-08-10,
+     the screen-27 pollution instance): the readiness demo states the
+     branch's COMMIT COUNT and HEAD SHA (`git rev-list --count main..<branch>`
+     and `git log --oneline -1 <branch>`), and if either changed since the
+     last handoff the branch is NOT ready. A diff --stat that happens to
+     match is not enough — a branch can grow commits whose files the diff
+     hides (screen-27's four commits landed on the finding branch after its
+     demo via the GOV-GUARD restore; the diff never re-ran through the
+     gate). Identity (count + HEAD) is the binding check.
+  5. Only then is the branch reported merge-ready, with the `git diff --stat`
      output pasted into the report.
 The diff-before-merge step remains the owner's final gate — but it should be
 catching nothing, because the branch is current when handed over.
