@@ -1,0 +1,73 @@
+<div class="page-content">
+  <h2 class="page-title">Formulation Type &amp; ROA Master</h2>
+
+  <form class="form-row">
+    <div class="form-field">
+      <select
+        class="text-input"
+        [(ngModel)]="selectedFormulationTypeId"
+        name="formulationType"
+      >
+        <option [ngValue]="null">Select formulation type…</option>
+        @for (ft of formulationTypes(); track ft.id) {
+          <option [ngValue]="ft.id">{{ ft.type }}</option>
+        }
+      </select>
+    </div>
+    <div class="form-field form-field-wide">
+      <label class="field-label">Route(s) of administration:</label>
+      @if (roaOptions().length) {
+        @for (roa of roaOptions(); track roa.id) {
+          <label class="roa-check">
+            <input
+              type="checkbox"
+              [checked]="mappedRoaIds().includes(roa.id)"
+              (change)="toggleRoa(roa.id)"
+            />
+            {{ roa.description }}
+          </label>
+        }
+      } @else {
+        <span class="empty-hint">No active ROAs (dev feed is empty).</span>
+      }
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="text-search-box"
+      placeholder="Search…"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Formulation Type</th>
+        <th>Route of Administration</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of filteredRows(); track row.id) {
+        <tr>
+          <td>{{ row.formulationType }}</td>
+          <td>{{ row.routeOfAdministration }}</td>
+          <td>{{ row.status ? 'Active' : 'Inactive' }}</td>
+        </tr>
+      }
+      @if (!filteredRows().length) {
+        <tr>
+          <td colspan="3" class="empty-cell">No formulation-ROA mappings found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
