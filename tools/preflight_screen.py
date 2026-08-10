@@ -326,9 +326,50 @@ def check_c7(feature, route):
                 f'the route {route_token!r} exists on MAIN but no feature dir '
                 'under features/{feature}/ — a pre-registered route awaiting '
                 'its component (the batch-22 tell).')
+    # C7 MODULE-ID COLLISION check (the screen-25 audit, 2026-08-10): a
+    # screen may share a module id with an ALREADY-REBUILT screen (e.g.
+    # procedureTemplate/515 vs procedureConfiguration/515 — a drill-down
+    # detail view of a rebuilt master). The feature-dir + route-path checks
+    # above cannot see it (different names, same moduleId). Surfaced by
+    # check_c7_module_collision below (wired in main()).
     return ('PASS',
             f'no feature dir under features/{feature}/ and no route '
             f'{route_token!r} on main — genuinely new screen.')
+
+
+def check_c7_module_collision(feature, route, module_id):
+    """C7 MODULE-ID COLLISION — the screen-25 blind spot surfaced (owner
+    audit 2026-08-10): C7's feature-dir + route-path checks cannot detect a
+    screen that SHARES a module id with an already-rebuilt screen (different
+    feature name + route path, same moduleId — e.g. procedureTemplate/515 vs
+    procedureConfiguration/515). The shape: a drill-down/detail view of a
+    rebuilt master, or a second screen on the same module. Reads MAIN's
+    current committed routes; flags when module_id already appears on another
+    route on main pointing at a DIFFERENT feature dir.
+    """
+    try:
+        routes = subprocess.run(
+            ['git', 'show', 'main:new/src/app/app.routes.ts'],
+            capture_output=True, text=True, cwd=ROOT).stdout
+    except Exception as ex:  # noqa: BLE001
+        return 'UNVALIDATED', f'main routes unreadable: {ex}'
+    # find routes carrying module_id with their feature refs
+    blocks = re.findall(
+        r"path:\s*'([^']+)'[^}]*?data:\s*\{[^}]*?moduleId:\s*(\d+)[^}]*\}",
+        routes, re.S)
+    same = [(p, m) for p, m in blocks if m == str(module_id) and p != route.lstrip('/')]
+    if same:
+        return ('FLAG-MODULE-COLLISION',
+                f'moduleId {module_id} ALREADY used by {len(same)} other '
+                f'route(s) on main: {[p for p, _ in same]}. This screen '
+                'shares a module id with an already-rebuilt screen — the '
+                'DRILL-DOWN/SECOND-VIEW shape. If this is a detail view of a '
+                'rebuilt master, the rebuild should be surfaced as a second '
+                'view of that screen (shared moduleId is legitimate) OR the '
+                'route should be folded into the parent feature — NOT merged '
+                'as a standalone new master without the owner seeing the '
+                'relationship.')
+    return 'PASS', f'moduleId {module_id} used only by this route on main.'
 
 
 def main():
@@ -340,6 +381,13 @@ def main():
     args = ap.parse_args()
     folder = f"{ROOT}/new/src/app/features/{args.feature}/{args.feature}"
 
+    # C8 needs the moduleId the NEW route declares — read it from the
+    # working tree's own app.routes.ts (the route's data.moduleId).
+    branch_routes = open(f"{ROOT}/new/src/app/app.routes.ts", encoding="utf-8").read()
+    m = re.search(
+        rf"path:\s*'{args.route.lstrip('/')}'[^}}]*?data:\s*\{{[^}}]*?moduleId:\s*(\d+)",
+        branch_routes, re.S)
+    module_id = m.group(1) if m else ''
     results = [
         ('C1 TEMPLATE MEMBER', check_c1(folder)),
         ('C2 DIRECTIVE IMPORTS', check_c2(folder)),
@@ -348,6 +396,7 @@ def main():
         ('C5 LEGACY REACHABILITY', check_c5(folder, args.appjs, args.route)),
         ('C6 COMMITTED MARKERS', check_c6()),
         ('C7 ALREADY-REBUILT', check_c7(args.feature, args.route)),
+        ('C8 MODULE-ID COLLISION', check_c7_module_collision(args.feature, args.route, module_id)),
     ]
     any_fail = False
     dead_flag = False
