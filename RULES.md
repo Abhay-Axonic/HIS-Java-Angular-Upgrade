@@ -335,3 +335,20 @@ THE POST-MERGE CHAIN (every screen, in order):
      line — the docs content that on screens 1-11 rode the branch.
   3. The smoke harness's branch assertion (SERVE-BRANCH vs branch under test)
      applies unchanged; screen branches still verify against their own tree.
+
+## ONE-MESSAGE-PER-TURN REPORTING DISCIPLINE (owner directive 2026-08-10, standing)
+
+The reporting mechanism is now known: ONE user-facing message per turn is
+delivered; anything written after it in the same turn is LOST when the turn
+ends. This is why full reports never reached the owner while verification
+summaries did — the summary was simply the last thing written. Therefore:
+  - When a screen is done, the turn's single message IS THE FULL REPORT.
+  - Nothing is appended after it — no verification summary, no follow-up
+    line, no "report follows" promise.
+  - If more must be said, STOP and wait for the owner's next prompt; do not
+    attempt a second message in the same turn.
+  - Verification runs happen BEFORE the report message in the same turn
+    (the evidence exists; the report cites it), or in a later turn — never
+    instead of the report.
+This supersedes the earlier "full report as its own terminal message" note:
+the report must be the LAST and ONLY message of the turn.
