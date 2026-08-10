@@ -1,0 +1,94 @@
+<div class="sc-page">
+  <header class="sc-header">
+    <h2>Surgical Calendar</h2>
+    <p class="sc-sub">Screen 22 — module 710 (OTIMS). Schedule surgical slots by speciality, doctor, and date range.</p>
+  </header>
+
+  <section class="sc-form card">
+    <h3>Schedule Surgical Slots</h3>
+    <div class="sc-form-row">
+      <label>
+        Speciality *
+        <select name="specialityId" [(ngModel)]="form.specialityId" (ngModelChange)="onSpecialityChange()">
+          <option [ngValue]="0">— Select speciality —</option>
+          @for (sp of specialities(); track sp.specialityId) {
+            <option [ngValue]="sp.specialityId">{{ sp.specialityName }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Doctor *
+        <select name="doctorId" [(ngModel)]="form.doctorId">
+          <option [ngValue]="0">— Select doctor —</option>
+          @for (doc of doctors(); track doc.doctorId) {
+            <option [ngValue]="doc.doctorId">Dr. {{ doc.firstName }} {{ doc.lastName }}</option>
+          }
+        </select>
+      </label>
+    </div>
+    <div class="sc-form-row">
+      <label>
+        From Date *
+        <input type="date" name="fromDate" [(ngModel)]="form.fromDate" />
+      </label>
+      <label>
+        To Date *
+        <input type="date" name="toDate" [(ngModel)]="form.toDate" />
+      </label>
+      <label>
+        From Time *
+        <input type="text" name="fromTime" [(ngModel)]="form.fromTime"
+               placeholder="HH:MM" pattern="^([01]\d|2[0-3]):[0-5]\d$" />
+      </label>
+      <label>
+        To Time *
+        <input type="text" name="toTime" [(ngModel)]="form.toTime"
+               placeholder="HH:MM" pattern="^([01]\d|2[0-3]):[0-5]\d$" />
+      </label>
+    </div>
+    <div class="sc-actions">
+      <button class="sc-btn sc-btn-primary" (click)="save()">Save</button>
+    </div>
+    @if (!formValid()) {
+      <p class="sc-inline-error">{{ formError() }}</p>
+    }
+  </section>
+
+  <section class="sc-grid card">
+    <div class="sc-grid-toolbar">
+      <input type="text" class="sc-search" placeholder="Search doctor / speciality / date / day"
+             [(ngModel)]="searchTerm" />
+      <span class="sc-count">{{ filteredRows().length }} row(s)</span>
+    </div>
+    @if (loading()) {
+      <p class="sc-loading">Loading…</p>
+    } @else if (filteredRows().length === 0) {
+      <p class="sc-empty">No surgical calendar entries found.</p>
+    } @else {
+      <table class="sc-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Day</th>
+            <th>Speciality</th>
+            <th>Doctor</th>
+            <th>From</th>
+            <th>To</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of filteredRows(); track $index) {
+            <tr>
+              <td>{{ row.procedureDate }}</td>
+              <td>{{ row.day }}</td>
+              <td>{{ row.speciality }}</td>
+              <td>{{ row.doctorName }}</td>
+              <td>{{ row.fromTime }}</td>
+              <td>{{ row.toTime }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>

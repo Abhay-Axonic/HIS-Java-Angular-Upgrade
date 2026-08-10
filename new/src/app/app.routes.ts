@@ -1569,6 +1569,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/procedure-type/procedure-type').then((m) => m.ProcedureType),
       },
+      {
+        path: 'surgicalCalendar',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 710, title: 'Surgical Calendar' },
+        loadComponent: () =>
+          import('./features/surgical-calendar/surgical-calendar').then((m) => m.SurgicalCalendar),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
