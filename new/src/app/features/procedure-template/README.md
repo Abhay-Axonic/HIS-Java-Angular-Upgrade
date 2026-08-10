@@ -1,11 +1,19 @@
-# Procedure Template — screen 25 (module 515, OTIMS)
+# Procedure Template — SECOND VIEW of module 515 (OTIMS)
+
+SECOND-VIEW of module 515 (the SEVENTH reachability bucket, RULES.md):
+procedureTemplate is the drill-down DETAIL view behind procedureConfiguration
+(screen 16, merged 78c168d0) — the legacy privilege tree gates them together,
+so they legitimately SHARE moduleId 515. This is NOT a new screen: it does
+NOT increment the distinct-rebuild count (241 stays 241; the count is by
+screen and 515 is already counted). Rebuilt on the SECOND-VIEW decision
+(owner-approved 2026-08-10).
 
 Parity rebuild of the legacy
 `views/master/GlobalMaster/OTIMS/procedure-template.html` (state registered
 app.js:20447 — url /procedureTemplate, controller procedureTemplateController
 loaded index.html:1743, title ' Procedure Configuration', params.commonObj).
 
-## CLASSIFICATION — DANGLE-ORPHANED (C7-verified; the last OTIMS dangle-with-backend)
+## CLASSIFICATION — SECOND-VIEW of 515 (C7 + C8 verified)
 
 - State registration: REGISTERED — app.js:20447 `.state('procedureTemplate')`
   with a `params.commonObj` mechanism (a drill-down: the legacy controller
