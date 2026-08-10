@@ -43,11 +43,28 @@ table in any schema, though the entity TranslatedFrequencyMaster maps
 @Table("t_translated_frequency", schema="public")). The same phantom is
 referenced a second time at FrequencyDao.java:222 (and the save path's
 translated-frequency insert saveTranslatedFrequency would fail the same
-way). byId therefore 500s UNCONDITIONALLY for any id. The rebuild wires
-byId but the component populates the edit form from the loaded list row
-and lets any byId call surface the backend failure honestly (the error
-toast reports it). NOT FIXED (Rule 10) — a backend defect (missing table
-or stale entity mapping), logged for the owner post-merge.
+way). byId therefore 500s UNCONDITIONALLY for any id.
+
+WHAT THE USER SEES (merge question, verified by clicking Edit in the probe):
+the rebuild CALLS byId on edit and surfaces the failure honestly — the
+toast reads "Edit failed to load record: ... Backend defect: byId queries
+the missing table public.t_translated_frequency. Editing from the list data
+instead." (the HTTP-500 HIS-1001 detail with its correlation reference is
+included), and the form still populates from the loaded list row so the
+screen stays usable. NOT silent, NOT a crash, NOT generic — the defect is
+named. NOT FIXED (Rule 10) — a backend defect (missing table or stale
+entity mapping), logged for the owner post-merge.
+
+WHAT ELSE TOUCHES t_translated_frequency (d): FOUR paths — (1) byId via
+getTranslatedFrequencyListForUpdate (FrequencyDao:243/255, fired by
+FrequencyService.getById:294 — the observed 500); (2) the save path with
+translations via saveTranslatedFrequency (FrequencyDao:191, fired by
+FrequencyService.saveFrequency:223 when addedLanguageList is non-empty);
+(3) updateTranslatedFrequency (FrequencyDao:166, translation edits); (4)
+getTranslatedFrequencyList (FrequencyDao:222, the same select). The PLAIN
+list (getAll) and a translation-free save do NOT touch it. The rebuild's
+save sends no translation list, so save is not phantom-blocked (still
+unfired — no-seed).
 
 ## Scoped backend check (per the standing rule, every class)
 

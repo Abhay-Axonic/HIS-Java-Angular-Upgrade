@@ -60,6 +60,18 @@ with sync_playwright() as p:
     grid_text = page.locator('table tbody').inner_text()
     check('live row in grid', 'Active' in grid_text or 'Inactive' in grid_text, repr(grid_text[:60]))
 
+    # MERGE QUESTION: click Edit on the TESTFREQ1 row — byId 500s (phantom
+    # t_translated_frequency). The failure MUST surface honestly:
+    #  - a toast naming the failure (not silent, not generic)
+    #  - the form still populates from the list row (screen usable)
+    page.locator('table tbody tr:first-child button:has-text("Edit")').first.click()
+    page.wait_for_timeout(2500)
+    body_after = page.evaluate('document.body.innerText')
+    toast_ok = 't_translated_frequency' in body_after and 'Edit failed to load record' in body_after
+    check('edit-click: honest toast naming the phantom', toast_ok, repr(body_after[-300:] if not toast_ok else 'toast seen'))
+    code_val = page.locator('input[name="code"]').input_value()
+    check('edit-click: form populated from list row (usable)', code_val == 'TESTFREQ1', f'code={code_val!r}')
+
     check('zero page errors', not page_errors, '; '.join(page_errors[:2]))
     check('zero failed requests', not failed, '; '.join(failed[:2]))
     browser.close()

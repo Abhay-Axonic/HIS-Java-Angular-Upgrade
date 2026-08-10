@@ -53,13 +53,31 @@ export class FrequencyMaster {
   }
 
   edit(row: FrequencyRow) {
-    // byId is wired but 500s in dev (phantom public.t_translated_frequency —
-    // see the service JSDoc); populate from the loaded row instead and let
-    // the real byId call report the backend failure honestly.
-    this.code.set(row.code);
-    this.description.set(row.description);
-    this.noOfTimes.set(row.noOfAdministrationTime);
-    this.editingId.set(row.id);
+    // Honesty obligation (backend-defect merge rule): the byId endpoint
+    // 500s in dev (phantom public.t_translated_frequency — see the service
+    // JSDoc). We CALL it so the failure surfaces to the user, populate the
+    // form from the loaded list row so the screen stays usable, and report
+    // the backend defect in the toast.
+    this.service.byId(this.orgId, row.id).subscribe({
+      next: (res) => {
+        if (res && res.code !== undefined) {
+          this.code.set(res.code);
+          this.description.set(res.description);
+          this.noOfTimes.set(res.noOfAdministrationTime);
+        }
+        this.editingId.set(row.id);
+      },
+      error: (e) => {
+        // HTTP 500 HIS-1001 — backend defect: the byId sub-query hits the
+        // missing public.t_translated_frequency table. Named, not silent.
+        const detail = e?.error?.message ?? e?.message ?? `${e}`;
+        this.notify.error(`Edit failed to load record: ${detail}. Backend defect: byId queries the missing table public.t_translated_frequency. Editing from the list data instead.`);
+        this.code.set(row.code);
+        this.description.set(row.description);
+        this.noOfTimes.set(row.noOfAdministrationTime);
+        this.editingId.set(row.id);
+      },
+    });
   }
 
   clearForm() {
