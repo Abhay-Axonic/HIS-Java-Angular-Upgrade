@@ -1,0 +1,88 @@
+<div class="page-content">
+  <h2 class="page-title">Blood Component Master</h2>
+
+  <form class="form-row">
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        name="code"
+        [(ngModel)]="form().code"
+      />
+      <label for="code">Component Code *</label>
+    </div>
+    <div class="form-field">
+      <input
+        type="text"
+        class="text-input"
+        autocomplete="off"
+        name="name"
+        [(ngModel)]="form().name"
+      />
+      <label for="name">Component Name *</label>
+    </div>
+  </form>
+
+  <div class="toolbar-row">
+    <div class="toolbar-right">
+      <button class="btn btn-primary btn-save" (click)="onSave()" title="Save">
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+      </button>
+      <input
+        type="text"
+        class="text-search-box"
+        placeholder="Search"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+      />
+      <i class="fa fa-search common-search-text-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Component Code</th>
+          <th>Component Name</th>
+          <th class="width8 text-center">Status</th>
+          <th class="width8 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of filteredRows(); track row.bloodComponentId) {
+          <tr>
+            <td>{{ row.bloodComponentCode }}</td>
+            <td>{{ rowLabel(row) }}</td>
+            <td class="text-center">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [checked]="row.status === 'A'"
+                  (change)="onToggle()"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
+            <td class="text-center">
+              <a class="btn btn-link" (click)="onEdit(row)" title="Edit">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="empty-cell">
+              @if (loading()) {
+                Loading…
+              } @else {
+                No blood components found
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
