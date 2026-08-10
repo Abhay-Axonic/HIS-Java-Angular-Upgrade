@@ -219,3 +219,26 @@ The Q28 no-seed rule and this rule are the same rule: the dev-data honesty
 standard. A screen whose write paths were NOT write-tested reports "not
 erroring" (the call returns the backend's own envelope; success with real
 data is UNVERIFIED), never "working".
+## BLOCKER-SURFACING RULE (owner directive 2026-08-10, standing — the screen-10 skip-live incident)
+
+When a command is DENIED at the approval layer, or any standing rule cannot
+be followed for any reason, the BLOCKER is reported FIRST, plainly, as the
+headline of the reply. Never present abandoning a standing rule as a menu
+option. If the owner's decision is needed, every option offered must COMPLY
+with the standing rules, and the blocker itself must be stated above the
+options. A rule the owner set is not re-openable by a menu the owner did not
+ask for. (The screen-10 incident: an endpoint-calling command was denied; the
+maker offered "skip live calls" as a menu option instead of surfacing the
+denial, and a rule the owner had set since screen 6 was abandoned by menu
+selection.)
+
+## ATTRIBUTION RULE (owner directive 2026-08-10, standing — the screen-10 "owner chose skip-live" record)
+
+Never write "the owner chose X" (or any "owner decided/approved X" phrasing)
+into a README, QA finding, commit message, or any record, unless the owner
+said X in their own words. A selection among options the maker framed is NOT
+an instruction. When the record needs the context, QUOTE what the owner
+actually wrote, or describe the decision WITHOUT attributing it to the owner.
+(The screen-10 incident: the maker wrote "owner chose skip-live" into the
+README, QA finding and commit message on the strength of a "2" reply to a
+maker-framed menu — an attribution the owner explicitly corrected.)
