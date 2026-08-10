@@ -58,10 +58,11 @@ public class OperationTheatreDaoImpl extends GenericDao<OperationTheatre, Intege
 
 		} catch (HibernateException he) {
 			logger.error("saveOperationTheatre failed", he);
+			throw new ApplicationException(he.getMessage(), he);
 		} catch (Exception e) {
 			logger.error("saveOperationTheatre failed", e);
+			throw new ApplicationException(e.getMessage(), e);
 		}
-		return new Response<>(ERROR, ERROR_CODE, COMMON_ERROR_MESSAGE, null, null);
 	}
 
 	@Override
