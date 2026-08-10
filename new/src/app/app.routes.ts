@@ -1618,6 +1618,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/unit-service-base-price/unit-service-base-price').then((m) => m.UnitServiceBasePrice),
       },
+      {
+        path: 'chargeConversion',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 592, title: 'Charge Conversion' },
+        loadComponent: () =>
+          import('./features/charge-conversion/charge-conversion').then((m) => m.ChargeConversion),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
