@@ -336,6 +336,36 @@ THE POST-MERGE CHAIN (every screen, in order):
   3. The smoke harness's branch assertion (SERVE-BRANCH vs branch under test)
      applies unchanged; screen branches still verify against their own tree.
 
+## MERGE-READINESS PRECONDITIONS (owner directive 2026-08-10, standing — three stale-base instances: BR-188's 799-deletion illusion, BR-189's docs-drift, BR-187's evidence-deletion)
+
+A branch is NOT merge-ready until ALL of these hold, checked in this order,
+IMMEDIATELY BEFORE it is handed to the owner as ready:
+  1. `git merge main` has been run on the branch and succeeded (no conflicts,
+     or conflicts resolved) AFTER the LAST commit that landed on main — the
+     branch must contain every main commit as an ancestor, not merely be
+     diff-clean. A branch is stale the moment ANY commit lands on main after
+     its last merge, and the agent must not report a branch as ready if main
+     has advanced since the merge (check `git log --oneline -1 main` vs the
+     branch's last main-merge).
+  2. `git diff --stat main..<branch>` (from the gov worktree) shows ONLY the
+     intended files — nothing else. The three observed failure modes, all
+     caught by this diff AFTER the fact and now prevented by checking BEFORE
+     handoff: (a) a branch cut before main's governance/docs commits reads
+     main's newer work as DELETIONS (BR-188: 799 deletions incl. RULES.md 95,
+     QA_FINDINGS.md 172); (b) a docs commit landing on main after the branch's
+     merge makes the docs file appear as a branch-side deletion (BR-189:
+     BUSINESS_RULE_MANIFEST.md drift); (c) the SAME docs-drift deleting the
+     evidence record the BR exists to carry (BR-187: the defence/regression
+     evidence — the one thing distinguishing a demonstrated BR from a
+     deferred one — read as 1 insertion 5 deletions on the branch side).
+  3. `git merge --no-commit --no-ff <branch>` dry run from the gov worktree
+     reports "Automatic merge went well" (then abort). This is the standing
+     step the owner reads before every merge.
+  4. Only then is the branch reported merge-ready, with the `git diff --stat`
+     output pasted into the report.
+The diff-before-merge step remains the owner's final gate — but it should be
+catching nothing, because the branch is current when handed over.
+
 ## ONE-MESSAGE-PER-TURN REPORTING DISCIPLINE (owner directive 2026-08-10, standing)
 
 The reporting mechanism is now known: ONE user-facing message per turn is
