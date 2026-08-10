@@ -36,19 +36,21 @@
         <input type="date" name="toDate" [(ngModel)]="form.toDate" />
       </label>
       <label>
-        From Time
-        <input type="time" name="fromTime" [(ngModel)]="form.fromTime" />
+        From Time *
+        <input type="text" name="fromTime" [(ngModel)]="form.fromTime"
+               placeholder="HH:MM" pattern="^([01]\d|2[0-3]):[0-5]\d$" />
       </label>
       <label>
-        To Time
-        <input type="time" name="toTime" [(ngModel)]="form.toTime" />
+        To Time *
+        <input type="text" name="toTime" [(ngModel)]="form.toTime"
+               placeholder="HH:MM" pattern="^([01]\d|2[0-3]):[0-5]\d$" />
       </label>
     </div>
     <div class="sc-actions">
       <button class="sc-btn sc-btn-primary" (click)="save()">Save</button>
     </div>
     @if (!formValid()) {
-      <p class="sc-inline-error">Speciality, doctor, and date range are required.</p>
+      <p class="sc-inline-error">{{ formError() }}</p>
     }
   </section>
 

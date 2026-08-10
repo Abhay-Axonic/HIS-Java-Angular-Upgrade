@@ -71,6 +71,38 @@ backend URL mappings all use it). Menu node 710 'Surgical Calendar' under
   handling (ServiceImpl:288+) appears to advance past the given start.
   Observed, not root-caused, not fixed.
 
+## Validation-defect fix (owner click-through, 2026-08-10 — the fifth
+probe-passed/browser-click-failed instance, and the fix mechanism)
+
+The owner's click-through (speciality + doctor + dates + times typed, Save)
+produced "Save blocked: from and to time are required" with a fully
+populated form. ROOT CAUSE (captured, not inferred): the rebuild's original
+`<input type="time">` never committed user-typed values — the browser's
+segmented time entry (HH:MM:-- ) requires the seconds segment to resolve
+before the value commits. The inputs DISPLAYED "09:00"/"12:00" (with a
+trailing "--") but the DOM value and the component model stayed EMPTY
+(captured via the Angular devtools global: fromTime_dom "", model fromTime
+""). The probe's page.fill() passed because it sets the value property
+directly, bypassing the segmented-commit path — the probe-vs-user difference
+the owner named.
+
+FIX: the time inputs are now `<input type="text">` with an HH:MM pattern +
+placeholder (matching the LEGACY template, which uses plain text inputs —
+surgical-calender.html:128,136 — never a native time picker), plus a
+client-side HH:MM format guard in save(). The probe now REPRODUCES THE USER
+INTERACTION: it types keystrokes (press_sequentially) into the real inputs
+and asserts the typed value reaches the model before Save. The exact
+interaction that failed the owner now passes: typed "09:00"/"12:00" -> model
+'09:00'/'12:00' -> 1 save post -> 48 rows landed (verified, cleaned per
+Q28).
+
+SECOND DEFECT (the owner's item 2): the inline message was hardcoded to the
+date-range text while the form can be invalid for THREE different reasons
+(missing range / missing times / malformed time) — a shared boolean
+(formValid) with a single hardcoded message showed the wrong reason. Fixed
+with a formError signal set by each guard; the inline text now names the
+actual blocking condition.
+
 ## Divergences from legacy (named)
 
 - House conventions: signals + FormsModule, typed service responses,

@@ -38,6 +38,7 @@ export class SurgicalCalendar {
   };
 
   protected formValid = signal(true);
+  protected formError = signal('');
 
   private orgId(): number {
     return Number(this.session.current?.organizationId ?? 1);
@@ -118,15 +119,26 @@ export class SurgicalCalendar {
   protected save(): void {
     if (!this.form.specialityId || !this.form.doctorId || !this.form.fromDate || !this.form.toDate) {
       this.formValid.set(false);
+      this.formError.set('Speciality, doctor, and date range are required.');
       this.notify.warning('Save blocked: speciality, doctor, and date range are required');
       return;
     }
     if (!this.form.fromTime || !this.form.toTime) {
       this.formValid.set(false);
+      this.formError.set('From and to time are required.');
       this.notify.warning('Save blocked: from and to time are required (the slot generator needs them)');
       return;
     }
+    // the time format guard (text inputs with an HH:MM pattern)
+    const timeRe = /^([01]\d|2[0-3]):[0-5]\d$/;
+    if (!timeRe.test(this.form.fromTime) || !timeRe.test(this.form.toTime)) {
+      this.formValid.set(false);
+      this.formError.set('From and to time must be in HH:MM format (e.g. 09:00).');
+      this.notify.warning('Save blocked: times must be in HH:MM format');
+      return;
+    }
     this.formValid.set(true);
+    this.formError.set('');
     // The legacy contract: the service REQUIRES surgicalCalendarDetailsDtoList
     // (NPE at ServiceImpl:68 if null — verified live: a top-level-only payload
     // 500s). The legacy builds it client-side as selectedDayList — one row per

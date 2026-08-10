@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
-"""probe_surgical_calendar_save.py — SAVE probe for screen 22.
+"""probe_surgical_calendar_save.py — SAVE probe for screen 22 (v2, the
+user-interaction fix).
 
-Drives the REAL form (speciality -> doctor cascade, date range, Save), then
-the caller verifies the DB and cleans up per Q28. Negative control: an
-incomplete form (no date range) must be rejected client-side with ZERO save
-requests on the wire.
+The owner's click-through found the probe-vs-user class: the probe's
+page.fill() on native <input type="time"> set the value property directly
+(bypassing the browser's segmented HH:MM:-- commit), while a user's typed
+keystrokes never reached the model — the inputs DISPLAYED 09:00/12:00 with a
+trailing '--' but the DOM value stayed empty (captured: fromTime_dom "",
+model fromTime ""). The inputs are now type="text" (matching the legacy
+template) and THIS PROBE TYPES KEYSTROKES into them exactly as a user does
+(press_sequentially), asserting the typed value reaches the model before
+Save fires. This is the interaction the fix must survive.
+
+Negative controls: (1) incomplete form (no date range) rejected client-side
+with 0 wire posts; (2) malformed time (not HH:MM) rejected client-side with 0
+wire posts. Positive: typed HH:MM times -> exactly 1 save post.
 
 AUTH: injected real-login token in the cookieObject cookie (stated plainly).
 """
@@ -13,14 +23,10 @@ import sys
 import time
 import urllib.parse
 
+from playwright.sync_api import sync_playwright
+
 CACHE = "tools/.token_cache.json"
 TOKEN = json.load(open(CACHE))["token"]
-
-try:
-    from playwright.sync_api import sync_playwright
-except ImportError:
-    print("FAIL: playwright not installed")
-    sys.exit(1)
 
 BASE = "http://localhost:4201"
 ROUTE = "/surgicalCalendar"
@@ -51,31 +57,50 @@ def main():
             "() => localStorage.setItem('permissions', JSON.stringify({modules: [{id: 710}]}))"
         )
         page.goto(BASE + ROUTE, wait_until="domcontentloaded")
-        time.sleep(3)
-
-        # ---- NEGATIVE CONTROL: incomplete form (no date range) — client-side reject
+        time.sleep(4)
         page.select_option('select[name="specialityId"]', label="General Medicine")
-        time.sleep(2)  # doctor cascade fires
+        time.sleep(3)
+        page.select_option('select[name="doctorId"]', index=1)
+        page.fill('input[name="fromDate"]', '2026-08-02')
+        page.fill('input[name="toDate"]', '2026-08-09')
+
+        # ---- NEGATIVE CONTROL 1: no times -> client-side reject, 0 posts
         page.click("button.sc-btn-primary")
         time.sleep(2)
-        body = page.inner_text("body")
-        blocked = "required" in body.lower() or "blocked" in body.lower()
-        neg_posts = [u for u in posts]
-        print(f"NEGATIVE: incomplete form rejected client-side: {blocked}, wire save posts: {len(neg_posts)}")
-        if not blocked:
-            FAILS.append("incomplete form NOT rejected client-side")
-        if neg_posts:
-            FAILS.append(f"incomplete form sent {len(neg_posts)} save request(s) on the wire")
+        neg1_posts = [u for u in posts]
+        print(f"NEG1: missing times rejected: {len(neg1_posts) == 0} (posts: {len(neg1_posts)})")
+        if neg1_posts:
+            FAILS.append(f"missing-times form sent {len(neg1_posts)} save request(s)")
 
-        # ---- POSITIVE: complete form — doctor + multi-day range (the
-        # single-day range is a documented legacy silent-no-op:
-        # ServiceImpl:267 isBefore-strict skips same-day ranges — finding,
-        # not reproduced by design)
-        page.select_option('select[name="doctorId"]', index=1)
-        page.fill('input[name="fromDate"]', '2026-08-10')
-        page.fill('input[name="toDate"]', '2026-08-14')
-        page.fill('input[name="fromTime"]', '09:00')
-        page.fill('input[name="toTime"]', '17:00')
+        # ---- NEGATIVE CONTROL 2: malformed time (not HH:MM) -> reject, 0 posts
+        ft = page.locator('input[name="fromTime"]')
+        ft.click()
+        ft.press_sequentially("900", delay=60)  # user types "900", not "09:00"
+        page.click("button.sc-btn-primary")
+        time.sleep(2)
+        neg2_posts = [u for u in posts]
+        print(f"NEG2: malformed time rejected: {len(neg2_posts) == 0} (posts: {len(neg2_posts)})")
+        if neg2_posts:
+            FAILS.append(f"malformed-time form sent {len(neg2_posts)} save request(s)")
+
+        # ---- POSITIVE: TYPE times like a user (keystrokes), assert the model
+        # receives them, then Save
+        ft.fill("")  # clear the malformed value
+        ft.click()
+        ft.press_sequentially("09:00", delay=80)
+        tt = page.locator('input[name="toTime"]')
+        tt.click()
+        tt.press_sequentially("12:00", delay=80)
+        time.sleep(1)
+        model = page.evaluate("""() => {
+          const el = document.querySelector('app-surgical-calendar');
+          const comp = window.ng ? window.ng.getComponent(el) : null;
+          return comp ? {fromTime: comp.form.fromTime, toTime: comp.form.toTime}
+                      : {fromTime: 'ng-unavailable', toTime: 'ng-unavailable'};
+        }""")
+        print(f"MODEL AFTER TYPING: {model}")
+        if model.get("fromTime") != "09:00" or model.get("toTime") != "12:00":
+            FAILS.append(f"typed times did not reach the model: {model}")
         page.click("button.sc-btn-primary")
         time.sleep(4)
         pos_posts = [u for u in posts]
@@ -88,7 +113,7 @@ def main():
     if FAILS:
         print("PROBE: FAIL —", "; ".join(FAILS))
         sys.exit(1)
-    print("PROBE: PASS (incomplete rejected with 0 wire posts; complete save fired exactly once)")
+    print("PROBE: PASS (missing/malformed times rejected with 0 posts; typed HH:MM reached the model; save fired exactly once)")
 
 
 if __name__ == "__main__":
