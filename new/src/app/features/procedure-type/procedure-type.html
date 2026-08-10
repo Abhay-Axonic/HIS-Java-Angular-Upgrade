@@ -1,0 +1,83 @@
+<div class="pt-page">
+  <header class="pt-header">
+    <h2>Procedure Type</h2>
+    <p class="pt-sub">Screen 21 — module 520 (OTIMS). List, search, add, edit, status.</p>
+  </header>
+
+  <section class="pt-form card">
+    <h3>{{ editingId() ? 'Edit Procedure Type' : 'Add Procedure Type' }}</h3>
+    <div class="pt-form-row">
+      <label>
+        Type Code *
+        <input type="text" name="procedureTypeCode" [(ngModel)]="form.procedureTypeCode"
+               placeholder="e.g. SURG" />
+      </label>
+      <label>
+        Type Name *
+        <input type="text" name="procedureTypeName" [(ngModel)]="form.procedureTypeName"
+               placeholder="e.g. Surgical Procedure" />
+      </label>
+    </div>
+    <div class="pt-form-row">
+      <label class="pt-desc">
+        Description
+        <input type="text" name="procedureTypeDesc" [(ngModel)]="form.procedureTypeDesc"
+               placeholder="Optional" />
+      </label>
+    </div>
+    <div class="pt-actions">
+      @if (editingId()) {
+        <button class="pt-btn pt-btn-update" (click)="update()">Update</button>
+        <button class="pt-btn pt-btn-ghost" (click)="clearForm()">Cancel</button>
+      } @else {
+        <button class="pt-btn pt-btn-primary" (click)="save()">Save</button>
+      }
+    </div>
+    @if (!formValid()) {
+      <p class="pt-inline-error">Code and name are required.</p>
+    }
+  </section>
+
+  <section class="pt-grid card">
+    <div class="pt-grid-toolbar">
+      <input type="text" class="pt-search" placeholder="Search code / name / description"
+             [(ngModel)]="searchTerm" />
+      <span class="pt-count">{{ filteredRows().length }} row(s)</span>
+    </div>
+    @if (loading()) {
+      <p class="pt-loading">Loading…</p>
+    } @else if (filteredRows().length === 0) {
+      <p class="pt-empty">No procedure types found.</p>
+    } @else {
+      <table class="pt-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of filteredRows(); track row.procedureTypeId) {
+            <tr>
+              <td>{{ row.procedureTypeCode }}</td>
+              <td>{{ row.procedureTypeName }}</td>
+              <td>{{ row.procedureTypeDesc || '—' }}</td>
+              <td>
+                <button class="pt-status" [class.pt-status-active]="row.status === 'A'"
+                        (click)="toggleStatus(row)">
+                  {{ row.status === 'A' ? 'Active' : 'Inactive' }}
+                </button>
+              </td>
+              <td>
+                <button class="pt-edit" (click)="edit(row)">Edit</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>

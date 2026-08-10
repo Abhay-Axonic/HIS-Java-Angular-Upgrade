@@ -1562,6 +1562,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/operation-theatre-type/operation-theatre-type').then((m) => m.OperationTheatreType),
       },
+      {
+        path: 'procedureType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 520, title: 'Procedure Type' },
+        loadComponent: () =>
+          import('./features/procedure-type/procedure-type').then((m) => m.ProcedureType),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
