@@ -265,3 +265,28 @@ THE POST-MERGE CHAIN (every screen, in order):
      line — the docs content that on screens 1-11 rode the branch.
   3. The smoke harness's branch assertion (SERVE-BRANCH vs branch under test)
      applies unchanged; screen branches still verify against their own tree.
+
+## OWNER MERGE WORKFLOW — FROM THE GOV WORKTREE (owner directive 2026-08-10)
+
+The governance worktree (.claude/worktrees/gov-main) now owns main. The repo
+root CANNOT check out main (git: "already used by worktree"), so the owner's
+merge-and-push routine runs from the gov worktree, not the repo root.
+
+Exact command shape (run once per screen merge):
+
+  cd /Users/axonichealth/Downloads/His_Java_Angular_Pgrade/HIS_Java_Angular_upgrade/.claude/worktrees/gov-main
+  git merge --no-ff rebuild/add-new-<screen>          # e.g. rebuild/add-new-nursing-order-master
+  git push
+
+(If the merge is from a branch that has already been merged — e.g. a
+follow-up — git will say "Already up to date"; that is correct, not an error.)
+
+Notes:
+- The screen branch under test lives at the repo root. It may be checked out
+  and verified there; the gov worktree is where main moves.
+- The post-merge docs chain (convention (a): QF entries, queue items,
+  session-log lines) also runs in the gov worktree — the repo root stays on
+  the next screen branch.
+- The guard (tools/gov.py post-checkout hook) allows leaving a MERGED
+  branch: once the merge lands, checking the repo root off the screen branch
+  is permitted.
