@@ -1,135 +1,118 @@
-<section class="page">
-  <fieldset>
-    <legend>Operation Theatre Type</legend>
+<div class="ot-type-page">
+  <header class="ot-type-header">
+    <h2>Operation Theatre Type</h2>
+    <p class="ot-type-sub">Parity rebuild — module 521 (OTIMS). List, search, add, edit, status.</p>
+  </header>
 
-    <div class="form-grid">
-      <div class="field">
-        <label for="theatreTypeCode">Code<span class="required">*</span></label>
+  <section class="ot-type-form" aria-label="Operation theatre type form">
+    <div class="ot-type-form-grid">
+      <label>
+        Type Code
         <input
-          id="theatreTypeCode"
           type="text"
-          autocomplete="off"
-          [ngModel]="form().theatreTypeCode"
-          (ngModelChange)="updateField('theatreTypeCode', $event)"
-          [class.invalid]="isCodeInvalid()"
           name="theatreTypeCode"
+          [(ngModel)]="form().theatreTypeCode"
+          placeholder="e.g. OT1"
         />
-        @if (isCodeInvalid()) {
-          <p class="help-block">Code is required</p>
-        }
-      </div>
-
-      <div class="field">
-        <label for="theatreTypeName">Name<span class="required">*</span></label>
+      </label>
+      <label>
+        Type Name
         <input
-          id="theatreTypeName"
           type="text"
-          autocomplete="off"
-          [ngModel]="form().theatreTypeName"
-          (ngModelChange)="updateField('theatreTypeName', $event)"
-          [class.invalid]="isNameInvalid()"
           name="theatreTypeName"
+          [(ngModel)]="form().theatreTypeName"
+          placeholder="e.g. General"
         />
-        @if (isNameInvalid()) {
-          <p class="help-block">Name is required</p>
-        }
-      </div>
-
-      <div class="field">
-        <label for="theatreTypeDesc">Description<span class="required">*</span></label>
+      </label>
+      <label>
+        Description
         <input
-          id="theatreTypeDesc"
           type="text"
-          autocomplete="off"
-          [ngModel]="form().theatreTypeDesc"
-          (ngModelChange)="updateField('theatreTypeDesc', $event)"
-          [class.invalid]="isDescInvalid()"
           name="theatreTypeDesc"
+          [(ngModel)]="form().theatreTypeDesc"
+          placeholder="Optional description"
         />
-        @if (isDescInvalid()) {
-          <p class="help-block">Description is required</p>
-        }
-      </div>
+      </label>
+      <label>
+        Status
+        <select [(ngModel)]="form().status" name="status">
+          <option value="A">Active</option>
+          <option value="I">Inactive</option>
+        </select>
+      </label>
     </div>
-  </fieldset>
+    <div class="ot-type-actions">
+      @if (editingId() === null) {
+        <button type="button" class="ot-type-btn ot-type-btn-primary" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save' }}
+        </button>
+      } @else {
+        <button type="button" class="ot-type-btn ot-type-btn-primary" (click)="update()" [disabled]="saving()">
+          {{ saving() ? 'Updating…' : 'Update' }}
+        </button>
+        <button type="button" class="ot-type-btn" (click)="editingId.set(null); form().theatreTypeCode=''; form().theatreTypeName=''; form().theatreTypeDesc=''; form().status='A'">
+          Cancel
+        </button>
+      }
+    </div>
+  </section>
 
-  <div class="toolbar">
-    <label class="show-entries">
-      Show
-      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" name="pageSize">
-        @for (size of pageSizeOptions; track size) {
-          <option [value]="size">{{ size }}</option>
-        }
-      </select>
-      entries
-    </label>
+  <section class="ot-type-list" aria-label="Operation theatre type list">
+    <div class="ot-type-list-toolbar">
+      <input
+        type="text"
+        class="ot-type-search"
+        placeholder="Search code / name / description"
+        [(ngModel)]="searchTerm"
+      />
+      <span class="ot-type-count">{{ filteredRows().length }} row(s)</span>
+    </div>
 
-    @if (saveMode()) {
-      <button type="button" class="btn-primary icon-btn" title="Save" (click)="save()">
-        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-      </button>
+    @if (loading()) {
+      <p class="ot-type-empty">Loading…</p>
+    } @else if (filteredRows().length === 0) {
+      <p class="ot-type-empty">
+        No operation theatre types found for this org/unit. The list endpoint
+        returned an empty feed.
+      </p>
     } @else {
-      <button type="button" class="btn-primary icon-btn" title="Update" (click)="update()">
-        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-      </button>
+      <table class="ot-type-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of filteredRows(); track row.operationTheatreTypeId) {
+            <tr>
+              <td>{{ row.theatreTypeCode }}</td>
+              <td>{{ row.theatreTypeName }}</td>
+              <td>{{ row.theatreTypeDesc }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="ot-type-status"
+                  [class.ot-type-status-active]="row.status === 'A'"
+                  [class.ot-type-status-inactive]="row.status !== 'A'"
+                  (click)="toggleStatus(row)"
+                  [attr.aria-label]="'Toggle status for ' + (row.theatreTypeName ?? row.theatreTypeCode)"
+                >
+                  {{ row.status === 'A' ? 'Active' : 'Inactive' }}
+                </button>
+              </td>
+              <td>
+                <button type="button" class="ot-type-btn ot-type-btn-small" (click)="edit(row)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     }
-  </div>
-
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Code</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th class="text-center">Status(n)</th>
-        <th class="text-center">Action taken</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (row of list(); track row.operationTheatreTypeId) {
-        <tr>
-          <td>{{ row.theatreTypeCode }}</td>
-          <td>{{ row.theatreTypeName }}</td>
-          <td>{{ row.theatreTypeDesc }}</td>
-          <td class="text-center">
-            <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggleStatus(row)" />
-          </td>
-          <td class="text-center">
-            <i class="icon-edit" title="Edit" (click)="edit(row)"></i>
-          </td>
-        </tr>
-      }
-      @if (!list().length) {
-        <tr>
-          <td colspan="5" class="text-center">No Records Found</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-
-  @if (totalPages() > 1) {
-    <div class="pagination">
-      @for (page of pageNumbers(); track page) {
-        <button type="button" [class.active]="page === currentPage()" (click)="goToPage(page)">{{ page }}</button>
-      }
-    </div>
-  }
-</section>
-
-@if (showConfirmModal()) {
-  <div class="modal-backdrop" (click)="closeConfirmModal()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <header>
-        Confirm
-        <button type="button" (click)="closeConfirmModal()">&times;</button>
-      </header>
-      <div class="modal-body">
-        <span>Are you sure you want to Save?</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-primary" (click)="confirmSave()">Ok</button>
-        <button type="button" class="btn-primary" (click)="closeConfirmModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
-}
+  </section>
+</div>
