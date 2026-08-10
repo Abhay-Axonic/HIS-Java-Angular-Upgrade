@@ -69,8 +69,9 @@ public class OperationTheatreServiceImpl implements IOperationTheatreService, IC
 					request.setPayload(payload);
 					//iOtimsService.publish(request);
 					
-					}
 					return new Response<>(SUCCESS, SUCCESS_CODE, SUCCESS_MESSAGE, null, null);
+					}
+					return res;
 				
 			}
 		} catch (Exception e) {
