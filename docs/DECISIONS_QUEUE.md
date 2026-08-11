@@ -358,3 +358,106 @@ The two options trade the same asset: pre-rebuild visibility of the query landsc
 - THE 5 MENULESS BRANCHES (real controllers + endpoints, NO menu node — invisible to any node-based count): microbiologyStainMaster, serologyTestFindingMaster, storageLocationMaster, languageMaster, scheduleMaster. They are real screens without menu entries (Q18 registered-unmenued class); they do not add to the candidate count per the owner's rule (menu node + live backend) but are noted as latent screens.
 - BUILD-SHAPE RECOMMENDATION (owner decides; nothing built): recommend option (b) — the dispatcher screen + the 4 Unit Master branches (phlebotomyMaster, headerMaster, departmentMaster, biochemicalTest) proven end-to-end first, then the remaining 34 branches in family batches (LIS 25, ADT 7, billing/common 5, master 1). Trade-offs: (a) one-pass 43-branch build is the largest single artifact of the project — wrong in 43 places if the dispatch core is wrong, no incremental proof; (b) proves the dispatcher core + one family end-to-end cheaply, de-risks the pattern before mass production, rest is mechanical branch addition; (c) 43 separate screens sharing a component duplicates the permission gate and per-master boilerplate 43x, and contradicts the 'count once' decision. Recommendation: (b).
 
+
+## DQ-2026-08-12-001 — RETRACTION: the "guard fail-open" finding is withdrawn; the guard denies correctly (verified 3/3 under a race-free harness)
+
+**STATUS: RETRACTED by evidence — no code change made. The owner-approved fix
+(navigateByUrl + return false) was correctly NOT implemented because the
+evidence reversed BEFORE it landed.**
+
+What was claimed (2026-08-11): module-access.guard.ts fails OPEN — it evaluates
+deny, returns the UrlTree, and the redirect is silently dropped because
+accessDenied sits outside the Shell; 257 guarded routes effectively unguarded
+on direct navigation; reproduced on commonMaster, growthChart, cabinDisplay.
+
+What the record now shows: the guard denies correctly on the CLEAN, unmodified
+code. The reversal came from re-running the ATTACK (attack-first, BR shape) on
+the unfixed code — the attack could not be demonstrated, which is the property
+that makes the reversal trustworthy: it is not "the fix appears to work", it is
+"the defect does not reproduce on the code as it stands".
+
+Evidence (all against the clean unfixed guard, permissions=[999999] non-family
+id, deep-link):
+- settle_guard.py dual probe, 3/3 routes (commonMaster/relationmaster family
+  gate, growthChart 744, serviceMaster 376 — including the long-merged screen):
+  location poll lands on /accessDenied at ~0.26s, history REPLACE
+  /accessDenied?reason=denied fires, the access-denied CHUNK IS REQUESTED
+  (listener captures /@ng/component?c=...access-denied.ts...AccessDenied),
+  <app-access-denied> mounts with reason=denied, the guarded component NEVER
+  renders, shell absent (accessDenied is top-level by design), 0 page errors.
+- 4/4 repeat runs in ~0.3s (warm dev server); first-run latency ~8.5s was the
+  dev-server lazy-chunk compile, which is what the ORIGINAL fixed-6s-sleep
+  probes misread.
+
+Point-by-point reconciliation of the five old evidence items:
+
+(a) "URL never moved — 0 of 3, 20s flat timeline": those runs asserted
+    `page.url` at a fixed instant. `page.url` lags `location.href` during the
+    in-app (SPA) redirect; the redirect had landed at the component+URL level
+    while page.url still reported the pre-navigation URL. A 20s timeline run
+    (debug_guard11) sampled page.url only — the SPA redirect does not
+    re-navigate the document, so the sample saw nothing change even though the
+    router had replaced the URL. Measurement artifact.
+
+(b) "accessDenied chunk NEVER requested (request-listener probe)" — the one
+    piece a slow redirect could not explain. The listener filter
+    (`"access" in url.lower()`) WOULD have matched the chunk URL
+    (/@ng/component?c=...access-denied...), so the chunk genuinely was not
+    requested in that run. The artifact: that run (debug_guard12) executed
+    during the debug window when the served bundle was STALE — the ng serve
+    process log carries the compile error `TS2345 ... module-access.guard.ts:58`
+    (`moduleIds ?? [moduleId]` union producing `(number|undefined)[]`), and ng
+    serve serves the LAST-GOOD bundle while the current source fails to
+    compile. The transcript's own next step recorded "The served bundle is
+    stale from before, which explains the inconsistent behavior." So the
+    request-listener was sound; the code it listened to was not the code under
+    test. Re-run of the EXACT old harness (reconcile_old12.py: two-goto,
+    evaluate-based permissions, no interception, same filter) against the
+    clean bundle: chunk requested, poll lands in 0.26s. Artifact named: stale
+    served bundle from the broken HMR compile during the debug window.
+    Residual honesty: the exact byte-state of the bundle served at that
+    instant is not reconstructible; what is proven is (i) the harness/listener
+    are not the cause, (ii) the window contained a documented compile failure
+    and stale-bundle servicing, (iii) clean-bundle runs are consistent 3/3.
+
+(c) "UrlTree to a Shell child (billingGroupMaster) DID redirect and loop; a
+    top-level target does not": the billingGroupMaster loop test ran with NO
+    cookie (notLoggedIn path) — billingGroupMaster is itself guarded, so the
+    redirect looped. It was never a clean top-level-vs-child contrast, and the
+    clean bundle redirects to the TOP-LEVEL accessDenied fine. The contrast
+    was an artifact of the notLoggedIn test setup, not the route tree.
+
+(d) "return false cancelled and reverted correctly": consistent with Angular
+    semantics and not evidence of fail-open; the clean guard's parseUrl return
+    redirects (the redirect does not depend on the return value's shape).
+
+(e) "router.url was / at guard time on a deep-link": true and expected — the
+    guard runs during the initial navigation before the URL commits; it does
+    not indicate a dropped redirect (the redirect lands afterward).
+
+serviceMaster (Q2 — direct answer): the ORIGINAL attack was NEVER run on
+serviceMaster. The original reproductions were commonMaster/relationmaster
+(probe negative control) and growthChart 744 (debug_guard13) — plus a
+cabinDisplay 760 debug run in the contaminated window. serviceMaster, the
+long-merged screen the owner's three-route requirement was written to cover,
+was first exercised under the reversal (settle_guard), where it denies
+correctly. The original finding was therefore INCOMPLETE as well as wrong — it
+never met the owner's own three-route bar.
+
+Why the fix was not implemented: the owner approved navigateByUrl + return
+false on the fail-open report. Before implementing, the attack was re-run on
+the unfixed code per the BR shape; it could not be demonstrated. Per the
+sequence's own condition (attack on unfixed code first, three routes), the fix
+must not land when the attack half fails. No change to a working security
+control. (The navigateByUrl + return false shape was itself never proven to
+redirect; earlier contaminated runs suggested it might not — do not implement
+it without a fresh attack/defence demonstration on the clean bundle.)
+
+Lesson recorded: the positive-only probe convention did NOT cause this false
+verdict (a negative control DID run); what caused it was (1) asserting page.url
+instead of the real location, (2) a fixed sleep vs variable dev-server chunk
+compile latency, and (3) diagnosing against a bundle that a broken HMR compile
+had frozen at last-good. Probe discipline for guard deny paths is now in the
+angular-rebuild-verification skill reference: poll location.pathname up to 15s,
+assert the DOM (component mounts / guarded content absent), and confirm the
+served bundle contains the expected guard markers before trusting any verdict.
