@@ -488,3 +488,54 @@ CommonMasterService.DISPATCH; probe extended with per-branch real-row
 assertions; PROBE PASS (all 6 render real rows, negative control still denies,
 0 page errors); ng build EXIT 0. Remaining after ADT: LIS 25, billing/common 5,
 master 1. Next batch reported before the following one per owner directive.
+
+## DQ-2026-08-12-003 — LIS FAMILY: 16 of 26 branches return the GENERIC "Internal Server Error" envelope — the unreachable-empty-branch fall-through (masked-error class, owner's LIS watch-item CONFIRMED)
+
+Owner's directive before the LIS 25 batch: the three LIS/global masters in the
+slice each returned descriptive per-master "Records not found." messages —
+"confirm that holds across the family, or flag any that return the generic
+envelope instead; a generic one hiding among descriptive ones is the
+masked-error class."
+
+CONFIRMED AS A REAL CLASS: 16 of 26 LIS branches return `{"status":"error",
+"code":"500","message":"Internal Server Error"}` — the generic envelope —
+while 10 return descriptive per-master messages ("Sample Records not found.",
+"Container Records not found.", etc.). NOT a phantom-column/exception swallow
+(the screens-49/52 class): the tables exist with all query columns (verified
+lab.m_reagent_master etc., information_schema), the DAO returns SUCCESS with
+an empty list, and the SERVICE layer swallows it.
+
+THE MECHANISM (named, verified in source): the LIS service impls use the shape
+`Response res = dao.list...(...); if (res.getListObject() != null &&
+res.getListObject().size() > 0) { ... if(unitMst.isEmpty()) { return ...NOT_FOUND; }
+else { return SUCCESS; } } catch { throw; } return new Response(ERROR, ERR_500,
+ERR_500_MESSAGE, null, null);` — ReagentMasterServiceImpl.java:103-121,
+ColonyMasterServiceImpl.java:103-121, OrganismMasterServiceImpl, WtifilmMaster-
+ServiceImpl (line 123), etc. The `size() > 0` guard makes the inner
+`isEmpty()` branch UNREACHABLE for an empty list: empty list skips the whole
+block and falls through to the generic `ERR_500_MESSAGE` ("Internal Server
+Error"). The descriptive per-master message EXISTS in the code but can never
+fire. (Secondary copy-paste defect: line 112 returns SAMPLE_RECORDS_NOT_FOUND
+for reagent/colony — the wrong constant name, dead anyway.)
+
+CLASSIFICATION (26 LIS branches):
+- DESCRIPTIVE dev-empty (10): sampleMaster, containerMaster, techinqueMaster,
+  prerequisitesMaster, mediaMaster, antibioticMaster, antibioticsGroupMaster,
+  storageLocationMaster, languageMaster, serologyTestFindingMaster.
+- GENERIC "Internal Server Error" (16): reagentMaster, reportTypeMaster,
+  bacteriaShapMaster, wtifilmStudyMasterMaster, colonyMaster, organismMaster,
+  organismGroupMaster, stainigMaster, microbiologyStainMaster, antibiotic-
+  sMaster, incubationTestMaster, sensitivityTypeResultMaster, slideProcedure-
+  Master, bacteriaClassificationMaster, unitMaster, blockMaster.
+
+REBUILD HANDLING: the generic 16 get an AMBER-permanent banner per the
+BANNER-TIER RULE — the response the warning would read is the thing that lies
+(empty reported as a server error), so the banner must say WHY it is permanent
+and name the fall-through mechanism. The descriptive 10 surface the backend's
+own message as honest dev-empty.
+
+BACKEND NOTE (not fixed — reported per Rule 10): the fall-through is a
+service-layer defect — the `size() > 0` guard should be `>= 0` or the empty
+branch should be outside the guard. Fixing it changes observable behavior (a
+message string), so it needs a BR entry + owner approval, not an inline fix.
+The dead SAMPLE_RECORDS_NOT_FOUND constant (wrong master) is the same class.
