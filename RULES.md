@@ -462,3 +462,43 @@ Three tiers, and the discriminator is TRUST, not severity:
 
 Application rule for every rebuild screen: if a finding's path is reachable in dev AND the response can be trusted, a save-time warning is the better shape; if the path is unreachable in dev, OR the defect corrupts the response the warning would read (lie-class, masked-200 class), the permanent banner is the only reliable place — and the banner must say why it is permanent. The four Billing screens carrying pre-emptive banners (charge-conversion 29, global-doctor-share 32, doctorwise-share 33, doctor-referral-share 34) are all AMBER-permanent by this rule (their save-path defects either lie or are unreachable in dev); the two that were originally RED were converted per this decision.
 
+
+## BUNDLE-FRESHNESS RULE — the probe verifies the served bundle matches the current source BEFORE any behavioural assertion (owner directive 2026-08-12, standing — the second false finding from serve-side staleness)
+
+**THE PATTERN — serve-side staleness has now caused TWO false findings. Both
+times the browser was running code that no longer matched the working tree,
+and the probe reported a behavioural result anyway:**
+
+- **INSTANCE 1 — screen-11 stale tree (smoke harness).** The smoke harness
+  probed a tree that did not match the branch under test; fixed by the smoke
+  harness's branch assertion (SERVE-BRANCH vs branch under test, above). That
+  assertion asserts the TREE.
+- **INSTANCE 2 — guard fail-open retraction (2026-08-12).** A temporary debug
+  patch introduced TS2345 at module-access.guard.ts:58 (`moduleIds ??
+  [moduleId]` union producing `(number|undefined)[]`); ng serve ERRORED and
+  silently kept serving the LAST-GOOD bundle. The source showed the new guard;
+  the browser ran the OLD guard. Probes run in that window (fixed-sleep +
+  page.url, request-listener) produced the false "fail-open" finding — the
+  access-denied chunk "never requested" — which was then retracted after the
+  attack could not be demonstrated on the clean bundle. The old harness
+  re-run byte-for-byte against a clean bundle passes all four checks; the
+  variable was the served bundle, not the measurement.
+
+**THE RULE (a/b/c, same shape as the smoke harness's branch assertion — that
+one asserts the tree, this one asserts the bundle):**
+  a) BEFORE any assertion, every browser probe verifies the served bundle
+     matches the current source — a build marker, a hash, or a compile
+     timestamp the probe can read. Implemented in `tools/bundle_freshness.py`
+     (extracts distinctive identifier-like string literals from the CURRENT
+     source and requires them in the served bundle; plus explicit absent-
+     markers for debug leftovers) and wired into every probe as the FIRST
+     step: `tools/probe_common_master.py`, `tools/settle_guard.py`.
+  b) A stale bundle FAILS the probe LOUDLY — exit code 2 (distinct from
+     behavioural FAIL exit 1), FRESHNESS-FAIL lines naming the missing
+     marker — rather than producing a finding. No behavioural assertion runs.
+  c) NEGATIVE CONTROL demonstrated 2026-08-12: broke the guard compile
+     deliberately (TS2322), left ng serve frozen at last-good (served bundle
+     still parseUrl x4, marker absent), and the probe FAILED on freshness
+     (RC=2, "lacks current-source marker", zero behavioural assertions)
+     instead of reporting a behavioural result. Restore + recompile -> probe
+     green again (RC=0).
