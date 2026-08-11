@@ -5,7 +5,7 @@
   </header>
 
   <section class="dws-finding">
-    <h3>False-success surfaced — the doctor-share save lies about a failed voucher write</h3>
+    <h3>AMBER — known defect, permanent warning: the doctor-share save lies about a failed voucher write</h3>
     <p>
       saveDoctorShareList returns body status SUCCESS with an ERROR_MESSAGE
       when the voucher write fails — after the share rows were already
@@ -21,6 +21,11 @@
       returns SUCCESS "saved" with nothing written.
     </p>
     <p class="dws-note">Not fixed (Rule 10 — backend BR candidate; the BR-188 family).</p>
+    <p class="dws-why">
+      Why this warning is permanent: the save path reports success without
+      writing — you have not hit it, and this warning cannot be shown at save
+      time because the response it would read is the thing that lies.
+    </p>
   </section>
 
   <section class="dws-list card">

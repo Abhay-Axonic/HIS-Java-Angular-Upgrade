@@ -55,10 +55,12 @@ def main():
 
         body = page.inner_text("body")
         banner = "batch-partial-commit" in body
+        amber = "AMBER" in body and "permanent warning" in body
         mechanism = "executeBatch" in body and "rollback" in body
-        print(f"FINDING BANNER: {banner}, names the mechanism: {mechanism}")
-        if not (banner and mechanism):
-            FAILS.append("finding banner not rendered (banner/mechanism)")
+        why_permanent = "Why this warning is permanent" in body and "cannot be triggered in dev" in body
+        print(f"FINDING BANNER: {banner}, AMBER-permanent tier: {amber}, names the mechanism: {mechanism}, why-permanent stated: {why_permanent}")
+        if not (amber and banner and mechanism and why_permanent):
+            FAILS.append("finding banner not rendered (tier/banner/mechanism/why-permanent)")
 
         honest = "No global doctor share rows found" in body
         print(f"HONEST DEV-EMPTY LIST: {honest}")
