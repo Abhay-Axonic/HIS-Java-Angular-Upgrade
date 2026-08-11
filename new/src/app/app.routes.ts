@@ -1991,6 +1991,27 @@ export const routes: Routes = [
           import('./features/nursing-station-ward-mapping/nursing-station-ward-mapping').then((m) => m.NursingStationWardMapping),
       },
       {
+        path: 'appointmentSchedulingUnitMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 653, title: 'Appointment Scheduling Unit Master' },
+        loadComponent: () =>
+          import('./features/appointment-scheduling-unit-master/appointment-scheduling-unit-master').then((m) => m.AppointmentSchedulingUnitMaster),
+      },
+      {
+        path: 'scheduleWise',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 657, title: 'Schedule Wise' },
+        loadComponent: () =>
+          import('./features/schedule-wise/schedule-wise').then((m) => m.ScheduleWise),
+      },
+      {
+        path: 'doctorWise',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 658, title: 'Doctor Wise' },
+        loadComponent: () =>
+          import('./features/doctor-wise/doctor-wise').then((m) => m.DoctorWise),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },

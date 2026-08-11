@@ -1,0 +1,53 @@
+<div class="dw-wrap">
+  <header class="dw-header">
+    <h2>Doctor Wise — Slot Block/Unblock</h2>
+    <span class="dw-sub">Unit Master / OPD — module 658</span>
+  </header>
+
+  @if (loading()) {
+    <p class="dw-muted">Loading slots…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="dw-state dw-masked">
+        <p>{{ error() }}</p>
+        <p class="dw-muted">
+          Masked-error envelope, permanent: the slot-block list endpoint
+          returns a blank generic error (HTTP 200, status=error, no message).
+          The backend swallows the real exception at the controller boundary
+          (<code>SlotMasterController</code> :101-104) — the DAO throws a
+          date-parse failure (<code>GlobalCommonDateUtils.getDate</code>
+          appends " 00:00:00" to short dates, then parses with
+          "yyyy-MM-dd"). The SQL itself runs clean (DQ-2026-08-12-016).
+          scheduleWise shares this same endpoint.
+        </p>
+      </div>
+    } @else {
+      <div class="dw-state dw-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="dw-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Doctor</th>
+          <th>Speciality</th>
+          <th>From</th>
+          <th>To</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.slotId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="dw-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

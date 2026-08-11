@@ -1,0 +1,49 @@
+<div class="asum-wrap">
+  <header class="asum-header">
+    <h2>Appointment Scheduling — Unit Master</h2>
+    <span class="asum-sub">Unit Master / OPD — module 653</span>
+  </header>
+
+  @if (loading()) {
+    <p class="asum-muted">Loading slots…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="asum-state asum-masked">
+        <p>{{ error() }}</p>
+        <p class="asum-muted">
+          Masked-error envelope, permanent: the primary list endpoint
+          (<code>getSlotsNew</code>) throws a real backend exception wrapped
+          in the correlation-id message ("Something went wrong. Reference:
+          ERR-…", ErrorCorrelationUtil). The screen is not simply empty —
+          the backend is failing (DQ-2026-08-12-016).
+        </p>
+      </div>
+    } @else {
+      <div class="asum-state asum-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="asum-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Doctor</th>
+          <th>Speciality</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.slotId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="asum-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
