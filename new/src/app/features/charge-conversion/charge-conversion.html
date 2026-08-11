@@ -1,0 +1,48 @@
+<div class="cc-page">
+  <header class="cc-header">
+    <h2>Charge Conversion</h2>
+    <p class="cc-sub">Screen 29 — module 592 (Billing, parent 570). Patient-driven charge conversion transaction.</p>
+  </header>
+
+  <section class="cc-finding">
+    <h3>Backend defect surfaced — partial success on a billing write path</h3>
+    <p>
+      The legacy save can report success while writing nothing: when the
+      order-details lookup fails, the details save and the order-rate update
+      are silently skipped yet the response is SUCCESS + "Charge conversion
+      saved".
+    </p>
+    <p class="cc-detail">
+      ChargeConversionServiceImpl.saveChargeConversionMasterList — the
+      <code>if(SUCCESS &amp;&amp; listObject != null)</code> guard skips the
+      inner write on an ERROR from getOrderDetailsListByOrderId (whose DAO
+      catch-and-return swallows the exception into a masked HTTP-200 error
+      envelope); the service returns SUCCESS regardless (line 91). A failed
+      inner step reported as full success.
+    </p>
+    <p class="cc-note">
+      Not fixed (Rule 10 — backend BR candidate). The full conversion flow is
+      patient-gated: patient search → encounter → payer selection. This
+      rebuild renders the flow surface and the feed that works without a
+      patient context (visit types); the conversion write cannot be honestly
+      exercised without a patient.
+    </p>
+  </section>
+
+  <section class="cc-flow card">
+    <h3>Conversion flow</h3>
+    @if (loading()) {
+      <p class="cc-loading">Loading…</p>
+    } @else if (visitTypes().length > 0) {
+      <label>Visit type
+        <select class="cc-select">
+          @for (vt of visitTypes(); track vt.id) {
+            <option [value]="vt.id">{{ vt.name }}</option>
+          }
+        </select>
+      </label>
+    } @else {
+      <p class="cc-empty">Visit type list is empty (dev data). The conversion flow requires a patient + encounter context.</p>
+    }
+  </section>
+</div>

@@ -1,0 +1,36 @@
+<div class="dws-page">
+  <header class="dws-header">
+    <h2>Doctorwise Share</h2>
+    <p class="dws-sub">Screen 33 — module 614 (Billing, parent 570). Doctorwise share configuration.</p>
+  </header>
+
+  <section class="dws-finding">
+    <h3>False-success surfaced — the doctor-share save lies about a failed voucher write</h3>
+    <p>
+      saveDoctorShareList returns body status SUCCESS with an ERROR_MESSAGE
+      when the voucher write fails — after the share rows were already
+      updated. The UI shows success for a failed write on a money path.
+    </p>
+    <p class="dws-detail">
+      TDoctorShareDaoImpl.saveDoctorShareList (lines 680-726): the share-row
+      executeUpdate loop runs first (684-701); the voucher save (708) can
+      return non-SUCCESS or a null object — line 724 then returns
+      <code>SUCCESS + ERROR_MESSAGE</code> anyway. The share amounts changed,
+      the voucher was not written, and the caller (which checks
+      status == "success") shows success. Line 726: the empty-list path
+      returns SUCCESS "saved" with nothing written.
+    </p>
+    <p class="dws-note">Not fixed (Rule 10 — backend BR candidate; the BR-188 family).</p>
+  </section>
+
+  <section class="dws-list card">
+    <h3>Doctorwise share configuration</h3>
+    @if (loading()) {
+      <p class="dws-loading">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="dws-empty">No doctorwise share rows found (dev data).</p>
+    } @else {
+      <p class="dws-empty">Doctorwise share rows loaded ({{ rows().length }}).</p>
+    }
+  </section>
+</div>

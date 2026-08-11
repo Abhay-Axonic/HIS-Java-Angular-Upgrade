@@ -1,0 +1,36 @@
+<div class="gds-page">
+  <header class="gds-header">
+    <h2>Global Doctor Share</h2>
+    <p class="gds-sub">Screen 32 — module 613 (Billing, parent 570). Global doctor share configuration.</p>
+  </header>
+
+  <section class="gds-finding">
+    <h3>Backend risk surfaced — batch-partial-commit on the doctor-share write path</h3>
+    <p>
+      The global doctor-share save writes rows in batches of 100 and commits
+      after each batch; a mid-batch failure leaves earlier rows persisted
+      with no rollback in the catch — a partial-write risk on a money path.
+    </p>
+    <p class="gds-detail">
+      TGlobalDoctorShareGroupWiseDaoImpl.saveGlobalDoctorShareGroupWiseDao —
+      executeBatch every 100 rows + commit (line 94-96); the catch
+      (105-107) returns the honest ERROR envelope but never rolls back the
+      already-committed batches. SUCCESS is returned only after the final
+      commit. Not a false success (the catch returns ERROR) — a
+      partial-write risk. The empty-list SUCCESS (line 102) is unreachable
+      from this endpoint (the service guards size &gt; 0).
+    </p>
+    <p class="gds-note">Not fixed (Rule 10 — backend BR candidate).</p>
+  </section>
+
+  <section class="gds-list card">
+    <h3>Global doctor share configuration</h3>
+    @if (loading()) {
+      <p class="gds-loading">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="gds-empty">No global doctor share rows found (dev data; grades feed: {{ grades().length }}).</p>
+    } @else {
+      <p class="gds-empty">Global doctor share rows loaded ({{ rows().length }}).</p>
+    }
+  </section>
+</div>

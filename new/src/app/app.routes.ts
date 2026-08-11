@@ -1618,6 +1618,83 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/unit-service-base-price/unit-service-base-price').then((m) => m.UnitServiceBasePrice),
       },
+      {
+        path: 'chargeConversion',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 592, title: 'Charge Conversion' },
+        loadComponent: () =>
+          import('./features/charge-conversion/charge-conversion').then((m) => m.ChargeConversion),
+      },
+      {
+        path: 'serviceTariffMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 610, title: 'Service Tariff Master' },
+        loadComponent: () =>
+          import('./features/service-tariff-master/service-tariff-master').then((m) => m.ServiceTariffMaster),
+      },
+      {
+        path: 'doctorConsultation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 612, title: 'Doctor Consultation' },
+        loadComponent: () =>
+          import('./features/doctor-consultation/doctor-consultation').then((m) => m.DoctorConsultation),
+      },
+      {
+        path: 'globalDoctorShare',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 613, title: 'Global Doctor Share' },
+        loadComponent: () =>
+          import('./features/global-doctor-share/global-doctor-share').then((m) => m.GlobalDoctorShare),
+      },
+      {
+        path: 'doctorwiseShare',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 614, title: 'Doctorwise Share' },
+        loadComponent: () =>
+          import('./features/doctorwise-share/doctorwise-share').then((m) => m.DoctorwiseShare),
+      },
+      {
+        path: 'doctorReferralShare',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 615, title: 'Doctor Referral Share' },
+        loadComponent: () =>
+          import('./features/doctor-referral-share/doctor-referral-share').then((m) => m.DoctorReferralShare),
+      },
+      {
+        path: 'depositMatrixConfig',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 621, title: 'Deposit Matrix Configuration' },
+        loadComponent: () =>
+          import('./features/deposit-matrix-configuration/deposit-matrix-configuration').then((m) => m.DepositMatrixConfiguration),
+      },
+      {
+        path: 'unitServiceMapping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 584, title: 'Unit Service Mapping' },
+        loadComponent: () =>
+          import('./features/unit-service-mapping/unit-service-mapping').then((m) => m.UnitServiceMapping),
+      },
+      {
+        path: 'companyContractMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 608, title: 'Company Contract' },
+        loadComponent: () =>
+          import('./features/company-contract/company-contract').then((m) => m.CompanyContract),
+      },
+      {
+        path: 'TPAmaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 572, title: 'TPA Master' },
+        loadComponent: () =>
+          import('./features/tpa-master/tpa-master').then((m) => m.TpaMaster),
+      },
+      {
+        path: 'corporateMasterGlobal',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 574, title: 'Corporate Master' },
+        loadComponent: () =>
+          import('./features/corporate-master/corporate-master').then((m) => m.CorporateMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

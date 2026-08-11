@@ -1,0 +1,37 @@
+<div class="drs-page">
+  <header class="drs-header">
+    <h2>Doctor Referral Share</h2>
+    <p class="drs-sub">Screen 34 — module 615 (Billing, parent 570). Doctor referral share configuration.</p>
+  </header>
+
+  <section class="drs-finding">
+    <h3>False-success surfaced — the referral-share save reports success with nothing written</h3>
+    <p>
+      saveReferralShare returns SUCCESS + "saved" when both detail lists are
+      empty — no rows are written, yet the caller sees success.
+    </p>
+    <p class="drs-detail">
+      IndividualDoctorShareServiceImpl.saveReferralShare (line 216): the two
+      list-guards (174, 196) are <code>if(list != null &amp;&amp; size &gt; 0)</code> —
+      when both lists are empty, no group-wise or service-wise row is saved,
+      no voucher is created, and the method still returns
+      <code>SUCCESS + DOCTOR_SHARE</code>. The empty-save reports success (the
+      screen-22 same-day shape, on the referral-share money path). The DAO
+      saves follow the clean catch→honest-ERROR pattern with the same latent
+      batch-partial-commit shape as screen 32 (commits per batch, no
+      rollback in the catch).
+    </p>
+    <p class="drs-note">Not fixed (Rule 10 — backend BR candidates).</p>
+  </section>
+
+  <section class="drs-list card">
+    <h3>Doctor referral share configuration</h3>
+    @if (loading()) {
+      <p class="drs-loading">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="drs-empty">No referral share rows found (dev data).</p>
+    } @else {
+      <p class="drs-empty">Referral share rows loaded ({{ rows().length }}).</p>
+    }
+  </section>
+</div>

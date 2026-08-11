@@ -1,0 +1,42 @@
+<div class="dmc-page">
+  <header class="dmc-header">
+    <h2>Deposit Matrix Configuration</h2>
+    <p class="dmc-sub">Screen 35 — module 621 (Billing, parent 570). Deposit matrix configuration.</p>
+  </header>
+
+  <section class="dmc-list card">
+    <h3>Deposit matrix rows (count: {{ count() ?? '?' }})</h3>
+    @if (loading()) {
+      <p class="dmc-loading">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="dmc-empty">No deposit matrix rows found (dev data).</p>
+    } @else {
+      <table class="dmc-table">
+        <thead>
+          <tr>
+            <th>Patient Type</th>
+            <th>Entitlement</th>
+            <th>Billing Category</th>
+            <th>Against Deposit</th>
+            <th>Surgical</th>
+            <th>Non-Surgical</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.mDepositMatrixId) {
+            <tr>
+              <td>{{ row.patientType }}</td>
+              <td>{{ row.patientEntitleMent }}</td>
+              <td>{{ row.billingCategory }}</td>
+              <td>{{ row.againstDeposit }}</td>
+              <td>{{ row.surgical }}</td>
+              <td>{{ row.nonSurgical }}</td>
+              <td>{{ row.status }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
