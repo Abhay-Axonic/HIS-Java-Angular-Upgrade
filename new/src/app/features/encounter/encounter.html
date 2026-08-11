@@ -1,0 +1,102 @@
+<div class="encounter-screen">
+  <div class="ambers">
+    <div class="amber-banner">
+      <strong>AMBER — known defect, permanent warning:</strong>
+      the legacy menu's "Patient Visit" (module 5) reaches this encounter workscreen,
+      but its un-parameterised list feed (<code>GET /api/opd/getListOfEncounterMaster</code>)
+      reports a 500 unless called with the legacy <code>unit_id</code>/<code>organization_id</code>
+      header names the JwtTokenFilter does not forward — the response it would read is the
+      thing that lies: a 500 envelope instead of the row set.
+      <p class="why-permanent">
+        Why this warning is permanent: the legacy browser session sends those legacy header
+        names itself, so the endpoint only ever worked for the AngularJS app; the rebuild's
+        authenticated calls cannot reproduce them without a backend contract change, which is
+        out of scope for a parity rebuild.
+      </p>
+    </div>
+  </div>
+
+  <div class="screen-header">
+    <h2>Encounter / Patient Visit</h2>
+    <p class="subtitle">
+      Search encounters and review the patient-visit summary. The search feed
+      (<code>POST /api/opd/getEncounterDetails</code>) is live and org-scoped; it returns the
+      encounters for the patient context supplied, so a dev database without seeded visits
+      returns an empty list honestly.
+    </p>
+  </div>
+
+  <div class="search-panel">
+    <div class="row">
+      <label>
+        From
+        <input type="date" [(ngModel)]="search.fromDate" name="fromDate" />
+      </label>
+      <label>
+        To
+        <input type="date" [(ngModel)]="search.toDate" name="toDate" />
+      </label>
+      <label>
+        Patient ID (optional)
+        <input type="number" [(ngModel)]="search.patientId" name="patientId" placeholder="e.g. 1" />
+      </label>
+      <button class="btn-primary" (click)="searchEncounter()" [disabled]="loading()">
+        @if (loading()) {
+          Searching…
+        } @else {
+          Search
+        }
+      </button>
+    </div>
+    <p class="hint">
+      Patient-gated paths (next-of-kin, payment entitlement, clinical coversheet tabs) require a
+      patient context and are documented in the README — they are not reproduced on this surface.
+    </p>
+  </div>
+
+  @if (searchError()) {
+    <div class="error">{{ searchError() }}</div>
+  }
+
+  @if (searched()) {
+    <div class="results">
+      @if (encounters().length === 0) {
+        <div class="results-empty">
+          No encounters found for the selected window. This is expected in a dev database with no
+          seeded patient visits.
+        </div>
+      } @else {
+        <table class="encounter-table">
+          <thead>
+            <tr>
+              <th>Encounter #</th>
+              <th>Patient</th>
+              <th>Visit Type</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of encounters(); track e) {
+              <tr>
+                <td>{{ e.encounterId ?? e.encounterNo ?? '—' }}</td>
+                <td>{{ e.patientName ?? ('Patient ' + (e.patientId ?? '—')) }}</td>
+                <td>{{ e.visitTypeName ?? e.visitTypeId ?? '—' }}</td>
+                <td>{{ e.encounterDate ?? e.createdDate ?? '—' }}</td>
+                <td><button class="btn-small" (click)="selectEncounter(e)">View</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      @if (selectedEncounter()) {
+        <div class="detail">
+          <h3>Encounter summary</h3>
+          <pre>{{ json(selectedEncounter()) }}</pre>
+          <button class="btn-small" (click)="clearSelection()">Close</button>
+        </div>
+      }
+    </div>
+  }
+</div>

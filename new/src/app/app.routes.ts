@@ -1737,6 +1737,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/opd-coversheet/opd-coversheet').then((m) => m.OpdCoversheet),
       },
+      {
+        path: 'encounter',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 5, title: 'Encounter' },
+        loadComponent: () =>
+          import('./features/encounter/encounter').then((m) => m.Encounter),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
