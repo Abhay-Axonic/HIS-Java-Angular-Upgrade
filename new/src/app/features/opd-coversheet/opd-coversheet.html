@@ -1,0 +1,74 @@
+<div class="oc-page">
+  <header class="oc-header">
+    <h2>OPD Coversheet</h2>
+    <p class="oc-sub">Screen 45 — module 9 (Opd, parent 2). Clinical transaction surface.</p>
+  </header>
+
+  <section class="oc-finding">
+    <h3>AMBER — known defect, permanent warning: the button-master feed is broken by a phantom column</h3>
+    <p>
+      /api/global/getActiveButtonMaster cannot load: the DAO's SQL reads
+      <code>disclaimer</code> from public.m_unit_master, a column the dev
+      schema does not have — the exception is caught and masked into an
+      ERROR envelope with no message.
+    </p>
+    <p class="oc-detail">
+      UserRoleMasterDaoImpl.getActiveButtonMaster — the first query
+      (public.button_master, 2 rows org 1/unit 1) works; the second
+      (<code>select disclaimer from public.m_unit_master ...</code>) throws
+      because no <code>disclaimer</code> column exists (0 columns match in
+      any spelling); the HibernateException catch returns
+      <code>ERROR/null-code/null-message</code>. The legacy action-bar /
+      AI-button config surface cannot render on this schema.
+    </p>
+    <p class="oc-note">Not fixed (Rule 10 — backend BR candidate; the phantom-column class).</p>
+    <p class="oc-why">
+      Why this warning is permanent: the feed's response is the thing that
+      lies — an ERROR envelope with no message, which a save-time warning
+      would have to read to decide whether to warn; you have not hit it, and
+      this warning cannot be shown at call time because the response it
+      would read is the thing that lies.
+    </p>
+  </section>
+
+  <section class="oc-feeds card">
+    <h3>Template feeds (no patient context required)</h3>
+    @if (loading()) {
+      <p class="oc-note">Loading…</p>
+    } @else {
+      <p class="oc-note">
+        Coversheet templates by type: @for (t of templateTypes; track t) {
+          <span class="oc-type">type {{ t }}:
+            @if ((templatesByType()[t] ?? -2) < 0) {
+              feed error
+            } @else {
+              {{ templatesByType()[t] }}
+            }
+          </span>
+        }
+      </p>
+      <p class="oc-note">
+        Complaints templates: {{ complaintsCount() === null ? '…' : complaintsCount() }} ·
+        Diagnosis templates: {{ diagnosisCount() === null ? '…' : diagnosisCount() }}
+      </p>
+    }
+  </section>
+
+  <section class="oc-gated card">
+    <h3>Patient-gated clinical tabs (documented, not faked)</h3>
+    <p class="oc-note">
+      The coversheet's 83 clinical tabs — vitals, complaints, diagnosis,
+      medication, orders, investigations, allergies, histories,
+      immunization — are all patient/encounter-scoped. The legacy enters
+      this screen with an appointment context (params.appointmentObj) from
+      patient list / the encounter queue. Those feeds and write paths cannot
+      be honestly exercised without a patient context, so this rebuild
+      surfaces them as documented, not simulated.
+    </p>
+    <p class="oc-note">
+      Menu note: node 9's actionLink is mis-copied (#/encounterQueueManagement
+      — node 6's route); the state is genuinely reachable from patient list
+      and the queue via $state.go.
+    </p>
+  </section>
+</div>
