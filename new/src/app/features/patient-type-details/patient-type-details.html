@@ -1,0 +1,53 @@
+<div class="ptd-wrap">
+  <header class="ptd-header">
+    <h2>Patient Type Details</h2>
+    <span class="ptd-sub">Unit Master / Billing — module 765</span>
+  </header>
+
+  @if (loading()) {
+    <p class="ptd-muted">Loading patient types…</p>
+  } @else if (error()) {
+    <div class="ptd-state ptd-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <section class="ptd-picker">
+      <label for="ptd-type">Patient Type</label>
+      <select id="ptd-type" [value]="selectedTypeId() ?? ''" (change)="onTypeSelected($event)">
+        <option value="" disabled>Select a patient type…</option>
+        @for (t of types(); track t.patientTypeId) {
+          <option [value]="t.patientTypeId">{{ t.patientTypeCode }} — {{ t.patientType }}</option>
+        }
+      </select>
+    </section>
+
+    @if (selectedTypeId() !== null) {
+      @if (loadingDetails()) {
+        <p class="ptd-muted">Loading service details…</p>
+      } @else {
+        <table class="ptd-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of details(); track row.patientTypeDetailsId) {
+              <tr>
+                <td>{{ row.serviceName }}</td>
+                <td>{{ row.status }}</td>
+                <td>
+                  <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggle(row)"></app-status-toggle>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="3" class="ptd-empty">No service details for this patient type.</td></tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
+  }
+</div>

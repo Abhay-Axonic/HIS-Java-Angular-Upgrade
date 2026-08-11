@@ -1814,6 +1814,28 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/blood-bag-type-master/blood-bag-type-master').then((m) => m.BloodBagTypeMaster),
       },
+      // Unit Master 531 — billing/unit family batch 1 (DQ-2026-08-12-008).
+      {
+        path: 'patientType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 764, title: 'Patient Type Master' },
+        loadComponent: () =>
+          import('./features/patient-type-master/patient-type-master').then((m) => m.PatientTypeMaster),
+      },
+      {
+        path: 'patientTypeDetails',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 765, title: 'Patient Type Details' },
+        loadComponent: () =>
+          import('./features/patient-type-details/patient-type-details').then((m) => m.PatientTypeDetails),
+      },
+      {
+        path: 'pharmacyTariffMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 803, title: 'Pharmacy Tariff Master' },
+        loadComponent: () =>
+          import('./features/pharmacy-tariff-master/pharmacy-tariff-master').then((m) => m.PharmacyTariffMaster),
+      },
       {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
