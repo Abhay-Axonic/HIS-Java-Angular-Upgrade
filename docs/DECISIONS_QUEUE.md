@@ -623,3 +623,50 @@ menu'd masters are covered: 294 - 38 = 256 (209 verified + 47 bindings-only).
 569) are the slice masters now covered by the dispatcher, so they are not
 counted as unbuilt. 44 report, 57 rebuilt, 22 partial (18 genuinely partial
 after the 4 covered), 27 shell, 0 other.
+
+## DQ-2026-08-12-007 — UNIT MASTER 531: DISPATCHER SCAN RESULT + FAMILY BATCH PLAN (owner's pre-build checks 1 and 2)
+
+CHECK 1 — SECOND DISPATCHER? NO. All 40 verified candidates examined for
+shared controllers/states (the accessControl/accessControl1,
+doctorConsulation/IPConsulation/OPConsulation, patientType/patientTypeDetails,
+fundApproval/fundRequisition/fundApprovedList clusters the owner flagged):
+- 38 of 40 have UNIQUE controllers (one state each) — no shared state, no
+  resolve-switching, no dispatcher.
+- accessControl + accessControl1: SAME controller (accessControlController,
+  resources/assets/accessControl/controller/ — a 60-line STUB: no serviceAction,
+  no endpoint, just angular-ui-tree on an empty $scope.data) with two DIFFERENT
+  templates (views/access-control.html 9974B vs views/common/access-control.html
+  9059B). Two states, shared stub controller -> likely both reduce to noData.
+- fund trio (fundApproval/fundRequisition/fundApprovedList): all MasterController
+  (common-controller.js generic scaffold; never populates the templates' bound
+  genderList/identificationList) -> no data path, noData class. fundReconciliation
+  is DISTINCT (fundInflowController).
+- SlotBlockUnblockControllerScheduleWise/DoctorWise (scheduleWise 657, doctorWise
+  658): distinct controllers (1047/828 lines) but SAME endpoint set — build as a
+  pair, one investigation.
+- templateutility (667): NO state in app.js (ctrl-basename only) — needs
+  investigation before build.
+
+CHECK 2 — BATCH BY BACKEND FAMILY (one investigation per family, not per
+screen). Families of the 40 verified:
+- billing/unit (6): doctorConsulationMaster, doctorWiseShare,
+  doctorReferralShareMaster, patientType, patientTypeDetails,
+  pharmacyTariffMaster
+- lis/unit+global (6): histopathologyTest, parameterMaster, parameterFormula,
+  profilepanelTestMaster, storageLocationMstForSlideBlocks, ambulanceCharges
+- bloodBank (5): bloodTest, reasonOfDiscard, screeningTest, donorRejection,
+  bloodGroupMatching
+- master/unit (6): templateICDCodeMapping, loyaltyCardCreation,
+  loyaltyCardConfiguration, autoServicePostingConfiguration, passBedCategoryMapper,
+  doctorRegistration
+- master/global (2): IPConsultationConfiguration, userNursingStationMapper
+- opd/unit (3): appointmentSchedulingUnitMaster, scheduleWise, doctorWise
+- services (3): ehcPackage, packageWithCAP, eitherOrPackage
+- CSSD (2): wrapperExpiryMaster, kitCreation
+- clinical (2): rmoAllocationMaster, growthChartMaster
+- adt/unit (1): nursingStationWardMapping
+- billing/global (1): fundReconciliation (fundInflowController)
+- no-state (1): templateutility
+- accessControl pair (2): accessControl, accessControl1 (stub — noData class)
+Order: billing/unit first (largest, likely real data), then lis, bloodBank,
+master, opd, services, cssd, clinical, adt, billing/global, no-state.
