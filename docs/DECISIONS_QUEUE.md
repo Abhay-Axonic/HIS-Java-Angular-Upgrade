@@ -1251,3 +1251,26 @@ and 8" at ef5cf3aa):
 - b10 resolution PENDING — per owner sequencing ("after 9 is merged").
   Lesson recorded: future overnight batches must be STACKED (cut off the
   previous batch's tip), never off main.
+
+## DQ-2026-08-12-027 — VACUOUS tsc GATE (11th structurally-incapable mechanism)
+
+Plain `npx tsc --noEmit` in new/ is a NO-OP: the solution-style tsconfig.json
+has `files: []` + project references to tsconfig.app.json/spec — an empty
+program, so it reports 0 errors trivially without type-checking anything.
+NOTICED 2026-08-12: the deleg_4ec02b84 subagent flagged it ("no-op gate");
+parent then verified by reading tsconfig.json + planting a broken
+`const x: number = 'x'` — plain tsc passed it, `tsc -p tsconfig.app.json`
+caught it (TS2322). REAL GATE = `npx tsc --noEmit -p tsconfig.app.json`
+(verified catching a planted error) + `ng build` (full Angular compiler,
+already the primary gate).
+
+AFFECTED BATCHES: 7, 8, 9, 10 all ran the plain form in their verify steps
+— the tsc step was vacuous in every one. RETRO-CHECK (2026-08-12): current
+main (ef5cf3aa) under `tsc -p tsconfig.app.json` = RC 0 CLEAN; b8 tip
+(7875ee01) = RC 0 CLEAN; resolved b9 (687af7a4) = RC 0 CLEAN. So the vacuous
+gate COST NOTHING in outcome: ng build (the real type-checking gate) passed
+EXIT 0 for every batch, and the retro-check confirms the merged content is
+type-clean. Skill updated (gate list now uses the -p form; plain form
+explicitly warned as vacuous). This is the 11th pass-while-structurally-
+incapable mechanism on record with the others (error-swallowing, masked
+envelopes, fall-throughs, proxy gap, noData, etc.).
