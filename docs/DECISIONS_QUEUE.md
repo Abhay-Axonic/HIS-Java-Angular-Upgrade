@@ -1031,3 +1031,31 @@ the payload the REBUILD will actually send, not just a guessed payload. The
 live probe is the arbiter: it rendered real data where the curl saw a masked
 error. The component's template now renders the real row (correct); the
 masked-banner branch stays for scheduleWise/doctorWise only.
+
+## DQ-2026-08-12-018 — UNIT MASTER 531 BATCH 7 (services 3 + CSSD 2): classification
+
+Owner's pre-build checks applied (EHCpackage 623, packageWithCAP 624,
+eitherOrPackage 626, wrapperExpiryMaster 554, kitCreation 555):
+
+SHARED COMPONENT/STATE CHECK: NONE — all five have UNIQUE controllers and
+templates. The package trio (EHC/CAP/eitherOr) share the /api/packages/filter
+endpoint with packageTypeId 1/3/2 — a backend family, not a shared component.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- EHCpackage: SUCCESS empty — honest dev-empty (POST /api/packages/filter
+  {orgId, unitId, packageCode, packageName, packageTypeId:1, offset,
+  noOfRecordsPerPage, searchKeyword})
+- packageWithCAP: SUCCESS empty — honest dev-empty (packageTypeId:3)
+- eitherOrPackage: SUCCESS empty — honest dev-empty (packageTypeId:2)
+- wrapperExpiryMaster: SUCCESS 1 REAL ROW (WRPTEST01 "Test Wrapper", 30 days)
+  — real data (GET /cssd/getWrapperExpiryList?organizationId&unitId&offset&
+  noOfRecordsPerPage). NOTE: without offset/noOfRecordsPerPage the endpoint
+  500s with the correlation envelope (ERR-c48a20d8) — a wrong-payload
+  artifact, NOT masked; with the full legacy query params it succeeds.
+- kitCreation: SUCCESS empty — honest dev-empty (GET /cssd/getAllKitsList
+  with full query params; without them ERR-8bf108d1).
+
+LESSON CONFIRMED (DQ-2026-08-12-017 applied twice in one batch): a
+classification must be verified against the payload the REBUILD sends — the
+CSSD pair looked masked with a minimal payload and are actually real
+data/honest empty with the legacy query params. ZERO masked errors in batch 7.
