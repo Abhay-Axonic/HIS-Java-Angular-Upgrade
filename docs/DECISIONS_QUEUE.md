@@ -1149,3 +1149,35 @@ CONTROLLER CLASSIFICATION of the 27:
 
 14 noData + 13 real (IncubationMaster may be a transaction deferral — verify
 during build). Live endpoint verification next.
+
+## DQ-2026-08-12-023 — GLOBAL MASTER 369: ENVELOPE CLASSIFICATION (batch 10)
+
+Live-verified the 12 distinct real controllers (DQ-022) + the 14 noData:
+- REAL DATA (2): dietTypeMaster (1 row, POST /api/kitchen/master/dietTypeMaster/
+  getDietTypeMasterPaginationList), siteOfAdministration (4 rows, POST
+  /api/global/clinical/getSiteMasterList {organizationId} only)
+- HONEST DEV-EMPTY (4): licenseTypeMaster (GET /org/getLiceneceTypeMasterList/
+  {org}), procedureConfigurations (GET /api/otims/getProcedureConfigList/
+  {org}/{unit}), subsequentSurgeryConfiguration (POST /api/otims/
+  getSubSequentProcedureConfigList), genericScheduleMaster (endpoint shape
+  pending final check)
+- MASKED (1): consentMaster — THIRD PHANTOM COLUMN: GET_CONSENT_LIST selects
+  c.formTemplateId (ConsentMaster.java:29) but adt.m_consent_master has NO
+  form_template column (verified information_schema). TRIPLE-swallowed: DAO
+  catches HibernateException silently (ConsentMasterDaoImpl:205-210), service
+  catches and returns blank ERROR (ConsentMasterServiceImpl:224-227),
+  controller catches and returns blank ERROR (ConsentMasterController:60-63).
+  The masked envelope is the blank {status:error, code:null, message:null}.
+- NODATA (14): the 10 MasterController shells + 4 missing-controller
+  (subdepartmentMaster, specimanMaster, packageMaster, daywiseDietTemplate).
+- IncubationMaster (422): LIS TRANSACTION screen (incubationObjservation
+  Controller — patient visit lists, not a master) — DEFERRED (transaction
+  class, like ambulanceCharges).
+- sampleTypeMediaMappingMaster, colonyTestWithMediaMaster,
+  mappingofMicroorganism: LIS global mappers — endpoint shape pending final
+  check (LIS_GLOBAL constants); verify during build.
+
+BATCH 10 = 13 builds: 2 real + 4 empty + 1 masked + 6 pending-shape, plus 14
+noData. ConsentMaster's phantom column is the 3rd found (technique_id,
+is_bed_charges_service, form_template) — all BR candidates (Rule 10, not
+fixed).
