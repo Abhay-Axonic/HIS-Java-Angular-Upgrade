@@ -1688,6 +1688,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/tpa-master/tpa-master').then((m) => m.TpaMaster),
       },
+      {
+        path: 'corporateMasterGlobal',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 574, title: 'Corporate Master' },
+        loadComponent: () =>
+          import('./features/corporate-master/corporate-master').then((m) => m.CorporateMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

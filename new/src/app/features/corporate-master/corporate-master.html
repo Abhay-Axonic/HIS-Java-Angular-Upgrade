@@ -1,0 +1,21 @@
+<div class="cm2-page">
+  <header class="cm2-header">
+    <h2>Corporate Master</h2>
+    <p class="cm2-sub">Screen 39 — module 574 (Billing, parent 570). Corporate master configuration.</p>
+  </header>
+
+  <section class="cm2-list card">
+    <h3>Companies (corporate type)</h3>
+    @if (loading()) {
+      <p class="cm2-loading">Loading…</p>
+    } @else if (companies().length === 0) {
+      <p class="cm2-empty">No corporate companies found (dev data).</p>
+    } @else {
+      <ul class="cm2-ul">
+        @for (c of companies(); track c.id) {
+          <li>{{ c.name }} ({{ c.id }})</li>
+        }
+      </ul>
+    }
+  </section>
+</div>
