@@ -2012,6 +2012,181 @@ export const routes: Routes = [
           import('./features/doctor-wise/doctor-wise').then((m) => m.DoctorWise),
       },
       {
+        path: 'sampleTypeMediaMappingMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 426, title: 'Sample Type Media Mapping Master' },
+        loadComponent: () =>
+          import('./features/sample-type-media-mapping-master/sample-type-media-mapping-master').then((m) => m.SampleTypeMediaMappingMaster),
+      },
+      {
+        path: 'colonyTestWithMediaMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 434, title: 'Colony Test With Media Master' },
+        loadComponent: () =>
+          import('./features/colony-test-with-media-master/colony-test-with-media-master').then((m) => m.ColonyTestWithMediaMaster),
+      },
+      {
+        path: 'mappingofMicroorganism',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 443, title: 'Mapping of Micro-organism' },
+        loadComponent: () =>
+          import('./features/mapping-of-microorganism/mapping-of-microorganism').then((m) => m.MappingofMicroorganism),
+      },
+      {
+        path: 'dietTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 510, title: 'Diet Type Master' },
+        loadComponent: () =>
+          import('./features/diet-type-master/diet-type-master').then((m) => m.DietTypeMaster),
+      },
+      {
+        path: 'siteOfAdministration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 753, title: 'Site Of Administration' },
+        loadComponent: () =>
+          import('./features/site-of-administration/site-of-administration').then((m) => m.SiteOfAdministration),
+      },
+      {
+        path: 'genericScheduleMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 827, title: 'Generic Schedule Master' },
+        loadComponent: () =>
+          import('./features/generic-schedule-master/generic-schedule-master').then((m) => m.GenericScheduleMaster),
+      },
+      {
+        path: 'doseMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 502, title: 'Dose Master' },
+        loadComponent: () =>
+          import('./features/dose-master/dose-master').then((m) => m.DoseMaster),
+      },
+      {
+        path: 'licenseTypeMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 379, title: 'License Type Master' },
+        loadComponent: () =>
+          import('./features/license-type-master/license-type-master').then((m) => m.LicenseTypeMaster),
+      },
+      {
+        path: 'procedureConfigurations',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 696, title: 'Procedure Configurations' },
+        loadComponent: () =>
+          import('./features/procedure-configurations/procedure-configurations').then((m) => m.ProcedureConfigurations),
+      },
+      {
+        path: 'subsequentSurgeryConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 516, title: 'Subsequent Surgery Configuration' },
+        loadComponent: () =>
+          import('./features/subsequent-surgery-configuration/subsequent-surgery-configuration').then((m) => m.SubsequentSurgeryConfiguration),
+      },
+      {
+        path: 'bacteriaClassification',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 428, title: 'Bacteria Classification' },
+        loadComponent: () =>
+          import('./features/bacteria-classification/bacteria-classification').then((m) => m.BacteriaClassification),
+      },
+      {
+        path: 'antibiotic',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 429, title: 'Antibiotic' },
+        loadComponent: () =>
+          import('./features/antibiotic-master/antibiotic-master').then((m) => m.Antibiotic),
+      },
+      {
+        path: 'antibioticsClass',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 430, title: 'Antibiotics Class' },
+        loadComponent: () =>
+          import('./features/antibiotics-class/antibiotics-class').then((m) => m.AntibioticsClass),
+      },
+      {
+        path: 'antibioticsGroup',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 431, title: 'Antibiotics Group' },
+        loadComponent: () =>
+          import('./features/antibiotics-group-master/antibiotics-group-master').then((m) => m.AntibioticsGroup),
+      },
+      {
+        path: 'sensitivityTestResult',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 438, title: 'Sensitivity Test Result' },
+        loadComponent: () =>
+          import('./features/sensitivity-test-result/sensitivity-test-result').then((m) => m.SensitivityTestResult),
+      },
+      {
+        path: 'dispensingMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 469, title: 'Dispensing Master' },
+        loadComponent: () =>
+          import('./features/dispensing-master/dispensing-master').then((m) => m.DispensingMaster),
+      },
+      {
+        path: 'kitMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 471, title: 'Kit Master' },
+        loadComponent: () =>
+          import('./features/kit-master-global/kit-master-global').then((m) => m.KitMaster),
+      },
+      {
+        path: 'taxMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 474, title: 'Tax Master' },
+        loadComponent: () =>
+          import('./features/tax-master-global/tax-master-global').then((m) => m.TaxMaster),
+      },
+      {
+        path: 'consentType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 528, title: 'Consent Type' },
+        loadComponent: () =>
+          import('./features/consent-type/consent-type').then((m) => m.ConsentType),
+      },
+      {
+        path: 'vaccinationSchedule',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 750, title: 'Vaccination Schedule' },
+        loadComponent: () =>
+          import('./features/vaccination-schedule/vaccination-schedule').then((m) => m.VaccinationSchedule),
+      },
+      {
+        path: 'subdepartmentMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 373, title: 'Sub Department Master' },
+        loadComponent: () =>
+          import('./features/sub-department-master/sub-department-master').then((m) => m.SubdepartmentMaster),
+      },
+      {
+        path: 'specimanMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 444, title: 'Speciman Master' },
+        loadComponent: () =>
+          import('./features/speciman-master/speciman-master').then((m) => m.SpecimanMaster),
+      },
+      {
+        path: 'packageMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 465, title: 'Package Master' },
+        loadComponent: () =>
+          import('./features/package-master-global/package-master-global').then((m) => m.PackageMaster),
+      },
+      {
+        path: 'daywiseDietTemplate',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 513, title: 'Day Wise Diet Template' },
+        loadComponent: () =>
+          import('./features/day-wise-diet-template/day-wise-diet-template').then((m) => m.DaywiseDietTemplate),
+      },
+      {
+        path: 'consentMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 400, title: 'Consent Master' },
+        loadComponent: () =>
+          import('./features/consent-master/consent-master').then((m) => m.ConsentMaster),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },

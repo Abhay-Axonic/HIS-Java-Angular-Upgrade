@@ -1,0 +1,52 @@
+<div class="cm-wrap">
+  <header class="cm-header">
+    <h2>Consent Master</h2>
+    <span class="cm-sub">Global Master / ADT — module 400</span>
+  </header>
+
+  @if (loading()) {
+    <p class="cm-muted">Loading consents…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="cm-state cm-masked">
+        <p>{{ error() }}</p>
+        <p class="cm-muted">
+          Masked-error envelope, permanent: the consent list endpoint returns
+          a blank generic error (HTTP 200, status=error, no message). The
+          <code>GET_CONSENT_LIST</code> query selects
+          <code>formTemplateId</code>, a column that does not exist in
+          <code>adt.m_consent_master</code> (phantom column, DQ-2026-08-12-023)
+          — and the exception is swallowed at THREE layers (DAO, service,
+          controller), so the real failure never surfaces. The table is not
+          simply empty.
+        </p>
+      </div>
+    } @else {
+      <div class="cm-state cm-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="cm-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Consent Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.consentMasterId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="cm-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

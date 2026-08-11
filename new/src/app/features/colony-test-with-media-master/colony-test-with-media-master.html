@@ -1,0 +1,51 @@
+<div class="ctw-wrap">
+  <header class="ctw-header">
+    <h2>Colony Test With Media Master</h2>
+    <span class="ctw-sub">LIS / Global — module 434</span>
+  </header>
+
+  @if (loading()) {
+    <p class="ctw-muted">Loading colony test media mappings…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="ctw-state ctw-masked">
+        <p class="ctw-banner-title">LIS fall-through (size()>0 guard dead-branch, DQ-003/-023) — the endpoint returns Internal Server Error for empty tables.</p>
+        <p class="ctw-muted">
+          The list DAO's <code>size()&gt;0</code> guard is a dead branch: the
+          HQL projection (<code>Transformers.aliasToBean</code> into Long-typed
+          <code>createdDate</code>/<code>updatedDate</code> DTO fields, no
+          <code>@Convert</code> converter) throws on every call, empty DB or
+          not, and the exception is swallowed at DAO/service/controller — the
+          observed envelope is HTTP 200 <code>status=error</code>
+          "Internal Server Error" (or a real HTTP 500). The table is not
+          simply empty.
+        </p>
+      </div>
+    } @else {
+      <div class="ctw-state ctw-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="ctw-table">
+      <thead>
+        <tr>
+          <th>Colony Test</th>
+          <th>Media</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="ctw-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
