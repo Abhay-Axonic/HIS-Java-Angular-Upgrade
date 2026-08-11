@@ -1744,6 +1744,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/encounter/encounter').then((m) => m.Encounter),
       },
+      {
+        path: 'encounterQueueEHC',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 686, title: 'Encounter Queue EHC' },
+        loadComponent: () =>
+          import('./features/encounter-queue-ehc/encounter-queue-ehc').then((m) => m.EncounterQueueEhc),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

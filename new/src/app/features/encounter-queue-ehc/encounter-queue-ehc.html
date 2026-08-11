@@ -1,0 +1,118 @@
+<div class="eqehc-screen">
+  <div class="screen-header">
+    <h2>Encounter Queue EHC</h2>
+    <p class="subtitle">
+      Slot search for Encounter Queue / Executive Health Check appointments. The feeds below
+      are live and org-scoped; a dev database without seeded services returns empty lists
+      honestly.
+    </p>
+  </div>
+
+  <div class="search-panel">
+    <div class="row">
+      <label>
+        Date
+        <input type="date" [(ngModel)]="search.appointmentDate" name="appointmentDate" />
+      </label>
+      <label>
+        Speciality / Department
+        <select [(ngModel)]="search.specialityId" name="specialityId" (ngModelChange)="onSpecialityChange()">
+          <option [ngValue]="null">— select —</option>
+          @for (s of specialities(); track s) {
+            <option [ngValue]="s.specialityId ?? s.id">{{ s.specialityName ?? s.specialityDesc ?? ('Speciality ' + (s.specialityId ?? s.id)) }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Doctor
+        <select [(ngModel)]="search.doctorId" name="doctorId">
+          <option [ngValue]="null">— select —</option>
+          @for (d of doctors(); track d) {
+            <option [ngValue]="d.doctorId ?? d.id">{{ d.doctorName ?? d.doctor ?? ('Doctor ' + (d.doctorId ?? d.id)) }}</option>
+          }
+        </select>
+      </label>
+      <button class="btn-primary" (click)="searchSlots()" [disabled]="loading()">
+        @if (loading()) {
+          Searching…
+        } @else {
+          Search Slots
+        }
+      </button>
+    </div>
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+    <p class="hint">
+      Feeds live-verified: speciality list (2 real rows), reason list (1 real row), nursing
+      station (NST1), appointment status (PEN — Pending). Doctor list and slot search return
+      dev-empty until a service/doctor is seeded.
+    </p>
+  </div>
+
+  @if (loaded()) {
+    <div class="feeds">
+      <section>
+        <h3>Slot results</h3>
+        @if (slotMsg()) {
+          <p class="note">{{ slotMsg() }}</p>
+        }
+        @if (slots().length > 0) {
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Doctor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (sl of slots(); track sl) {
+                <tr>
+                  <td>{{ sl.slotTime ?? sl.time ?? '—' }}</td>
+                  <td>{{ sl.doctorName ?? '—' }}</td>
+                  <td>{{ sl.slotStatus ?? sl.status ?? '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+      <section>
+        <h3>Reference feeds</h3>
+        <div class="ref-grid">
+          <div>
+            <strong>Nursing stations</strong>
+            <ul>
+              @for (ns of nursingStations(); track ns) {
+                <li>{{ ns.nursingStationDesc ?? ns.nursingStationCode ?? '—' }}</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+          <div>
+            <strong>Appointment status</strong>
+            <ul>
+              @for (st of statuses(); track st) {
+                <li>{{ st.appointmentStatusDesc ?? st.appointmentStatusCode ?? '—' }}</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+          <div>
+            <strong>Reasons</strong>
+            <ul>
+              @for (r of reasons(); track r) {
+                <li>{{ r.reasonDesc ?? r.reasonCode ?? '—' }}</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+</div>
