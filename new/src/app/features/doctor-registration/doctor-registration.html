@@ -1,0 +1,37 @@
+<div class="ptm-wrap">
+  <header class="ptm-header">
+    <h2>Doctor Registration</h2>
+    <span class="ptm-sub">Admission Discharge / Doctor — module 651</span>
+  </header>
+
+  @if (loading()) {
+    <p class="ptm-muted">Loading doctors…</p>
+  } @else if (error()) {
+    <div class="ptm-state ptm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ptm-table">
+      <thead>
+        <tr>
+          <th>Doctor Code</th>
+          <th>Doctor Name</th>
+          <th>Doctor Category</th>
+          <th>Doctor Designation</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.doctorId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="ptm-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
