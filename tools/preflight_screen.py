@@ -372,6 +372,64 @@ def check_c7_module_collision(feature, route, module_id):
     return 'PASS', f'moduleId {module_id} used only by this route on main.'
 
 
+def check_c9(folder):
+    """HOUSE PATTERN: signal() state + @if/@for block syntax.
+
+    The rebuilt app is uniformly signals-first: 254/254 screens use signal()
+    state with @if/@for block syntax (audited 2026-08-11). Two independent
+    defects came from violating this:
+      1. computed() reading a PLAIN property never re-evaluates (dead filter,
+         screens 21/22/23/26/28 — see references/angular-signals-dead-filter
+         -and-masked-write-paths.md);
+      2. a component with plain-property state + *ngIf/*ngFor whose async
+         mutation (subscribe next/error) never re-renders (screen 46
+         encounter, 2026-08-11 — the click updated the button but the
+         subscribe callback's property write did not; converting to signals
+         fixed it instantly).
+    The structural-directive check is the cheap, decisive signal: *ngIf /
+    *ngFor do not exist in any rebuilt screen.
+    """
+    try:
+        t = open(f"{folder}.html", encoding="utf-8").read()
+        c = open(f"{folder}.ts", encoding="utf-8").read()
+    except OSError:
+        return 'UNVALIDATED', 'screen files not found'
+    issues = []
+    # structural directives are the strongest signal of the wrong pattern
+    for d in re.findall(r"\*ng(?:If|For|Switch|Else)\b", t):
+        issues.append(f"template uses {d} — house pattern is @if/@for block "
+                      "syntax (254/254 screens); plain-property async "
+                      "mutations never re-render here (dead-filter class, "
+                      "screen 46)")
+    # plain-property state mutated in subscribe callbacks: class-level state
+    # fields (line-start, optional access modifier, NOT const/let/var, NOT a
+    # signal) that the template binds BARE (no () call) — the binding is
+    # what makes the missing re-render visible. Service injections are
+    # excluded: they are never template-bound bare.
+    plain = set()
+    for m in re.finditer(
+            r"(?m)^\s*(?:protected\s+|private\s+|public\s+|readonly\s+)*"
+            r"([a-zA-Z_$][\w$]*)\s*=\s*(?!signal\()",
+            c):
+        plain.add(m.group(1))
+    plain -= {'null', 'true', 'false', 'undefined'}
+    if plain and '.subscribe(' in c:
+        # bare template binding = the property is read by the view
+        bound = set(re.findall(r"\{\{\s*([a-zA-Z_$][\w$]*)\s*\}\}|"
+                               r"\[(?:ngModel|disabled|class|style|value)\]\s*=\s*"
+                               r"\"([a-zA-Z_$][\w$]*)\"", t))
+        bound_names = {a for pair in bound for a in pair if a}
+        risky = sorted(plain & bound_names)
+        if risky:
+            issues.append(f"plain-property state {risky} is template-bound "
+                          "bare AND mutated via subscribe callbacks — house "
+                          "pattern is signal()/set() (async plain writes "
+                          "never re-render; dead-filter class, screen 46)")
+    if issues:
+        return 'FAIL', '; '.join(issues)
+    return 'PASS', 'signal() state + @if/@for block syntax (house pattern)'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('feature')           # e.g. add-new-drug-recall
@@ -397,6 +455,7 @@ def main():
         ('C6 COMMITTED MARKERS', check_c6()),
         ('C7 ALREADY-REBUILT', check_c7(args.feature, args.route)),
         ('C8 MODULE-ID COLLISION', check_c7_module_collision(args.feature, args.route, module_id)),
+        ('C9 HOUSE PATTERN', check_c9(folder)),
     ]
     any_fail = False
     dead_flag = False
