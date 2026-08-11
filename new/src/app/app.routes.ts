@@ -1880,6 +1880,47 @@ export const routes: Routes = [
           import('./features/parameter-master/parameter-master').then((m) => m.ParameterMaster),
       },
       {
+        path: 'bloodTest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 734, title: 'Blood Test Master' },
+        loadComponent: () =>
+          import('./features/blood-test-master/blood-test-master').then((m) => m.BloodTestMaster),
+      },
+      {
+        path: 'reasonOfDiscard',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 737, title: 'Reason Of Discard Master' },
+        loadComponent: () =>
+          import('./features/reason-of-discard-master/reason-of-discard-master').then(
+            (m) => m.ReasonOfDiscardMaster,
+          ),
+      },
+      {
+        path: 'screeningTest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 738, title: 'Screening Test Master' },
+        loadComponent: () =>
+          import('./features/screening-test-master/screening-test-master').then(
+            (m) => m.ScreeningTestMaster,
+          ),
+      },
+      {
+        path: 'donorRejectionMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 740, title: 'Donor Rejection Master' },
+        loadComponent: () =>
+          import('./features/donor-rejection-master/donor-rejection-master').then(
+            (m) => m.DonorRejectionMaster,
+          ),
+      },
+      {
+        path: 'bloodGroupMatchingMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 741, title: 'Blood Group Matching Master' },
+        loadComponent: () =>
+          import('./features/blood-group-matching-master/blood-group-matching-master').then((m) => m.BloodGroupMatchingMaster),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },
