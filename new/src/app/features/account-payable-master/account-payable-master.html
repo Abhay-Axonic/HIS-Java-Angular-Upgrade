@@ -28,7 +28,7 @@
 
   <section class="apm-list card">
     <div class="apm-list-toolbar">
-      <input type="text" name="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearch()"
+      <input type="text" name="search" [ngModel]="searchTerm()" (ngModelChange)="onSearch($event)"
              placeholder="Search account code or description…" />
       <button class="apm-btn" (click)="clearSearch()">Clear</button>
       <span class="apm-count">{{ filteredRows().length }} row(s)</span>

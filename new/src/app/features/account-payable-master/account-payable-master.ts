@@ -18,7 +18,7 @@ export class AccountPayableMaster {
 
   protected rows = signal<AccountPayableRow[]>([]);
   protected loading = signal(false);
-  protected searchTerm = '';
+  protected searchTerm = signal('');
   protected formValid = signal(true);
   protected formError = signal('');
 
@@ -61,18 +61,18 @@ export class AccountPayableMaster {
   }
 
   protected filteredRows = computed(() => {
-    const q = this.searchTerm.toLowerCase();
+    const q = this.searchTerm().toLowerCase();
     return this.rows().filter((r) =>
-      !q || r.accCode.toLowerCase().includes(q) || (r.accDesc || '').toLowerCase().includes(q)
+      !q || (r.accCode || '').toLowerCase().includes(q) || (r.accDesc || '').toLowerCase().includes(q)
     );
   });
 
-  protected onSearch(): void {
-    // live-filter via computed; nothing else needed
+  protected onSearch(value: string): void {
+    this.searchTerm.set(value);
   }
 
   protected clearSearch(): void {
-    this.searchTerm = '';
+    this.searchTerm.set('');
   }
 
   protected save(): void {
