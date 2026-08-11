@@ -1723,6 +1723,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/appointment-list/appointment-list').then((m) => m.AppointmentList),
       },
+      {
+        path: 'patientList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 8, title: 'Patient List' },
+        loadComponent: () =>
+          import('./features/patient-list/patient-list').then((m) => m.PatientList),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
