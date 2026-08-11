@@ -461,3 +461,30 @@ had frozen at last-good. Probe discipline for guard deny paths is now in the
 angular-rebuild-verification skill reference: poll location.pathname up to 15s,
 assert the DOM (component mounts / guarded content absent), and confirm the
 served bundle contains the expected guard markers before trusting any verdict.
+
+## DQ-2026-08-12-002 — COMMONMASTER GATE-DRIFT CHECK + ADT 7 BATCH (owner orders 2026-08-12)
+
+**GATE-DRIFT CHECK (owner order 1):** the route's 45-id moduleIds array is a
+COPIED CONSTANT from the legacy access gate (app.js:3908-3916, the commonMaster
+resolve `data` filter `item.id == ...` chain). Nothing detected drift. Built
+`tools/check_commonmaster_gate.py` — programmatically diffs the two lists (set
+equality both directions + duplicate check, window bounded at the chain's `);`
+terminator so the NEXT state's filter (item.id == 396) cannot bleed in).
+Result: EXACT MATCH — 45/45, 0 only-in-legacy, 0 only-in-route, 0 dups.
+NEGATIVE CONTROL demonstrated: removed id 844 from the route array -> check
+FAILED (RC=1, "only in legacy: [844]"); restored -> PASS (RC=0). The check is
+the preflight gate-drift step for every commonMaster-family screen: the
+route's moduleIds must match the legacy access-gate array programmatically,
+never by eye.
+
+**ADT 7 BATCH (owner order 3 — ADT first, not LIS):** the ADT family is root
+380 = sexmaster 389, relationmaster 390, maritalstatus 391, religion 392,
+occupation 393, patientsource 394, referraltype 395. relationmaster was the
+slice's live-data branch; the other 6 are now built. ALL are POST /adt/<ep>
+with body {organizationId, offset, noOfRecordsPerPage} — live-verified
+2026-08-12, EVERY one returns real rows (gender 3, marital 3 incl. Widowed,
+religion 2, occupation 2, patientSource 6, referraltype 5). Added to
+CommonMasterService.DISPATCH; probe extended with per-branch real-row
+assertions; PROBE PASS (all 6 render real rows, negative control still denies,
+0 page errors); ng build EXIT 0. Remaining after ADT: LIS 25, billing/common 5,
+master 1. Next batch reported before the following one per owner directive.
