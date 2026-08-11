@@ -2187,6 +2187,139 @@ export const routes: Routes = [
           import('./features/consent-master/consent-master').then((m) => m.ConsentMaster),
       },
       {
+        path: 'templateMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 58, title: 'Lab Template Master' },
+        loadComponent: () =>
+          import('./features/template-master/template-master').then((m) => m.TemplateMaster),
+      },
+      {
+        path: 'testMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 276, title: 'Test Master' },
+        loadComponent: () =>
+          import('./features/test-master/test-master').then((m) => m.TestMaster),
+      },
+      {
+        path: 'multiparameterTestMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 183, title: 'Multiparameter Test Master' },
+        loadComponent: () =>
+          import('./features/multiparameter-test-master/multiparameter-test-master').then((m) => m.MultiparameterTestMaster),
+      },
+      {
+        path: 'OPConsulationConfigurationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 611, title: 'OP Consultation Configuration Master' },
+        loadComponent: () =>
+          import('./features/op-consultation-configuration-master/op-consultation-configuration-master').then((m) => m.OPConsulationConfigurationMaster),
+      },
+      {
+        path: 'fundApproval',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 809, title: 'Fund Approval' },
+        loadComponent: () =>
+          import('./features/fund-approval/fund-approval').then((m) => m.FundApproval),
+      },
+      {
+        path: 'fundRequisition',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 810, title: 'Fund Requisition' },
+        loadComponent: () =>
+          import('./features/fund-requisition/fund-requisition').then((m) => m.FundRequisition),
+      },
+      {
+        path: 'fundApprovedList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 811, title: 'Fund Approved List' },
+        loadComponent: () =>
+          import('./features/fund-approved-list/fund-approved-list').then((m) => m.FundApprovedList),
+      },
+      {
+        path: 'schedulePriceUnitService',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 586, title: 'Schedule Price Unit Service' },
+        loadComponent: () =>
+          import('./features/schedule-price-unit-service/schedule-price-unit-service').then((m) => m.SchedulePriceUnitService),
+      },
+      {
+        path: 'roundOffConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 599, title: 'Round Off Configuration' },
+        loadComponent: () =>
+          import('./features/round-off-configuration/round-off-configuration').then((m) => m.RoundOffConfiguration),
+      },
+      {
+        path: 'IPdefaultServiceConfig',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 620, title: 'IP Default Service Config' },
+        loadComponent: () =>
+          import('./features/ip-default-service-config/ip-default-service-config').then((m) => m.IPdefaultServiceConfig),
+      },
+      {
+        path: 'EHCpackage',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 623, title: 'EHC Package' },
+        loadComponent: () =>
+          import('./features/ehc-package/ehc-package').then((m) => m.EhcPackage),
+      },
+      {
+        path: 'packageWithCAP',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 624, title: 'Package With CAP' },
+        loadComponent: () =>
+          import('./features/package-with-cap/package-with-cap').then((m) => m.PackageWithCap),
+      },
+      {
+        path: 'eitherOrPackage',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 626, title: 'Either Or Package' },
+        loadComponent: () =>
+          import('./features/either-or-package/either-or-package').then((m) => m.EitherOrPackage),
+      },
+      {
+        path: 'wrapperExpiryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 554, title: 'Wrapper Expiry Master' },
+        loadComponent: () =>
+          import('./features/wrapper-expiry-master/wrapper-expiry-master').then((m) => m.WrapperExpiryMaster),
+      },
+      {
+        path: 'kitCreation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 555, title: 'Kit Creation' },
+        loadComponent: () =>
+          import('./features/kit-creation/kit-creation').then((m) => m.KitCreation),
+      },
+      {
+        path: 'RMOAllocationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 824, title: 'RMO Allocation Master' },
+        loadComponent: () =>
+          import('./features/rmo-allocation-master/rmo-allocation-master').then((m) => m.RmoAllocationMaster),
+      },
+      {
+        path: 'growthChartMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 962, title: 'Growth Chart Master' },
+        loadComponent: () =>
+          import('./features/growth-chart-master/growth-chart-master').then((m) => m.GrowthChartMaster),
+      },
+      {
+        path: 'accessControl',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 677, title: 'Access Control' },
+        loadComponent: () =>
+          import('./features/access-control/access-control').then((m) => m.AccessControl),
+      },
+      {
+        path: 'accessControl1',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 673, title: 'Access Control' },
+        loadComponent: () =>
+          import('./features/access-control/access-control').then((m) => m.AccessControl),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },

@@ -1,0 +1,18 @@
+<div class="nd-wrap">
+  <header class="nd-header">
+    <h2>Fund Approved List</h2>
+    <span class="nd-sub">Unit Master — module 811</span>
+  </header>
+
+  @if (noData()) {
+    <div class="nd-state nd-nodata">
+      <p>{{ error() }}</p>
+      <p class="nd-muted">
+        This is the no-endpoint state, permanent: the legacy screen has no
+        backend list endpoint at all (DQ-2026-08-12-020) — its controller is
+        the generic MasterController shell or is absent from the webapp. The
+        legacy screen never loads data either; this state is the honest parity.
+      </p>
+    </div>
+  }
+</div>

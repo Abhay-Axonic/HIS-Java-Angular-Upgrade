@@ -28,6 +28,17 @@ siteOfAdministration (753), doseMaster (502), genericScheduleMaster (827) —
 real data; sampleTypeMediaMappingMaster (426), mappingofMicroorganism (443) —
 LIS fall-through masked; bacteriaClassification (428), subdepartmentMaster
 (373) — noData samples.
+Batch 9 (DQ-2026-08-12-020): templateMaster (58) — real raw-array endpoint
+(honest empty); 9 noData screens (testMaster 276, multiparameterTestMaster
+183, OPConsulationConfigurationMaster 611, fundApproval 809, fundRequisition
+810, fundApprovedList 811, schedulePriceUnitService 586, roundOffConfiguration
+599, IPdefaultServiceConfig 620).
+Batch 7 (DQ-2026-08-12-018): EHCpackage (623), packageWithCAP (624),
+eitherOrPackage (626) — honest dev-empty (shared /api/packages/filter);
+wrapperExpiryMaster (554) — real (WRPTEST01); kitCreation (555) — empty.
+Batch 8 (DQ-2026-08-12-019): RMOAllocationMaster (824) — empty;
+growthChartMaster (962) — real (Female Updated); accessControl (677) +
+accessControl1 (673) — noData shared component; templateutility walked.
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -621,6 +632,213 @@ with sync_playwright() as p:
         if errorsN10:
             FAILS.append(f"B10 {route} page errors: {errorsN10[:3]}")
         ctxN10.close()
+    # 9. Batch 9 (DQ-2026-08-12-020): templateMaster real (raw [] empty state)
+    # + 9 noData screens (missing-controller + MasterController shells).
+    ctxT9 = browser.new_context()
+    pageT9 = ctxT9.new_page()
+    errorsT9 = []
+    pageT9.on("pageerror", lambda e: errorsT9.append(str(e)))
+    pageT9.on("console", lambda m: errorsT9.append(m.text) if m.type == "error" else None)
+    ctxT9.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageT9.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageT9.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 58}]}))"
+    )
+    pageT9.goto(BASE + "/templateMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageT9.inner_text("body")
+    ok_t9 = "No records" in body and "accessDenied" not in pageT9.url
+    print(f"B9 templateMaster: empty-state('No records')={ok_t9} url={pageT9.url.split('/')[-1][:40]}")
+    if not ok_t9:
+        FAILS.append("templateMaster: empty state not rendered")
+    if errorsT9:
+        FAILS.append(f"templateMaster page errors: {errorsT9[:3]}")
+    ctxT9.close()
+
+    B9_NODATA = [
+        ("testMaster", 276), ("multiparameterTestMaster", 183),
+        ("OPConsulationConfigurationMaster", 611), ("fundApproval", 809),
+        ("fundRequisition", 810), ("fundApprovedList", 811),
+        ("schedulePriceUnitService", 586), ("roundOffConfiguration", 599),
+        ("IPdefaultServiceConfig", 620),
+    ]
+    for route, mid in B9_NODATA:
+        ctxN9 = browser.new_context()
+        pageN9 = ctxN9.new_page()
+        errorsN9 = []
+        pageN9.on("pageerror", lambda e: errorsN9.append(str(e)))
+        pageN9.on("console", lambda m: errorsN9.append(m.text) if m.type == "error" else None)
+        ctxN9.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageN9.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageN9.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageN9.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageN9.inner_text("body")
+        ok_n9 = "no-endpoint" in body and "accessDenied" not in pageN9.url
+        print(f"B9 {route}: noData-state={ok_n9} url={pageN9.url.split('/')[-1][:40]}")
+        if not ok_n9:
+            FAILS.append(f"B9 {route}: noData state not rendered")
+        if errorsN9:
+            FAILS.append(f"B9 {route} page errors: {errorsN9[:3]}")
+        ctxN9.close()
+    # 10. Batch 7 (DQ-2026-08-12-018): package trio (EHC/CAP/eitherOr) honest
+    # dev-empty (shared /api/packages/filter endpoint) + wrapperExpiryMaster
+    # real row (WRPTEST01) + kitCreation empty.
+    PKG_EMPTY = [
+        ("EHCpackage", 623, "No records"),
+        ("packageWithCAP", 624, "No records"),
+        ("eitherOrPackage", 626, "No records"),
+    ]
+    for route, mid, expect in PKG_EMPTY:
+        ctxB7 = browser.new_context()
+        pageB7 = ctxB7.new_page()
+        errorsB7 = []
+        pageB7.on("pageerror", lambda e: errorsB7.append(str(e)))
+        pageB7.on("console", lambda m: errorsB7.append(m.text) if m.type == "error" else None)
+        ctxB7.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageB7.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageB7.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageB7.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageB7.inner_text("body")
+        ok = expect in body and "accessDenied" not in pageB7.url
+        print(f"B7 {route}: empty-state('{expect}')={ok} url={pageB7.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"B7 {route}: empty state not rendered")
+        if errorsB7:
+            FAILS.append(f"B7 {route} page errors: {errorsB7[:3]}")
+        ctxB7.close()
+
+    # wrapperExpiryMaster — real row (WRPTEST01)
+    ctxW = browser.new_context()
+    pageW = ctxW.new_page()
+    errorsW = []
+    pageW.on("pageerror", lambda e: errorsW.append(str(e)))
+    pageW.on("console", lambda m: errorsW.append(m.text) if m.type == "error" else None)
+    ctxW.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageW.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageW.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 554}]}))"
+    )
+    pageW.goto(BASE + "/wrapperExpiryMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageW.inner_text("body")
+    real_w = "WRPTEST01" in body and "Test Wrapper" in body
+    print(f"B7 wrapperExpiryMaster: real_rows(WRPTEST01)= {real_w} url={pageW.url.split('/')[-1][:40]}")
+    if not real_w:
+        FAILS.append("wrapperExpiryMaster: real rows not rendered")
+    if errorsW:
+        FAILS.append(f"wrapperExpiryMaster page errors: {errorsW[:3]}")
+    ctxW.close()
+
+    # kitCreation — empty state
+    ctxK = browser.new_context()
+    pageK = ctxK.new_page()
+    errorsK = []
+    pageK.on("pageerror", lambda e: errorsK.append(str(e)))
+    pageK.on("console", lambda m: errorsK.append(m.text) if m.type == "error" else None)
+    ctxK.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageK.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageK.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 555}]}))"
+    )
+    pageK.goto(BASE + "/kitCreation", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageK.inner_text("body")
+    ok_k = "No records" in body and "accessDenied" not in pageK.url
+    print(f"B7 kitCreation: empty-state('No records')={ok_k} url={pageK.url.split('/')[-1][:40]}")
+    if not ok_k:
+        FAILS.append("kitCreation: empty state not rendered")
+    if errorsK:
+        FAILS.append(f"kitCreation page errors: {errorsK[:3]}")
+    ctxK.close()
+
+    # 11. Batch 8 (DQ-2026-08-12-019): RMOAllocationMaster empty, growthChart
+    # real (Female Updated), accessControl pair noData (both routes share the
+    # component; templateutility walked — no state in app.js).
+    ctxR = browser.new_context()
+    pageR = ctxR.new_page()
+    errorsR = []
+    pageR.on("pageerror", lambda e: errorsR.append(str(e)))
+    pageR.on("console", lambda m: errorsR.append(m.text) if m.type == "error" else None)
+    ctxR.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageR.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageR.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 824}]}))"
+    )
+    pageR.goto(BASE + "/RMOAllocationMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageR.inner_text("body")
+    ok_r = "No records" in body and "accessDenied" not in pageR.url
+    print(f"B8 RMOAllocationMaster: empty-state('No records')={ok_r} url={pageR.url.split('/')[-1][:40]}")
+    if not ok_r:
+        FAILS.append("RMOAllocationMaster: empty state not rendered")
+    if errorsR:
+        FAILS.append(f"RMOAllocationMaster page errors: {errorsR[:3]}")
+    ctxR.close()
+
+    ctxG8 = browser.new_context()
+    pageG8 = ctxG8.new_page()
+    errorsG8 = []
+    pageG8.on("pageerror", lambda e: errorsG8.append(str(e)))
+    pageG8.on("console", lambda m: errorsG8.append(m.text) if m.type == "error" else None)
+    ctxG8.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageG8.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageG8.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 962}]}))"
+    )
+    pageG8.goto(BASE + "/growthChartMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageG8.inner_text("body")
+    real_g8 = "Female Updated" in body and "70" in body
+    print(f"B8 growthChartMaster: real_rows(Female Updated)= {real_g8} url={pageG8.url.split('/')[-1][:40]}")
+    if not real_g8:
+        FAILS.append("growthChartMaster: real rows not rendered")
+    if errorsG8:
+        FAILS.append(f"growthChartMaster page errors: {errorsG8[:3]}")
+    ctxG8.close()
+
+    for route, mid in [("accessControl", 677), ("accessControl1", 673)]:
+        ctxA8 = browser.new_context()
+        pageA8 = ctxA8.new_page()
+        errorsA8 = []
+        pageA8.on("pageerror", lambda e: errorsA8.append(str(e)))
+        pageA8.on("console", lambda m: errorsA8.append(m.text) if m.type == "error" else None)
+        ctxA8.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageA8.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageA8.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageA8.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageA8.inner_text("body")
+        ok_a8 = "no-endpoint" in body and "stub controller" in body and "accessDenied" not in pageA8.url
+        print(f"B8 {route}: noData-state={ok_a8} url={pageA8.url.split('/')[-1][:40]}")
+        if not ok_a8:
+            FAILS.append(f"B8 {route}: noData state not rendered")
+        if errorsA8:
+            FAILS.append(f"B8 {route} page errors: {errorsA8[:3]}")
+        ctxA8.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
