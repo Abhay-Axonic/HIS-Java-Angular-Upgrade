@@ -572,3 +572,26 @@ class as the screen-47 header-contract split (a dev-harness route gap, not a
 backend defect). NOTE: proxy.conf.json is gitignored (dev-only bridge) — the
 branch carries the fix in the working tree; it does not appear in the merge
 diff.
+
+## DQ-2026-08-12-005 — TWO CLASSES ADDED TO THE CLOSE-OUT MODEL (owner framing)
+
+1) NO-ENDPOINT (noData) is a DISTINCT outcome, not dev-empty: consultantType
+has no list endpoint at all in the backend (stub controller). In the
+43-branch close-out it counts as its own row: NOT real data, NOT honest
+dev-empty, NOT lie-class. Other branches with no list endpoint, if any,
+count the same way. (Live probe confirms the noData state renders.)
+
+2) PROXY GAP = the FOURTH cause class of an apparently-failing screen
+(owner: "a branch that looked broken because a proxy route was missing, not
+because the backend was"). The four, named:
+   - phantom columns / missing DB structures (screens 49/52 class)
+   - masked error envelopes (LIS fall-through, DQ-2026-08-12-003)
+   - header-contract splits (screen 47 class)
+   - PROXY ROUTE GAPS (NEW — scheduleMaster /Pharmacy/** this batch: the
+     endpoint worked directly on 8080 but the app's same-origin call was
+     answered with the SPA index.html because new/proxy.conf.json had no
+     /Pharmacy/** route; added. proxy.conf.json is gitignored (dev-harness
+     bridge), so the fix lives in the working tree, not the merge diff.)
+
+When a screen looks broken in the dev harness: check the proxy route BEFORE
+classifying it as a backend defect.
