@@ -1,0 +1,43 @@
+<div class="eqm2-page">
+  <header class="eqm2-header">
+    <h2>Encounter Queue Management</h2>
+    <p class="eqm2-sub">Screen 42 — module 6 (Opd, parent 2). Encounter queue management.</p>
+  </header>
+
+  <section class="eqm2-list card">
+    <h3>Nursing stations</h3>
+    @if (loading()) {
+      <p class="eqm2-note">Loading…</p>
+    } @else if (stations().length === 0) {
+      <p class="eqm2-note">No nursing stations found (dev data).</p>
+    } @else {
+      <ul class="eqm2-ul">
+        @for (s of stations(); track s.userNursingStationMpprId) {
+          <li>Station {{ s.nursingStationId }} (mapper {{ s.userNursingStationMpprId }})</li>
+        }
+      </ul>
+    }
+
+    <h3>Departments (station 1)</h3>
+    @if (departments().length === 0) {
+      <p class="eqm2-note">No departments found.</p>
+    } @else {
+      <ul class="eqm2-ul">
+        @for (d of departments(); track d) {
+          <li>Dept {{ d }}</li>
+        }
+      </ul>
+    }
+
+    <h3>Doctors</h3>
+    @if (doctors().length === 0) {
+      <p class="eqm2-note">No doctors found.</p>
+    } @else {
+      <ul class="eqm2-ul">
+        @for (d of doctors(); track d.doctorId) {
+          <li>{{ d.firstName }} ({{ d.doctorId }})</li>
+        }
+      </ul>
+    }
+  </section>
+</div>

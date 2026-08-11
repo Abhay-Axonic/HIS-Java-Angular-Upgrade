@@ -1695,6 +1695,41 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/corporate-master/corporate-master').then((m) => m.CorporateMaster),
       },
+      {
+        path: 'patientRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 3, title: 'Patient Registration' },
+        loadComponent: () =>
+          import('./features/patient-registration/patient-registration').then((m) => m.PatientRegistration),
+      },
+      {
+        path: 'appointmentScheduling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 4, title: 'Appointment Scheduling' },
+        loadComponent: () =>
+          import('./features/appointment-scheduling/appointment-scheduling').then((m) => m.AppointmentScheduling),
+      },
+      {
+        path: 'encounterQueueManagement',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 6, title: 'Encounter Queue Management' },
+        loadComponent: () =>
+          import('./features/encounter-queue-management/encounter-queue-management').then((m) => m.EncounterQueueManagement),
+      },
+      {
+        path: 'appointmentList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 7, title: 'Appointment List' },
+        loadComponent: () =>
+          import('./features/appointment-list/appointment-list').then((m) => m.AppointmentList),
+      },
+      {
+        path: 'patientList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 8, title: 'Patient List' },
+        loadComponent: () =>
+          import('./features/patient-list/patient-list').then((m) => m.PatientList),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

@@ -1,0 +1,19 @@
+<div class="apl-page">
+  <header class="apl-header">
+    <h2>Appointment List</h2>
+    <p class="apl-sub">Screen 43 — module 7 (Opd, parent 2). Scheduled appointment list.</p>
+  </header>
+
+  <section class="apl-list card">
+    <h3>Scheduled appointments</h3>
+    @if (loading()) {
+      <p class="apl-note">Loading…</p>
+    } @else if (loadState() === 'error') {
+      <p class="apl-note">The backend returned its error envelope (501 "Something went wrong!!") — the shared scheduleAppointmentList endpoint's known state (root cause owed once, screen 41's finding). Honest state shown.</p>
+    } @else if (rows().length === 0) {
+      <p class="apl-note">No appointments found (dev data).</p>
+    } @else {
+      <p class="apl-note">{{ rows().length }} appointment(s).</p>
+    }
+  </section>
+</div>

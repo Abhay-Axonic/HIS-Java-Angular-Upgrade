@@ -1,0 +1,17 @@
+<div class="ptl-page">
+  <header class="ptl-header">
+    <h2>Patient List</h2>
+    <p class="ptl-sub">Screen 44 — module 8 (Opd, parent 2). Patient list.</p>
+  </header>
+
+  <section class="ptl-list card">
+    <h3>Patients</h3>
+    @if (loading()) {
+      <p class="ptl-note">Loading…</p>
+    } @else if (rows().length === 0) {
+      <p class="ptl-note">No patients found (dev data).</p>
+    } @else {
+      <p class="ptl-note">{{ rows().length }} patient(s).</p>
+    }
+  </section>
+</div>
