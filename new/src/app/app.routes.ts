@@ -1758,6 +1758,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/self-registration/self-registration').then((m) => m.SelfRegistration),
       },
+      {
+        path: 'counterWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 701, title: 'Counter Worklist' },
+        loadComponent: () =>
+          import('./features/counter-worklist/counter-worklist').then((m) => m.CounterWorklist),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

@@ -1,0 +1,101 @@
+<div class="cwl-screen">
+  <div class="amber-banner">
+    <strong>AMBER — known defect, permanent warning:</strong>
+    the Counter Worklist search feed (<code>POST /api/opd/getSearchedListEncounterMaster</code>)
+    is broken by phantom columns: the named query <code>GET_SEARCH_ENCOUNTERED_LIST</code>
+    selects <code>enMst.latest_call</code> and joins on <code>enMst.nursing_station_id</code>,
+    but neither column exists in <code>opd.t_encounter_master</code>. Every call throws at
+    query execution and the DAO catch swallows it into a masked error envelope
+    (status "error" with a null code and null message) — the response it
+    would read is the thing that lies: a 200 "error" body with no message instead of the
+    row set.
+    <p class="why-permanent">
+      Why this warning is permanent: the phantom columns are referenced in the entity's
+      named query but absent from the live schema (verified against information_schema; all
+      28 joined tables exist). A fix requires either adding the columns (a schema change,
+      Expand-Migrate-Contract territory) or rewriting the query — both out of scope for a
+      parity rebuild, so the defect is surfaced here rather than hidden.
+    </p>
+  </div>
+
+  <div class="screen-header">
+    <h2>Counter Worklist</h2>
+    <p class="subtitle">
+      Search encounters for a counter/nursing station. The search feed is live but broken by
+      the phantom-column defect above — the screen surfaces the failure honestly. The nursing
+      station reference feed works and renders real rows.
+    </p>
+  </div>
+
+  <div class="search-panel">
+    <div class="row">
+      <label>
+        From
+        <input type="date" [(ngModel)]="search.fromDate" name="fromDate" />
+      </label>
+      <label>
+        To
+        <input type="date" [(ngModel)]="search.toDate" name="toDate" />
+      </label>
+      <label>
+        Nursing station
+        <select [(ngModel)]="search.nursingStationId" name="nursingStationId">
+          @for (ns of nursingStations(); track ns) {
+            <option [ngValue]="ns.nursingStationId?.toString()">{{ ns.nursingStationDesc }}</option>
+          }
+        </select>
+      </label>
+      <button class="btn-primary" (click)="searchWorklist()" [disabled]="loading()">
+        @if (loading()) {
+          Searching…
+        } @else {
+          Search
+        }
+      </button>
+    </div>
+  </div>
+
+  @if (searchError()) {
+    <div class="error">{{ searchError() }}</div>
+  }
+
+  @if (searched()) {
+    <div class="results">
+      @if (encounters().length === 0) {
+        <div class="results-empty">No encounters found.</div>
+      } @else {
+        <table class="encounter-table">
+          <thead>
+            <tr>
+              <th>Encounter #</th>
+              <th>Patient</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of encounters(); track e) {
+              <tr>
+                <td>{{ e.encounterNumber ?? e.encounterId ?? '—' }}</td>
+                <td>{{ e.patientName ?? ('Patient ' + (e.patientId ?? '—')) }}</td>
+                <td>{{ e.encounterDate ?? '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+  <div class="feeds">
+    <section>
+      <h3>Nursing stations</h3>
+      <ul>
+        @for (ns of nursingStations(); track ns) {
+          <li>{{ ns.nursingStationDesc }} ({{ ns.nursingStationCode }})</li>
+        } @empty {
+          <li class="muted">none (dev)</li>
+        }
+      </ul>
+    </section>
+  </div>
+</div>
