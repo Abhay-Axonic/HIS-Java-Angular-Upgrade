@@ -2047,6 +2047,34 @@ export const routes: Routes = [
           import('./features/kit-creation/kit-creation').then((m) => m.KitCreation),
       },
       {
+        path: 'RMOAllocationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 824, title: 'RMO Allocation Master' },
+        loadComponent: () =>
+          import('./features/rmo-allocation-master/rmo-allocation-master').then((m) => m.RmoAllocationMaster),
+      },
+      {
+        path: 'growthChartMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 962, title: 'Growth Chart Master' },
+        loadComponent: () =>
+          import('./features/growth-chart-master/growth-chart-master').then((m) => m.GrowthChartMaster),
+      },
+      {
+        path: 'accessControl',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 677, title: 'Access Control' },
+        loadComponent: () =>
+          import('./features/access-control/access-control').then((m) => m.AccessControl),
+      },
+      {
+        path: 'accessControl1',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 673, title: 'Access Control' },
+        loadComponent: () =>
+          import('./features/access-control/access-control').then((m) => m.AccessControl),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },

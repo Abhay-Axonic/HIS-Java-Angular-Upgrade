@@ -25,6 +25,9 @@ appointmentSchedulingUnitMaster (653) — ERR-ref correlation envelope.
 Batch 7 (DQ-2026-08-12-018): EHCpackage (623), packageWithCAP (624),
 eitherOrPackage (626) — honest dev-empty (shared /api/packages/filter);
 wrapperExpiryMaster (554) — real (WRPTEST01); kitCreation (555) — empty.
+Batch 8 (DQ-2026-08-12-019): RMOAllocationMaster (824) — empty;
+growthChartMaster (962) — real (Female Updated); accessControl (677) +
+accessControl1 (673) — noData shared component; templateutility walked.
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -594,6 +597,79 @@ with sync_playwright() as p:
     if errorsK:
         FAILS.append(f"kitCreation page errors: {errorsK[:3]}")
     ctxK.close()
+
+    # 11. Batch 8 (DQ-2026-08-12-019): RMOAllocationMaster empty, growthChart
+    # real (Female Updated), accessControl pair noData (both routes share the
+    # component; templateutility walked — no state in app.js).
+    ctxR = browser.new_context()
+    pageR = ctxR.new_page()
+    errorsR = []
+    pageR.on("pageerror", lambda e: errorsR.append(str(e)))
+    pageR.on("console", lambda m: errorsR.append(m.text) if m.type == "error" else None)
+    ctxR.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageR.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageR.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 824}]}))"
+    )
+    pageR.goto(BASE + "/RMOAllocationMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageR.inner_text("body")
+    ok_r = "No records" in body and "accessDenied" not in pageR.url
+    print(f"B8 RMOAllocationMaster: empty-state('No records')={ok_r} url={pageR.url.split('/')[-1][:40]}")
+    if not ok_r:
+        FAILS.append("RMOAllocationMaster: empty state not rendered")
+    if errorsR:
+        FAILS.append(f"RMOAllocationMaster page errors: {errorsR[:3]}")
+    ctxR.close()
+
+    ctxG8 = browser.new_context()
+    pageG8 = ctxG8.new_page()
+    errorsG8 = []
+    pageG8.on("pageerror", lambda e: errorsG8.append(str(e)))
+    pageG8.on("console", lambda m: errorsG8.append(m.text) if m.type == "error" else None)
+    ctxG8.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageG8.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageG8.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 962}]}))"
+    )
+    pageG8.goto(BASE + "/growthChartMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageG8.inner_text("body")
+    real_g8 = "Female Updated" in body and "70" in body
+    print(f"B8 growthChartMaster: real_rows(Female Updated)= {real_g8} url={pageG8.url.split('/')[-1][:40]}")
+    if not real_g8:
+        FAILS.append("growthChartMaster: real rows not rendered")
+    if errorsG8:
+        FAILS.append(f"growthChartMaster page errors: {errorsG8[:3]}")
+    ctxG8.close()
+
+    for route, mid in [("accessControl", 677), ("accessControl1", 673)]:
+        ctxA8 = browser.new_context()
+        pageA8 = ctxA8.new_page()
+        errorsA8 = []
+        pageA8.on("pageerror", lambda e: errorsA8.append(str(e)))
+        pageA8.on("console", lambda m: errorsA8.append(m.text) if m.type == "error" else None)
+        ctxA8.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageA8.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageA8.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageA8.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageA8.inner_text("body")
+        ok_a8 = "no-endpoint" in body and "stub controller" in body and "accessDenied" not in pageA8.url
+        print(f"B8 {route}: noData-state={ok_a8} url={pageA8.url.split('/')[-1][:40]}")
+        if not ok_a8:
+            FAILS.append(f"B8 {route}: noData state not rendered")
+        if errorsA8:
+            FAILS.append(f"B8 {route} page errors: {errorsA8[:3]}")
+        ctxA8.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
