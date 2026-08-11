@@ -288,3 +288,5 @@ The two options trade the same asset: pre-rebuild visibility of the query landsc
 - SCREEN 42 = encounterQueueManagement (6), LIVE class, 2026-08-10 (autonomous run; the OPD subtree's third build). C5/C7/C8 PASS (8/8 clean). All three feeds LIVE with REAL rows (nursing stations, depts [1,2], doctors Demo). Feed-driven read surface — no write-path shape. Branch d174140d.
 
 - SCREEN 43 = appointmentList (7), LIVE class, 2026-08-10 (autonomous run; the OPD subtree's fourth build). C5/C7/C8 PASS (8/8 clean). Shared /api/opd/scheduleAppointmentList endpoint (screen-41 finding; root cause owed once). Read-only list surface. Branch 2e3a0b58.
+
+- SCREEN 44 = patientList (8), LIVE class, 2026-08-10 (autonomous run; the OPD subtree's fifth build). C5/C7/C8 PASS (8/8 clean). GETPATIENTLIST = /api/global/getPatientDetails WORKING (200 success [] — the first OPD list returning success). Search path shares /api/global/patientSearch (screen-40 501 owed there). Read-only surface. Branch f038f6f1.
