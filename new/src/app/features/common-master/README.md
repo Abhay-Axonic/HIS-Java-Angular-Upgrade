@@ -47,6 +47,37 @@ every one returns REAL rows:
 
 All six render their real rows in the probe (asserted per branch).
 
+## LIS family batch (owner order 2026-08-12; DQ-2026-08-12-003)
+
+The LIS family is the largest (26 remaining branches after the slice's 4 Unit
+Master ones). ALL are GET `/LIS/global/<list>/{orgId}/{offset}/{size}` except
+languageMaster + serologyTestFindingMaster (4 segments: orgId/unitId/offset/
+size). Live-verified 2026-08-12 — every branch is dev-empty (zero real rows),
+in TWO classes:
+
+- **DESCRIPTIVE dev-empty (10)** — backend returns the per-master message
+  ("Sample Records not found." etc.), surfaced as honest dev-empty:
+  sampleMaster, containerMaster, techinqueMaster, prerequisitesMaster,
+  mediaMaster, antibioticMaster (legacy copy-paste: says "Sample"),
+  antibioticsGroupMaster, storageLocationMaster, languageMaster,
+  serologyTestFindingMaster.
+- **GENERIC "Internal Server Error" (16)** — the MASKED-ERROR class (the
+  owner's LIS watch-item, CONFIRMED): the legacy service layer's
+  `size() > 0` guard makes its inner `isEmpty()` branch unreachable, so an
+  empty list falls through to `ERR_500_MESSAGE` ("Internal Server Error").
+  The per-master message EXISTS in the code but can never fire
+  (ReagentMasterServiceImpl.java:103-121, ColonyMasterServiceImpl, etc.).
+  The rebuild renders an AMBER-permanent banner naming the mechanism (the
+  response the warning would read is the thing that lies): reagentMaster,
+  reportTypeMaster, bacteriaShapMaster, wtifilmStudyMasterMaster, colonyMaster,
+  organismMaster, organismGroupMaster, stainigMaster, microbiologyStainMaster,
+  antibioticsMaster, incubationTestMaster, sensitivityTypeResultMaster,
+  slideProcedureMaster, bacteriaClassificationMaster, unitMaster, blockMaster.
+
+Backend fix NOT made (Rule 10 — behavioral change; BR candidate: the guard
+should be `>= 0` or the empty branch moved outside it; the dead
+SAMPLE_RECORDS_NOT_FOUND constant is the same class).
+
 ## Mechanism notes
 
 - **Dispatch**: `CommonMasterService.DISPATCH` maps the `:url` key to
