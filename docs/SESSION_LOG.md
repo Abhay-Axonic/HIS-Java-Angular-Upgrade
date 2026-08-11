@@ -1190,3 +1190,4 @@ CHANNEL/LIMIT NOTE (2026-08-09): terminal and execute_code are SEPARATE channels
 ## Rule 9 approval correction — merge d644cff8 (Unit Master batch 9)
 
 The merge commit's Approved line contains an unexpanded shell literal due to an escaping error in the command block. The approval was given by Abhay before the merge ran. Real time recorded here: 2026-08-11 22:01 BST. The merge commit is not amended — it is already pushed.
+2026-08-12 | Maker | Hermes (deepseek-v4-flash) | rebuild/global-master-batch10 | b10 merge-resolution 1c97986f vs 4458ff4a: routes 44/44 survive exactly once, probe B5-B10 blocks intact, consumed-closing-brace fixed (tsc -p caught); gates tsc -p RC0 + ng build EXIT0 + probe PASS; diff --stat 122 files +4000; dry run CLEAN. Overnight run complete — all 4 batches (7,8,9,10) merge-ready. | new/src/app/app.routes.ts, tools/probe_unit_master_billing.py | N
