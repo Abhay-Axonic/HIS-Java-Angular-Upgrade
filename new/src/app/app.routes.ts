@@ -2012,6 +2012,76 @@ export const routes: Routes = [
           import('./features/doctor-wise/doctor-wise').then((m) => m.DoctorWise),
       },
       {
+        path: 'templateMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 58, title: 'Lab Template Master' },
+        loadComponent: () =>
+          import('./features/template-master/template-master').then((m) => m.TemplateMaster),
+      },
+      {
+        path: 'testMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 276, title: 'Test Master' },
+        loadComponent: () =>
+          import('./features/test-master/test-master').then((m) => m.TestMaster),
+      },
+      {
+        path: 'multiparameterTestMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 183, title: 'Multiparameter Test Master' },
+        loadComponent: () =>
+          import('./features/multiparameter-test-master/multiparameter-test-master').then((m) => m.MultiparameterTestMaster),
+      },
+      {
+        path: 'OPConsulationConfigurationMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 611, title: 'OP Consultation Configuration Master' },
+        loadComponent: () =>
+          import('./features/op-consultation-configuration-master/op-consultation-configuration-master').then((m) => m.OPConsulationConfigurationMaster),
+      },
+      {
+        path: 'fundApproval',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 809, title: 'Fund Approval' },
+        loadComponent: () =>
+          import('./features/fund-approval/fund-approval').then((m) => m.FundApproval),
+      },
+      {
+        path: 'fundRequisition',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 810, title: 'Fund Requisition' },
+        loadComponent: () =>
+          import('./features/fund-requisition/fund-requisition').then((m) => m.FundRequisition),
+      },
+      {
+        path: 'fundApprovedList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 811, title: 'Fund Approved List' },
+        loadComponent: () =>
+          import('./features/fund-approved-list/fund-approved-list').then((m) => m.FundApprovedList),
+      },
+      {
+        path: 'schedulePriceUnitService',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 586, title: 'Schedule Price Unit Service' },
+        loadComponent: () =>
+          import('./features/schedule-price-unit-service/schedule-price-unit-service').then((m) => m.SchedulePriceUnitService),
+      },
+      {
+        path: 'roundOffConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 599, title: 'Round Off Configuration' },
+        loadComponent: () =>
+          import('./features/round-off-configuration/round-off-configuration').then((m) => m.RoundOffConfiguration),
+      },
+      {
+        path: 'IPdefaultServiceConfig',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 620, title: 'IP Default Service Config' },
+        loadComponent: () =>
+          import('./features/ip-default-service-config/ip-default-service-config').then((m) => m.IPdefaultServiceConfig),
+      },
+      {
         path: 'EHCpackage',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 623, title: 'EHC Package' },

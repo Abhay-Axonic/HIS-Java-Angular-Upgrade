@@ -22,6 +22,11 @@ nursingStationWardMapping (548) — real (Updated Desc, recordPerPage payload).
 Batch 6 (all masked, DQ-2026-08-12-016): scheduleWise (657) + doctorWise (658)
 — blank-generic slot endpoint (swallowed exception + date-parse);
 appointmentSchedulingUnitMaster (653) — ERR-ref correlation envelope.
+Batch 9 (DQ-2026-08-12-020): templateMaster (58) — real raw-array endpoint
+(honest empty); 9 noData screens (testMaster 276, multiparameterTestMaster
+183, OPConsulationConfigurationMaster 611, fundApproval 809, fundRequisition
+810, fundApprovedList 811, schedulePriceUnitService 586, roundOffConfiguration
+599, IPdefaultServiceConfig 620).
 Batch 7 (DQ-2026-08-12-018): EHCpackage (623), packageWithCAP (624),
 eitherOrPackage (626) — honest dev-empty (shared /api/packages/filter);
 wrapperExpiryMaster (554) — real (WRPTEST01); kitCreation (555) — empty.
@@ -518,6 +523,61 @@ with sync_playwright() as p:
         FAILS.append(f"appointmentSchedulingUnitMaster page errors: {errorsA6[:3]}")
     ctxA6.close()
 
+    # 9. Batch 9 (DQ-2026-08-12-020): templateMaster real (raw [] empty state)
+    # + 9 noData screens (missing-controller + MasterController shells).
+    ctxT9 = browser.new_context()
+    pageT9 = ctxT9.new_page()
+    errorsT9 = []
+    pageT9.on("pageerror", lambda e: errorsT9.append(str(e)))
+    pageT9.on("console", lambda m: errorsT9.append(m.text) if m.type == "error" else None)
+    ctxT9.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageT9.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageT9.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 58}]}))"
+    )
+    pageT9.goto(BASE + "/templateMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageT9.inner_text("body")
+    ok_t9 = "No records" in body and "accessDenied" not in pageT9.url
+    print(f"B9 templateMaster: empty-state('No records')={ok_t9} url={pageT9.url.split('/')[-1][:40]}")
+    if not ok_t9:
+        FAILS.append("templateMaster: empty state not rendered")
+    if errorsT9:
+        FAILS.append(f"templateMaster page errors: {errorsT9[:3]}")
+    ctxT9.close()
+
+    B9_NODATA = [
+        ("testMaster", 276), ("multiparameterTestMaster", 183),
+        ("OPConsulationConfigurationMaster", 611), ("fundApproval", 809),
+        ("fundRequisition", 810), ("fundApprovedList", 811),
+        ("schedulePriceUnitService", 586), ("roundOffConfiguration", 599),
+        ("IPdefaultServiceConfig", 620),
+    ]
+    for route, mid in B9_NODATA:
+        ctxN9 = browser.new_context()
+        pageN9 = ctxN9.new_page()
+        errorsN9 = []
+        pageN9.on("pageerror", lambda e: errorsN9.append(str(e)))
+        pageN9.on("console", lambda m: errorsN9.append(m.text) if m.type == "error" else None)
+        ctxN9.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageN9.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageN9.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageN9.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageN9.inner_text("body")
+        ok_n9 = "no-endpoint" in body and "accessDenied" not in pageN9.url
+        print(f"B9 {route}: noData-state={ok_n9} url={pageN9.url.split('/')[-1][:40]}")
+        if not ok_n9:
+            FAILS.append(f"B9 {route}: noData state not rendered")
+        if errorsN9:
+            FAILS.append(f"B9 {route} page errors: {errorsN9[:3]}")
+        ctxN9.close()
     # 10. Batch 7 (DQ-2026-08-12-018): package trio (EHC/CAP/eitherOr) honest
     # dev-empty (shared /api/packages/filter endpoint) + wrapperExpiryMaster
     # real row (WRPTEST01) + kitCreation empty.
