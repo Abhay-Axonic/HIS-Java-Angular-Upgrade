@@ -1716,6 +1716,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/encounter-queue-management/encounter-queue-management').then((m) => m.EncounterQueueManagement),
       },
+      {
+        path: 'appointmentList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 7, title: 'Appointment List' },
+        loadComponent: () =>
+          import('./features/appointment-list/appointment-list').then((m) => m.AppointmentList),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
