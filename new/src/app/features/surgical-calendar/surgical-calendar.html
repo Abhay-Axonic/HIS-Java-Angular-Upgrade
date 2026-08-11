@@ -57,7 +57,7 @@
   <section class="sc-grid card">
     <div class="sc-grid-toolbar">
       <input type="text" class="sc-search" placeholder="Search doctor / speciality / date / day"
-             [(ngModel)]="searchTerm" />
+             [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
       <span class="sc-count">{{ filteredRows().length }} row(s)</span>
     </div>
     @if (loading()) {

@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
-"""probe_surgical_calendar.py — browser probe for screen 22 (surgicalCalendar,
-module 710). Injected real-login token (stated plainly per
-browser-smoke-harness) in the cookieObject cookie + permissions store seeded
-with moduleId 710. Zero backend seeding.
+"""probe_surgical_calendar.py — both-directions SEARCH probe for screen 22
+(surgicalCalendar, module 710). Injected real-login token (stated plainly per
+browser-smoke-harness). Zero backend seeding; the list is live (7 real dev
+rows: 'Dr. Demo Doctor' / 'General Medicine' / 2026/08/02 / 'Sunday' —
+verified by calling POST /api/otims/surgicalCalender/list).
 
-Asserts: route renders (final URL == /surgicalCalendar, no accessDenied),
-form + grid state render, the speciality dropdown is LIVE-populated (2 real
-dev rows — the speciality feed working), 0 page errors.
+BOTH DIRECTIONS (the QF-AN standing requirement): a matching term ('Demo')
+must INCLUDE the row; a non-matching term ('abc') must EXCLUDE it with the
+counter reading '0 row(s)'; clearing must restore the row. The search filters
+doctorName / speciality / procedureDate / day.
 """
 import json
 import sys
 import time
 import urllib.parse
 
-CACHE = "tools/.token_cache.json"
-TOKEN = json.load(open(CACHE))["token"]
-
 try:
     from playwright.sync_api import sync_playwright
 except ImportError:
     print("FAIL: playwright not installed")
     sys.exit(1)
+
+CACHE = "tools/.token_cache.json"
+TOKEN = json.load(open(CACHE))["token"]
 
 BASE = "http://localhost:4201"
 ROUTE = "/surgicalCalendar"
@@ -45,31 +47,48 @@ def main():
         page.evaluate(
             "() => localStorage.setItem('permissions', JSON.stringify({modules: [{id: 710}]}))"
         )
-
         page.goto(BASE + ROUTE, wait_until="domcontentloaded")
-        time.sleep(4)
+        time.sleep(6)
         final_url = page.url
         print(f"FINAL URL: {final_url}")
-        if "accessDenied" in final_url:
-            FAILS.append(f"guard denial: {final_url}")
-        if ROUTE not in final_url:
-            FAILS.append(f"not on route: {final_url}")
+        if "accessDenied" in final_url or ROUTE not in final_url:
+            FAILS.append(f"route not reached: {final_url}")
 
         body = page.inner_text("body")
-        has_form = "Speciality" in body and "Save" in body
-        print(f"FORM RENDERED: {has_form}")
-        if not has_form:
-            FAILS.append("form not rendered")
-        grid_ok = "No surgical calendar entries found" in body or "row(s)" in body
-        print(f"GRID STATE RENDERED: {grid_ok}")
-        if not grid_ok:
-            FAILS.append("grid state not rendered")
-        # the speciality dropdown must be live-populated from the real feed
-        opts = page.eval_on_selector_all('select[name="specialityId"] option',
-                                         "els => els.map(e => e.textContent.trim())")
-        print(f"SPECIALITY OPTIONS ({len(opts)}): {opts[:4]}")
-        if len(opts) < 2:
-            FAILS.append("speciality dropdown not live-populated")
+        row_present = "Dr. Demo Doctor" in body and "General Medicine" in body
+        print(f"DEV ROW VISIBLE (positive baseline): {row_present}")
+        if not row_present:
+            FAILS.append("dev row (Dr. Demo Doctor / General Medicine) not visible initially")
+
+        s = page.locator('input.sc-search')
+        s.click()
+        # POSITIVE: matching term includes the row
+        s.press_sequentially("Demo", delay=40)
+        time.sleep(1)
+        body2 = page.inner_text("body")
+        pos = "Dr. Demo Doctor" in body2 and "row(s)" in body2 and "0 row(s)" not in body2
+        print(f"POSITIVE (Demo includes): {pos}")
+        if not pos:
+            FAILS.append("matching term did not include the row")
+
+        # NEGATIVE: non-matching term excludes + counter zero
+        s.fill("")
+        s.press_sequentially("abc", delay=40)
+        time.sleep(1)
+        body3 = page.inner_text("body")
+        neg = "Dr. Demo Doctor" not in body3 and "0 row(s)" in body3
+        print(f"NEGATIVE (abc excludes, counter 0): {neg}")
+        if not neg:
+            FAILS.append("non-matching term did not exclude the row (counter/row visible)")
+
+        # CLEAR restores
+        s.fill("")
+        time.sleep(1)
+        body4 = page.inner_text("body")
+        restored = "Dr. Demo Doctor" in body4
+        print(f"CLEAR RESTORES: {restored}")
+        if not restored:
+            FAILS.append("clearing did not restore the row")
 
         page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
         print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")
@@ -82,7 +101,7 @@ def main():
     if FAILS:
         print("PROBE: FAIL —", "; ".join(FAILS))
         sys.exit(1)
-    print("PROBE: PASS (route renders, form + grid + live speciality dropdown, 0 page errors)")
+    print("PROBE: PASS (route renders, dev row visible, matching term includes, 'abc' excludes with counter 0, clear restores, 0 page errors)")
 
 
 if __name__ == "__main__":
