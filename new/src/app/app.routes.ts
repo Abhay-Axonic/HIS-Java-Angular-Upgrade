@@ -1963,6 +1963,34 @@ export const routes: Routes = [
           import('./features/auto-service-posting-configuration/auto-service-posting-configuration').then((m) => m.AutoServicePostingConfiguration),
       },
       {
+        path: 'IPConsultationConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 684, title: 'IP Consultation Configuration' },
+        loadComponent: () =>
+          import('./features/ip-consultation-configuration/ip-consultation-configuration').then((m) => m.IpConsultationConfiguration),
+      },
+      {
+        path: 'fundReconciliation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 808, title: 'Fund Reconciliation' },
+        loadComponent: () =>
+          import('./features/fund-reconciliation/fund-reconciliation').then((m) => m.FundReconciliation),
+      },
+      {
+        path: 'userNursingStationMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 689, title: 'User Nursing Station Mapper' },
+        loadComponent: () =>
+          import('./features/user-nursing-station-mapper/user-nursing-station-mapper').then((m) => m.UserNursingStationMapper),
+      },
+      {
+        path: 'nursingStationWardMapping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 548, title: 'Nursing Station Ward Mapping' },
+        loadComponent: () =>
+          import('./features/nursing-station-ward-mapping/nursing-station-ward-mapping').then((m) => m.NursingStationWardMapping),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },

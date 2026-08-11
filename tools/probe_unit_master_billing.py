@@ -16,6 +16,9 @@ Batch 4 (master/unit family): loyaltyCardCreation (729), passBedCategoryMapper
 dev-empty; loyaltyCardConfiguration (743) — real row (1000/5000/1000);
 autoServicePostingConfiguration (775) — masked-error banner (phantom column
 is_bed_charges_service, DQ-2026-08-12-013).
+Batch 5: IPConsultationConfiguration (684), fundReconciliation (808) — honest
+dev-empty; userNursingStationMapper (689) — real (Admin/EMP123);
+nursingStationWardMapping (548) — real (Updated Desc, recordPerPage payload).
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -369,6 +372,85 @@ with sync_playwright() as p:
     if real_errs_a:
         FAILS.append(f"autoServicePosting page errors: {real_errs_a[:3]}")
     ctxA.close()
+
+    # 8. Batch 5 (DQ-2026-08-12-015): 2 honest dev-empty (IPConsultation-
+    # Configuration, fundReconciliation) + 2 real-data (userNursingStation-
+    # Mapper Admin/EMP123, nursingStationWardMapping Updated Desc).
+    B5_EMPTY = [
+        ("IPConsultationConfiguration", 684, "No records"),
+        ("fundReconciliation", 808, "No records"),
+    ]
+    for route, mid, expect in B5_EMPTY:
+        ctxB5 = browser.new_context()
+        pageB5 = ctxB5.new_page()
+        errorsB5 = []
+        pageB5.on("pageerror", lambda e: errorsB5.append(str(e)))
+        pageB5.on("console", lambda m: errorsB5.append(m.text) if m.type == "error" else None)
+        ctxB5.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageB5.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageB5.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageB5.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageB5.inner_text("body")
+        ok = expect in body and "accessDenied" not in pageB5.url
+        print(f"B5 {route}: empty-state('{expect}')={ok} url={pageB5.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"B5 {route}: empty state not rendered")
+        if errorsB5:
+            FAILS.append(f"B5 {route} page errors: {errorsB5[:3]}")
+        ctxB5.close()
+
+    # userNursingStationMapper — real rows (Admin  Admin / EMP123)
+    ctxU = browser.new_context()
+    pageU = ctxU.new_page()
+    errorsU = []
+    pageU.on("pageerror", lambda e: errorsU.append(str(e)))
+    pageU.on("console", lambda m: errorsU.append(m.text) if m.type == "error" else None)
+    ctxU.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageU.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageU.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 689}]}))"
+    )
+    pageU.goto(BASE + "/userNursingStationMapper", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageU.inner_text("body")
+    real_u = "Admin" in body and "EMP123" in body
+    print(f"B5 userNursingStationMapper: real_rows(Admin/EMP123)= {real_u} url={pageU.url.split('/')[-1][:40]}")
+    if not real_u:
+        FAILS.append("userNursingStationMapper: real rows not rendered")
+    if errorsU:
+        FAILS.append(f"userNursingStationMapper page errors: {errorsU[:3]}")
+    ctxU.close()
+
+    # nursingStationWardMapping — real rows (Updated Desc)
+    ctxN = browser.new_context()
+    pageN = ctxN.new_page()
+    errorsN = []
+    pageN.on("pageerror", lambda e: errorsN.append(str(e)))
+    pageN.on("console", lambda m: errorsN.append(m.text) if m.type == "error" else None)
+    ctxN.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageN.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageN.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 548}]}))"
+    )
+    pageN.goto(BASE + "/nursingStationWardMapping", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageN.inner_text("body")
+    real_n = "Updated Desc" in body
+    print(f"B5 nursingStationWardMapping: real_rows('Updated Desc')= {real_n} url={pageN.url.split('/')[-1][:40]}")
+    if not real_n:
+        FAILS.append("nursingStationWardMapping: real rows not rendered")
+    if errorsN:
+        FAILS.append(f"nursingStationWardMapping page errors: {errorsN[:3]}")
+    ctxN.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).

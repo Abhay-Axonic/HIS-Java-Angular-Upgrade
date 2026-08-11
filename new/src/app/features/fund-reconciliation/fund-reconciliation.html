@@ -1,0 +1,38 @@
+<div class="fr-wrap">
+  <header class="fr-header">
+    <h2>Fund Reconciliation</h2>
+    <span class="fr-sub">Unit Master / Fund Management — module 808</span>
+  </header>
+
+  @if (loading()) {
+    <p class="fr-muted">Loading fund inflow details…</p>
+  } @else if (error()) {
+    <div class="fr-state fr-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="fr-table">
+      <thead>
+        <tr>
+          <th>Fund Inflow ID</th>
+          <th>Trust</th>
+          <th>Total Collected Amount</th>
+          <th>Fund Type</th>
+          <th>Available Amount</th>
+          <th>Bill Consume Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.fundInFlowId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="fr-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
