@@ -815,3 +815,39 @@ obligation, explicit):
 BOUNDARY: subagents never commit, never touch main/governance docs, never
 run the probes' freshness gate decisions — the parent does. Subagent scope is
 file-writing in a feature directory + its own tsc/build self-check.
+
+## DQ-2026-08-12-012 — THREE ZERO-MASKED BATCHES: GENUINE BACKEND SHAPE, NOT PROBE CONVERGENCE (owner question)
+
+Asked: three batches with zero masked envelopes — genuinely cleaner families,
+or probes converging on what they expect?
+
+ANSWER: GENUINE BACKEND SHAPE, evidenced at the DAO layer. The blood bank
+family's DAO returns SUCCESS-empty unconditionally: BloodTestMasterDaoImpl
+:113-123 does `new Response(SUCCESS, SUCCESS_CODE, null, list, null)` — no
+size-guard wrapper, no fall-through. The LIS family's service layer wraps the
+DAO call in `if(res.getListObject() != null && res.getListObject().size() >
+0)` (ReagentMasterServiceImpl:35) — the guard whose empty-branch is dead, so
+empty falls through to ERR_500_MESSAGE. THE ENVELOPE CLASS IS A PROPERTY OF
+THE BACKEND CODE SHAPE PER MODULE, not of the probe. Blood bank has no
+guarded services -> SUCCESS-empty (honest); LIS has guarded services ->
+masked 500.
+
+WHY THE PROBES ARE NOT CONVERGING (three evidences):
+1. The probe asserts what the LIVE endpoint returns (curl-verified first,
+   then browser-asserted) — the blood bank probe asserted "No records."
+   because SUCCESS-empty is what the backend genuinely returns.
+2. parameterMaster (batch 2) FAILED its first probe run — masked banner not
+   rendered, because the auth interceptor strips HTTP-500 envelopes so the
+   correlation message never reached the component. The probe caught a real
+   defect in the rebuild's error handling; fixed, re-probed, passed. A probe
+   that fails when the code is wrong is not rubber-stamping.
+3. The masked classes FOUND so far are backend code shapes (LIS fall-through
+   DQ-2026-08-12-003, phantom column DQ-2026-08-12-009) — found BY the
+   envelope check, not missed by it. If a future family has guarded services,
+   the same check will find them.
+
+PREDICTION (falsifiable): the master/unit family (batch 4, 6 screens) will
+behave like blood bank (SUCCESS-empty or real data, zero masked) because its
+service layer is the un-guarded shape; if any master/unit endpoint 500s with
+a masked envelope, the family has a guarded service or a phantom column and
+the check will catch it.
