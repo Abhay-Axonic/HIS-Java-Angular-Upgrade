@@ -11,6 +11,11 @@ descriptive dev-empty surfaced; parameterMaster (562) — masked-error banner
 Batch 3 (blood bank family): bloodTest (734), reasonOfDiscard (737),
 screeningTest (738), donorRejectionMaster (740) — honest dev-empty (SUCCESS
 empty listObject); bloodGroupMatchingMaster (741) — real rows (A+).
+Batch 4 (master/unit family): loyaltyCardCreation (729), passBedCategoryMapper
+(822), templateICDCodeMapping (688), doctorRegistration (651) — honest
+dev-empty; loyaltyCardConfiguration (743) — real row (1000/5000/1000);
+autoServicePostingConfiguration (775) — masked-error banner (phantom column
+is_bed_charges_service, DQ-2026-08-12-013).
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -282,6 +287,88 @@ with sync_playwright() as p:
     if errorsG:
         FAILS.append(f"bloodGroupMatchingMaster page errors: {errorsG[:3]}")
     ctxG.close()
+
+    # 7. Master/unit family batch 4 (DQ-2026-08-12-013): 4 honest dev-empty
+    # screens + loyaltyCardConfiguration real row + autoServicePostingConfig
+    # masked banner (phantom column is_bed_charges_service).
+    MASTER_EMPTY = [
+        ("loyaltyCardCreation", 729, "No records"),
+        ("passBedCategoryMapper", 822, "No records"),
+        ("templateICDCodeMapping", 688, "No records"),
+        ("doctorRegistration", 651, "No records"),
+    ]
+    for route, mid, expect in MASTER_EMPTY:
+        ctxE = browser.new_context()
+        pageE = ctxE.new_page()
+        errorsE = []
+        pageE.on("pageerror", lambda e: errorsE.append(str(e)))
+        pageE.on("console", lambda m: errorsE.append(m.text) if m.type == "error" else None)
+        ctxE.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageE.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageE.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageE.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageE.inner_text("body")
+        ok = expect in body and "accessDenied" not in pageE.url
+        print(f"MASTER {route}: empty-state('{expect}')={ok} url={pageE.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"MASTER {route}: empty state not rendered")
+        if errorsE:
+            FAILS.append(f"MASTER {route} page errors: {errorsE[:3]}")
+        ctxE.close()
+
+    # loyaltyCardConfiguration — real row (1000/5000/1000)
+    ctxL = browser.new_context()
+    pageL = ctxL.new_page()
+    errorsL = []
+    pageL.on("pageerror", lambda e: errorsL.append(str(e)))
+    pageL.on("console", lambda m: errorsL.append(m.text) if m.type == "error" else None)
+    ctxL.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageL.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageL.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 743}]}))"
+    )
+    pageL.goto(BASE + "/loyaltyCardConfiguration", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageL.inner_text("body")
+    real_l = "1000" in body and "5000" in body
+    print(f"MASTER loyaltyCardConfiguration: real_rows(1000/5000)= {real_l} url={pageL.url.split('/')[-1][:40]}")
+    if not real_l:
+        FAILS.append("loyaltyCardConfiguration: real rows not rendered")
+    if errorsL:
+        FAILS.append(f"loyaltyCardConfiguration page errors: {errorsL[:3]}")
+    ctxL.close()
+
+    # autoServicePostingConfiguration — masked banner (phantom column)
+    ctxA = browser.new_context()
+    pageA = ctxA.new_page()
+    errorsA = []
+    pageA.on("pageerror", lambda e: errorsA.append(str(e)))
+    pageA.on("console", lambda m: errorsA.append(m.text) if m.type == "error" else None)
+    ctxA.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageA.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageA.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 775}]}))"
+    )
+    pageA.goto(BASE + "/autoServicePostingConfiguration", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageA.inner_text("body")
+    masked_a = "Reference: ERR" in body and "is_bed_charges_service" in body and "phantom column" in body
+    print(f"MASTER autoServicePosting: masked-banner={masked_a} url={pageA.url.split('/')[-1][:40]}")
+    if not masked_a:
+        FAILS.append("autoServicePostingConfiguration: masked-error banner not rendered")
+    real_errs_a = [e for e in errorsA if "config/billing/list" not in e and "500" not in e]
+    if real_errs_a:
+        FAILS.append(f"autoServicePosting page errors: {real_errs_a[:3]}")
+    ctxA.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).

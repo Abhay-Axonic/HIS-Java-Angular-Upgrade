@@ -1,0 +1,53 @@
+<div class="asp-wrap">
+  <header class="asp-header">
+    <h2>Auto Service Posting Configuration</h2>
+    <span class="asp-sub">Unit Master / Master — module 775</span>
+  </header>
+
+  @if (loading()) {
+    <p class="asp-muted">Loading configuration…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="asp-state asp-masked">
+        <p>{{ error() }}</p>
+        <p class="asp-muted">
+          This is the masked-error envelope, permanent: the list endpoint
+          throws a real backend exception wrapped in the correlation-id
+          message. The raw SQL in <code>AutoPostingConfigDaoImpl</code>
+          selects <code>is_bed_charges_service</code>, a column that does not
+          exist in <code>public.t_auto_posting_services_cofiguration</code>
+          (phantom column, DQ-2026-08-12-013). The table is not simply empty —
+          the backend is failing (reference envelope from
+          ErrorCorrelationUtil). This warning cannot be shown at save time
+          because the response it would read is the thing that lies.
+        </p>
+      </div>
+    } @else {
+      <div class="asp-state asp-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="asp-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Speciality</th>
+          <th>Posting Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="asp-empty">No configuration.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

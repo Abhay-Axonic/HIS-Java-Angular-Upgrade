@@ -1880,6 +1880,34 @@ export const routes: Routes = [
           import('./features/parameter-master/parameter-master').then((m) => m.ParameterMaster),
       },
       {
+        path: 'loyaltyCardCreation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 729, title: 'Loyalty Card Creation' },
+        loadComponent: () =>
+          import('./features/loyalty-card-creation/loyalty-card-creation').then((m) => m.LoyaltyCardCreation),
+      },
+      {
+        path: 'passBedCategoryMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 822, title: 'Pass Bed Category Mapper' },
+        loadComponent: () =>
+          import('./features/pass-bed-category-mapper/pass-bed-category-mapper').then((m) => m.PassBedCategoryMapper),
+      },
+      {
+        path: 'templateICDCodeMapping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 688, title: 'Template ICD Code Mapping' },
+        loadComponent: () =>
+          import('./features/template-icd-code-mapping/template-icd-code-mapping').then((m) => m.TemplateIcdCodeMapping),
+      },
+      {
+        path: 'doctorRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 651, title: 'Doctor Registration' },
+        loadComponent: () =>
+          import('./features/doctor-registration/doctor-registration').then((m) => m.DoctorRegistration),
+      },
+      {
         path: 'bloodTest',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 734, title: 'Blood Test Master' },
@@ -1919,6 +1947,20 @@ export const routes: Routes = [
         data: { moduleId: 741, title: 'Blood Group Matching Master' },
         loadComponent: () =>
           import('./features/blood-group-matching-master/blood-group-matching-master').then((m) => m.BloodGroupMatchingMaster),
+      },
+      {
+        path: 'loyaltyCardConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 743, title: 'Loyalty Card Configuration' },
+        loadComponent: () =>
+          import('./features/loyalty-card-configuration/loyalty-card-configuration').then((m) => m.LoyaltyCardConfiguration),
+      },
+      {
+        path: 'autoServicePostingConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 775, title: 'Auto Service Posting Configuration' },
+        loadComponent: () =>
+          import('./features/auto-service-posting-configuration/auto-service-posting-configuration').then((m) => m.AutoServicePostingConfiguration),
       },
       {
         path: 'OTIMSroleCreation',
