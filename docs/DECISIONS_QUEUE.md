@@ -969,3 +969,45 @@ envelope, no fall-through, no phantom column). Classification is again the
 live-curl envelope check BEFORE any browser assertion (DQ-2026-08-12-014's
 method); the recordPerPage 400 is a payload-field-name mismatch, resolved by
 matching the legacy controller exactly, not a backend defect.
+
+## DQ-2026-08-12-016 — UNIT MASTER 531 BATCH 6 (opd/unit three): classification — MASKED FAMILY
+
+Owner's pre-build checks applied to the opd/unit three (appointmentScheduling-
+UnitMaster 653, scheduleWise 657, doctorWise 658):
+
+SHARED COMPONENT/STATE CHECK (owner's explicit question): scheduleWise and
+doctorWise do NOT share a state or component — two separate controller files
+(SlotBlockUnblockControllerScheduleWise.js 1047 lines vs
+SlotBlockUnblockControllerDoctorWise.js 828 lines), two separate templates
+(schedule-wise.html vs doctor-wise.html), two separate states. What they DO
+share is the backend endpoint set (copy-paste family): GETALLSLOTSBLOCKUNBLOCK,
+GETACTIVEREASONLIST, GETACTIVESPECIALITY, GETDOCTORSLISTAGANISTSPECIALITIES,
+GETSUBSPECIALITYBYSPECIALITYARRAY, UPDATESLOTSTATUS, BLOCKUNBLOCKSLOT appear in
+both. So: ONE endpoint investigation covers both screens (build-once-
+investigate), but each is its own rebuild — the commonMaster lesson does NOT
+collapse them into one component. appointmentSchedulingUnitMaster is a much
+larger scheduling screen (60+ endpoints) with its own controller.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- scheduleWise + doctorWise (POST /api/opd/getSlots/blockUnblock
+  {organisationId, unitId, slotTypeId, isBlocked, fromDate, toDate,
+  listDoctorId, listSpecialityId, fromTime, toTime}): HTTP 200 status=error
+  code=null message=null — the BLANK GENERIC envelope. Root cause traced:
+  SlotMasterController.java:101-104 swallows the exception and returns
+  `new Response(ERROR, COMMON_ERROR_CODE, COMMON_ERROR_MESSAGE, null, null)`;
+  the DAO (SlotMasterDaoImpl:1857) throws a date-parse failure —
+  GlobalCommonDateUtils.getDate appends " 00:00:00" to <12-char dates then
+  parses with "yyyy-MM-dd" (always fails for 'YYYY-MM-DD' frontend input).
+  The SQL itself runs clean in psql (0 rows — tables/columns all exist,
+  NOT phantom-column). MASKED class: the real exception is swallowed at the
+  controller boundary (constitution target class).
+- appointmentSchedulingUnitMaster (POST /api/opd/getSlotsNew): MASKED-ERR-REF
+  "Something went wrong. Reference: ERR-98fe438a" — the ErrorCorrelationUtil
+  correlation envelope (3rd screen with it; parameterMaster + autoService-
+  PostingConfiguration were the first two).
+
+ALL THREE SCREENS ARE THE MASKED CLASS. No honest dev-empty, no real data in
+this family. The rebuilds carry AMBER-permanent banners naming the mechanism
+(swallowed controller exception + date-parse for the pair; correlation
+envelope for getSlotsNew). Backend fixes NOT made (Rule 10; BR candidates:
+fix getDate's short-date handling, stop swallowing at the controller).
