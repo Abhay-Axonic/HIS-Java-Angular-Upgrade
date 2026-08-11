@@ -1,0 +1,43 @@
+<div class="cc2-page">
+  <header class="cc2-header">
+    <h2>Company Contract</h2>
+    <p class="cc2-sub">Screen 37 — module 608 (Billing, parent 570). Company contract configuration.</p>
+  </header>
+
+  <section class="cc2-list card">
+    <h3>Companies</h3>
+    @if (loading()) {
+      <p class="cc2-loading">Loading…</p>
+    } @else if (companies().length === 0) {
+      <p class="cc2-empty">No companies found (dev data).</p>
+    } @else {
+      <ul class="cc2-ul">
+        @for (c of companies(); track c.id) {
+          <li>{{ c.name }} ({{ c.id }})</li>
+        }
+      </ul>
+    }
+
+    <h3>Visit types</h3>
+    @if (visitTypes().length === 0) {
+      <p class="cc2-empty">No visit types loaded.</p>
+    } @else {
+      <ul class="cc2-ul">
+        @for (v of visitTypes(); track v.id) {
+          <li>{{ v.name }} ({{ v.id }})</li>
+        }
+      </ul>
+    }
+
+    <h3>Package types</h3>
+    @if (packageTypes().length === 0) {
+      <p class="cc2-empty">No package types loaded.</p>
+    } @else {
+      <ul class="cc2-ul">
+        @for (p of packageTypes(); track p.id) {
+          <li>{{ p.name }} ({{ p.id }})</li>
+        }
+      </ul>
+    }
+  </section>
+</div>

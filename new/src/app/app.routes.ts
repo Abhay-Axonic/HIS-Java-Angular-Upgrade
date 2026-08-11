@@ -1674,6 +1674,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/unit-service-mapping/unit-service-mapping').then((m) => m.UnitServiceMapping),
       },
+      {
+        path: 'companyContractMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 608, title: 'Company Contract' },
+        loadComponent: () =>
+          import('./features/company-contract/company-contract').then((m) => m.CompanyContract),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
