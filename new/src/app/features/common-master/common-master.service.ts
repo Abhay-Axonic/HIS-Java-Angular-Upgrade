@@ -47,6 +47,10 @@ interface MasterEndpoint {
   getSegments?: (orgId: number, unitId: number, offset: number, size: number) => string[];
   /** POST: body builder. */
   body?: (orgId: number, unitId: number, offset: number, size: number) => Record<string, unknown>;
+  /** True when the master has NO list endpoint in the backend (the legacy
+   * controller is a stub that never loads data). The component renders the
+   * honest empty state instead of calling a nonexistent endpoint. */
+  noData?: boolean;
 }
 
 const DISPATCH: Record<string, MasterEndpoint> = {
@@ -222,6 +226,49 @@ const DISPATCH: Record<string, MasterEndpoint> = {
     method: 'GET', path: '/LIS/global/listLanguageMaster',
     getSegments: (o, u, off, sz) => [String(o), String(u), String(off), String(sz)],
   },
+  // --- Final batch: billing/common 5 + master 1 (owner order 2026-08-12) ---
+  // priorityMaster POST /api/common/getPriorityMasterList -> success 3 rows
+  // visitType POST /api/global/visitTypeMasterList -> success 7 rows
+  // paymentMode POST /api/billing/getPaymentModeMasterList -> success 8 rows
+  // paymentEntitment POST /global/getPaymententitlementList -> success 3 rows
+  //   (class-level @RequestMapping("/global"), NOT /api/global — legacy
+  //   frontend's GLOBAL constant is "/global"; live-verified)
+  // scheduleMaster GET /Pharmacy/global/listScheduleMaster/{org}/{unit}/{off}/{sz}
+  //   -> success 1 row. ALL FIVE real data, zero generic envelopes.
+  // consultantType: NO backend list endpoint exists (stub controller, no
+  //   GET constant, no @RequestMapping list method) — dispatched but renders
+  //   empty; the generic "no endpoint" state handles it via hasMaster.
+  priorityMaster: {
+    method: 'POST', path: '/api/common/getPriorityMasterList',
+    body: (o, _u, off, sz) => ({ organizationId: o, offset: off, noOfRecordsPerPage: sz }),
+  },
+  visitType: {
+    method: 'POST', path: '/api/global/visitTypeMasterList',
+    body: (o, _u, off, sz) => ({ organizationId: o, offset: off, noOfRecordsPerPage: sz }),
+  },
+  paymentMode: {
+    method: 'POST', path: '/api/billing/getPaymentModeMasterList',
+    body: (o, _u, off, sz) => ({ organizationId: o, offset: off, noOfRecordsPerPage: sz }),
+  },
+  paymentEntitment: {
+    method: 'POST', path: '/global/getPaymententitlementList',
+    body: (o, _u, off, sz) => ({ organizationId: o, offset: off, noOfRecordsPerPage: sz }),
+  },
+  scheduleMaster: {
+    method: 'GET', path: '/Pharmacy/global/listScheduleMaster',
+    getSegments: (o, u, off, sz) => [String(o), String(u), String(off), String(sz)],
+  },
+  // consultantType: NO backend list endpoint EXISTS (the legacy controller is
+  // a 48-line stub with no GET constant and no serviceAction; no Java
+  // @RequestMapping list method anywhere; guessed endpoint verified 404).
+  // Dispatched with noData:true so hasMaster()=true (it IS a real menu'd
+  // branch, node 450) but the component renders the honest no-data state —
+  // mirroring legacy, where the stub never populates commonList either.
+  consultantType: {
+    method: 'POST',
+    path: '', // never called (noData)
+    noData: true,
+  },
 };
 
 export const COMMON_MASTER_DISPATCH = DISPATCH;
@@ -234,6 +281,11 @@ export class CommonMasterService {
   /** True when the dispatch key has a configured endpoint. */
   hasMaster(key: string): boolean {
     return key in DISPATCH;
+  }
+
+  /** True when the master has no backend list endpoint (legacy stub). */
+  isNoData(key: string): boolean {
+    return DISPATCH[key]?.noData === true;
   }
 
   /** Keys known to the dispatcher (for the header/title). */
@@ -249,6 +301,14 @@ export class CommonMasterService {
     const ep = DISPATCH[key];
     if (!ep) {
       throw new Error(`commonMaster: no endpoint configured for '${key}'`);
+    }
+    if (ep.noData) {
+      // Master with no backend list endpoint (legacy stub) — emit an honest
+      // empty response; the component renders the no-data state.
+      return new Observable((sub) => {
+        sub.next({ status: 'success', code: '200', listObject: [] });
+        sub.complete();
+      });
     }
     const base = `${this.base}${ep.path}`;
     if (ep.method === 'GET' && ep.getSegments) {
