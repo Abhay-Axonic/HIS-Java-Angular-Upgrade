@@ -22,6 +22,9 @@ nursingStationWardMapping (548) — real (Updated Desc, recordPerPage payload).
 Batch 6 (all masked, DQ-2026-08-12-016): scheduleWise (657) + doctorWise (658)
 — blank-generic slot endpoint (swallowed exception + date-parse);
 appointmentSchedulingUnitMaster (653) — ERR-ref correlation envelope.
+Batch 7 (DQ-2026-08-12-018): EHCpackage (623), packageWithCAP (624),
+eitherOrPackage (626) — honest dev-empty (shared /api/packages/filter);
+wrapperExpiryMaster (554) — real (WRPTEST01); kitCreation (555) — empty.
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -511,6 +514,86 @@ with sync_playwright() as p:
     if errorsA6:
         FAILS.append(f"appointmentSchedulingUnitMaster page errors: {errorsA6[:3]}")
     ctxA6.close()
+
+    # 10. Batch 7 (DQ-2026-08-12-018): package trio (EHC/CAP/eitherOr) honest
+    # dev-empty (shared /api/packages/filter endpoint) + wrapperExpiryMaster
+    # real row (WRPTEST01) + kitCreation empty.
+    PKG_EMPTY = [
+        ("EHCpackage", 623, "No records"),
+        ("packageWithCAP", 624, "No records"),
+        ("eitherOrPackage", 626, "No records"),
+    ]
+    for route, mid, expect in PKG_EMPTY:
+        ctxB7 = browser.new_context()
+        pageB7 = ctxB7.new_page()
+        errorsB7 = []
+        pageB7.on("pageerror", lambda e: errorsB7.append(str(e)))
+        pageB7.on("console", lambda m: errorsB7.append(m.text) if m.type == "error" else None)
+        ctxB7.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageB7.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageB7.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageB7.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageB7.inner_text("body")
+        ok = expect in body and "accessDenied" not in pageB7.url
+        print(f"B7 {route}: empty-state('{expect}')={ok} url={pageB7.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"B7 {route}: empty state not rendered")
+        if errorsB7:
+            FAILS.append(f"B7 {route} page errors: {errorsB7[:3]}")
+        ctxB7.close()
+
+    # wrapperExpiryMaster — real row (WRPTEST01)
+    ctxW = browser.new_context()
+    pageW = ctxW.new_page()
+    errorsW = []
+    pageW.on("pageerror", lambda e: errorsW.append(str(e)))
+    pageW.on("console", lambda m: errorsW.append(m.text) if m.type == "error" else None)
+    ctxW.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageW.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageW.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 554}]}))"
+    )
+    pageW.goto(BASE + "/wrapperExpiryMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageW.inner_text("body")
+    real_w = "WRPTEST01" in body and "Test Wrapper" in body
+    print(f"B7 wrapperExpiryMaster: real_rows(WRPTEST01)= {real_w} url={pageW.url.split('/')[-1][:40]}")
+    if not real_w:
+        FAILS.append("wrapperExpiryMaster: real rows not rendered")
+    if errorsW:
+        FAILS.append(f"wrapperExpiryMaster page errors: {errorsW[:3]}")
+    ctxW.close()
+
+    # kitCreation — empty state
+    ctxK = browser.new_context()
+    pageK = ctxK.new_page()
+    errorsK = []
+    pageK.on("pageerror", lambda e: errorsK.append(str(e)))
+    pageK.on("console", lambda m: errorsK.append(m.text) if m.type == "error" else None)
+    ctxK.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageK.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageK.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 555}]}))"
+    )
+    pageK.goto(BASE + "/kitCreation", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageK.inner_text("body")
+    ok_k = "No records" in body and "accessDenied" not in pageK.url
+    print(f"B7 kitCreation: empty-state('No records')={ok_k} url={pageK.url.split('/')[-1][:40]}")
+    if not ok_k:
+        FAILS.append("kitCreation: empty state not rendered")
+    if errorsK:
+        FAILS.append(f"kitCreation page errors: {errorsK[:3]}")
+    ctxK.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
