@@ -1,0 +1,57 @@
+<div class="cm-wrap">
+  <header class="cm-header">
+    <h2>{{ masterTitle() }}</h2>
+    <span class="cm-key">/commonMaster/{{ masterKey() }}</span>
+  </header>
+
+  @if (loading()) {
+    <div class="cm-state">Loading…</div>
+  } @else if (unsupported()) {
+    <div class="cm-state cm-error">
+      <p>Master '{{ masterTitle() }}' has not been rebuilt yet.</p>
+      <p class="cm-muted">
+        This branch of commonMaster is outside the current slice; it will be
+        added in a family batch. The permission check still applies — you are
+        here because your role holds a family permission, not because the
+        screen is open.
+      </p>
+    </div>
+  } @else if (error()) {
+    <div class="cm-state cm-error">
+      <p>{{ error() }}</p>
+      <p class="cm-muted">
+        This is the backend's own message for an unseeded master — the master
+        grid has no rows to render in this environment.
+      </p>
+    </div>
+  } @else {
+    <div class="cm-toolbar">
+      <span class="cm-count">{{ rows().length }} record(s)</span>
+    </div>
+
+    @if (rows().length === 0) {
+      <div class="cm-state">No records.</div>
+    } @else {
+      <table class="cm-grid">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Description</th>
+            <th>Code</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr>
+              <td>{{ $index + 1 }}</td>
+              @for (cell of rowCells(row); track $index) {
+                <td>{{ cell }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

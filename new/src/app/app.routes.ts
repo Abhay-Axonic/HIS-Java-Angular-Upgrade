@@ -1786,6 +1786,26 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cabin-display/cabin-display').then((m) => m.CabinDisplay),
       },
+      // commonMaster dispatcher (one state, 43 dispatch branches; slice = the
+      // 4 Unit Master branches + ADT relation for the live-data proof).
+      // Gated by the family's node-id ARRAY (legacy grants when ANY family id
+      // is in the user's permissions) — a single-id gate would deny the other
+      // branches silently. See docs/DECISIONS_QUEUE.md COMMONMASTER records.
+      {
+        path: 'commonMaster/:url',
+        canActivate: [moduleAccessGuard],
+        data: {
+          moduleIds: [
+            412, 413, 414, 415, 417, 419, 420, 392, 423, 424, 427, 435, 436,
+            437, 825, 430, 429, 425, 431, 438, 440, 428, 439, 561, 564, 557,
+            389, 390, 391, 450, 460, 492, 393, 394, 395, 491, 447, 448, 449,
+            798, 569, 826, 426, 421, 844,
+          ],
+          title: 'Common Master',
+        },
+        loadComponent: () =>
+          import('./features/common-master/common-master').then((m) => m.CommonMasterComponent),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
