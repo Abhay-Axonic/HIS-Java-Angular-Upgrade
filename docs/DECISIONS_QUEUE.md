@@ -937,3 +937,35 @@ second) tracks it correctly. This also completes the evidence that the
 fourth-cause rule (check the proxy BEFORE classifying a screen as a backend
 defect) is load-bearing: two independent screens (scheduleMaster, autoService-
 PostingConfiguration) have now been mis-diagnosable without it.
+
+## DQ-2026-08-12-015 — UNIT MASTER 531 BATCH 5 (master/global + adt/unit + billing/global): classification BEFORE build
+
+Owner's pre-build checks applied to the batch-5 four (IPConsultationConfig-
+uration 684, userNursingStationMapper 689, nursingStationWardMapping 548,
+fundReconciliation 808):
+
+SHARED COMPONENT/STATE CHECK: NONE — all four have UNIQUE controllers and
+templates (IPConsultationConfigurationMasterController, userNursingStation-
+MapperController, nursingStationWardMappingController, fundInflowController
+for fundReconciliation). No dispatcher pattern.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- IPConsultationConfiguration: SUCCESS empty — honest dev-empty (POST
+  /api/global/getDoctorIPConsultationServiceMapperList {organizationId,
+  unitId, offset, noOfRecordsPerPage})
+- userNursingStationMapper: SUCCESS 1 REAL ROW — real data (POST /api/global/
+  getUserNursingStationMapperlist; legacy payload uses organisationId British
+  spelling)
+- nursingStationWardMapping: SUCCESS 1 REAL ROW — real data (POST /api/adt/
+  unit/getNursingStationWardMapperList; NOTE payload uses recordPerPage, NOT
+  noOfRecordsPerPage — 400 "Bad request: Invalid parameters" until the legacy
+  field name was matched)
+- fundReconciliation: SUCCESS empty — honest dev-empty (POST /api/billing/
+  getAllfundInflowDetailsByTrust {orgId, unitId, trustId:0}; large transaction
+  screen with 30+ endpoints, primary list verified)
+
+ZERO generic envelopes, ZERO masked errors in this family (no correlation
+envelope, no fall-through, no phantom column). Classification is again the
+live-curl envelope check BEFORE any browser assertion (DQ-2026-08-12-014's
+method); the recordPerPage 400 is a payload-field-name mismatch, resolved by
+matching the legacy controller exactly, not a backend defect.
