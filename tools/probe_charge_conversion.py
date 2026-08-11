@@ -56,10 +56,12 @@ def main():
 
         body = page.inner_text("body")
         banner = "partial success on a billing write path" in body
+        amber = "AMBER" in body and "permanent warning" in body
         mechanism = "getOrderDetailsListByOrderId" in body and "SUCCESS" in body
-        print(f"FINDING BANNER: {banner}, names the mechanism: {mechanism}")
-        if not (banner and mechanism):
-            FAILS.append("finding banner not rendered (banner/mechanism)")
+        why_permanent = "Why this warning is permanent" in body and "response it would read is the thing that lies" in body
+        print(f"FINDING BANNER: {banner}, AMBER-permanent tier: {amber}, names the mechanism: {mechanism}, why-permanent stated: {why_permanent}")
+        if not (amber and banner and mechanism and why_permanent):
+            FAILS.append("finding banner not rendered (tier/banner/mechanism/why-permanent)")
 
         # the visit-type feed renders honestly (loaded list OR its empty state)
         feed_honest = "Visit type" in body

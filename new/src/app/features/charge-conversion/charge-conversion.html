@@ -5,7 +5,7 @@
   </header>
 
   <section class="cc-finding">
-    <h3>Backend defect surfaced — partial success on a billing write path</h3>
+    <h3>AMBER — known defect, permanent warning: partial success on a billing write path</h3>
     <p>
       The legacy save can report success while writing nothing: when the
       order-details lookup fails, the details save and the order-rate update
@@ -26,6 +26,12 @@
       rebuild renders the flow surface and the feed that works without a
       patient context (visit types); the conversion write cannot be honestly
       exercised without a patient.
+    </p>
+    <p class="cc-why">
+      Why this warning is permanent: the save path reports success without
+      writing when the lookup fails — you have not hit it, and this warning
+      cannot be shown at save time because the response it would read is the
+      thing that lies.
     </p>
   </section>
 

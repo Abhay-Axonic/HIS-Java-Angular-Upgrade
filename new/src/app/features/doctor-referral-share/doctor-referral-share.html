@@ -5,7 +5,7 @@
   </header>
 
   <section class="drs-finding">
-    <h3>False-success surfaced — the referral-share save reports success with nothing written</h3>
+    <h3>AMBER — known defect, permanent warning: the referral-share save reports success with nothing written</h3>
     <p>
       saveReferralShare returns SUCCESS + "saved" when both detail lists are
       empty — no rows are written, yet the caller sees success.
@@ -22,6 +22,11 @@
       rollback in the catch).
     </p>
     <p class="drs-note">Not fixed (Rule 10 — backend BR candidates).</p>
+    <p class="drs-why">
+      Why this warning is permanent: the save path reports success without
+      writing — you have not hit it, and this warning cannot be shown at save
+      time because the response it would read is the thing that lies.
+    </p>
   </section>
 
   <section class="drs-list card">

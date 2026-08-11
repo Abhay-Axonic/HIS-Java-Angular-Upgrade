@@ -55,10 +55,12 @@ def main():
 
         body = page.inner_text("body")
         banner = "False-success surfaced" in body
+        amber = "AMBER" in body and "permanent warning" in body
         mechanism = "saveReferralShare" in body and "empty" in body and "nothing written" in body
-        print(f"FALSE-SUCCESS BANNER: {banner}, names the mechanism: {mechanism}")
-        if not (banner and mechanism):
-            FAILS.append("false-success finding not rendered (banner/mechanism)")
+        why_permanent = "Why this warning is permanent" in body and "response it would read is the thing that lies" in body
+        print(f"FALSE-SUCCESS BANNER: {banner}, AMBER-permanent tier: {amber}, names the mechanism: {mechanism}, why-permanent stated: {why_permanent}")
+        if not (amber and mechanism and why_permanent):
+            FAILS.append("AMBER-permanent finding not rendered (tier/mechanism/why-permanent)")
 
         honest = "No referral share rows found" in body
         print(f"HONEST DEV-EMPTY LIST: {honest}")
