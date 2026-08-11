@@ -595,3 +595,31 @@ because the backend was"). The four, named:
 
 When a screen looks broken in the dev harness: check the proxy route BEFORE
 classifying it as a backend defect.
+
+## DQ-2026-08-12-006 — COUNT CONFIRMATION + CORRECTED REMAINING AFTER COMMONMASTER (owner-requested, post-merge 3aa17177)
+
+(a) DIRECTORY-ANCHORED COUNT: commonMaster increments the rebuilt-directory
+census by ONE, not 43 — it is one feature directory (new/src/app/features/
+common-master/) dispatching 43 masters internally. Census was 268 (DQ-336,
+2026-08-11); common-master is the ONLY feature dir added since the anchor
+(verified via git diff 128e509e..origin/main). CURRENT FIGURE: **269 rebuilt
+feature directories**. EXCLUSION SET: 4 non-screen utility dirs excluded from
+the census (_decoy-groundwork, _recheck-20-bucket, _screen-template,
+access-denied); the 5 menuless commonMaster branches (languageMaster,
+microbiologyStainMaster, scheduleMaster, serologyTestFindingMaster,
+storageLocationMaster) stay latent and uncounted.
+
+(b) CORRECTED REMAINING CANDIDATES: **256 (209 backend-verified + 47
+bindings-only)**. The owner's cited "209 backend-verified" is exactly
+247 - 38, confirming the corrected-record frame: DQ-356 (2026-08-11) fixed the
+denominator at 294 candidates = 247 verified + 47 bindings-only (the 297 was
+the pre-correction DQ-343 headline; the correction moved the 38 menu'd
+commonMaster masters from bindings-only into verified after live-verification
+across all four backend families). Now that the dispatcher is built, those 38
+menu'd masters are covered: 294 - 38 = 256 (209 verified + 47 bindings-only).
+
+(c) NEXT SUBTREE: Unit Master 531 (205 nodes) — raw sweep 55 candidates
+(40 verified + 15 bindings-only); the 4 #commonMaster partials (557/561/564/
+569) are the slice masters now covered by the dispatcher, so they are not
+counted as unbuilt. 44 report, 57 rebuilt, 22 partial (18 genuinely partial
+after the 4 covered), 27 shell, 0 other.
