@@ -1730,6 +1730,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/patient-list/patient-list').then((m) => m.PatientList),
       },
+      {
+        path: 'OPDCoverSheet',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'OPD Coversheet' },
+        loadComponent: () =>
+          import('./features/opd-coversheet/opd-coversheet').then((m) => m.OpdCoversheet),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
