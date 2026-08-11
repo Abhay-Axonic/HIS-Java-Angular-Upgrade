@@ -539,3 +539,36 @@ service-layer defect — the `size() > 0` guard should be `>= 0` or the empty
 branch should be outside the guard. Fixing it changes observable behavior (a
 message string), so it needs a BR entry + owner approval, not an inline fix.
 The dead SAMPLE_RECORDS_NOT_FOUND constant (wrong master) is the same class.
+
+## DQ-2026-08-12-004 — FINAL BATCH (billing/common 5 + master 1): dispatcher now 43/43 — 5 real-data branches, 1 noData stub, ZERO generic envelopes in this batch; proxy gap found + fixed
+
+Owner directive: "check each endpoint's envelope shape and split descriptive
+from generic rather than writing all the 500s off as dev-empty."
+
+RESULT: this batch has ZERO 500s and ZERO generic envelopes — all five
+endpoints with data return SUCCESS with REAL rows (live-verified 2026-08-12):
+
+| branch | method+path | live result |
+|---|---|---|
+| priorityMaster | POST /api/common/getPriorityMasterList | success, 3 rows |
+| visitType | POST /api/global/visitTypeMasterList | success, 7 rows |
+| paymentMode | POST /api/billing/getPaymentModeMasterList | success, 8 rows |
+| paymentEntitment | POST /global/getPaymententitlementList | success, 3 rows (class-level @RequestMapping("/global"), NOT /api/global — legacy GLOBAL constant; live-verified both variants, /api 404s) |
+| scheduleMaster | GET /Pharmacy/global/listScheduleMaster/{org}/{unit}/{off}/{sz} | success, 1 row |
+
+consultantType (node 450): NO backend list endpoint EXISTS — the legacy
+controller is a 48-line stub (no GET constant, no serviceAction, no Java
+@RequestMapping list method anywhere in legacy/; a guessed endpoint verified
+404). Dispatched with noData:true (hasMaster()=true, it IS a real menu'd
+branch) but the component renders the honest no-data state, mirroring legacy
+where the stub never populates commonList either.
+
+PROXY GAP found during the live probe: scheduleMaster's real-data grid did not
+render in the app even though the endpoint works directly — the dev-server
+proxy (new/proxy.conf.json) had NO /Pharmacy/** route, so the app's
+same-origin call to /Pharmacy/global/listScheduleMaster was answered with the
+SPA index.html (parse failure). Added /Pharmacy/** -> localhost:8080. Same
+class as the screen-47 header-contract split (a dev-harness route gap, not a
+backend defect). NOTE: proxy.conf.json is gitignored (dev-only bridge) — the
+branch carries the fix in the working tree; it does not appear in the merge
+diff.
