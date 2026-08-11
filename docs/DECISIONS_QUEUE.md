@@ -1122,3 +1122,30 @@ RESULT: 1 real build + 9 noData + 5 walked. The 9 noData screens use ONE
 shared noData component pattern (accessControl precedent, DQ-019) with per-
 screen routes; templateMaster builds as a real master with the raw-array
 response handling.
+
+## DQ-2026-08-12-022 — GLOBAL MASTER (369) SUBTREE SWEEP: 27 candidates
+
+Swept Global Master (root 369, 168 nodes): 98 name-matched states; 64 already
+rebuilt via routes, 7 via the commonMaster dispatcher, 27 GENUINE candidates
+(alias-checked: none rebuilt under kebab routes).
+
+CONTROLLER CLASSIFICATION of the 27:
+- NODATA — MasterController shells (10): bacteriaClassification (428),
+  antibiotic (429), antibioticsClass (430), antibioticsGroup (431),
+  sensitivityTestResult (438), dispensingMaster (469), kitMaster (471),
+  taxMaster (474), consentType (528), vaccinationSchedule (750) — all resolve
+  to common-controller.js's MasterController (generic scaffold, zero api
+  refs; dashboardInfoMasterController.js was a false partial-match).
+- NODATA — missing controller (4): subdepartmentMaster (373),
+  specimanMaster (444), packageMaster (465), daywiseDietTemplate (513) —
+  states reference no controller file that exists.
+- REAL controllers (13, 12 distinct): licenseTypeMaster (379),
+  consentMaster (400/527 — same ctrl), IncubationMaster (422 — NOTE: it's a
+  LIS TRANSACTION screen incubationObjservationController, not a master),
+  sampleTypeMediaMappingMaster (426), colonyTestWithMediaMaster (434),
+  mappingofMicroorganism (443), doseMaster (502), dietTypeMaster (510),
+  subsequentSurgeryConfiguration (516), procedureConfigurations (696),
+  siteOfAdministration (753), genericScheduleMaster (827).
+
+14 noData + 13 real (IncubationMaster may be a transaction deferral — verify
+during build). Live endpoint verification next.
