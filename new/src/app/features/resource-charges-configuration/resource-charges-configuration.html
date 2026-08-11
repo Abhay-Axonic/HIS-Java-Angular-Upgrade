@@ -57,7 +57,7 @@
   <section class="rcc-grid card">
     <div class="rcc-grid-toolbar">
       <input type="text" class="rcc-search" placeholder="Search speciality / service / role"
-             [(ngModel)]="searchTerm" />
+             [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
       <span class="rcc-count">{{ filteredRows().length }} row(s)</span>
     </div>
     @if (loading()) {
