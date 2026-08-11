@@ -1011,3 +1011,23 @@ this family. The rebuilds carry AMBER-permanent banners naming the mechanism
 (swallowed controller exception + date-parse for the pair; correlation
 envelope for getSlotsNew). Backend fixes NOT made (Rule 10; BR candidates:
 fix getDate's short-date handling, stop swallowing at the controller).
+
+## DQ-2026-08-12-017 — CORRECTION to DQ-2026-08-12-016: appointmentSchedulingUnitMaster is REAL DATA, not masked
+
+The live browser probe rendered an actual row on appointmentSchedulingUnit-
+Master ("Dr. Demo Doctor | General Medicine") — the endpoint POST /api/opd/
+getSlotsNew works with the payload {organizationId, unitId, slotTypeId} and
+returns SUCCESS with real data. The masked ERR-98fe438a seen during
+classification was a WRONG-PAYLOAD artifact: the probe curl sent
+{organizationId, unitId, offset, noOfRecordsPerPage}, which hits a different
+query branch that 500s; the component's actual payload (slotTypeId: 1)
+succeeds. Classification correction: appointmentSchedulingUnitMaster (653) =
+REAL DATA. scheduleWise (657) + doctorWise (658) remain the masked pair
+(blank generic envelope, date-parse + swallowed exception — verified against
+the component's own payload which ALSO returns the blank generic envelope).
+
+LESSON (matches DQ-2026-08-12-008): a classification must be verified against
+the payload the REBUILD will actually send, not just a guessed payload. The
+live probe is the arbiter: it rendered real data where the curl saw a masked
+error. The component's template now renders the real row (correct); the
+masked-banner branch stays for scheduleWise/doctorWise only.
