@@ -1765,6 +1765,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/counter-worklist/counter-worklist').then((m) => m.CounterWorklist),
       },
+      {
+        path: 'growthChart',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 744, title: 'Growth Chart' },
+        loadComponent: () =>
+          import('./features/growth-chart/growth-chart').then((m) => m.GrowthChart),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
