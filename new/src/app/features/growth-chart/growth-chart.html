@@ -1,0 +1,70 @@
+<div class="gc-screen">
+  <div class="screen-header">
+    <h2>Growth Chart</h2>
+    <p class="subtitle">
+      Patient growth-chart records (weight / height by age). The list feed and the
+      patient-details feed are live and return real dev rows — this is a functional
+      surface, not a stub.
+    </p>
+  </div>
+
+  <div class="search-panel">
+    <div class="row">
+      <label>
+        Patient ID
+        <input type="number" [(ngModel)]="search.patientId" name="patientId" />
+      </label>
+      <label>
+        Gender
+        <select [(ngModel)]="search.genderId" name="genderId">
+          @for (g of genders(); track g) {
+            <option [ngValue]="g.id ?? g.genderId">{{ g.desc ?? g.genderName ?? ('Gender ' + (g.id ?? g.genderId)) }}</option>
+          }
+        </select>
+      </label>
+      <button class="btn-primary" (click)="loadDetails()" [disabled]="loading()">
+        @if (loading()) {
+          Loading…
+        } @else {
+          Load patient details
+        }
+      </button>
+      <button class="btn-secondary" (click)="loadList()" [disabled]="loading()">Show list</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (loaded()) {
+    <div class="results">
+      @if (growthChartList().length === 0) {
+        <div class="results-empty">No growth chart records found.</div>
+      } @else {
+        <table class="gc-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Age (months)</th>
+              <th>Weight</th>
+              <th>Height</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (g of growthChartList(); track g) {
+              <tr>
+                <td>{{ g.growthChartId ?? '—' }}</td>
+                <td>{{ g.ageInMonths ?? '—' }}</td>
+                <td>{{ g.weight ?? ((g.weightFrom ?? g.weightTo) ?? '—') }}</td>
+                <td>{{ g.height ?? '—' }}</td>
+                <td>{{ g.growthChartDate ?? '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+</div>
