@@ -767,3 +767,51 @@ ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
 ZERO generic envelopes, ZERO masked errors in this family (no correlation
 envelope, no fall-through, no phantom column). The four master-list screens
 render empty grids honestly; bloodGroupMatching renders its real rows.
+
+## DQ-2026-08-12-011 — DELEGATION AS A KNOWN PROCESS (owner-requested record: how subagent-written code works, and the verification obligation)
+
+Asked: batch 2's four of five features were written by a subagent — state how
+that works, what the subagent receives/returns, and which gates run on its
+output vs mine. The arrangement is now a DOCUMENTED process, not an
+undiscussed one.
+
+WHAT THE SUBAGENT RECEIVES (the brief, in full context):
+- The exact repo path, branch, and the reference feature directory to mirror
+  (batch-1 patient-type-master — the house pattern in concrete form).
+- Per-feature specs: route path, moduleId, title, component class name, the
+  exact list endpoint (method + path + payload), the legacy controller line
+  refs that prove the endpoint, and the live envelope classification
+  (descriptive dev-empty / honest empty / real data — so it never guesses
+  banner behavior).
+- The non-negotiable house rules restated: signal()+@if/@for ONLY (zero
+  *ngIf/*ngFor), API_BASE_URL inject()ed, no manual HttpHeaders,
+  SessionService getters as properties, NotificationService success()/error(),
+  StatusToggle [checked]+(toggled), strict-template gotchas (no Number() in
+  templates).
+
+WHAT IT RETURNS: a self-report of files created + tsc/ng-build results +
+deviations. SELF-REPORTS ARE NOT EVIDENCE — they are the subagent's claims.
+
+WHICH GATES RUN ON SUBAGENT OUTPUT vs MY OUTPUT (the verification
+obligation, explicit):
+- The SAME gates run on BOTH. Subagent work is not trusted on its report:
+  1. tsc --noEmit (whole project) — re-run by me after the subagent finishes.
+  2. ng build (owner-approved; the only gate that compiles templates) — re-run
+     by me.
+  3. LIVE browser probe (freshness gate first, real assertions per screen) —
+     run by me against the served bundle.
+  4. Route/moduleId/C9 checks (grep the routes file + templates) — by me.
+  5. Branch commit + merge-readiness dry run — by me.
+- My own hand-written features (parameterMaster in batch 2, bloodGroup-
+  MatchingMaster in batch 3) go through the identical gates. There is no
+  "subagent tier" of verification — the obligation is the same for every
+  line that lands.
+- Independent verification is MANDATORY before claiming a subagent-written
+  batch green: the subagent's tsc/build run may have raced the dev server,
+  its route insert may have conflicted with mine (it did once — the sibling
+  worktree warning), and its "verified" claims are unobserved. The parent
+  re-runs everything and reconciles.
+
+BOUNDARY: subagents never commit, never touch main/governance docs, never
+run the probes' freshness gate decisions — the parent does. Subagent scope is
+file-writing in a feature directory + its own tsc/build self-check.
