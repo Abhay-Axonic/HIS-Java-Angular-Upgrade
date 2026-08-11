@@ -8,6 +8,9 @@ Batch 2 (LIS family): histopathologyTest (559), parameterFormula (566),
 profilepanelTestMaster (567), storageLocationMstForSlideBlocks (568) —
 descriptive dev-empty surfaced; parameterMaster (562) — masked-error banner
 (phantom column technique_id, correlation envelope).
+Batch 3 (blood bank family): bloodTest (734), reasonOfDiscard (737),
+screeningTest (738), donorRejectionMaster (740) — honest dev-empty (SUCCESS
+empty listObject); bloodGroupMatchingMaster (741) — real rows (A+).
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -222,6 +225,63 @@ with sync_playwright() as p:
     if real_errs:
         FAILS.append(f"parameterMaster page errors: {real_errs[:3]}")
     ctxM.close()
+
+    # 6. Blood bank family batch 3 (DQ-2026-08-12-010): 4 honest dev-empty
+    # screens (render "No records." empty state, no banner) + bloodGroup-
+    # MatchingMaster real rows (A+).
+    BLOOD_EMPTY = [
+        ("bloodTest", 734, "No records"),
+        ("reasonOfDiscard", 737, "No records"),
+        ("screeningTest", 738, "No records"),
+        ("donorRejectionMaster", 740, "No records"),
+    ]
+    for route, mid, expect in BLOOD_EMPTY:
+        ctxB = browser.new_context()
+        pageB = ctxB.new_page()
+        errorsB = []
+        pageB.on("pageerror", lambda e: errorsB.append(str(e)))
+        pageB.on("console", lambda m: errorsB.append(m.text) if m.type == "error" else None)
+        ctxB.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageB.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageB.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageB.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageB.inner_text("body")
+        ok = expect in body and "accessDenied" not in pageB.url
+        print(f"BLOOD {route}: empty-state('{expect}')={ok} url={pageB.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"BLOOD {route}: empty state not rendered")
+        if errorsB:
+            FAILS.append(f"BLOOD {route} page errors: {errorsB[:3]}")
+        ctxB.close()
+
+    # bloodGroupMatchingMaster — real rows (A+)
+    ctxG = browser.new_context()
+    pageG = ctxG.new_page()
+    errorsG = []
+    pageG.on("pageerror", lambda e: errorsG.append(str(e)))
+    pageG.on("console", lambda m: errorsG.append(m.text) if m.type == "error" else None)
+    ctxG.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageG.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageG.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 741}]}))"
+    )
+    pageG.goto(BASE + "/bloodGroupMatchingMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageG.inner_text("body")
+    real_a = "A+" in body and "A Positive" in body
+    print(f"BLOOD bloodGroupMatchingMaster: real_rows(A+)= {real_a} url={pageG.url.split('/')[-1][:40]}")
+    if not real_a:
+        FAILS.append("bloodGroupMatchingMaster: real rows not rendered")
+    if errorsG:
+        FAILS.append(f"bloodGroupMatchingMaster page errors: {errorsG[:3]}")
+    ctxG.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
