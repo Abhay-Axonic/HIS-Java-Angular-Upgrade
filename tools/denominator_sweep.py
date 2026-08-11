@@ -63,6 +63,10 @@ def main():
                 if f.endswith(".java"):
                     java_files[f[:-5]] = os.path.join(root, f)
 
+    # exact controller-JS basenames (sans 'Controller' suffix) loaded in index.html
+    ctrl_roots = {c[:-len("Controller")].lower() for c in
+                  set(re.findall(r"controller/[^\"']*?([A-Za-z0-9_]+Controller)\.js", index))}
+
     def classify(n):
         """Return (bucket, detail). Buckets:
         report    — menu-only leaf, no state, no backend
@@ -88,9 +92,13 @@ def main():
             if dir_hit or route_hit:
                 return "partial", f"#{st} ({'dir' if dir_hit else ''}{'route' if route_hit else ''})"
         else:
-            # no actionLink: name-map fallback (node name -> state)
+            # no actionLink: name-map fallback (node name -> state). The candidate
+            # set includes the acronym-preserved base (e.g. RMOAllocationMaster,
+            # QMS, IPConsultationConfiguration) — first-letter-lowercase alone
+            # misses those (the 2026-08-11 hand-check: 4 state + 19 controller-
+            # basename misses of 400 report-classified nodes).
             base = re.sub(r"[^a-zA-Z0-9]", "", name)
-            cands = {base[:1].lower() + base[1:], kebab(name), base.lower()}
+            cands = {base[:1].lower() + base[1:], kebab(name), base.lower(), base}
             st = next((c for c in cands if c in all_states), "")
             if st:
                 # a no-actionlink node whose state is already rebuilt on main
@@ -101,6 +109,11 @@ def main():
                     return "partial", f"#{st} ({'dir' if k in feat_dirs else ''}{'route' if st in route_paths else ''})"
 
         if not st:
+            # exact controller-basename match (the 19 QMS/RMO/OTIMS-class misses):
+            # the node has its own controller JS even without a matching state
+            base = re.sub(r"[^a-zA-Z0-9]", "", (n.get("name") or "").strip())
+            if base and base.lower() in ctrl_roots:
+                return "candidate", f"#{base.lower()} (ctrl-basename)"
             return "report", ""
 
         # state-registered node: find its block for controller/template
