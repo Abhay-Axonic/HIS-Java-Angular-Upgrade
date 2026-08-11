@@ -1,0 +1,140 @@
+<div class="sr-screen">
+  <div class="screen-header">
+    <h2>Self Registration</h2>
+    <p class="subtitle">
+      Kiosk-style patient self-registration. The reference feeds below are live and
+      org-scoped — a dev database returns the seeded rows honestly. The payment-enabled
+      save path (<code>POST /api/billing/kiosk/saveAndPay</code>, M-Pesa STK / card) is
+      documented in the README and is not exercised on this surface.
+    </p>
+  </div>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (loaded()) {
+    <div class="reg-panel">
+      <div class="form-grid">
+        <label>
+          Prefix
+          <select [(ngModel)]="patient.prefixId" name="prefixId">
+            <option [ngValue]="null">— select —</option>
+            @for (p of prefixes(); track p) {
+              <option [ngValue]="p.prefixId ?? p.id">{{ p.prefixDesc ?? p.desc ?? ('Prefix ' + (p.prefixId ?? p.id)) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          First name
+          <input type="text" [(ngModel)]="patient.firstName" name="firstName" />
+        </label>
+        <label>
+          Last name
+          <input type="text" [(ngModel)]="patient.lastName" name="lastName" />
+        </label>
+        <label>
+          Gender
+          <select [(ngModel)]="patient.genderId" name="genderId">
+            <option [ngValue]="null">— select —</option>
+            @for (g of genders(); track g) {
+              <option [ngValue]="g.id ?? g.genderId">{{ g.desc ?? g.genderName ?? ('Gender ' + (g.id ?? g.genderId)) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Date of birth
+          <input type="date" [(ngModel)]="patient.dob" name="dob" />
+        </label>
+        <label>
+          Country
+          <select [(ngModel)]="patient.countryId" name="countryId">
+            <option [ngValue]="null">— select —</option>
+            @for (c of countries(); track c) {
+              <option [ngValue]="c.countryId ?? c.id">{{ c.countryName ?? c.desc ?? ('Country ' + (c.countryId ?? c.id)) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Phone
+          <input type="text" [(ngModel)]="patient.phoneNo" name="phoneNo" />
+        </label>
+        <label>
+          Identification type
+          <select [(ngModel)]="patient.identificationId" name="identificationId">
+            <option [ngValue]="null">— select —</option>
+            @for (i of identifications(); track i) {
+              <option [ngValue]="i.identificationId ?? i.id">{{ i.identificationName ?? i.desc ?? ('ID ' + (i.identificationId ?? i.id)) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Identification no
+          <input type="text" [(ngModel)]="patient.identificationNo" name="identificationNo" />
+        </label>
+        <label>
+          Marital status
+          <select [(ngModel)]="patient.maritalStatusId" name="maritalStatusId">
+            <option [ngValue]="null">— select —</option>
+            @for (m of maritalStatuses(); track m) {
+              <option [ngValue]="m.id ?? m.maritalStatusId">{{ m.desc ?? m.maritalStatusDesc ?? ('Status ' + (m.id ?? m.maritalStatusId)) }}</option>
+            }
+          </select>
+        </label>
+      </div>
+      <p class="hint">
+        Feeds live-verified: country (India/IN), gender (3 rows), identification type (4
+        rows), marital status (2 rows), prefix (Mr.). The save path is payment-gated and
+        documented in the README — nothing is written by this surface.
+      </p>
+    </div>
+
+    <div class="feeds">
+      <section>
+        <h3>Reference feeds</h3>
+        <div class="ref-grid">
+          <div>
+            <strong>Countries</strong>
+            <ul>
+              @for (c of countries(); track c) {
+                <li>{{ c.countryName }} ({{ c.countryCode }})</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+          <div>
+            <strong>Genders</strong>
+            <ul>
+              @for (g of genders(); track g) {
+                <li>{{ g.desc ?? g.genderName }}</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+          <div>
+            <strong>Identification types</strong>
+            <ul>
+              @for (i of identifications(); track i) {
+                <li>{{ i.identificationName ?? i.desc }}</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+          <div>
+            <strong>Marital statuses</strong>
+            <ul>
+              @for (m of maritalStatuses(); track m) {
+                <li>{{ m.desc ?? m.maritalStatusDesc }}</li>
+              } @empty {
+                <li class="muted">none (dev)</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+</div>

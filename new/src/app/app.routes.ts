@@ -1751,6 +1751,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/encounter-queue-ehc/encounter-queue-ehc').then((m) => m.EncounterQueueEhc),
       },
+      {
+        path: 'selfRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 703, title: 'Self Registration' },
+        loadComponent: () =>
+          import('./features/self-registration/self-registration').then((m) => m.SelfRegistration),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
