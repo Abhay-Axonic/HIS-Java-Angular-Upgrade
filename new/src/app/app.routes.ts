@@ -1836,6 +1836,49 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/pharmacy-tariff-master/pharmacy-tariff-master').then((m) => m.PharmacyTariffMaster),
       },
+      // LIS / Unit batch — 4 list-only masters. Endpoints taken verbatim from
+      // the legacy controllers (see each feature's service doc comment for
+      // line refs; lis.url.config.js LIS_UNIT = "/LIS/unit"). All 4 are
+      // descriptive dev-empty: the backend answers status 'error' + a plain
+      // "… not found." message when the dev DB has no rows, surfaced verbatim
+      // by each component's error state (no masked banner).
+      {
+        path: 'histopathologyTest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 559, title: 'Histopathology Test' },
+        loadComponent: () =>
+          import('./features/histopathology-test/histopathology-test').then((m) => m.HistopathologyTest),
+      },
+      {
+        path: 'parameterFormula',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 566, title: 'Parameter Formula Master' },
+        loadComponent: () =>
+          import('./features/parameter-formula/parameter-formula').then((m) => m.ParameterFormula),
+      },
+      {
+        path: 'profilepanelTestMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 567, title: 'Profile Panel Test Master' },
+        loadComponent: () =>
+          import('./features/profile-panel-test-master/profile-panel-test-master').then((m) => m.ProfilePanelTestMaster),
+      },
+      {
+        path: 'storageLocationMasterForSlideBlocks',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 568, title: 'Storage Location Master for Slide Blocks' },
+        loadComponent: () =>
+          import('./features/storage-location-master-slide-blocks/storage-location-master-slide-blocks').then(
+            (m) => m.StorageLocationMasterSlideBlocks,
+          ),
+      },
+      {
+        path: 'parameterMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 562, title: 'Parameter Master' },
+        loadComponent: () =>
+          import('./features/parameter-master/parameter-master').then((m) => m.ParameterMaster),
+      },
       {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],

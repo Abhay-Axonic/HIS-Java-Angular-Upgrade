@@ -1,0 +1,53 @@
+<div class="pm-wrap">
+  <header class="pm-header">
+    <h2>Parameter Master</h2>
+    <span class="pm-sub">Unit Master / LIS — module 562</span>
+  </header>
+
+  @if (loading()) {
+    <p class="pm-muted">Loading parameters…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="pm-state pm-masked">
+        <p>{{ error() }}</p>
+        <p class="pm-muted">
+          This is the masked-error envelope, permanent: the list endpoint
+          throws a real backend exception wrapped in the correlation-id
+          message. The named query <code>GET_PAGINATED_PARAMETER_MASTER_LIST</code>
+          selects <code>techniqueId</code>, a column that does not exist in
+          <code>lab.m_parameter_master</code> (phantom column, DQ-2026-08-12-009).
+          The table is not simply empty — the backend is failing (reference
+          envelope from ErrorCorrelationUtil). This warning cannot be shown
+          at save time because the response it would read is the thing that
+          lies.
+        </p>
+      </div>
+    } @else {
+      <div class="pm-state pm-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="pm-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Unit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.parameterId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="pm-empty">No parameters.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
