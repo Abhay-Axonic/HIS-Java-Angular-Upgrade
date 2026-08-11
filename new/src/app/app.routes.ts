@@ -2082,6 +2082,41 @@ export const routes: Routes = [
           import('./features/ip-default-service-config/ip-default-service-config').then((m) => m.IPdefaultServiceConfig),
       },
       {
+        path: 'EHCpackage',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 623, title: 'EHC Package' },
+        loadComponent: () =>
+          import('./features/ehc-package/ehc-package').then((m) => m.EhcPackage),
+      },
+      {
+        path: 'packageWithCAP',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 624, title: 'Package With CAP' },
+        loadComponent: () =>
+          import('./features/package-with-cap/package-with-cap').then((m) => m.PackageWithCap),
+      },
+      {
+        path: 'eitherOrPackage',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 626, title: 'Either Or Package' },
+        loadComponent: () =>
+          import('./features/either-or-package/either-or-package').then((m) => m.EitherOrPackage),
+      },
+      {
+        path: 'wrapperExpiryMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 554, title: 'Wrapper Expiry Master' },
+        loadComponent: () =>
+          import('./features/wrapper-expiry-master/wrapper-expiry-master').then((m) => m.WrapperExpiryMaster),
+      },
+      {
+        path: 'kitCreation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 555, title: 'Kit Creation' },
+        loadComponent: () =>
+          import('./features/kit-creation/kit-creation').then((m) => m.KitCreation),
+      },
+      {
         path: 'OTIMSroleCreation',
         canActivate: [moduleAccessGuard],
         data: { title: 'OTIMS Role Creation' },

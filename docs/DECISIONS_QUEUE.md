@@ -1031,3 +1031,202 @@ the payload the REBUILD will actually send, not just a guessed payload. The
 live probe is the arbiter: it rendered real data where the curl saw a masked
 error. The component's template now renders the real row (correct); the
 masked-banner branch stays for scheduleWise/doctorWise only.
+
+## DQ-2026-08-12-018 — UNIT MASTER 531 BATCH 7 (services 3 + CSSD 2): classification
+
+Owner's pre-build checks applied (EHCpackage 623, packageWithCAP 624,
+eitherOrPackage 626, wrapperExpiryMaster 554, kitCreation 555):
+
+SHARED COMPONENT/STATE CHECK: NONE — all five have UNIQUE controllers and
+templates. The package trio (EHC/CAP/eitherOr) share the /api/packages/filter
+endpoint with packageTypeId 1/3/2 — a backend family, not a shared component.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- EHCpackage: SUCCESS empty — honest dev-empty (POST /api/packages/filter
+  {orgId, unitId, packageCode, packageName, packageTypeId:1, offset,
+  noOfRecordsPerPage, searchKeyword})
+- packageWithCAP: SUCCESS empty — honest dev-empty (packageTypeId:3)
+- eitherOrPackage: SUCCESS empty — honest dev-empty (packageTypeId:2)
+- wrapperExpiryMaster: SUCCESS 1 REAL ROW (WRPTEST01 "Test Wrapper", 30 days)
+  — real data (GET /cssd/getWrapperExpiryList?organizationId&unitId&offset&
+  noOfRecordsPerPage). NOTE: without offset/noOfRecordsPerPage the endpoint
+  500s with the correlation envelope (ERR-c48a20d8) — a wrong-payload
+  artifact, NOT masked; with the full legacy query params it succeeds.
+- kitCreation: SUCCESS empty — honest dev-empty (GET /cssd/getAllKitsList
+  with full query params; without them ERR-8bf108d1).
+
+LESSON CONFIRMED (DQ-2026-08-12-017 applied twice in one batch): a
+classification must be verified against the payload the REBUILD sends — the
+CSSD pair looked masked with a minimal payload and are actually real
+data/honest empty with the legacy query params. ZERO masked errors in batch 7.
+
+## DQ-2026-08-12-019 — UNIT MASTER 531 BATCH 8 (clinical 2 + no-state + accessControl pair): classification
+
+Owner's pre-build checks applied (RMOAllocationMaster 824, growthChartMaster
+962, templateutility 667, accessControl 677, accessControl1 673):
+
+SHARED COMPONENT/STATE CHECK: accessControl + accessControl1 SHARE the
+accessControlController (the 60-line STUB — zero serviceAction/api/URI refs,
+pure angular-ui-tree on empty $scope.data) with TWO templates
+(views/common/access-control.html vs views/access-control.html) — the
+commonMaster shared-controller precedent: ONE noData rebuild, TWO routes.
+templateutility (667) has NO state in app.js (sweep's ctrl-basename class) —
+NOT a screen; walked past.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- RMOAllocationMaster: SUCCESS empty — honest dev-empty (POST /api/unit/
+  clinical/getRmoAllocationMasterList {organizationId, unitId, offset,
+  noOfRecordsPerPage})
+- growthChartMaster: SUCCESS 1 REAL ROW — real data (GET /api/global/
+  growthChartlist/{org}/{unit}/{offset}/{size}; the height-units GET also
+  SUCCESS 1 row)
+- accessControl + accessControl1: NO-ENDPOINT (noData class, DQ-005) — the
+  stub controller never calls any endpoint; legacy renders an empty tree
+  editor with no data path.
+
+ZERO masked errors in batch 8. RMO + growthChart build as normal masters;
+accessControl pair builds ONCE (shared component) with the noData state, two
+routes (moduleId 677 and 673) both pointing at it.
+
+## DQ-2026-08-12-020 — UNIT MASTER 531 BINDINGS-ONLY 15: full classification (backend truth)
+
+The 15 bindings-only candidates (backend=N in the sweep) examined for
+controller existence + endpoints:
+
+REAL BUILD (1): templateMaster (58) — labTemplateMasterController EXISTS;
+GET /LIS/unit/labtemplates/{org}/{unit}/{offset}/{size} returns a RAW ARRAY
+(response.data read directly, NOT {listObject} — the raw-list response shape,
+3rd shape seen alongside {listObject} and {stores,listObject2}) — honest empty
+[] live. Real endpoint, real controller: build.
+
+NODATA — MISSING CONTROLLER (3): testMaster (276), multiparameterTestMaster
+(183), OPConsulationConfigurationMaster (611) — the states reference
+controllers (singleParameterTestController, multiParameterTestController,
+OPConsulationConfigurationMasterController) that DO NOT EXIST anywhere in the
+webapp (find: 0 files); the templates DO exist. No controller code = no
+endpoint (consultantType precedent, DQ-005): noData class.
+
+NODATA — MASTERCONTROLLER SHELLS (6): fundApproval (809), fundRequisition
+(810), fundApprovedList (811), schedulePriceUnitService (586),
+roundOffConfiguration (599), IPdefaultServiceConfig (620) — all use the
+generic MasterController (common-controller.js, ZERO api refs). The templates
+bind genderList/identificationList (fund trio) or plain form fields
+(round-off: min/max/medianAmount inputs) that MasterController never
+populates; no list binding to any endpoint. noData class.
+
+NO STATE — WALKED (5): Order set Master (707), ordersetmaster (698),
+bloodtestresultmaster (733), kitmasterpharmacy (762), templateutility (667) —
+no .state in app.js, not screens (sweep ctrl-basename/name-match classes).
+
+RESULT: 1 real build + 9 noData + 5 walked. The 9 noData screens use ONE
+shared noData component pattern (accessControl precedent, DQ-019) with per-
+screen routes; templateMaster builds as a real master with the raw-array
+response handling.
+
+## DQ-2026-08-12-022 — GLOBAL MASTER (369) SUBTREE SWEEP: 27 candidates
+
+Swept Global Master (root 369, 168 nodes): 98 name-matched states; 64 already
+rebuilt via routes, 7 via the commonMaster dispatcher, 27 GENUINE candidates
+(alias-checked: none rebuilt under kebab routes).
+
+CONTROLLER CLASSIFICATION of the 27:
+- NODATA — MasterController shells (10): bacteriaClassification (428),
+  antibiotic (429), antibioticsClass (430), antibioticsGroup (431),
+  sensitivityTestResult (438), dispensingMaster (469), kitMaster (471),
+  taxMaster (474), consentType (528), vaccinationSchedule (750) — all resolve
+  to common-controller.js's MasterController (generic scaffold, zero api
+  refs; dashboardInfoMasterController.js was a false partial-match).
+- NODATA — missing controller (4): subdepartmentMaster (373),
+  specimanMaster (444), packageMaster (465), daywiseDietTemplate (513) —
+  states reference no controller file that exists.
+- REAL controllers (13, 12 distinct): licenseTypeMaster (379),
+  consentMaster (400/527 — same ctrl), IncubationMaster (422 — NOTE: it's a
+  LIS TRANSACTION screen incubationObjservationController, not a master),
+  sampleTypeMediaMappingMaster (426), colonyTestWithMediaMaster (434),
+  mappingofMicroorganism (443), doseMaster (502), dietTypeMaster (510),
+  subsequentSurgeryConfiguration (516), procedureConfigurations (696),
+  siteOfAdministration (753), genericScheduleMaster (827).
+
+14 noData + 13 real (IncubationMaster may be a transaction deferral — verify
+during build). Live endpoint verification next.
+
+## DQ-2026-08-12-023 — GLOBAL MASTER 369: ENVELOPE CLASSIFICATION (batch 10)
+
+Live-verified the 12 distinct real controllers (DQ-022) + the 14 noData:
+- REAL DATA (2): dietTypeMaster (1 row, POST /api/kitchen/master/dietTypeMaster/
+  getDietTypeMasterPaginationList), siteOfAdministration (4 rows, POST
+  /api/global/clinical/getSiteMasterList {organizationId} only)
+- HONEST DEV-EMPTY (4): licenseTypeMaster (GET /org/getLiceneceTypeMasterList/
+  {org}), procedureConfigurations (GET /api/otims/getProcedureConfigList/
+  {org}/{unit}), subsequentSurgeryConfiguration (POST /api/otims/
+  getSubSequentProcedureConfigList), genericScheduleMaster (endpoint shape
+  pending final check)
+- MASKED (1): consentMaster — THIRD PHANTOM COLUMN: GET_CONSENT_LIST selects
+  c.formTemplateId (ConsentMaster.java:29) but adt.m_consent_master has NO
+  form_template column (verified information_schema). TRIPLE-swallowed: DAO
+  catches HibernateException silently (ConsentMasterDaoImpl:205-210), service
+  catches and returns blank ERROR (ConsentMasterServiceImpl:224-227),
+  controller catches and returns blank ERROR (ConsentMasterController:60-63).
+  The masked envelope is the blank {status:error, code:null, message:null}.
+- NODATA (14): the 10 MasterController shells + 4 missing-controller
+  (subdepartmentMaster, specimanMaster, packageMaster, daywiseDietTemplate).
+- IncubationMaster (422): LIS TRANSACTION screen (incubationObjservation
+  Controller — patient visit lists, not a master) — DEFERRED (transaction
+  class, like ambulanceCharges).
+- sampleTypeMediaMappingMaster, colonyTestWithMediaMaster,
+  mappingofMicroorganism: LIS global mappers — endpoint shape pending final
+  check (LIS_GLOBAL constants); verify during build.
+
+BATCH 10 = 13 builds: 2 real + 4 empty + 1 masked + 6 pending-shape, plus 14
+noData. ConsentMaster's phantom column is the 3rd found (technique_id,
+is_bed_charges_service, form_template) — all BR candidates (Rule 10, not
+fixed).
+
+## DQ-2026-08-12-024 — ADT SUBTREE (root 3) SWEEP: TRANSACTION-HEAVY, ZERO MASTER BUILDS
+
+Swept Adt (80 nodes): 34 state-matched (3 rebuilt via routes: patientRegistration,
+periodicityService, inputOutputCharts), 46 no-state (reports/leaves/sections).
+
+The 31 candidates are ALL the transaction/deferred class:
+- Patient-workflow transactions (deferred per ambulanceCharges/IncubationMaster
+  precedent): billEstimation, IPDBilling, updatePayeeInformation,
+  preAuthorizationRequest, patientAcceptance, allergies (1283-line controller
+  with patientSearchByMultipleCriteria — patient-entry, NOT a master),
+  sampleCollection, homecareMedicationEntry, transfer/initiateBedTransfer/
+  transferRequest/transferRequestAcceptance, readyForBilling, finalDischarge,
+  abscondingPatient, shortLeaveStatus, KitIndent/KitIndentApproval/KitReturn,
+  washingRequest, inputOutputChartHistory, sterilizationRequest, vitals,
+  serviceRendering, nursingProgressNote, administrationWorklist, dayCareWorklist
+- Dashboards (not masters): nursingAllocationDashboard, nursingShiftDashboard
+- MasterController shells (noData): patientAcceptance, homecareMedicationEntry,
+  abscondingPatient, washingRequest, nursingProgressNote
+- Missing controllers: billEstimation, IPDBilling, transferRequest, dayCareWorklist
+
+RESULT: zero master-grid builds in the Adt subtree — it is patient-workflow
+and reporting. The rebuild program's scope (masters per the walk) does not
+apply here; the deferred transaction class (DQ-2026-08-12-014 note) covers
+these. Adt closed out with no branch. Next: Nursing (129) or Pharmacy (108)
+subtree.
+
+## DQ-2026-08-12-025 — REMAINING-CANDIDATE CENSUS: MASTER PROGRAM COVERAGE COMPLETE
+
+Comprehensive sweep of all 1,077 menu nodes after batches 1-10:
+- Master-bearing subtrees COVERED: OPD (268 rebuilds), Unit Master 531
+  (batches 1-9: 40 verified + 15 bindings-only), Global Master 369 (batch 10:
+  27 candidates), commonMaster dispatcher (43/43).
+- The 212 remaining state-candidates (not rebuilt, incl. unmerged batches
+  7-10) are ALL the deferred transaction/report/dashboard classes: billing
+  transactions (opdBill, deposit, refund, debit/credit note, bill list),
+  patient workflow (admission, transfer, discharge, appointments, bed
+  allocation, allergies, vitals, sample collection), asset/CSSD workflows
+  (assetIssue, sterilization, kit issue), reports (the 500+ RPT class).
+- NO genuine master-grid candidates remain. The rebuild program's scope
+  (masters per the walk) is exhausted for the menu; remaining nodes are the
+  transaction class (deferred per DQ-2026-08-12-014, ambulanceCharges,
+  IncubationMaster, DQ-024 Adt/Nursing/Pharmacy sweeps) and reports.
+
+RECOMMENDATION for the owner: the master-rebuild phase is complete across
+the menu. The next phase (transactions) is a different scope/class and should
+be a separate decision — the transaction screens are patient-workflow
+features with 30+ endpoints each, a materially larger build than the masters
+program. Queued for owner decision, not assumed.
