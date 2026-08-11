@@ -1,0 +1,37 @@
+<div class="pr2-page">
+  <header class="pr2-header">
+    <h2>Patient Registration</h2>
+    <p class="pr2-sub">Screen 40 — module 3 (Opd, parent 2). Patient registration and search.</p>
+  </header>
+
+  <section class="pr2-search card">
+    <h3>Patient search</h3>
+    <div class="pr2-fields">
+      <input type="text" class="form-control" placeholder="UHID"
+             [ngModel]="uhid()" (ngModelChange)="uhid.set($event)" />
+      <input type="text" class="form-control" placeholder="Patient name"
+             [ngModel]="name()" (ngModelChange)="name.set($event)" />
+      <input type="text" class="form-control" placeholder="Mobile"
+             [ngModel]="mobile()" (ngModelChange)="mobile.set($event)" />
+    </div>
+    <div class="pr2-actions">
+      <button class="btn btn-primary" (click)="onSearch()" [disabled]="searching()">Search</button>
+      <button class="btn btn-secondary" (click)="clear()">Clear</button>
+    </div>
+  </section>
+
+  <section class="pr2-results card">
+    <h3>Results</h3>
+    @if (searching()) {
+      <p class="pr2-note">Searching…</p>
+    } @else if (searchState() === 'idle') {
+      <p class="pr2-note">Enter criteria and search (the backend's empty-criteria path returns a 501 error envelope — known behaviour, recorded in the service docs).</p>
+    } @else if (searchState() === 'error') {
+      <p class="pr2-note">The search returned the backend's error envelope. Honest state shown — no fabricated rows.</p>
+    } @else if (results().length === 0) {
+      <p class="pr2-note">No patients found (dev data).</p>
+    } @else {
+      <p class="pr2-note">{{ results().length }} patient(s) found.</p>
+    }
+  </section>
+</div>

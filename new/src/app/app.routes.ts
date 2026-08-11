@@ -1695,6 +1695,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/corporate-master/corporate-master').then((m) => m.CorporateMaster),
       },
+      {
+        path: 'patientRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 3, title: 'Patient Registration' },
+        loadComponent: () =>
+          import('./features/patient-registration/patient-registration').then((m) => m.PatientRegistration),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
