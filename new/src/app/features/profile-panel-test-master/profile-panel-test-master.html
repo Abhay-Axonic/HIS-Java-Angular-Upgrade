@@ -1,0 +1,37 @@
+<div class="ptm-wrap">
+  <header class="ptm-header">
+    <h2>Profile Panel Test Master</h2>
+    <span class="ptm-sub">LIS / Unit — module 567</span>
+  </header>
+
+  @if (loading()) {
+    <p class="ptm-muted">Loading profile panel tests…</p>
+  } @else if (error()) {
+    <div class="ptm-state ptm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ptm-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Alias</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.panelId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+            <td>{{ row.status }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="ptm-empty">No profile panel tests.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

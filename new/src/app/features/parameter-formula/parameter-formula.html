@@ -1,0 +1,37 @@
+<div class="ptm-wrap">
+  <header class="ptm-header">
+    <h2>Parameter Formula Master</h2>
+    <span class="ptm-sub">LIS / Unit — module 566</span>
+  </header>
+
+  @if (loading()) {
+    <p class="ptm-muted">Loading parameter formulas…</p>
+  } @else if (error()) {
+    <div class="ptm-state ptm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ptm-table">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Formula</th>
+          <th>Formula (LaTeX)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.formulaId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+            <td>{{ row.status }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="ptm-empty">No parameter formulas.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

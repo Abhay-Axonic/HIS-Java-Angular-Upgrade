@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """probe_unit_master_billing.py — browser probe for the Unit Master 531
-billing/unit family batch 1 (DQ-2026-08-12-008): patientType (764),
-patientTypeDetails (765), pharmacyTariffMaster (803).
+billing/unit + LIS family batches (DQ-2026-08-12-008/-009).
+
+Batch 1 (billing/unit): patientType (764), patientTypeDetails (765),
+pharmacyTariffMaster (803) — real data.
+Batch 2 (LIS family): histopathologyTest (559), parameterFormula (566),
+profilepanelTestMaster (567), storageLocationMstForSlideBlocks (568) —
+descriptive dev-empty surfaced; parameterMaster (562) — masked-error banner
+(phantom column technique_id, correlation envelope).
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -12,7 +18,9 @@ Assertions (browser, real data, no seeding):
   2. patientTypeDetails renders the type picker with the 3 real types.
   3. pharmacyTariffMaster renders "Pharmaceutical" + "Test PMS Product
      Category" (the 3 real tariff rows).
-  4. Negative control: non-family module id 999999 -> denied (accessDenied).
+  4. LIS descriptive screens surface their per-master messages.
+  5. parameterMaster renders the masked-error banner (techniqueId phantom).
+  6. Negative control: non-family module id 999999 -> denied (accessDenied).
 """
 import json
 import sys
@@ -153,6 +161,67 @@ with sync_playwright() as p:
     if errorsC:
         FAILS.append(f"pharmacyTariffMaster page errors: {errorsC[:3]}")
     ctxC.close()
+
+    # 5. LIS family batch 2 — 4 descriptive dev-empty screens + parameterMaster
+    # masked-error banner (DQ-2026-08-12-009). Each in a fresh context with its
+    # own module id via the shell bootstrap + localStorage permissions.
+    LIS_DESCRIPTIVE = [
+        ("histopathologyTest", 559, "Test not found"),
+        ("parameterFormula", 566, "Formula Records Not Found"),
+        ("profilepanelTestMaster", 567, "Panel Test Records Not Found"),
+        ("storageLocationMasterForSlideBlocks", 568, "Rack Records not found"),
+    ]
+    for route, mid, expect in LIS_DESCRIPTIVE:
+        ctxL = browser.new_context()
+        pageL = ctxL.new_page()
+        errorsL = []
+        pageL.on("pageerror", lambda e: errorsL.append(str(e)))
+        pageL.on("console", lambda m: errorsL.append(m.text) if m.type == "error" else None)
+        ctxL.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageL.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageL.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageL.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageL.inner_text("body")
+        ok = expect in body and "accessDenied" not in pageL.url
+        print(f"LIS {route}: descriptive('{expect}')={ok} url={pageL.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"LIS {route}: descriptive message not surfaced")
+        if errorsL:
+            FAILS.append(f"LIS {route} page errors: {errorsL[:3]}")
+        ctxL.close()
+
+    # parameterMaster — masked-error banner (correlation envelope)
+    ctxM = browser.new_context()
+    pageM = ctxM.new_page()
+    errorsM = []
+    pageM.on("pageerror", lambda e: errorsM.append(str(e)))
+    pageM.on("console", lambda m: errorsM.append(m.text) if m.type == "error" else None)
+    ctxM.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageM.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageM.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 562}]}))"
+    )
+    pageM.goto(BASE + "/parameterMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageM.inner_text("body")
+    masked = "Reference: ERR" in body and "techniqueId" in body and "phantom column" in body
+    print(f"LIS parameterMaster: masked-banner={masked} url={pageM.url.split('/')[-1][:40]}")
+    if not masked:
+        FAILS.append("parameterMaster: masked-error banner not rendered")
+    # The 500 resource-load error is the DOCUMENTED backend defect (phantom
+    # column technique_id) — the very thing the banner names. Exclude it from
+    # the page-error check; any OTHER error is a real failure.
+    real_errs = [e for e in errorsM if "listParameterMaster" not in e and "500" not in e]
+    if real_errs:
+        FAILS.append(f"parameterMaster page errors: {real_errs[:3]}")
+    ctxM.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).

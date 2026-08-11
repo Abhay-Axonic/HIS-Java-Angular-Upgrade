@@ -1,0 +1,52 @@
+<div class="ptm-wrap">
+  <header class="ptm-header">
+    <h2>Histopathology Test</h2>
+    <span class="ptm-sub">LIS / Unit — module 559</span>
+  </header>
+
+  <section class="ptm-form">
+    <div class="ptm-field">
+      <label for="ht-search">Search</label>
+      <input id="ht-search" type="text" [(ngModel)]="form().search" (keyup.enter)="search()" placeholder="Code / description / alias…" />
+    </div>
+    <div class="ptm-actions">
+      <button class="ptm-btn ptm-btn-primary" (click)="search()" [disabled]="loading()">Search</button>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <p class="ptm-muted">Loading histopathology tests…</p>
+  } @else if (error()) {
+    <div class="ptm-state ptm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ptm-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Alias</th>
+          <th>Department</th>
+          <th>Sample</th>
+          <th>Technique</th>
+          <th>Normal TAT</th>
+          <th>Urgent TAT</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.testId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+            <td>{{ row.status }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="9" class="ptm-empty">No histopathology tests.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
