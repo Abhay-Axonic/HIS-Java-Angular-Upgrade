@@ -740,3 +740,30 @@ REBUILD HANDLING: 4 descriptive dev-empty screens build as master grids
 surfacing the backend message; parameterMaster builds with an AMBER-permanent
 masked-error banner naming the phantom column (technique_id) + correlation
 envelope (DQ-2026-08-12-009); ambulanceCharges deferred (transaction class).
+
+## DQ-2026-08-12-010 — UNIT MASTER 531 BLOOD BANK FAMILY (batch 3): classification BEFORE build
+
+Owner's pre-build checks applied to the blood bank five (bloodTest 734,
+reasonOfDiscard 737, screeningTest 738, donorRejectionMaster 740,
+bloodGroupMatchingMaster 741):
+
+SHARED COMPONENT/STATE CHECK: NONE — all five have UNIQUE controllers and
+UNIQUE templates (verified in app.js state blocks; controllers under
+resources/assets/js/controller/bloodBank/). No dispatcher pattern.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- bloodTest: SUCCESS empty listObject — honest dev-empty (POST
+  /global/bloodBank/getBloodTestMasterList {organizationId, unitId, offset,
+  noOfRecordsPerPage})
+- reasonOfDiscard: SUCCESS empty — honest dev-empty (POST /bloodBank/
+  getReasonOfDiscardMasterList)
+- screeningTest: SUCCESS empty — honest dev-empty (POST /bloodBank/
+  getScreeningTestMasterList)
+- donorRejectionMaster: SUCCESS empty — honest dev-empty (POST /bloodBank/
+  getDonorRejectionMasterList)
+- bloodGroupMatchingMaster: SUCCESS 3 REAL ROWS (GET /global/bloodBank/
+  getActiveBloodGroupMaster/{org}/{unit}) — real data, not dev-empty.
+
+ZERO generic envelopes, ZERO masked errors in this family (no correlation
+envelope, no fall-through, no phantom column). The four master-list screens
+render empty grids honestly; bloodGroupMatching renders its real rows.
