@@ -698,3 +698,45 @@ getPatientType/1/1 -> SUCCESS 3 real rows (DB+Cache); GET /api/units/pharmacy/
 tariff/getAll/1/1 -> SUCCESS 3 real rows. THIRD envelope shape (stores/
 listObject2/resObject fields) — distinct from commonMaster's; zero generic
 envelopes. The 3 doctor/share screens are already rebuilt -> excluded.
+
+## DQ-2026-08-12-009 — UNIT MASTER 531 LIS FAMILY (batch 2): classification BEFORE build + phantom-column finding (NEW masked envelope: correlation-id "Something went wrong. Reference: ERR-...")
+
+Owner's pre-build checks applied to the LIS six (histopathologyTest 559,
+parameterMaster 562, parameterFormula 566, profilepanelTestMaster 567,
+storageLocationMstForSlideBlocks 568, ambulanceCharges 819):
+
+SHARED COMPONENT/STATE CHECK: NONE — all six have UNIQUE controllers and
+UNIQUE templates (verified in app.js state blocks). The commonMaster
+dispatcher pattern does NOT repeat in this family.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- histopathologyTest: DESCRIPTIVE "Test not found." — honest dev-empty
+  (correct path is 7 segments: /LIS/unit/listTestMaster/{org}/{histo}/{unit}/
+  {off}/{size}/{searchKey})
+- parameterFormula: DESCRIPTIVE "Formula Records Not Found." — honest dev-empty
+- profilepanelTestMaster: DESCRIPTIVE "Panel Test Records Not Found." —
+  honest dev-empty
+- storageLocationMstForSlideBlocks: DESCRIPTIVE "Rack Records not found." —
+  honest dev-empty
+- parameterMaster: MASKED-ERR-REF "Something went wrong. Reference:
+  ERR-<uuid8>" — NOT dev-empty. ROOT CAUSE: PHANTOM COLUMN — the
+  GET_PAGINATED_PARAMETER_MASTER_LIST named query selects
+  parameterMaster.techniqueId (ParameterMaster.java:131, property declared
+  :289) but lab.m_parameter_master has NO technique_id column (verified
+  information_schema, 0 rows). The screens-49/52 phantom-column class,
+  surfacing via a NEW masked envelope: ErrorCorrelationUtil (Global utility)
+  wraps the real exception in "Something went wrong. Reference: ERR-..." with
+  a correlation id — distinct from the LIS fall-through's plain "Internal
+  Server Error" (DQ-2026-08-12-003). The other query columns all exist.
+  Backend fix NOT made (Rule 10 — behavioral change; BR candidate).
+- ambulanceCharges: NOT A MASTER — a 1581-line charges-capture transaction
+  screen (patient search + tariff list + bill data; the GETAmbulanceMaster-
+  DataList call at ctrl:213 is COMMENTED OUT). Classification correction:
+  the sweep's "verified" bucket included a transaction screen; it does NOT
+  fit the master-grid rebuild pattern. Flagged for the walk's
+  classification, not built as a master.
+
+REBUILD HANDLING: 4 descriptive dev-empty screens build as master grids
+surfacing the backend message; parameterMaster builds with an AMBER-permanent
+masked-error banner naming the phantom column (technique_id) + correlation
+envelope (DQ-2026-08-12-009); ambulanceCharges deferred (transaction class).
