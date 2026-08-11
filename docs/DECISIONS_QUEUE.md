@@ -1181,3 +1181,29 @@ BATCH 10 = 13 builds: 2 real + 4 empty + 1 masked + 6 pending-shape, plus 14
 noData. ConsentMaster's phantom column is the 3rd found (technique_id,
 is_bed_charges_service, form_template) — all BR candidates (Rule 10, not
 fixed).
+
+## DQ-2026-08-12-024 — ADT SUBTREE (root 3) SWEEP: TRANSACTION-HEAVY, ZERO MASTER BUILDS
+
+Swept Adt (80 nodes): 34 state-matched (3 rebuilt via routes: patientRegistration,
+periodicityService, inputOutputCharts), 46 no-state (reports/leaves/sections).
+
+The 31 candidates are ALL the transaction/deferred class:
+- Patient-workflow transactions (deferred per ambulanceCharges/IncubationMaster
+  precedent): billEstimation, IPDBilling, updatePayeeInformation,
+  preAuthorizationRequest, patientAcceptance, allergies (1283-line controller
+  with patientSearchByMultipleCriteria — patient-entry, NOT a master),
+  sampleCollection, homecareMedicationEntry, transfer/initiateBedTransfer/
+  transferRequest/transferRequestAcceptance, readyForBilling, finalDischarge,
+  abscondingPatient, shortLeaveStatus, KitIndent/KitIndentApproval/KitReturn,
+  washingRequest, inputOutputChartHistory, sterilizationRequest, vitals,
+  serviceRendering, nursingProgressNote, administrationWorklist, dayCareWorklist
+- Dashboards (not masters): nursingAllocationDashboard, nursingShiftDashboard
+- MasterController shells (noData): patientAcceptance, homecareMedicationEntry,
+  abscondingPatient, washingRequest, nursingProgressNote
+- Missing controllers: billEstimation, IPDBilling, transferRequest, dayCareWorklist
+
+RESULT: zero master-grid builds in the Adt subtree — it is patient-workflow
+and reporting. The rebuild program's scope (masters per the walk) does not
+apply here; the deferred transaction class (DQ-2026-08-12-014 note) covers
+these. Adt closed out with no branch. Next: Nursing (129) or Pharmacy (108)
+subtree.
