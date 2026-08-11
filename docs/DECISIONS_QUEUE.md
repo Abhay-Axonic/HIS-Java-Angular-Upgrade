@@ -1207,3 +1207,26 @@ and reporting. The rebuild program's scope (masters per the walk) does not
 apply here; the deferred transaction class (DQ-2026-08-12-014 note) covers
 these. Adt closed out with no branch. Next: Nursing (129) or Pharmacy (108)
 subtree.
+
+## DQ-2026-08-12-025 — REMAINING-CANDIDATE CENSUS: MASTER PROGRAM COVERAGE COMPLETE
+
+Comprehensive sweep of all 1,077 menu nodes after batches 1-10:
+- Master-bearing subtrees COVERED: OPD (268 rebuilds), Unit Master 531
+  (batches 1-9: 40 verified + 15 bindings-only), Global Master 369 (batch 10:
+  27 candidates), commonMaster dispatcher (43/43).
+- The 212 remaining state-candidates (not rebuilt, incl. unmerged batches
+  7-10) are ALL the deferred transaction/report/dashboard classes: billing
+  transactions (opdBill, deposit, refund, debit/credit note, bill list),
+  patient workflow (admission, transfer, discharge, appointments, bed
+  allocation, allergies, vitals, sample collection), asset/CSSD workflows
+  (assetIssue, sterilization, kit issue), reports (the 500+ RPT class).
+- NO genuine master-grid candidates remain. The rebuild program's scope
+  (masters per the walk) is exhausted for the menu; remaining nodes are the
+  transaction class (deferred per DQ-2026-08-12-014, ambulanceCharges,
+  IncubationMaster, DQ-024 Adt/Nursing/Pharmacy sweeps) and reports.
+
+RECOMMENDATION for the owner: the master-rebuild phase is complete across
+the menu. The next phase (transactions) is a different scope/class and should
+be a separate decision — the transaction screens are patient-workflow
+features with 30+ endpoints each, a materially larger build than the masters
+program. Queued for owner decision, not assumed.
