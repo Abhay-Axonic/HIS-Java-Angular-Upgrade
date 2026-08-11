@@ -1779,6 +1779,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/token-display/token-display').then((m) => m.TokenDisplay),
       },
+      {
+        path: 'cabinDisplay',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 760, title: 'Cabin Display' },
+        loadComponent: () =>
+          import('./features/cabin-display/cabin-display').then((m) => m.CabinDisplay),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',

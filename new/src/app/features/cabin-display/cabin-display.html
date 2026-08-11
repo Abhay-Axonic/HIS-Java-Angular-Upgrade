@@ -1,0 +1,73 @@
+<div class="cd-screen">
+  <div class="amber-banner">
+    <strong>AMBER — known defect, permanent warning:</strong>
+    the Cabin Display token feed (<code>POST /api/opd/token/getDoctorTokenList</code>)
+    is broken by a phantom column: the named query <code>GET_DOCTOR_TOKEN_LIST</code>
+    selects <code>em.doctor_latest_call</code>, which does not exist in
+    <code>opd.t_encounter_master</code>. Every call throws at query execution and the
+    DAO catch swallows it into a masked 501 "Something went wrong!!" envelope — the
+    response it would read is the thing that lies: a "failed" body with no detail
+    instead of the token row set. The sibling <code>latest_call</code> phantom on the
+    same table (Counter Worklist's search feed, screen 49) confirms this is a family:
+    the table lost columns that named queries still reference.
+    <p class="why-permanent">
+      Why this warning is permanent: the phantom column is referenced in the entity's
+      named query (EncounterMaster.java:1176) but absent from the live schema
+      (verified against information_schema; all 7 joined tables exist and every other
+      column resolves). A fix requires either adding the column (a schema change,
+      Expand-Migrate-Contract territory) or rewriting the query — both out of scope for
+      a parity rebuild, so the defect is surfaced here rather than hidden.
+    </p>
+  </div>
+
+  <div class="screen-header">
+    <h2>Cabin Display</h2>
+    <p class="subtitle">
+      Cabin-level token display. The token feed is live but broken by the
+      phantom-column defect above — the screen surfaces the failure honestly.
+    </p>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-primary" (click)="refresh()" [disabled]="loading()">
+      @if (loading()) {
+        Refreshing…
+      } @else {
+        Refresh
+      }
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (loaded()) {
+    <div class="token-grid">
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Token</th>
+            <th>Cabin</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of tokenList(); track t) {
+            <tr>
+              <td>{{ t.doctorName ?? '—' }}</td>
+              <td>{{ t.patientName ?? '—' }}</td>
+              <td>{{ t.unitTokenNumber ?? '—' }}</td>
+              <td>{{ t.cabinDesc ?? '—' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="muted">No cabin tokens.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
