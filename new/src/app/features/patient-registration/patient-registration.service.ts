@@ -57,6 +57,7 @@ export interface PatientSearchCriteria {
   identificationTypeId: string;
   unitId: number;
   organizationId: number;
+  registrationTypeId: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -75,6 +76,13 @@ export class PatientRegistrationService {
       identificationTypeId: criteria.identificationTypeId ?? '',
       unitId,
       organizationId: orgId,
+      // REQUIRED by the service's routing: the legacy always sets
+      // patientObj.registrationTypeId (1 normal / 2 OTC) before searching;
+      // WITHOUT it the service falls through to a null-message 501 envelope
+      // (PatientRegistrationServiceImpl:753 — the fall-through return, not
+      // a server failure). 1 = the normal-patient search (the front door's
+      // default registration type).
+      registrationTypeId: 1,
     };
     return this.http.post<ApiEnvelope>(`${this.base}/api/global/patientSearch`, payload);
   }

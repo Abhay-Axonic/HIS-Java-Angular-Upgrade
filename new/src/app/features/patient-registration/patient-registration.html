@@ -25,7 +25,7 @@
     @if (searching()) {
       <p class="pr2-note">Searching…</p>
     } @else if (searchState() === 'idle') {
-      <p class="pr2-note">Enter criteria and search (the backend's empty-criteria path returns a 501 error envelope — known behaviour, recorded in the service docs).</p>
+      <p class="pr2-note">Enter criteria and search (normal-patient search; registrationTypeId 1 sent per the legacy contract).</p>
     } @else if (searchState() === 'error') {
       <p class="pr2-note">The search returned the backend's error envelope. Honest state shown — no fabricated rows.</p>
     } @else if (results().length === 0) {

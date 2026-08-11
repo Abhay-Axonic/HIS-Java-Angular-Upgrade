@@ -62,15 +62,17 @@ def main():
         if not (title and surface and inputs):
             FAILS.append(f"screen not rendered (title: {title}, surface: {surface}, inputs: {inputs})")
 
-        # click Search with empty criteria -> the backend's 501 envelope ->
-        # the honest error state
-        page.click("text=Search")
+        # click Search (empty criteria) -> the working contract (registrationTypeId
+        # 1) -> the backend returns success with a dev-empty list -> the honest
+        # empty state (NOT the fall-through 501: the probe now sends the legacy
+        # routing key)
+        page.locator("button", has_text="Search").click()
         time.sleep(5)
         body2 = page.inner_text("body")
-        honest = "error envelope" in body2 or "501" in body2 or "backend's error envelope" in body2
-        print(f"HONEST ERROR STATE after search: {honest}")
-        if not honest:
-            FAILS.append("honest error state not shown after the backend 501")
+        working = "No patients found" in body2
+        print(f"WORKING SEARCH -> dev-empty state: {working}")
+        if not working:
+            FAILS.append("working search did not reach the honest dev-empty state (fall-through 501?)")
 
         page_errors = [e for e in errors if not e.startswith("Failed to load resource")]
         print(f"PAGE ERRORS: {page_errors if page_errors else 'none'}")

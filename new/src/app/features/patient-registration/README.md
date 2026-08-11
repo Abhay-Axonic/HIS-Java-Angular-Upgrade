@@ -16,14 +16,18 @@ loaded index.html:897).
   convertPatient, updatePatient + kin-details CRUD. Controller catches
   return the honest ERROR envelope (COMMON_ERROR_MESSAGE) — clean, no
   swallow. patientSearch's service + DAO catches RETHROW (LOUD).
-- LIVE-VERIFIED BY CALLING (body status): patientSearch with the legacy's
-  empty-criteria payload -> HTTP 200 body {"status":"error","code":"501",
-  "message":null} — the endpoint HANDLER is live (the request reached the
-  service), but the empty-criteria path THROWS (root cause not yet traced —
-  candidate classes: generateQueryForPatientSearch with all-empty params, or
-  a phantom in GET_PATIENT_DATA). The 501-null-message envelope is the
-  honest-error class (message lost in the rethrow chain), NOT a masked
-  false-success.
+- LIVE-VERIFIED BY CALLING (body status): patientSearch WITH the legacy's
+  contract ({...search fields, registrationTypeId: 1}) -> HTTP 200 body
+  {"status":"success","listObject":[]} — the search endpoint is genuinely
+  LIVE and WORKING. WITHOUT registrationTypeId the service falls through to
+  its final `return new Response<>(ERROR, COMMON_ERROR_CODE, null, null,
+  null)` (PatientRegistrationServiceImpl:753) — a null-message 501 envelope
+  that is the service's MISSING-ROUTING-KEY response, not a server failure.
+  The legacy always sets patientObj.registrationTypeId (1 normal / 2 OTC)
+  before searching (patientRegistrationController.js:3265-3270), so the
+  legacy screen works; the earlier 'honest 501' was the rebuild probe
+  omitting the routing key — corrected, the screen sends registrationTypeId
+  1.
 - KNOWN SHAPE: GET_PATIENT_DATA carries the walk's INNER-JOIN drop class
   (patient.appointmentMastersList INNER JOIN — a patient with no appointment
   is dropped from search results).
