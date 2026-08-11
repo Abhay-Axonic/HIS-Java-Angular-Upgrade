@@ -1059,3 +1059,31 @@ LESSON CONFIRMED (DQ-2026-08-12-017 applied twice in one batch): a
 classification must be verified against the payload the REBUILD sends — the
 CSSD pair looked masked with a minimal payload and are actually real
 data/honest empty with the legacy query params. ZERO masked errors in batch 7.
+
+## DQ-2026-08-12-019 — UNIT MASTER 531 BATCH 8 (clinical 2 + no-state + accessControl pair): classification
+
+Owner's pre-build checks applied (RMOAllocationMaster 824, growthChartMaster
+962, templateutility 667, accessControl 677, accessControl1 673):
+
+SHARED COMPONENT/STATE CHECK: accessControl + accessControl1 SHARE the
+accessControlController (the 60-line STUB — zero serviceAction/api/URI refs,
+pure angular-ui-tree on empty $scope.data) with TWO templates
+(views/common/access-control.html vs views/access-control.html) — the
+commonMaster shared-controller precedent: ONE noData rebuild, TWO routes.
+templateutility (667) has NO state in app.js (sweep's ctrl-basename class) —
+NOT a screen; walked past.
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
+- RMOAllocationMaster: SUCCESS empty — honest dev-empty (POST /api/unit/
+  clinical/getRmoAllocationMasterList {organizationId, unitId, offset,
+  noOfRecordsPerPage})
+- growthChartMaster: SUCCESS 1 REAL ROW — real data (GET /api/global/
+  growthChartlist/{org}/{unit}/{offset}/{size}; the height-units GET also
+  SUCCESS 1 row)
+- accessControl + accessControl1: NO-ENDPOINT (noData class, DQ-005) — the
+  stub controller never calls any endpoint; legacy renders an empty tree
+  editor with no data path.
+
+ZERO masked errors in batch 8. RMO + growthChart build as normal masters;
+accessControl pair builds ONCE (shared component) with the noData state, two
+routes (moduleId 677 and 673) both pointing at it.
