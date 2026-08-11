@@ -1230,3 +1230,24 @@ the menu. The next phase (transactions) is a different scope/class and should
 be a separate decision — the transaction screens are patient-workflow
 features with 30+ endpoints each, a materially larger build than the masters
 program. Queued for owner decision, not assumed.
+
+## DQ-2026-08-12-026 — MERGE MISLABEL: ef5cf3aa "batch 8" actually merged b7
+
+Discovered during the batch-9 conflict resolution (owner's merge of "batches 7
+and 8" at ef5cf3aa):
+- ef5cf3aa parents = 8083f5af + d06bfce1 → the merge brought in B7's tip
+  (d06bfce1), NOT b8's (7875ee01). b8's screens (RMOAllocationMaster 824,
+  growthChartMaster 962, access-control pair 677/673 — DQ-2026-08-12-019) are
+  NOT on main: `git merge-base --is-ancestor 7875ee01 origin/main` = NO; zero
+  b8 routes in main's app.routes.ts. The main-tree dirs "growth-chart" and
+  "new-access-control" are OLDER alias-routed rebuilds, not b8's features.
+- b8 merges CLEANLY when done: it is stacked on d06bfce1 (now an ancestor of
+  main), so merging 7875ee01 adds only b8's delta (17 files +610).
+- b9 resolution (687af7a4, merge main→b9): kept b7's 5 routes + b9's 10;
+  probe kept both batches' assertion blocks; fixed the consumed-closing-brace
+  glitch at the join (TS1117, caught by tsc -p tsconfig.app.json); gates: tsc
+  clean, ng build EXIT 0, live probe PASS (b9's 10 + b7's 5 render, negative
+  control denies); dry run CLEAN 52 files +1282.
+- b10 resolution PENDING — per owner sequencing ("after 9 is merged").
+  Lesson recorded: future overnight batches must be STACKED (cut off the
+  previous batch's tip), never off main.
