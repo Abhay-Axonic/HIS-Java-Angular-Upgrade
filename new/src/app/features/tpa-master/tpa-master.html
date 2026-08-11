@@ -1,0 +1,43 @@
+<div class="tpa-page">
+  <header class="tpa-header">
+    <h2>TPA Master</h2>
+    <p class="tpa-sub">Screen 38 — module 572 (Billing, parent 570). TPA registration configuration.</p>
+  </header>
+
+  <section class="tpa-list card">
+    <h3>Companies (TPA type)</h3>
+    @if (loading()) {
+      <p class="tpa-loading">Loading…</p>
+    } @else if (companies().length === 0) {
+      <p class="tpa-empty">No TPA companies found (dev data).</p>
+    } @else {
+      <ul class="tpa-ul">
+        @for (c of companies(); track c.id) {
+          <li>{{ c.name }} ({{ c.id }})</li>
+        }
+      </ul>
+    }
+
+    <h3>AR codes</h3>
+    @if (arCodes().length === 0) {
+      <p class="tpa-empty">No AR codes loaded.</p>
+    } @else {
+      <ul class="tpa-ul">
+        @for (a of arCodes(); track a.aRCodeId) {
+          <li>{{ a.aRCode }} — {{ a.aRCodeDesc }}</li>
+        }
+      </ul>
+    }
+
+    <h3>Countries</h3>
+    @if (countries().length === 0) {
+      <p class="tpa-empty">No countries loaded.</p>
+    } @else {
+      <ul class="tpa-ul">
+        @for (c of countries(); track c.countryId) {
+          <li>{{ c.countryName }} ({{ c.countryId }})</li>
+        }
+      </ul>
+    }
+  </section>
+</div>

@@ -1681,6 +1681,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/company-contract/company-contract').then((m) => m.CompanyContract),
       },
+      {
+        path: 'TPAmaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 572, title: 'TPA Master' },
+        loadComponent: () =>
+          import('./features/tpa-master/tpa-master').then((m) => m.TpaMaster),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
