@@ -1274,3 +1274,19 @@ type-clean. Skill updated (gate list now uses the -p form; plain form
 explicitly warned as vacuous). This is the 11th pass-while-structurally-
 incapable mechanism on record with the others (error-swallowing, masked
 envelopes, fall-throughs, proxy gap, noData, etc.).
+
+## DQ-2026-08-12-028 — BATCH 10 MERGE-RESOLUTION (1c97986f) — COMPLETE
+
+Merged origin/main (4458ff4a, post b7/b8/b9) into rebuild/global-master-batch10:
+- app.routes.ts: kept ALL 44 batch routes (b10 25 + b9 10 + b7 5 + b8 4),
+  fixed the consumed-closing-brace glitch at the consentMaster/templateMaster
+  join (same TS1117 class as b9, caught by tsc -p before commit).
+- probe: docstring + assertion block resolved; B5-B10 blocks all present.
+- (d) route survival: 52 checked (44 batch + 8 prior samples) each exactly
+  once, zero conflict markers. (One false alarm: batch-5 route is
+  'IPConsultationConfiguration' capital-IP — my check's case was wrong, route
+  present.)
+- Gates: tsc -p tsconfig.app.json RC 0, ng build EXIT 0, live probe PASS
+  (B10 masked banner + real screens, B9/B7/B8 all render, negative control).
+- Diff --stat main..b10 = 122 files +4000, intended set only; dry run CLEAN
+  0 conflicts.
