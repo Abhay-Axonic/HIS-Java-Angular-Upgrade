@@ -93,13 +93,17 @@ def main():
                 return "partial", f"#{st} ({'dir' if dir_hit else ''}{'route' if route_hit else ''})"
         else:
             # no actionLink: name-map fallback (node name -> state). The candidate
-            # set includes the acronym-preserved base (e.g. RMOAllocationMaster,
-            # QMS, IPConsultationConfiguration) — first-letter-lowercase alone
-            # misses those (the 2026-08-11 hand-check: 4 state + 19 controller-
-            # basename misses of 400 report-classified nodes).
+            # set includes the acronym-preserved base AND a case-insensitive pass
+            # (e.g. RMOAllocationMaster, QMS, opdBill, pendingForPOCreation) —
+            # first-letter-lowercase alone misses those (the 2026-08-11 hand-check:
+            # 4 state + 19 controller-basename misses; the full-bucket re-run found
+            # 13 more case-insensitive misses of 511 report-classified nodes).
             base = re.sub(r"[^a-zA-Z0-9]", "", name)
             cands = {base[:1].lower() + base[1:], kebab(name), base.lower(), base}
             st = next((c for c in cands if c in all_states), "")
+            if not st:
+                low = base.lower()
+                st = next((s for s in all_states if s.lower() == low), "")
             if st:
                 # a no-actionlink node whose state is already rebuilt on main
                 k = kebab(st)
