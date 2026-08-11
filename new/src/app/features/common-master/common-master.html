@@ -17,14 +17,29 @@
       </p>
     </div>
   } @else if (error()) {
-    <div class="cm-state cm-error">
-      <p>{{ error() }}</p>
-      <p class="cm-muted">
-        This is the backend's own message for an unseeded master — the master
-        grid has no rows to render in this environment.
-      </p>
-    </div>
-  } @else {
+   @if (maskedError()) {
+     <div class="cm-state cm-error cm-masked">
+       <p>{{ error() }}</p>
+       <p class="cm-muted">
+         This is the lie-class envelope, permanent: this master's table is
+         empty, but the backend reports "Internal Server Error" instead of
+         the per-master "Records not found." message. The legacy service's
+         <code>size() &gt; 0</code> guard makes its empty-branch unreachable,
+         so every empty list falls through to the generic error. This warning
+         cannot be shown at save time because the response it would read is
+         the thing that lies (DQ-2026-08-12-003).
+       </p>
+     </div>
+   } @else {
+     <div class="cm-state cm-error">
+       <p>{{ error() }}</p>
+       <p class="cm-muted">
+         This is the backend's own message for an unseeded master — the master
+         grid has no rows to render in this environment.
+       </p>
+     </div>
+   }
+ } @else {
     <div class="cm-toolbar">
       <span class="cm-count">{{ rows().length }} record(s)</span>
     </div>

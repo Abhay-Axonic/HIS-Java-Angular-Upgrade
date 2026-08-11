@@ -50,6 +50,11 @@ export class CommonMasterComponent implements OnInit {
   /** True when the key has no configured endpoint yet (batch-pending branch). */
   readonly unsupported = signal(false);
 
+  /** True when the error is the generic lie-class envelope (empty reported as
+   * "Internal Server Error" by the LIS fall-through) — drives the AMBER-
+   * permanent banner (DQ-2026-08-12-003, BANNER-TIER RULE). */
+  readonly maskedError = signal(false);
+
   ngOnInit(): void {
     const key = this.route.snapshot.paramMap.get('url') ?? '';
     this.masterKey.set(key);
@@ -84,19 +89,40 @@ export class CommonMasterComponent implements OnInit {
           this.rows.set(res.listObject ?? []);
           this.error.set('');
         } else {
-          // The 500 dev-empty envelope is the honest state for unseeded
-          // masters ("Phlebotomy Records not found." etc.) — surface the
-          // message rather than masking it.
+          // Two dev-empty classes (DQ-2026-08-12-003):
+          //  - descriptive per-master message ("Sample Records not found.")
+          //    = honest dev-empty; surface the backend's own message.
+          //  - the GENERIC "Internal Server Error" envelope = the
+          //    unreachable-empty-branch fall-through: the legacy service's
+          //    `size() > 0` guard makes its inner isEmpty() branch dead, so an
+          //    empty table falls through to ERR_500_MESSAGE. The response
+          //    LIES (empty reported as a server error) — the banner must say
+          //    WHY it is permanent (BANNER-TIER RULE, amber).
+          const msg = res.message ?? `No records for '${key}'.`;
           this.rows.set([]);
-          this.error.set(res.message ?? `No records for '${key}'.`);
+          if (this.isGenericEnvelope(msg)) {
+            this.maskedError.set(true);
+            this.error.set(msg);
+          } else {
+            this.maskedError.set(false);
+            this.error.set(msg);
+          }
         }
       },
       error: (err) => {
         this.loading.set(false);
         this.rows.set([]);
+        this.maskedError.set(false);
         this.error.set(`Request failed: ${err?.status ?? 'unknown'} ${err?.message ?? ''}`);
       },
     });
+  }
+
+  /** True when the message is the generic lie-class envelope (empty reported
+   * as "Internal Server Error" by the LIS service fall-through). */
+  private isGenericEnvelope(msg: string): boolean {
+    const m = msg.toLowerCase();
+    return m.includes('internal server error') || m.includes('something went wrong');
   }
 
   /** Column values for a row: prefer id/desc/code, fall back to first keys. */

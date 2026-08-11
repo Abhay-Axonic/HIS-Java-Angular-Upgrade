@@ -4,9 +4,9 @@
 Injected real-login token (stated plainly per browser-smoke-harness).
 Zero backend seeding.
 
-The slice (owner decision, option b) is the dispatcher + 4 Unit Master branches
-(phlebotomyMaster, headerMaster, departmentMaster, biochemicalTest) + 1 ADT
-real-data branch (relationmaster, node 390) to prove the data path.
+The dispatcher family: 5 slice branches (4 Unit Master + ADT relationmaster),
+6 ADT branches (root 380), 26 LIS branches (10 descriptive dev-empty + 16
+generic-envelope masked-error banners per DQ-2026-08-12-003).
 
 Probe asserts:
   1. POSITIVE GATE: with the family's node-id array in permissions, the route
@@ -84,6 +84,32 @@ ADT_BRANCHES = {
     "patientsource": "PATIENT12",
     "referraltype": "Testing1",
 }
+# LIS family batch (DQ-2026-08-12-003): 26 branches.
+#  - DESCRIPTIVE (10): backend returns "X Records not found." — honest
+#    dev-empty, message must be surfaced.
+#  - GENERIC (16): backend returns "Internal Server Error" — the
+#    unreachable-empty-branch fall-through; the AMBER-permanent masked-error
+#    banner must render (lie-class envelope).
+LIS_DESCRIPTIVE = {
+    "sampleMaster": "Sample Records not found",
+    "containerMaster": "Container Records not found",
+    "techinqueMaster": "Techinque Records not found",
+    "prerequisitesMaster": "Prerequisites Records not found",
+    "mediaMaster": "Media Records not found",
+    "antibioticMaster": "Sample Records not found",  # legacy copy-paste msg
+    "antibioticsGroupMaster": "Antibiotics group Records not found",
+    "storageLocationMaster": "Storage Location Records not found",
+    "languageMaster": "Language Records not found",
+    "serologyTestFindingMaster": "Serology Test Records not found",
+}
+LIS_GENERIC = [
+    "reagentMaster", "reportTypeMaster", "bacteriaShapMaster",
+    "wtifilmStudyMasterMaster", "colonyMaster", "organismMaster",
+    "organismGroupMaster", "stainigMaster", "microbiologyStainMaster",
+    "antibioticsMaster", "incubationTestMaster", "sensitivityTypeResultMaster",
+    "slideProcedureMaster", "bacteriaClassificationMaster", "unitMaster",
+    "blockMaster",
+]
 FAILS = []
 
 
@@ -161,6 +187,25 @@ def main():
             print(f"ADT {branch}: real_row('{expect}')={real}  url={page.url.split('/')[-1]}")
             if not real:
                 FAILS.append(f"ADT {branch}: real row '{expect}' not rendered")
+
+        # LIS family: descriptive branches surface their per-master message;
+        # generic branches render the AMBER-permanent masked-error banner.
+        for branch, expect in LIS_DESCRIPTIVE.items():
+            page.goto(BASE + f"/commonMaster/{branch}", wait_until="domcontentloaded")
+            time.sleep(6)
+            body = page.inner_text("body")
+            desc = expect in body and "lie-class" not in body
+            print(f"LIS {branch}: descriptive('{expect}')={desc}  url={page.url.split('/')[-1]}")
+            if not desc:
+                FAILS.append(f"LIS {branch}: descriptive message '{expect}' not surfaced")
+        for branch in LIS_GENERIC:
+            page.goto(BASE + f"/commonMaster/{branch}", wait_until="domcontentloaded")
+            time.sleep(6)
+            body = page.inner_text("body")
+            masked = "Internal Server Error" in body and "lie-class" in body
+            print(f"LIS {branch}: masked-banner={masked}  url={page.url.split('/')[-1]}")
+            if not masked:
+                FAILS.append(f"LIS {branch}: masked-error banner not rendered")
 
         ctx.close()
 

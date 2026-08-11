@@ -109,6 +109,119 @@ const DISPATCH: Record<string, MasterEndpoint> = {
     path: '/adt/getReferralTypeMasterList',
     body: (o, _u, off, sz) => ({ organizationId: o, offset: off, noOfRecordsPerPage: sz }),
   },
+  // --- LIS family batch (owner order 2026-08-12; DQ-2026-08-12-003) ---
+  // 26 branches. All GET /LIS/global/<list>/{orgId}/{offset}/{size} EXCEPT
+  // languageMaster + serologyTestFindingMaster (4 segments: orgId/unitId/
+  // offset/size). 10 are descriptive dev-empty ("X Records not found."); 16
+  // return the GENERIC "Internal Server Error" envelope — the unreachable-
+  // empty-branch fall-through in the legacy service layer (the size()>0 guard
+  // makes the inner isEmpty() branch dead, so empty lists fall to
+  // ERR_500_MESSAGE). The 16 get an AMBER-permanent banner from the
+  // component; live-verified 2026-08-12.
+  sampleMaster: {
+    method: 'GET', path: '/LIS/global/listSampleMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  containerMaster: {
+    method: 'GET', path: '/LIS/global/listContainerMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  techinqueMaster: {
+    method: 'GET', path: '/LIS/global/listTechinqueMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  prerequisitesMaster: {
+    method: 'GET', path: '/LIS/global/listPrerequisitesMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  unitMaster: {
+    method: 'GET', path: '/LIS/global/listUnitMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  reagentMaster: {
+    method: 'GET', path: '/LIS/global/listReagentMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  reportTypeMaster: {
+    method: 'GET', path: '/LIS/global/listReportType',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  bacteriaShapMaster: {
+    method: 'GET', path: '/LIS/global/listBacteria',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  wtifilmStudyMasterMaster: {
+    method: 'GET', path: '/LIS/global/listWtfilmStudy',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  mediaMaster: {
+    method: 'GET', path: '/LIS/global/listMediaMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  colonyMaster: {
+    method: 'GET', path: '/LIS/global/listColony',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  organismMaster: {
+    method: 'GET', path: '/LIS/global/listOrganismMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  organismGroupMaster: {
+    method: 'GET', path: '/LIS/global/listOrganisumGroup',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  stainigMaster: {
+    method: 'GET', path: '/LIS/global/listStainigMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  microbiologyStainMaster: {
+    method: 'GET', path: '/LIS/global/listMicrobStainigMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  antibioticMaster: {
+    method: 'GET', path: '/LIS/global/listAntibiotics',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  antibioticsMaster: {
+    method: 'GET', path: '/LIS/global/listAntibiotic',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  incubationTestMaster: {
+    method: 'GET', path: '/LIS/global/listIncubationTest',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  antibioticsGroupMaster: {
+    method: 'GET', path: '/LIS/global/listAntibioticsGroupMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  sensitivityTypeResultMaster: {
+    method: 'GET', path: '/LIS/global/listSensitivityTestResult',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  slideProcedureMaster: {
+    method: 'GET', path: '/LIS/global/listSlideProcedure',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  bacteriaClassificationMaster: {
+    method: 'GET', path: '/LIS/global/listBacteriaClassfication',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  blockMaster: {
+    method: 'GET', path: '/LIS/global/listBlock',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  serologyTestFindingMaster: {
+    method: 'GET', path: '/LIS/global/listSerologyMaster',
+    getSegments: (o, u, off, sz) => [String(o), String(u), String(off), String(sz)],
+  },
+  storageLocationMaster: {
+    method: 'GET', path: '/LIS/global/listStorageLocationMaster',
+    getSegments: (o, _u, off, sz) => [String(o), String(off), String(sz)],
+  },
+  languageMaster: {
+    method: 'GET', path: '/LIS/global/listLanguageMaster',
+    getSegments: (o, u, off, sz) => [String(o), String(u), String(off), String(sz)],
+  },
 };
 
 export const COMMON_MASTER_DISPATCH = DISPATCH;
