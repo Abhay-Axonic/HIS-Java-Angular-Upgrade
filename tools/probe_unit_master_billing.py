@@ -19,6 +19,9 @@ is_bed_charges_service, DQ-2026-08-12-013).
 Batch 5: IPConsultationConfiguration (684), fundReconciliation (808) — honest
 dev-empty; userNursingStationMapper (689) — real (Admin/EMP123);
 nursingStationWardMapping (548) — real (Updated Desc, recordPerPage payload).
+Batch 6 (all masked, DQ-2026-08-12-016): scheduleWise (657) + doctorWise (658)
+— blank-generic slot endpoint (swallowed exception + date-parse);
+appointmentSchedulingUnitMaster (653) — ERR-ref correlation envelope.
 
 Freshness gate FIRST (bundle-freshness rule, RULES.md bb17efb9): the served
 bundle must match current source before any behavioural assertion. A stale
@@ -451,6 +454,63 @@ with sync_playwright() as p:
     if errorsN:
         FAILS.append(f"nursingStationWardMapping page errors: {errorsN[:3]}")
     ctxN.close()
+
+    # 9. Batch 6 (DQ-2026-08-12-016 + correction -017): scheduleWise +
+    # doctorWise are the masked pair (blank generic envelope, date-parse +
+    # swallowed exception); appointmentSchedulingUnitMaster is REAL DATA
+    # (the component payload {organizationId, unitId, slotTypeId} succeeds —
+    # the masked ERR-ref seen in classification was a wrong-payload artifact).
+    for route, mid, expect_terms in [
+        ("scheduleWise", 657, ["Masked-error", "SlotMasterController", "date-parse"]),
+        ("doctorWise", 658, ["Masked-error", "SlotMasterController", "date-parse"]),
+    ]:
+        ctxB6 = browser.new_context()
+        pageB6 = ctxB6.new_page()
+        errorsB6 = []
+        pageB6.on("pageerror", lambda e: errorsB6.append(str(e)))
+        pageB6.on("console", lambda m: errorsB6.append(m.text) if m.type == "error" else None)
+        ctxB6.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageB6.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageB6.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageB6.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageB6.inner_text("body")
+        ok = all(t in body for t in expect_terms) and "accessDenied" not in pageB6.url
+        print(f"B6 {route}: masked-banner={ok} url={pageB6.url.split('/')[-1][:40]}")
+        if not ok:
+            FAILS.append(f"B6 {route}: masked banner not rendered")
+        real_errs_b6 = [e for e in errorsB6 if "getSlots" not in e and "500" not in e]
+        if real_errs_b6:
+            FAILS.append(f"B6 {route} page errors: {real_errs_b6[:3]}")
+        ctxB6.close()
+
+    # appointmentSchedulingUnitMaster — REAL DATA (Dr. Demo Doctor)
+    ctxA6 = browser.new_context()
+    pageA6 = ctxA6.new_page()
+    errorsA6 = []
+    pageA6.on("pageerror", lambda e: errorsA6.append(str(e)))
+    pageA6.on("console", lambda m: errorsA6.append(m.text) if m.type == "error" else None)
+    ctxA6.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageA6.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageA6.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 653}]}))"
+    )
+    pageA6.goto(BASE + "/appointmentSchedulingUnitMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageA6.inner_text("body")
+    real_a6 = "Dr. Demo Doctor" in body and "General Medicine" in body
+    print(f"B6 appointmentSchedulingUnitMaster: real_rows(Demo Doctor)= {real_a6} url={pageA6.url.split('/')[-1][:40]}")
+    if not real_a6:
+        FAILS.append("appointmentSchedulingUnitMaster: real rows not rendered")
+    if errorsA6:
+        FAILS.append(f"appointmentSchedulingUnitMaster page errors: {errorsA6[:3]}")
+    ctxA6.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
