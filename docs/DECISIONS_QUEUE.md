@@ -851,3 +851,45 @@ behave like blood bank (SUCCESS-empty or real data, zero masked) because its
 service layer is the un-guarded shape; if any master/unit endpoint 500s with
 a masked envelope, the family has a guarded service or a phantom column and
 the check will catch it.
+
+## DQ-2026-08-12-013 — UNIT MASTER 531 MASTER/UNIT FAMILY (batch 4): classification + SECOND PHANTOM COLUMN (is_bed_charges_service) — and the falsifiable prediction from DQ-2026-08-12-012 FAILED as designed
+
+Owner's pre-build checks applied to the master/unit six (templateICDCodeMapping
+688, loyaltyCardCreation 729, loyaltyCardConfiguration 743, autoServicePosting-
+Configuration 775, passBedCategoryMapper 822, doctorRegistration 651):
+
+SHARED COMPONENT/STATE CHECK: NONE — all six have UNIQUE controllers and
+templates (master/unit/ directory).
+
+ENVELOPE CLASSIFICATION (live-verified 2026-08-12):
+- loyaltyCardCreation: SUCCESS empty — honest dev-empty (POST /api/unit/
+  getLoyaltiCardMasterList; note legacy payload uses organisationId British
+  spelling)
+- loyaltyCardConfiguration: SUCCESS 1 REAL ROW — real data (POST /api/unit/
+  getLoyaltyCardConfigurationList)
+- passBedCategoryMapper: SUCCESS empty — honest dev-empty (POST /api/unit/
+  getVisitorPassMapperList; organisationId payload)
+- autoServicePostingConfiguration: MASKED-ERR-REF "Something went wrong.
+  Reference: ERR-0c281b8d" — SECOND PHANTOM COLUMN: the raw SQL in
+  AutoPostingConfigDaoImpl.java:92,134 selects autopostin0_.
+  is_bed_charges_service but public.t_auto_posting_services_cofiguration has
+  NO is_bed_charges_service column (verified information_schema count 0; the
+  table itself exists with the legacy typo "cofiguration" and all OTHER query
+  columns). Same masked envelope as parameterMaster (ErrorCorrelationUtil).
+  Backend fix NOT made (Rule 10; BR candidate: add the column or drop the
+  select).
+- templateICDCodeMapping: HTTP 405 — the list is GET_TEMPLATE_DIAGNOSIS_MAPPER_
+  LIST; needs the exact legacy call shape (mapping screen; POST body
+  {offset, noOfRecordsPerPage} at ctrl:URI1 = .../getTemplateDiagnosisMapperlist
+  + offset + noOfRecordsPerPage — verified shape pending build)
+- doctorRegistration: REGISTRATION FORM (60+ endpoints, doctorSearchObj
+  payload {doctorName, specialityId, docDesignationId, docCategoryId,
+  organizationId, unitId, typeId, identificationTypeId}) — the large doctor
+  master form, NOT a simple grid; builds as the full form parity.
+
+PREDICTION RESULT (DQ-2026-08-12-012): the falsifiable prediction said batch 4
+would behave like blood bank (zero masked); autoServicePostingConfiguration
+500s with a masked envelope — THE PREDICTION FAILED, which is exactly what a
+falsifiable prediction is for. The envelope check caught a 2nd phantom column
+the moment it existed. This is further evidence the probes do not converge:
+they fail when the backend is broken.
