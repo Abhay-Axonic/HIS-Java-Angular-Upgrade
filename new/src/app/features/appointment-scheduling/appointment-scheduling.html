@@ -1,0 +1,37 @@
+<div class="aps-page">
+  <header class="aps-header">
+    <h2>Appointment Scheduling</h2>
+    <p class="aps-sub">Screen 41 — module 4 (Opd, parent 2). Appointment scheduling.</p>
+  </header>
+
+  <section class="aps-finding">
+    <h3>Masked error surfaced — the scheduled-list DAO discards the exception into a null-message envelope</h3>
+    <p>
+      scheduledAppointmentList's DAO catch logs + returns a null-message
+      ERROR envelope; the service rethrows it as a null-message
+      ApplicationException; the controller surfaces "Something went
+      wrong!!". The user sees an error, but the underlying cause is lost at
+      the first swallow.
+    </p>
+    <p class="aps-detail">
+      AppointmentSchedulingDaoImpl:872-875 — the HibernateException catch
+      logs then falls to <code>return new Response(ERROR, null, null, null,
+      null)</code>. The list path throws server-side (root cause owed — a
+      phantom column or missing join in GET_SCHEDULED_APPOINTMENTS_SLOTS_
+      LIST). Not fixed (Rule 10 — surfaced for the BR scoped-check).
+    </p>
+  </section>
+
+  <section class="aps-list card">
+    <h3>Scheduled appointments</h3>
+    @if (loading()) {
+      <p class="aps-note">Loading…</p>
+    } @else if (loadState() === 'error') {
+      <p class="aps-note">The backend returned its error envelope (501 "Something went wrong!!"). Honest state shown.</p>
+    } @else if (rows().length === 0) {
+      <p class="aps-note">No scheduled appointments found (dev data).</p>
+    } @else {
+      <p class="aps-note">{{ rows().length }} scheduled appointment(s).</p>
+    }
+  </section>
+</div>
