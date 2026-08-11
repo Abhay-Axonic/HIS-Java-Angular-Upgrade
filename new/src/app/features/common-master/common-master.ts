@@ -55,6 +55,10 @@ export class CommonMasterComponent implements OnInit {
    * permanent banner (DQ-2026-08-12-003, BANNER-TIER RULE). */
   readonly maskedError = signal(false);
 
+  /** True when the master has no backend list endpoint at all (legacy stub
+   * controller — e.g. consultantType). Renders the honest no-data state. */
+  readonly noData = signal(false);
+
   ngOnInit(): void {
     const key = this.route.snapshot.paramMap.get('url') ?? '';
     this.masterKey.set(key);
@@ -88,6 +92,7 @@ export class CommonMasterComponent implements OnInit {
         if (res.status === 'success') {
           this.rows.set(res.listObject ?? []);
           this.error.set('');
+          this.noData.set(this.service.isNoData(key));
         } else {
           // Two dev-empty classes (DQ-2026-08-12-003):
           //  - descriptive per-master message ("Sample Records not found.")

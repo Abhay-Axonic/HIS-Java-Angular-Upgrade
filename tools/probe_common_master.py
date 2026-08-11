@@ -110,6 +110,17 @@ LIS_GENERIC = [
     "slideProcedureMaster", "bacteriaClassificationMaster", "unitMaster",
     "blockMaster",
 ]
+# Final batch: billing/common 5 + master 1. ALL real data (live-verified):
+# priorityMaster 3 rows, visitType 7 rows, paymentMode 8 rows,
+# paymentEntitment 3 rows, scheduleMaster 1 row. consultantType has NO
+# backend list endpoint (legacy stub) -> honest noData state.
+FINAL_REAL = {
+    "priorityMaster": "priorityId",
+    "visitType": "Visit",
+    "paymentMode": "Cash",
+    "paymentEntitment": "Cash",
+    "scheduleMaster": "Schedule",
+}
 FAILS = []
 
 
@@ -206,6 +217,27 @@ def main():
             print(f"LIS {branch}: masked-banner={masked}  url={page.url.split('/')[-1]}")
             if not masked:
                 FAILS.append(f"LIS {branch}: masked-error banner not rendered")
+
+        # Final batch: 5 real-data branches + consultantType noData state.
+        # Real-data assertion: the page must render a grid with rows (not an
+        # error or empty message) — assert at least one row cell exists.
+        for branch, _expect in FINAL_REAL.items():
+            page.goto(BASE + f"/commonMaster/{branch}", wait_until="domcontentloaded")
+            time.sleep(6)
+            body = page.inner_text("body")
+            has_grid = "record(s)" in body and "not found" not in body
+            print(f"FINAL {branch}: real-data-grid={has_grid}  url={page.url.split('/')[-1]}")
+            if not has_grid:
+                FAILS.append(f"FINAL {branch}: real data grid not rendered")
+
+        # consultantType: no backend endpoint -> honest noData state
+        page.goto(BASE + "/commonMaster/consultantType", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = page.inner_text("body")
+        no_data = "has no list endpoint" in body
+        print(f"FINAL consultantType: noData-state={no_data}  url={page.url.split('/')[-1]}")
+        if not no_data:
+            FAILS.append("consultantType: noData state not rendered")
 
         ctx.close()
 

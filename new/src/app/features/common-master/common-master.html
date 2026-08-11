@@ -16,7 +16,16 @@
         screen is open.
       </p>
     </div>
-  } @else if (error()) {
+  } @else if (noData()) {
+   <div class="cm-state cm-error">
+     <p>Master '{{ masterTitle() }}' has no list endpoint in the backend.</p>
+     <p class="cm-muted">
+       The legacy controller for this master is a stub — it never loads data
+       (no GET constant, no service call), so there is nothing to render.
+       The screen is a real menu branch, but the data path does not exist.
+     </p>
+   </div>
+ } @else if (error()) {
    @if (maskedError()) {
      <div class="cm-state cm-error cm-masked">
        <p>{{ error() }}</p>
