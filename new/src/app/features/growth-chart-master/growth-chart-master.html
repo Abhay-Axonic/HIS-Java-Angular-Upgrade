@@ -1,0 +1,37 @@
+<div class="gcm-wrap">
+  <header class="gcm-header">
+    <h2>Growth Chart Master</h2>
+    <span class="gcm-sub">Unit Master / Organization — module 962</span>
+  </header>
+
+  @if (loading()) {
+    <p class="gcm-muted">Loading growth charts…</p>
+  } @else if (error()) {
+    <div class="gcm-state gcm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="gcm-table">
+      <thead>
+        <tr>
+          <th>Gender</th>
+          <th>Age (months)</th>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.growthChartId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="gcm-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
