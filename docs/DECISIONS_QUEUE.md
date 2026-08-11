@@ -670,3 +670,31 @@ screen). Families of the 40 verified:
 - accessControl pair (2): accessControl, accessControl1 (stub — noData class)
 Order: billing/unit first (largest, likely real data), then lis, bloodBank,
 master, opd, services, cssd, clinical, adt, billing/global, no-state.
+
+## DQ-2026-08-12-008 — UNIT MASTER 531 CANDIDATE RECONCILIATION: 4 of the "40 verified" are ALREADY REBUILT (alias-routed class); billing/unit batch = 3 screens not 6
+
+Pre-build reconciliation of the 40 "verified" candidates against origin/main
+routes (moduleId-anchored, then tree-id-verified):
+- doctorConsulationMaster (612) -> rebuilt route 'doctorConsultation' (dir
+  doctor-consultation) — REAL (tree id 612 unique, name ' Doctor Consulation')
+- doctorWiseShare (614) -> 'doctorwiseShare' (doctorwise-share) — REAL
+- doctorReferralShareMaster (615) -> 'doctorReferralShare' (doctor-referral-share) — REAL
+- accessControl (677) -> 'newAccessControl' (new-access-control) — REAL
+  (the legacy state accessControl was rebuilt as newAccessControl; the
+  accessControl1 state 673 remains unbuilt)
+- autoServicePostingConfiguration (775): FALSE POSITIVE — the rebuilt
+  'couponTemplateMaster' also carries moduleId 775, but the privilege-tree
+  node 775 is 'Auto Service Posting Configuration' (dup-id artifact: ids
+  repeat across tenant namespaces per the sweep) — 775 remains UNBUILT.
+
+NET: genuinely unbuilt from the 40 = 36 (not 40). The sweep's verified bucket
+carried 4 alias-routed false candidates (state name != dir kebab: the
+Consulation typo, doctorwiseShare camel, newAccessControl rename). Same class
+as the recorded 39 alias-routed dirs (DQ-336).
+
+BILLING/UNIT BATCH = 3 SCREENS (not 6): patientType (764), patientTypeDetails
+(765), pharmacyTariffMaster (803). All live-verified: GET /api/billing/
+getPatientType/1/1 -> SUCCESS 3 real rows (DB+Cache); GET /api/units/pharmacy/
+tariff/getAll/1/1 -> SUCCESS 3 real rows. THIRD envelope shape (stores/
+listObject2/resObject fields) — distinct from commonMaster's; zero generic
+envelopes. The 3 doctor/share screens are already rebuilt -> excluded.
