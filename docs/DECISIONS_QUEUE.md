@@ -893,3 +893,47 @@ would behave like blood bank (zero masked); autoServicePostingConfiguration
 falsifiable prediction is for. The envelope check caught a 2nd phantom column
 the moment it existed. This is further evidence the probes do not converge:
 they fail when the backend is broken.
+
+## DQ-2026-08-12-014 — PROBE PASS 17/17 + MODULE-BY-MODULE VARIATION IS REAL (owner's read request)
+
+LIVE PROBE PASS (2026-08-12, after owner restarted 4201): all 17 checks green
+across the four Unit Master batches — 3 billing real-data, 4 LIS descriptive,
+parameterMaster masked, 4 blood empty, bloodGroupMatching real, 4 master/unit
+empty, loyaltyCardConfiguration real, autoServicePostingConfiguration masked
+banner (through the NEW /config/** proxy), negative control denies, 0 page
+errors.
+
+OWNER'S QUESTION — is the module-by-module variation real? YES, and batch 4
+is the proof of the variation, not a contradiction of it. The evidence:
+
+1. DAO/SERVICE LAYER SHAPE DIFFERS BY MODULE (the mechanism): blood bank DAOs
+   return SUCCESS-empty unconditionally (BloodTestMasterDaoImpl:123). LIS
+   services wrap DAO calls in size()>0 guards whose empty branch is dead
+   (ReagentMasterServiceImpl:35) -> masked 500 for empty. Master/unit has a
+   different shape again: loyalty/pass/template/doctor endpoints return
+   SUCCESS-empty (un-guarded, honest), but autoServicePostingConfiguration's
+   raw SQL selects a phantom column -> correlation 500. Three DIFFERENT code
+   shapes in three families, all producing different envelope classes. The
+   variation is in the backend code, not in the probe.
+
+2. THE PROXY GAP IS A FOURTH, INDEPENDENT CAUSE CLASS (DQ-2026-08-12-005
+   confirmed again): /config/** was missing from proxy.conf.json — the screen
+   would have looked like a backend defect (Http failure during parsing, 200 +
+   SPA html) until the proxy was checked. autoServicePostingConfiguration had
+   TWO independent causes stacked: the phantom column (real backend defect)
+   AND the proxy gap (dev-harness defect). Both had to be found for the
+   screen to render; the probe's 200-parsing failure caught the proxy, and
+   the direct-curl correlation envelope caught the phantom column.
+
+3. THE FALSIFIABLE PREDICTION (DQ-2026-08-12-012) FAILED for master/unit —
+   the batch had a masked envelope where the prediction said zero. The check
+   caught it. Probes that fail when the backend is broken do not converge.
+
+CONCLUSION: the "three clean batches" were genuinely clean backend families
+(blood bank's DAO shape has no masked-error path); master/unit is not clean
+(phantom column + proxy gap). The variation is real, module by module, and
+the classification method (live curl envelope check first, browser assertion
+second) tracks it correctly. This also completes the evidence that the
+fourth-cause rule (check the proxy BEFORE classifying a screen as a backend
+defect) is load-bearing: two independent screens (scheduleMaster, autoService-
+PostingConfiguration) have now been mis-diagnosable without it.
