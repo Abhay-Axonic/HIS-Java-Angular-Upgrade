@@ -1087,3 +1087,38 @@ ENVELOPE CLASSIFICATION (live-verified 2026-08-12, body status inspected):
 ZERO masked errors in batch 8. RMO + growthChart build as normal masters;
 accessControl pair builds ONCE (shared component) with the noData state, two
 routes (moduleId 677 and 673) both pointing at it.
+
+## DQ-2026-08-12-020 — UNIT MASTER 531 BINDINGS-ONLY 15: full classification (backend truth)
+
+The 15 bindings-only candidates (backend=N in the sweep) examined for
+controller existence + endpoints:
+
+REAL BUILD (1): templateMaster (58) — labTemplateMasterController EXISTS;
+GET /LIS/unit/labtemplates/{org}/{unit}/{offset}/{size} returns a RAW ARRAY
+(response.data read directly, NOT {listObject} — the raw-list response shape,
+3rd shape seen alongside {listObject} and {stores,listObject2}) — honest empty
+[] live. Real endpoint, real controller: build.
+
+NODATA — MISSING CONTROLLER (3): testMaster (276), multiparameterTestMaster
+(183), OPConsulationConfigurationMaster (611) — the states reference
+controllers (singleParameterTestController, multiParameterTestController,
+OPConsulationConfigurationMasterController) that DO NOT EXIST anywhere in the
+webapp (find: 0 files); the templates DO exist. No controller code = no
+endpoint (consultantType precedent, DQ-005): noData class.
+
+NODATA — MASTERCONTROLLER SHELLS (6): fundApproval (809), fundRequisition
+(810), fundApprovedList (811), schedulePriceUnitService (586),
+roundOffConfiguration (599), IPdefaultServiceConfig (620) — all use the
+generic MasterController (common-controller.js, ZERO api refs). The templates
+bind genderList/identificationList (fund trio) or plain form fields
+(round-off: min/max/medianAmount inputs) that MasterController never
+populates; no list binding to any endpoint. noData class.
+
+NO STATE — WALKED (5): Order set Master (707), ordersetmaster (698),
+bloodtestresultmaster (733), kitmasterpharmacy (762), templateutility (667) —
+no .state in app.js, not screens (sweep ctrl-basename/name-match classes).
+
+RESULT: 1 real build + 9 noData + 5 walked. The 9 noData screens use ONE
+shared noData component pattern (accessControl precedent, DQ-019) with per-
+screen routes; templateMaster builds as a real master with the raw-array
+response handling.
