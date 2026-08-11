@@ -1,0 +1,60 @@
+<div class="td-screen">
+  <div class="screen-header">
+    <h2>Token Display</h2>
+    <p class="subtitle">
+      Kiosk token display — the live token list and broadcast messages for the
+      current date. Both feeds are live and return honest dev results (dev-empty
+      token list on the seeded database).
+    </p>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-primary" (click)="refresh()" [disabled]="loading()">
+      @if (loading()) {
+        Refreshing…
+      } @else {
+        Refresh
+      }
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (loaded()) {
+    <div class="token-grid">
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>UHID</th>
+            <th>Counter</th>
+            <th>Token</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of tokenList(); track t) {
+            <tr>
+              <td>{{ t.uhidNumber ?? '—' }}</td>
+              <td>{{ t.counterDesc ?? '—' }}</td>
+              <td>{{ t.unitTokenNumber ?? '—' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="muted">No tokens for today (dev-empty is the honest state).</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (broadcastMsgs().length > 0) {
+    <div class="broadcast">
+      <h3>Broadcast</h3>
+      @for (m of broadcastMsgs(); track m) {
+        <div class="msg">{{ m.message ?? m.broadcastMessage ?? '—' }}</div>
+      }
+    </div>
+  }
+</div>

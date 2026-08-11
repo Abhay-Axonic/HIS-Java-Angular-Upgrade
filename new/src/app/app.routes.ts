@@ -1772,6 +1772,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/growth-chart/growth-chart').then((m) => m.GrowthChart),
       },
+      {
+        path: 'tokenDisplay',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 747, title: 'Token Display' },
+        loadComponent: () =>
+          import('./features/token-display/token-display').then((m) => m.TokenDisplay),
+      },
       // Phase 4 batch 23.
       {
         path: 'bloodBagType',
