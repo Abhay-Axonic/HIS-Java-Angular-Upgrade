@@ -1,0 +1,58 @@
+<div class="ptm-wrap">
+  <header class="ptm-header">
+    <h2>Patient Type Master</h2>
+    <span class="ptm-sub">Unit Master / Billing — module 764</span>
+  </header>
+
+  <section class="ptm-form">
+    <div class="ptm-field">
+      <label for="ptm-code">Code *</label>
+      <input id="ptm-code" type="text" [(ngModel)]="form().code" />
+    </div>
+    <div class="ptm-field">
+      <label for="ptm-desc">Description *</label>
+      <input id="ptm-desc" type="text" [(ngModel)]="form().desc" />
+    </div>
+    <div class="ptm-actions">
+      <button class="ptm-btn ptm-btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : editingId() !== null ? 'Update' : 'Save' }}
+      </button>
+      <button class="ptm-btn" (click)="resetForm()" [disabled]="saving()">Reset</button>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <p class="ptm-muted">Loading patient types…</p>
+  } @else if (error()) {
+    <div class="ptm-state ptm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ptm-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.patientTypeId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+            <td>{{ row.status }}</td>
+            <td>
+              <button class="ptm-btn ptm-btn-small" (click)="edit(row)">Edit</button>
+              <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggle(row, row.status === 'A' ? 'I' : 'A')"></app-status-toggle>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="ptm-empty">No patient types.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

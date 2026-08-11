@@ -1,0 +1,42 @@
+<div class="ptm-wrap">
+  <header class="ptm-header">
+    <h2>Pharmacy Tariff Master</h2>
+    <span class="ptm-sub">Unit Master / Billing — module 803</span>
+  </header>
+
+  @if (loading()) {
+    <p class="ptm-muted">Loading pharmacy tariffs…</p>
+  } @else if (error()) {
+    <div class="ptm-state ptm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ptm-table">
+      <thead>
+        <tr>
+          <th>Asset Category</th>
+          <th>Product Category</th>
+          <th>Mark-up/Down</th>
+          <th>Mark-up/Down %</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+            <td>{{ row.status }}</td>
+            <td>
+              <app-status-toggle [checked]="row.status === 'A'" (toggled)="toggle(row)"></app-status-toggle>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="ptm-empty">No pharmacy tariffs.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
