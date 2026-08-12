@@ -2846,3 +2846,16 @@ persist in a configured environment). The whitelist includes auth-exempt WRITE e
 - **ATTACK-THEN-DEFENCE (to run when implemented):** ATTACK (current): fire getUnitServiceTariffMasterList with all filter lists EMPTY (the default load — the legacy's exact first call) -> current build returns HTTP 200 body {"status":"error","code":null,"message":null} (masked; the grid shows nothing). DEFENCE (post-fix): the SAME payload -> HTTP 200 status 'success' with the list (the IN (1) placeholder or the skipped append) AND a populated message on any real error. REGRESSION: non-empty filter lists still filter correctly (a matching id INCLUDES, a non-matching id EXCLUDES — both-directions, per the walk standard).
 - **RELATIONSHIP:** the masked-error class (screen-17 family) with a NEW mechanism (controller-level empty catch) + the IN () generation defect; the ForWeb variant is the working reference implementation. Distinct from the false-success BRs (191/192/194) — this one masks an error, it does not fake a write.
 - **Filing location (BR_INDEX):** BR-195.
+
+## BR-2026-08-12-032 — ORDERSET icpc_id PHANTOM COLUMN (DDL alternative, logged NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (Rule 10). The masked feed behind 587 Order
+Set / 588 Order Set List was root-caused (DQ-031) to LIST_ORDER_MASTER_FOR_ICPC
+joining osm.icpc_id, a column absent from doctor.m_orderset_master (verified:
+14 columns). The frontend rebuild (DQ-031 Group B) documents the masked
+behavior with an AMBER banner — parity with current behavior, per the owner.
+The DDL alternative — ALTER TABLE doctor.m_orderset_master ADD COLUMN
+icpc_id ... — is the FIX candidate and must NOT be applied as a side effect
+of the frontend rebuild: a schema change on a table whose other query works
+fine needs backend review on its own terms. 4th phantom column found
+(technique_id, is_bed_charges_service, form_template, icpc_id).
