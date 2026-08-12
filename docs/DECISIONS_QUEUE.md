@@ -2189,3 +2189,45 @@ list + W1/W2/W3 + reject are all live-verified working); the picker step is
 documented as broken-feed with the honest-error banner state. The chain
 writes are the merge gate — the picker being a broken read does not block
 proving the writes through the UI.
+
+## DQ-2026-08-12-051 — TRANSFER (65): UI GOLDEN TRACE PASS + RETRY-COMPLETENESS ANSWER (owner's merge-gate asks)
+
+THE MERGE GATE — GOLDEN TRACE THROUGH THE UI (ONE browser session, real
+DOM, module-65 grant, DEMO-001 fixture):
+ACCEPT PATH 6/6 GREEN:
+  STEP 1 screen renders; STEP 2 pending list (getPendingTransferRequest-
+  ListForADT, status-4) shows the seeded row + Accept button; STEP 3 W2
+  accept via UI -> psql transfer=6, to-bed(1) bed_status=5 (booked);
+  STEP 4 W3 final via UI -> psql transfer=9|I, adm_details.bed=1 (patient
+  moved). The screen reported the honest read-back: "row left the pending
+  list (status 9)" — the W3 ERROR envelope (DQ-048 empty catch) was
+  disambiguated by the refreshed list (T4 read-back rule implemented in
+  the screen, not just the probe).
+REJECT PATH 4/4 GREEN: list -> select -> Reject via UI -> psql transfer=
+  5|I, request=5|I.
+FIXTURE: 0 leftovers after both paths (bills none, transfers/requests/
+  admission-details/bed-log all torn down, bed-status reset).
+SCREEN FIXES THE TRACE DEMANDED (committed 0fb11def): pending list
+  endpoint corrected to the ADT status-4 list (the universal list filters
+  status 7); LEGAL_TRANSITIONS +3->4, +4->6/5; W2 success reflects status
+  6 locally so the W3 gate opens; W3 read-back verification (never trust
+  the envelope); reject gate covers status-4 rows (list rows carry null
+  transferStatusId — the query does not select it — defaulted to 4).
+RETRY-COMPLETENESS ANSWER (owner's explicit ask, stated plainly): the
+  retry restores ONLY THE BED, NOT ALL ELEVEN ENTITIES. With a REAL
+  from-bed (3) and corrected to-bed (1): after the retry, transfer=9|I,
+  adm_details.bed=1, to-bed(1)=5, bed-log A present — BUT new-transfer-
+  row=0 (the chained transfer record at DAO:611-629 is NEVER created) and
+  from-bed(3) NOT released (bed_status untouched). The envelope says ERROR
+  on BOTH the failed call and the retry (the empty catch fires again in
+  the from-bed block, before the new-transfer-row save) — so the UI/user
+  can NEVER tell from the response whether the move landed; only psql
+  shows the partial state. Patient recorded Transferd (9|I) with the
+  correct new bed; old bed never released; chained transfer never
+  recorded. This is the DQ-048 finding's full shape: W3 type-null branch
+  is non-atomic AND its retry is a partial recovery masked by an
+  always-ERROR envelope. CLASS: honest-error (Amendment 7) but
+  operationally severe (clinical path: bed bookkeeping silently left
+  behind); logged BR candidate (backend: reorder W3 so the from-bed/new-
+  transfer-row run BEFORE the failing insert, single transaction, and
+  LOG the catch).
