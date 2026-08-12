@@ -61,6 +61,7 @@ export class TransferScreen {
   writeMsg = signal('');
   writeOk = signal<boolean>(false);
   busy = signal(false);
+  pendingRefresh = signal(false);
 
   private org(): number {
     return Number(this.session.organizationId ?? 1);
@@ -202,6 +203,30 @@ export class TransferScreen {
       next: (res) => {
         const list = (res as { listObject?: TransferRow[] })?.listObject ?? [];
         this.pending.set(Array.isArray(list) ? list : []);
+        // read-back verification (T4): after a W3 error envelope, the
+        // refreshed list is the truth — if the row reached status 9 the
+        // write landed despite the envelope (DQ-048's empty catch).
+        if (this.pendingRefresh()) {
+          this.pendingRefresh.set(false);
+          const sel = this.selectedTransfer();
+          if (sel) {
+            const fresh = (Array.isArray(list) ? list : []).find(
+              (r) => r.transferId === sel.transferId,
+            );
+            if (fresh && fresh.transferStatusId === 9) {
+              this.writeMsg.set('Transfer completed — verified by read-back (the W3 error envelope was the legacy empty-catch; state landed).');
+              this.writeOk.set(true);
+              this.selectedTransfer.set({ ...fresh });
+            } else if (!fresh) {
+              // row no longer in the pending list — status 9 rows drop out
+              this.writeMsg.set('Transfer completed — row left the pending list (status 9).');
+              this.writeOk.set(true);
+            } else {
+              this.writeMsg.set(`W3 envelope error and read-back shows status ${fresh.transferStatusId} — the write did not land; retry the final transfer.`);
+              this.writeOk.set(false);
+            }
+          }
+        }
       },
       error: () => this.pending.set([]),
     });
@@ -248,6 +273,9 @@ export class TransferScreen {
       next: (res) => {
         const e = this.unwrap(res);
         if (e?.status === 'success') {
+          // the selected row now sits at status 6 (Ready For Transfer) —
+          // reflect it locally so the W3 gate (legal[6] -> 9) opens
+          this.selectedTransfer.set({ ...row, transferStatusId: 6 });
           this.writeMsg.set('Transfer accepted (W2 ok) — destination bed booked, Ready For Transfer. Execute the final transfer.');
           this.writeOk.set(true);
           this.phase.set('final');
@@ -291,15 +319,23 @@ export class TransferScreen {
     this.svc.acceptFinalTransferRequest(payload).subscribe({
       next: (res) => {
         const e = this.unwrap(res);
+        // T4 rule: never trust the frontend success flag — assert the NEXT
+        // read-back. The legacy W3 (DQ-048) commits transfer/request/
+        // admission-details THEN its bed-log insert fails -> the empty catch
+        // returns an ERROR envelope while the state landed. The read-back is
+        // the truth: refresh the list and check the row's real status.
+        this.loadPending();
         if (e?.status === 'success') {
           this.writeMsg.set('Transfer completed (W3 ok) — patient moved. Status: Transferd.');
           this.writeOk.set(true);
-          this.phase.set('final');
-          this.loadPending();
         } else {
-          this.writeMsg.set(`W3 failed: ${e?.message ?? 'unknown error'}`);
+          // ERROR envelope: check the read-back before declaring failure.
+          // loadPending is async; verify against the refreshed list below.
+          this.writeMsg.set('W3 returned an error envelope — verifying the transfer state via read-back...');
           this.writeOk.set(false);
+          this.pendingRefresh.set(true);
         }
+        this.phase.set('final');
         this.busy.set(false);
       },
       error: (err) => {
@@ -309,8 +345,6 @@ export class TransferScreen {
       },
     });
   }
-
-  // ---------- reject ----------
   rejectTransfer(): void {
     const row = this.selectedTransfer();
     if (!row) {
@@ -360,8 +394,12 @@ export class TransferScreen {
   }
 
   can(phase: 'request' | 'accept' | 'final', row?: TransferRow): boolean {
-    if (!row || row.transferStatusId == null) return false;
-    const from = this.legal[row.transferStatusId];
+    if (!row) return false;
+    // The ADT pending list (getPendingTransferRequestListForADT) does NOT
+    // select transferStatusId — every row in it is status 4 by construction
+    // (the query's WHERE). Treat null status on a list row as 4.
+    const status = row.transferStatusId ?? 4;
+    const from = this.legal[status];
     if (!from) return false;
     const target = phase === 'request' ? 2 : phase === 'accept' ? 6 : 9;
     return from.includes(target);

@@ -36,10 +36,13 @@ export class TransferService {
     );
   }
 
-  /** Legacy: universalSearchForTransferRequestList — pending transfer rows */
+  /** Legacy: getPendingTransferRequestListForADT — the ADT accept-phase list
+   * (transfer_status_id=4, GET_PENDING_TRANSFER_REQ_LIST_FOR_ADT). The
+   * universal search list (universalSearchForTransferRequestList) filters
+   * status 7 (All set) — the accept phase needs the ADT list. */
   getPendingTransfers(organizationId: number, unitId: number): Observable<unknown> {
     return this.http.post(
-      `${this.base}/adt/universalSearchForTransferRequestList`,
+      `${this.base}/adt/getPendingTransferRequestListForADT`,
       { organizationId, unitId },
     );
   }

@@ -122,5 +122,7 @@ export const TRANSFER_STATUS: Record<number, { code: string; label: string }> = 
 export const LEGAL_TRANSITIONS: Record<number, number[]> = {
   1: [2],            // Pending -> Requested (W1)
   2: [6, 5],         // Requested -> Ready For Transfer (W2) | Rejected
+  3: [4],            // Request sent to doctor -> Request sent to ADT
+  4: [6, 5],         // Request sent to ADT -> Ready For Transfer (W2) | Rejected
   6: [9],            // Ready For Transfer -> Transferd (W3)
 };

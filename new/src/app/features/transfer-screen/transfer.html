@@ -63,8 +63,10 @@
     </section>
   }
 
-  @if (phase() === 'accept' || phase() === 'final') {
-    <!-- STEP 3: PENDING LIST (W2/W3 rows) -->
+  @if (phase() === 'pick' || phase() === 'accept' || phase() === 'final') {
+    <!-- STEP 3: PENDING LIST (W2/W3 rows) — visible from the start so an
+         existing transfer request can be acted on without the picker
+         (the picker feed is backend-broken, DQ-050) -->
     <section class="tr-step">
       <h3>3. Pending transfers</h3>
       <button (click)="loadPending()" [disabled]="busy()">Refresh list</button>
@@ -99,7 +101,7 @@
           @if (can('accept', row)) {
             <button (click)="acceptTransfer()" [disabled]="busy()">Accept (book bed)</button>
           }
-          @if (row.transferStatusId === 2) {
+          @if ((row.transferStatusId ?? 4) === 2 || (row.transferStatusId ?? 4) === 4) {
             <button class="tr-danger" (click)="rejectTransfer()" [disabled]="busy()">Reject</button>
           }
         </div>
