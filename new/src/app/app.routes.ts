@@ -2306,6 +2306,20 @@ export const routes: Routes = [
           import('./features/account-payable-status/account-payable-status').then((m) => m.AccountPayableStatus),
       },
       {
+        path: 'orderSet',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 587, title: 'Order Set' },
+        loadComponent: () =>
+          import('./features/order-set/order-set').then((m) => m.OrderSet),
+      },
+      {
+        path: 'orderSetList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 588, title: 'Order Set List' },
+        loadComponent: () =>
+          import('./features/order-set-list/order-set-list').then((m) => m.OrderSetList),
+      },
+      {
         path: 'RMOAllocationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 824, title: 'RMO Allocation Master' },

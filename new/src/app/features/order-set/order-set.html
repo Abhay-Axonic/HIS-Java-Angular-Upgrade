@@ -1,0 +1,54 @@
+<div class="os-wrap">
+  <header class="os-header">
+    <h2>Order Set</h2>
+    <span class="os-sub">Unit Master / Billing — module 587</span>
+  </header>
+
+  @if (loading()) {
+    <p class="os-muted">Loading order sets…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="os-state os-masked">
+        <p>{{ error() }}</p>
+        <p class="os-muted">
+          Masked-error envelope, permanent: the order-set list endpoint
+          returns a masked 500 ("Something went wrong!!"). The
+          <code>LIST_ORDER_MASTER_FOR_ICPC</code> query joins
+          <code>osm.icpc_id</code>, a column that does not exist in
+          <code>doctor.m_orderset_master</code> (phantom column,
+          DQ-2026-08-12-031; the 4th found) — the DAO and service rethrow,
+          the controller masks. The table is not simply empty. The DDL fix
+          (add icpc_id) is logged as a BR candidate (Rule 10, not applied).
+        </p>
+      </div>
+    } @else {
+      <div class="os-state os-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="os-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Diagnosis</th>
+          <th>Speciality</th>
+          <th>Doctor</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.ordersetMasterId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="os-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
