@@ -1,17 +1,35 @@
-<div class="ac-wrap">
-  <header class="ac-header">
+<div class="ct-wrap">
+  <header class="ct-header">
     <h2>Consent Type</h2>
-    <span class="ac-sub">Module 528 -- MasterController shell</span>
+    <span class="ct-sub">Global Master / OTIMS — module 528</span>
   </header>
 
-  @if (noData()) {
-    <div class="ac-state ac-nodata">
+  @if (loading()) {
+    <p class="ct-muted">Loading consent types…</p>
+  } @else if (error()) {
+    <div class="ct-state ct-error">
       <p>{{ error() }}</p>
-      <p class="ac-muted">
-        This is the no-endpoint state, permanent: the legacy screen is driven by a MasterController shell (common-controller.js) that performs zero endpoint calls -- there is
-        no backend list endpoint at all (DQ-2026-08-12-022). The legacy screen
-        never loads data either; this state is the honest parity.
-      </p>
     </div>
+  } @else {
+    <table class="ct-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.consentTypeMasterId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="ct-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
   }
 </div>
