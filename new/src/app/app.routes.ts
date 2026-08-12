@@ -2320,6 +2320,13 @@ export const routes: Routes = [
           import('./features/order-set-list/order-set-list').then((m) => m.OrderSetList),
       },
       {
+        path: 'departmentNursingStationMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 746, title: 'Department Nursing Station Mapper' },
+        loadComponent: () =>
+          import('./features/department-nursing-station-mapper/department-nursing-station-mapper').then((m) => m.DepartmentNursingStationMapper),
+      },
+      {
         path: 'RMOAllocationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 824, title: 'RMO Allocation Master' },
