@@ -1191,3 +1191,94 @@ CHANNEL/LIMIT NOTE (2026-08-09): terminal and execute_code are SEPARATE channels
 
 The merge commit's Approved line contains an unexpanded shell literal due to an escaping error in the command block. The approval was given by Abhay before the merge ran. Real time recorded here: 2026-08-11 22:01 BST. The merge commit is not amended — it is already pushed.
 2026-08-12 | Maker | Hermes (deepseek-v4-flash) | rebuild/global-master-batch10 | b10 merge-resolution 1c97986f vs 4458ff4a: routes 44/44 survive exactly once, probe B5-B10 blocks intact, consumed-closing-brace fixed (tsc -p caught); gates tsc -p RC0 + ng build EXIT0 + probe PASS; diff --stat 122 files +4000; dry run CLEAN. Overnight run complete — all 4 batches (7,8,9,10) merge-ready. | new/src/app/app.routes.ts, tools/probe_unit_master_billing.py | N
+
+════════════════════════════════════════════════════════════════════════════
+CONTINUITY ENTRY — 2026-08-12 (overnight run complete; next session = new
+harness, same repo, none of this conversation in context)
+════════════════════════════════════════════════════════════════════════════
+
+WHAT IS IN WORKING CONTEXT BUT NOT IN ANY FILE (a fresh session must read this):
+- The overnight run (batches 7-10) is MERGED and pushed (main = 00cac8be;
+  merges: ef5cf3aa=b7, b55c8ca5=b8, d644cff8=b9, 00cac8be=b10). Census 339
+  rebuilt dirs (343 - 4 exclusion: _decoy-groundwork, _recheck-20-bucket,
+  _screen-template, access-denied). Remaining 186 candidates, ALL the
+  deferred transaction/report/dashboard class (DQ-025) — the master-rebuild
+  program is COMPLETE. The transaction phase is an OWNER DECISION (DQ-025),
+  not something to start unilaterally.
+- OPEN FIX BRANCH `rebuild/global-master-batch10-fix` @ 4a54dde3 (2 commits:
+  24a23f6f + 4a54dde3), READY TO MERGE, NOT YET MERGED: the b10 delegation
+  created new/src/app/features/consent-type/ (module 528 route 'consentType')
+  but NEVER STAGED it — the route on main dangled (lazy import target absent
+  from the tree) until this branch committed the 5 files. Probe regression
+  guard added. Dry run CLEAN (5 files +104). Owner should merge it.
+- The 4a54dde3 probe guard asserts chunk-load resolution (catches dangling
+  routes) — a gate class that DID NOT EXIST before this incident; plain route
+  presence checks pass even when the import target is missing.
+- VERBAL OWNER DECISIONS never in DECISIONS_QUEUE (recorded here):
+  * Stack overnight batches (cut each off the PREVIOUS batch's tip, never off
+    main) — owner directive after b9/b10 conflicted (DQ-026 records the
+    incident; the directive itself is only here).
+  * Merge-label distrust: verify merge parents vs expected tips
+    (git merge-base --is-ancestor) before assuming content landed (ef5cf3aa
+    labeled "batch 8" merged b7's tip).
+  * Owner merges/pushes; agent prepares branches + dry runs only (standing
+    Rule 9). NO git reset --hard (denied 2026-08-12; use a fresh branch).
+- OWED PROBES:
+  * None outstanding — the full probe (49 assertions incl. the consentType
+    guard) PASSES on the fix branch. Re-run after the fix merges.
+  * TOKEN: tools/get_dev_token.py --check may report LOGIN-OK while the
+    CACHED token in tools/.token_cache.json is stale — if a probe floods
+    401s/sessionExpired, re-run get_dev_token.py (it refreshes the cache).
+    Probe failures that are ALL 401 = token expiry, NOT a code regression.
+- TOOLS STATUS (current vs superseded):
+  * CURRENT: tools/probe_unit_master_billing.py (49 checks, batches 1-10 +
+    consentType regression guard; freshness gate first, FRESHNESS_SPECS local
+    dict, check_freshness returns list-of-failures); tools/get_dev_token.py
+    (token mint + --check); tools/bundle_freshness.py (check_freshness(specs,
+    base_url, timeout) -> list of failures, EXIT_STALE=2);
+    tools/check_commonmaster_gate.py (45-id gate drift, shared, on main).
+  * SUPERSEDED/stale: tools/denominator_sweep.py (needs the privilege-tree
+    flat-list shape — the sweep method is now: psql 'select modules from
+    privilege.privilege where role_id=1 limit 1' = 1077 flat nodes with
+    parentId; the script's assumptions are dated), tools/reconcile_old12.py
+    (one-off, done), probe_common_master.py + probe_common_master_unsupported
+    .py (commonMaster done 43/43 — kept for regression but not extended).
+  * DO NOT REWRITE existing tools blindly: the probe is the living artifact.
+- GATE LIST (as it now stands):
+  1. `npx tsc --noEmit -p tsconfig.app.json` — THE REAL TYPE GATE. PLAIN
+     `npx tsc --noEmit` IS VACUOUS (solution-style tsconfig.json: files:[]
+     + project references = empty program, trivially 0 errors) — DQ-027.
+  2. `npx ng build` in new/ — full Angular compiler, EXIT 0 + "Application
+     bundle generation complete" (catches template errors tsc misses).
+  3. Live probe with FRESHNESS GATE FIRST (bundle-freshness rule, RULES.md
+     bb17efb9): stale/DOWN server = RC=2, zero behavioural assertions.
+  4. Route survival: each route present EXACTLY ONCE + lazy import TARGET
+     EXISTS (file + export class match — the consent-type lesson).
+  5. C9: zero *ngIf/*ngFor; API_BASE_URL inject()ed; no manual HttpHeaders.
+  6. Negative control (permissions=[{id:999999}]) denies.
+- SKILLS IN USE (verify they load in the new harness):
+  * angular-rebuild-verification (SKILL.md ~95K — patched 2026-08-12 with the
+    -p tsc form; rebase-traps moved to references/rebase-traps-batch24-25-
+    2026-08-03.md; refs/ prefix in pointers = references/ dir).
+  * cross-tenant-idor-fix (sibling skill, not used this run).
+  * hermes-agent (base harness skill).
+- STANDING GOTCHAS (memory carries most; the top ones): SessionService
+  getters are PROPERTIES (this.session.unitId); NotificationService has
+  success()/error(); StatusToggle [checked]/(toggled); master/unit payloads
+  use organisationId (British); dual-header GET feeds need BOTH header sets;
+  envelope shapes catalog (5 shapes incl. blank generic + correlation-ref);
+  3 phantom columns found (technique_id, is_bed_charges_service,
+  form_template) — all BR candidates, NOT fixed (Rule 10).
+- CLASS COUNTING: noData ≠ dev-empty ≠ masked; denominator counts ONE dir per
+  rebuild (a shared dir serving 2 states/routes counts once — access-control
+  serves accessControl+accessControl1, the reason screen-count 339 matches
+  dir-count 339 while per-batch dir deltas differ).
+- SUBAGENT RULE (DQ-011, still binding): never trust subagent self-reports;
+  re-run EVERY gate yourself. The consent-type incident is the newest proof:
+  the subagent's own verification passed (route presence) while the import
+  target was never staged.
+- NEXT SESSION START: read RULES.md, last 10 SESSION_LOG entries,
+  BUSINESS_RULE_MANIFEST.md; sync; confirm the fix branch merged; run the
+  probe once with a FRESH token; then await the owner's transaction-phase
+  decision (DQ-025) — do NOT start the 186 transaction screens unilaterally.
+════════════════════════════════════════════════════════════════════════════
