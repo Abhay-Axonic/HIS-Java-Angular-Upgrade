@@ -1,0 +1,37 @@
+<div class="dns-wrap">
+  <header class="dns-header">
+    <h2>Department Nursing Station Mapper</h2>
+    <span class="dns-sub">Global Master — module 746</span>
+  </header>
+
+  @if (loading()) {
+    <p class="dns-muted">Loading mappers…</p>
+  } @else if (error()) {
+    <div class="dns-state dns-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="dns-table">
+      <thead>
+        <tr>
+          <th>Department Id</th>
+          <th>Nursing Station Id</th>
+          <th>Department</th>
+          <th>Nursing Station</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.departmentNursingStationMpprId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="dns-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

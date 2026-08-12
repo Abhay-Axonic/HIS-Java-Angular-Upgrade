@@ -898,6 +898,60 @@ with sync_playwright() as p:
             FAILS.append(f"DQ030 {route} page errors: {errorsAP[:3]}")
         ctxAP.close()
 
+    # 13. DQ-031 builds: orderSet (587) + orderSetList (588) — MASKED
+    # (shared endpoint, 4th phantom column icpc_id; AMBER banner).
+    for route, mid, cls_name in [("orderSet", 587, "Order Set"),
+                                 ("orderSetList", 588, "Order Set List")]:
+        ctxOS = browser.new_context()
+        pageOS = ctxOS.new_page()
+        errorsOS = []
+        pageOS.on("pageerror", lambda e: errorsOS.append(str(e)))
+        pageOS.on("console", lambda m: errorsOS.append(m.text) if m.type == "error" else None)
+        ctxOS.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageOS.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageOS.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageOS.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageOS.inner_text("body")
+        ok_os = (cls_name in body and "icpc_id" in body and "phantom column" in body
+                 and "accessDenied" not in pageOS.url)
+        print(f"DQ031 {route}: masked-banner(icpc_id)={ok_os} url={pageOS.url.split('/')[-1][:40]}")
+        if not ok_os:
+            FAILS.append(f"DQ031 {route}: masked banner not rendered")
+        if errorsOS:
+            FAILS.append(f"DQ031 {route} page errors: {errorsOS[:3]}")
+        ctxOS.close()
+
+    # 14. Final master batch (DQ-032 (a)): departmentNursingStationMapper
+    # (746) — REAL DATA (2 rows; payload {organisationId, unitId, ...}).
+    ctx746 = browser.new_context()
+    page746 = ctx746.new_page()
+    errors746 = []
+    page746.on("pageerror", lambda e: errors746.append(str(e)))
+    page746.on("console", lambda m: errors746.append(m.text) if m.type == "error" else None)
+    ctx746.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    page746.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    page746.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 746}]}))"
+    )
+    page746.goto(BASE + "/departmentNursingStationMapper", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = page746.inner_text("body")
+    ok746 = ("Department Nursing Station Mapper" in body
+             and "accessDenied" not in page746.url and "Request failed" not in body)
+    print(f"FINAL-MASTER 746: renders={ok746} url={page746.url.split('/')[-1][:40]}")
+    if not ok746:
+        FAILS.append("746: not rendered")
+    if errors746:
+        FAILS.append(f"746 page errors: {errors746[:3]}")
+    ctx746.close()
+
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
     ctx2 = browser.new_context()
