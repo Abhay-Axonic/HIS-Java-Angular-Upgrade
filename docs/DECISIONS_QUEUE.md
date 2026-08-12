@@ -1321,3 +1321,50 @@ THREE-PART INCIDENT CLOSE-OUT (owner questions 2026-08-12):
    negative control (fake route → nonexistent component) FAILS naming it.
    Would have caught the defect before any probe ran. Gate list updated:
    run it before every probe.
+
+## DQ-2026-08-12-030 — DECOY RECHECK: 2 OF 18 ARE REAL SCREENS (corrected class list)
+
+consentType (528) — the founding decoy — proved REAL DATA (3 live rows,
+rebuilt at d79cf808). The owner ordered a live recheck of the other 17.
+VERDICTS (every one called live, body status inspected):
+
+REAL SCREENS MISCLASSIFIED AS DECOY (2) — the 'no controller anywhere' claim
+was wrong for both:
+- 580 Account Payable: billing/unit/accountPayableMasterController.js EXISTS
+  (the 9eb08762 finding missed it — index.html script-include search); the
+  state binds MasterController but the real controller lives in billing/unit.
+  /api/global/getAccountPayable {orgId, orgUnitId} -> 200 success 5 ROWS.
+- 582 Account Payable Status: java-only (AccountPayableMasterController
+  /getActiveAccountPayable); /api/global/getActiveAccountPayable
+  {orgId, orgUnitId} -> 200 success 5 ROWS.
+CLASSIFIER ERROR: keyed on 'controller JS in index.html + template bindings';
+missed controllers not script-included, and never called the backend. The
+consentType lesson (call the backend, check body) applied to the whole class.
+
+REAL BACKEND, MASKED FAILING FEED (2) — not shells, but the list feed fails:
+- 587 Order Set + 588 Order Set List: SHARE /api/orderset/orderSetsList
+  {orgId, unitId, offset, recordPerPage} -> 200 status=error 'Something went
+  wrong!!' (masked class; ONE root-cause investigation for both).
+
+REAL ENDPOINT, DIFFERENT CLASS (1):
+- 578 Variable Pricing: /billing/variable-pricing/
+  getVariablePricingFactorByVisitId live (HTTP 200) but VISIT-SCOPED
+  (payload {unitId, organisationId, visitTypeId}) — a pricing editor, not a
+  master list. State binds the shell under the TYPO state name
+  variableSquencePricing; real controller unbound.
+
+GENUINE DECOY SHELLS (12, correctly classified): 577 Package List, 581
+Account Payable Comparsion, 586 Schedule Price Unit Service, 589 Admission
+Rejection List, 591 Find Bill List (java findbillListDetails COMMENTED OUT —
+dead code), 593 Charge Conversion 2nd node (save-only CRUD), 594 Auto Charge
+Review, 595 Write Off, 596 Write Off Details, 599 Round Off Configuration
+('roundoff' java hits are DTO field names), 601 Remainder For NOK, 620 IP
+Default Service Configuration. Batch-9 noData builds for 586/599/620 were
+CORRECT.
+
+CORRECTED CLASS DECISION (replaces the single 'build or leave' question):
+  A) BUILD parity: 580, 582 (+ 528 already rebuilt)
+  B) ROOT-CAUSE the masked feed first, then build: 587, 588 (or build with
+     AMBER banner — owner's call)
+  C) LEAVE/design-new: 578 (transaction editor — defer with the transaction
+     class), 577/581/586/589/591/593/594/595/596/599/601/620 (true shells)
