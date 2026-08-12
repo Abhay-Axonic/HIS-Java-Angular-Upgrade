@@ -105,6 +105,15 @@ A transaction write mutates billing/stock/patient state — the master-loop
   transaction boundary is checked, and the golden trace records what the
   legacy ACTUALLY does — if the legacy half-writes, that is a masked
   behavioral defect to log, not to replicate).
+- FLOW-LEVEL ATOMICITY (Amendment 6, 2026-08-12, OPD Bill T2): where a flow
+  spans MULTIPLE HTTP writes, the trace records what the legacy LEAVES
+  BETWEEN them. A partial write that ALSO LOCKS THE RETRY PATH is the worst
+  finding class — worse than either the write failing or succeeding —
+  because it requires manual database intervention to recover. The lock test
+  is live-proven (psql after a forced mid-flow failure), and if the lock
+  confirms, a recovery-path grep (cancel/void/re-open that resets the
+  locked flag) decides whether the defect is serious-operational or merely
+  ugly. Code-read is hypothesis until psql confirms.
 - DESTRUCTIVE-TEST CONTAINMENT (Amendment 1): every destructive test (the T4
   rollback probe and the T5 illegal transitions) runs against a DEDICATED
   seed fixture — torn down and re-seeded per run — NEVER against the shared
