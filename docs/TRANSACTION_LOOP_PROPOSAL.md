@@ -11,7 +11,14 @@ skeleton; this document is the loop around them.
 
 Live call the FULL flow's endpoints with the exact legacy payload shapes —
 never classify from static structure (the run's lesson, 3 independent
-instances: consentType, 580/582, decoys). Output per screen:
+instances: consentType, 580/582, decoys). PAYLOAD LITERALISM (owner
+amendment, 2026-08-12): the payload is READ FROM THE CONTROLLER'S LITERAL
+SIGNATURE, never reconstructed from the field's apparent meaning — the
+assignLoyaltyCard flow carries the legacy typo `orgnisationId` (missing 'i')
+that must be sent byte-for-byte or the feed 500s, and getLoyaltiCardDetailsBy
+PatientId is POST not GET. A payload that looks right and is spelled
+differently is indistinguishable from a backend defect until someone reads
+the source. Output per screen:
 - the patient/encounter picker entry point (how does the legacy open the flow?)
 - every endpoint in the flow (list + detail + write + status), with
   envelope shape + live status
