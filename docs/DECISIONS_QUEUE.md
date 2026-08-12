@@ -1655,3 +1655,29 @@ card B duplicate of A, one un-configured unit. All additive/idempotent/
 DEMO-001-scoped/his_local-guarded/cleaned same-run (owner decision 1).
 
 NEXT: T1 golden trace + T2 flow map (first full sign-off per Amendment 2).
+
+## DQ-2026-08-12-039 — FIRST TRANSACTION BUILD COMPLETE: assignLoyaltyCard (752)
+
+T3-T5 executed per the signed-off flow map (f45da822, dry run CLEAN 7 files
++638). What the build demonstrated live on the fixture:
+- T4 WRITE: first assign SUCCESS (real config id 1 was the fix — my
+  hardcoded config 3 hit the FK, the transaction rolled back cleanly
+  (all-or-nothing worked), the controller masked it; a payload artifact,
+  NOT a defect). REPLAY double-posted: 2 card rows + 2 mapper rows —
+  BR-033 finding demonstrated (Amendment 5: known finding, demonstration
+  not discovery).
+- T4 SIDE-EFFECT (owner's priority): UPDATE_PATIENT_BY_LOYALTI_CARD landed —
+  both card rows show patient_id=<demo> + is_active=Y. The PATIENT row
+  changed, not just the mapper.
+- T5: SECOND assign (different card, same patient) SUCCEEDED — guard absent,
+  BR-033 confirmed (Amendment 4 NO-GUARD-LOW-STAKES, build proceeds).
+- FIXTURE (tools/seed_loyalty_fixture.py): DEMO-001 patient (searchable),
+  card A free, card B duplicate, no-config unit 9999. Additive/idempotent/
+  his_local-guarded/cleaned-same-run. TWO fixture bugs found+fixed during
+  the run: (1) FK order (details before registration), (2) the write's own
+  artifacts (mapper rows + probe-created cards) must be torn down first —
+  the Amendment 1 'everything the tests create is cleaned' discipline
+  caught it. Final state: 0 cards/0 mappers/0 patients after cleanup.
+- UI: assignLoyaltyCard renders (picker + card sections), zero page errors.
+NEXT: owner reads the T3-T5 evidence; then the SECOND transaction flow
+(another full sign-off) or a family, per Amendment 2.
