@@ -1549,3 +1549,29 @@ estimate). Each covered state verified by LIVE browser probe, not inferred:
 - Probe-grant lesson: the dispatcher route guards on the 45-id family array,
   NOT per-branch ids; single-id grants deny (probe artifact, not rebuild
   defect — departmentMaster etc. render fine with the family grant).
+
+## DQ-2026-08-12-036 — MASTER CLOSE-OUT BATCH (owner (a), complete)
+
+10 screens built (7e93ee27, branch rebuild/master-closeout, dry run CLEAN
+52 files +2441), per the owner's explicit list. Live-verified classification
+per screen — the DQ-034 audit held: these are NOT all clean master lists.
+- 745 discountRights: REAL master list — POST /billing/getDiscountRights
+  MasterList (NO /api prefix — billing controllers mount at /billing;
+  resolved by subagent from billing.url.config.js + Java controller; count
+  companion live 2).
+- FEED/FORM screens (render real dropdown/feed rows + honest class):
+  625 allInclusivePackage (gender feed 3 rows), 635 storewiseGenericMapper
+  (raw-array non-envelope), 650 staffRegistration (relation feed 2 rows),
+  660 applicationConfiguration (service list 1 row), 719 donorRegistration
+  (prefix feed 1 row).
+- WRITE-PATH/DEFERRED states (honest — no false data): 597 cashOpeningBalance,
+  598 interimHandover, 600 shiftClosing (refund endpoint 400s — payload
+  incomplete + DAO stray-quote bug logged in the screen), 722
+  transfusionTransmittedDiseases (bag-search only).
+Gates: tsc -p RC=0, ng build EXIT 0 (2 ICU-brace template bugs found+fixed:
+  literal {payload} text in shift-closing + storewise-generic-mapper),
+  preflight 357 routes PASS, live probe all 10 render (9/10 first pass; the
+  shiftClosing 'failure' was the probe's own check — the screen renders its
+  honest write-path state, corrected).
+THE MASTER PHASE IS CLOSED (341 + 3 Group B + 746 + 10 = 355 rebuilt dirs
+excl. decoys; remaining = transaction/report/dashboard class only).
