@@ -840,6 +840,34 @@ with sync_playwright() as p:
             FAILS.append(f"B8 {route} page errors: {errorsA8[:3]}")
         ctxA8.close()
 
+    # 11. consentType (528) noData — REGRESSION GUARD (DQ-028 follow-up):
+    # the b10 delegation created features/consent-type/ but never staged it;
+    # the route dangled until the fix branch committed the dir (24a23f6f).
+    # Assert the lazy import target resolves (chunk loads) AND the noData
+    # state renders — a dangling route fails with a chunk-load error.
+    ctxCT = browser.new_context()
+    pageCT = ctxCT.new_page()
+    errorsCT = []
+    pageCT.on("pageerror", lambda e: errorsCT.append(str(e)))
+    pageCT.on("console", lambda m: errorsCT.append(m.text) if m.type == "error" else None)
+    ctxCT.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageCT.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageCT.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 528}]}))"
+    )
+    pageCT.goto(BASE + "/consentType", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageCT.inner_text("body")
+    chunk_fail = any("Failed to fetch dynamically imported module" in e or "chunk" in e.lower()
+                     for e in errorsCT)
+    ok_ct = "Consent Type" in body and "no-endpoint" in body and "accessDenied" not in pageCT.url
+    print(f"consentType-regression-guard: renders={ok_ct} chunk_fail={chunk_fail} url={pageCT.url.split('/')[-1][:40]}")
+    if not ok_ct or chunk_fail:
+        FAILS.append(f"consentType: renders={ok_ct} chunk_fail={chunk_fail}")
+    ctxCT.close()
+
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
     ctx2 = browser.new_context()
