@@ -2898,3 +2898,31 @@ test: the screen being built cannot reach the gap -> does NOT stop the
 build; logged with the mechanism for whoever fixes it (likely fix: run the
 guard unconditionally, or gate on isFinalBill||isIntermediateBill||both
 absent).
+
+
+## BR-2026-08-12-035 — OPD BILL (11) saveBill: PHANTOM COLUMN package_applicable_date BLOCKS EVERY WRITE (backend-owned choice)
+
+STATUS: CANDIDATE — BACKEND-OWNED CHOICE, NOT APPLIED BY REBUILD (owner
+decision 2026-08-12: PARK OPD Bill; the rebuild cannot complete a bill on
+ANY path; fixing backend code to unblock a frontend build inverts
+maker-checker and BR fixes have their own attack-defence discipline).
+MECHANISM (DQ-044, live-verified): billing.t_package_consumption_master has
+38 columns — NO package_applicable_date (information_schema count 0 in any
+schema). Entity TPackageConsumptionMaster.java:156 declares
+@Column(name="package_applicable_date"). The LAZY @OneToMany at
+OrderDetailsMaster.java:461 (mappedBy orderDetailsMaster) drags the entity
+into every order-details load; Hibernate's generated SELECT includes the
+phantom column -> "column listtpacka12_.package_applicable_date does not
+exist" -> BillingException at BillingMasterServiceImpl:1335 -> masked
+ERR-xxxx envelope (honest error: status=error, code=500). Reachable on EVERY
+saveBill, package or not (reproduced on a non-package bill). All-or-nothing
+HELD: 0 bills / 0 payments / order-detail lock NOT set after the attempt
+(phantom fires before UPDATE_IS_BILLED_STATUS at :1068-1069; saveBill is one
+transaction). CLASS: broken screen (backend availability defect), NOT a
+masked write (Amendment 7). FIX (backend's call, Rule 10): add the column to
+the table (DDL) OR remove the mapping from the entity — either restores
+every saveBill. 5th phantom column (technique_id, is_bed_charges_service,
+form_template, icpc_id, package_applicable_date) and the FIRST that blocks a
+transaction WRITE. Fixture preserved at tools/seed_opd_bill_fixture.py
+(branch rebuild/opd-bill-investigation, merged to main) for the flow's
+resumption.
