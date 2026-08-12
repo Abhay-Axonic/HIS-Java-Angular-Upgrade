@@ -42,7 +42,11 @@ instances: consentType, 580/582, decoys). Output per screen:
   step 1 -> step 2 -> ... -> final write -> status change) in ONE browser
   session, asserting each step's rendered data against live rows. Per-screen
   probes are a smoke gate only; they cannot catch broken joins between steps.
-- The owner signs off the flow map before the build (like BR entries).
+- FLOW-MAP SIGN-OFF (Amendment 2): the owner signs off the first THREE
+  flow maps in full. After that, sign-off is one per flow FAMILY (billing,
+  admission, pharmacy, lab, blood bank): the agent proceeds within a signed
+  family on its own, surfacing only what does NOT match the family's signed
+  shape. Review stays on the shape, off the repetition.
 
 ## T3 — BUILD (house pattern per step)
 
@@ -67,6 +71,14 @@ A transaction write mutates billing/stock/patient state — the master-loop
   transaction boundary is checked, and the golden trace records what the
   legacy ACTUALLY does — if the legacy half-writes, that is a masked
   behavioral defect to log, not to replicate).
+- DESTRUCTIVE-TEST CONTAINMENT (Amendment 1): every destructive test (the T4
+  rollback probe and the T5 illegal transitions) runs against a DEDICATED
+  seed fixture — torn down and re-seeded per run — NEVER against the shared
+  golden-trace data. The probe asserts the fixture's row count before and
+  after, and FAILS if the teardown leaves anything behind (Q28's cleanup
+  assumes successful writes; destructive tests deliberately violate that).
+  If an illegal transition SUCCEEDS where it should be rejected: stop,
+  report, re-seed. Do NOT continue probing on a corrupted fixture.
 - AUDIT: createdBy/createdDate/updatedBy/updatedDate on every write; the
   probe asserts the fields are populated with the session user.
 - Never trust the frontend's success flag: assert the NEXT read-back (a
@@ -82,6 +94,15 @@ The negative control for a status machine is the ILLEGAL TRANSITION:
   discharged visit) and asserts the backend REJECTS it (body status !=
   success, or a masked envelope whose mechanism is logged) and the UI shows
   the error — it must NOT silently succeed or crash.
+- MASKED-ENVELOPE DISAMBIGUATION (Amendment 3): a masked response cannot
+  by itself tell rejection from silent success. Whenever an illegal
+  transition returns a masked envelope, verify in psql whether the illegal
+  transition ACTUALLY happened:
+    * response masked + STATE UNCHANGED = rejection with a bad message
+      (log the bad message as the defect)
+    * response masked + STATE CHANGED = security defect (the write went
+      through despite the mask) — falls under the masked-write rule: STOP,
+      come to the owner.
 - A machine with no illegal-transition test is unverified: the guard is
   the whole point of a status machine.
 - Also: the state that can never happen (e.g. two approvals) is probed as
