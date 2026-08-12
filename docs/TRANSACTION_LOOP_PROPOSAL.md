@@ -201,6 +201,27 @@ The negative control for a status machine is the ILLEGAL TRANSITION:
    PLUS psql state: honest-error + clean rollback = broken screen;
    masked + state unchanged = rejection with a bad message (log, banner);
    masked + state changed = security defect (STOP).
+SCREEN-REACHABILITY IN THE HIGH-STAKES BRANCH (Amendment 9, 2026-08-12,
+   transfer flow): for a missing guard at HIGH stakes — money, stock,
+   clinical state, permissions — the question is whether the SCREEN BEING
+   BUILT can reach the gap. Screen cannot reach it: log as a BR candidate,
+   build proceeds, and the BR notes it is API-surface reachable. Screen CAN
+   reach it: stop.
+VERIFY FAILURES, NOT ONLY SUCCESSES (Amendment 10, 2026-08-12, transfer
+   flow): where a write's catch is empty, an ERROR response carries no
+   information about what landed. The trace psql-checks state after every
+   ERROR as well as every success. An ERROR with partial rows is a
+   half-commit hiding behind a generic message — invisible to any check
+   that only inspects successful paths.
+EXPECTED-FINDINGS LIST (Amendment 11, 2026-08-12): three flows have
+   produced the same three classes of finding — (1) a status/state machine
+   enforced by UI convention only, not server-side; (2) a write payload
+   built from a PRIOR write's response rather than screen state; (3) error
+   swallowing (empty catches returning generic ERROR). T0 checks for all
+   three by DEFAULT on every new flow rather than rediscovering them:
+   (1) read the write methods for status preconditions; (2) read the
+   controller's payload construction for response-derived fields;
+   (3) read the write methods' catch blocks for swallows.
 4. T0 SMOKE THE PRIMARY WRITE FIRST (Amendment 8, 2026-08-12, from the OPD
    Bill phantom-column lesson): before designing the flow map, call the
    flow's PRIMARY WRITE endpoint ONCE against the seeded fixture with an
