@@ -2397,6 +2397,13 @@ export const routes: Routes = [
           import('./features/discount-rights/discount-rights').then((m) => m.DiscountRights),
       },
       {
+        path: 'assignLoyaltyCard',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 752, title: 'Assign Loyalty Card' },
+        loadComponent: () =>
+          import('./features/assign-loyalty-card/assign-loyalty-card').then((m) => m.AssignLoyaltyCard),
+      },
+      {
         path: 'RMOAllocationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 824, title: 'RMO Allocation Master' },

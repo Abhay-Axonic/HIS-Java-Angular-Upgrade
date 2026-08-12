@@ -1,0 +1,97 @@
+<div class="alc-wrap">
+  <header class="alc-header">
+    <h2>Assign Loyalty Card</h2>
+    <span class="alc-sub">Billing / Loyalty — module 752 (transaction flow: picker → check → assign)</span>
+  </header>
+
+  <!-- Step 1: PICKER -->
+  <section class="alc-step">
+    <h3>1. Find patient</h3>
+    <div class="alc-row">
+      <input
+        class="alc-input"
+        [value]="searchName()"
+        (input)="searchName.set($any($event.target).value)"
+        placeholder="Patient name (min 3 characters)"
+      />
+      <button class="alc-btn" (click)="search()" [attr.disabled]="searching() ? '' : null">
+        {{ searching() ? 'Searching…' : 'Search' }}
+      </button>
+    </div>
+    @if (searchError()) {
+      <p class="alc-error">{{ searchError() }}</p>
+    }
+    @if (patients().length > 0) {
+      <table class="alc-table">
+        <thead>
+          <tr><th>Patient Id</th><th>Name</th><th>UHID</th><th></th></tr>
+        </thead>
+        <tbody>
+          @for (p of patients(); track p.patientId) {
+            <tr>
+              @for (cell of rowCells(p); track $index) {
+                <td>{{ cell }}</td>
+              }
+              <td>
+                <button class="alc-btn alc-btn-sm" (click)="selectPatient(p)">Select</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <!-- Step 2: CARD TYPE + NUMBER -->
+  <section class="alc-step">
+    <h3>2. Card details</h3>
+    @if (feedsError()) {
+      <p class="alc-error">{{ feedsError() }}</p>
+    }
+    <div class="alc-row">
+      <select
+        class="alc-input"
+        [value]="cardConfigurationId()"
+        (change)="cardConfigurationId.set($any($event.target).value)"
+      >
+        <option value="">Select card type…</option>
+        @for (ct of cardTypes(); track ct.cardTypeId) {
+          <option [value]="ct.cardTypeId">{{ ct.cardTypeName }}</option>
+        }
+      </select>
+      <input
+        class="alc-input"
+        [value]="cardNo()"
+        (input)="cardNo.set($any($event.target).value)"
+        placeholder="16-digit card number"
+        maxlength="16"
+      />
+      <button class="alc-btn" (click)="check()">Check</button>
+    </div>
+    @if (checkResult()) {
+      <p class="alc-ok">{{ checkResult() }}</p>
+    }
+  </section>
+
+  <!-- Step 5: ASSIGN -->
+  <section class="alc-step">
+    <h3>3. Assign</h3>
+    @if (patients().length > 0 && !assigned()) {
+      <p class="alc-muted">Select the patient from the search results above, then assign.</p>
+      <button class="alc-btn alc-btn-primary" (click)="assign(patients()[0])" [attr.disabled]="assigning() ? '' : null">
+        {{ assigning() ? 'Assigning…' : 'Assign to selected patient' }}
+      </button>
+    }
+    @if (assignError()) {
+      <p class="alc-error">{{ assignError() }}</p>
+    }
+    @if (assignResult()) {
+      <p class="alc-ok">{{ assignResult() }}</p>
+    }
+    @if (assigned()) {
+      <div class="alc-state alc-assigned">
+        <p>Card assigned. The patient record now carries this loyalty card (status A).</p>
+      </div>
+    }
+  </section>
+</div>
