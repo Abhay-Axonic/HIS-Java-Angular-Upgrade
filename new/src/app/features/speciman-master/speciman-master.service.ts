@@ -1,0 +1,24 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../../core/api-config';
+import { ApiResponse } from '../../core/api-response';
+import { SpecimanMasterRow } from './speciman-master.models';
+
+/**
+ * NO ENDPOINT (noData class, DQ-2026-08-12-023): no backend list endpoint exists and no legacy controller implements one.
+ * The service exists only to keep the house pattern; getList() is never
+ * expected to return rows.
+ */
+@Injectable({ providedIn: 'root' })
+export class SpecimanMasterService {
+  private readonly http = inject(HttpClient);
+  private readonly base = inject(API_BASE_URL);
+
+  // No backend list endpoint exists. Kept as a never-called contract so the
+  // component follows the house shape; the component renders the noData
+  // state without calling it.
+  getList(): Observable<ApiResponse<never, SpecimanMasterRow>> {
+    return this.http.get<ApiResponse<never, SpecimanMasterRow>>(`${this.base}/specimanMaster/noop`);
+  }
+}

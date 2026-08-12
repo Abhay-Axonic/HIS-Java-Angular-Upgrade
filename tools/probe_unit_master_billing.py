@@ -22,6 +22,12 @@ nursingStationWardMapping (548) — real (Updated Desc, recordPerPage payload).
 Batch 6 (all masked, DQ-2026-08-12-016): scheduleWise (657) + doctorWise (658)
 — blank-generic slot endpoint (swallowed exception + date-parse);
 appointmentSchedulingUnitMaster (653) — ERR-ref correlation envelope.
+Batch 10 (DQ-2026-08-12-022/-023, Global Master): consentMaster (400) —
+masked (3rd phantom column form_template); dietTypeMaster (510),
+siteOfAdministration (753), doseMaster (502), genericScheduleMaster (827) —
+real data; sampleTypeMediaMappingMaster (426), mappingofMicroorganism (443) —
+LIS fall-through masked; bacteriaClassification (428), subdepartmentMaster
+(373) — noData samples.
 Batch 9 (DQ-2026-08-12-020): templateMaster (58) — real raw-array endpoint
 (honest empty); 9 noData screens (testMaster 276, multiparameterTestMaster
 183, OPConsulationConfigurationMaster 611, fundApproval 809, fundRequisition
@@ -523,6 +529,109 @@ with sync_playwright() as p:
         FAILS.append(f"appointmentSchedulingUnitMaster page errors: {errorsA6[:3]}")
     ctxA6.close()
 
+    # 10. Batch 10 (DQ-2026-08-12-022/-023): Global Master — consentMaster
+    # masked (3rd phantom column), 3 real-data screens, 2 LIS masked
+    # (fall-through), 2 noData samples.
+    ctxC10 = browser.new_context()
+    pageC10 = ctxC10.new_page()
+    errorsC10 = []
+    pageC10.on("pageerror", lambda e: errorsC10.append(str(e)))
+    pageC10.on("console", lambda m: errorsC10.append(m.text) if m.type == "error" else None)
+    ctxC10.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+    pageC10.goto(BASE, wait_until="domcontentloaded")
+    time.sleep(4)
+    pageC10.evaluate(
+        "() => localStorage.setItem('permissions', "
+        "JSON.stringify({modules: [{id: 400}]}))"
+    )
+    pageC10.goto(BASE + "/consentMaster", wait_until="domcontentloaded")
+    time.sleep(6)
+    body = pageC10.inner_text("body")
+    masked_c10 = "Masked-error" in body and "formTemplateId" in body and "phantom column" in body
+    print(f"B10 consentMaster: masked-banner={masked_c10} url={pageC10.url.split('/')[-1][:40]}")
+    if not masked_c10:
+        FAILS.append("consentMaster: masked banner not rendered")
+    real_errs_c10 = [e for e in errorsC10 if "getConsentMasterList" not in e and "500" not in e]
+    if real_errs_c10:
+        FAILS.append(f"consentMaster page errors: {real_errs_c10[:3]}")
+    ctxC10.close()
+
+    for route, mid, terms in [
+        ("dietTypeMaster", 510, ["Diet Type Master"]),
+        ("siteOfAdministration", 753, ["Site Of Administration"]),
+        ("doseMaster", 502, ["Dose Master"]),
+        ("genericScheduleMaster", 827, ["Generic Schedule Master"]),
+    ]:
+        ctxR10 = browser.new_context()
+        pageR10 = ctxR10.new_page()
+        errorsR10 = []
+        pageR10.on("pageerror", lambda e: errorsR10.append(str(e)))
+        pageR10.on("console", lambda m: errorsR10.append(m.text) if m.type == "error" else None)
+        ctxR10.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageR10.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageR10.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageR10.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageR10.inner_text("body")
+        ok_r10 = terms[0] in body and "accessDenied" not in pageR10.url and "Request failed" not in body
+        print(f"B10 {route}: renders={ok_r10} url={pageR10.url.split('/')[-1][:40]}")
+        if not ok_r10:
+            FAILS.append(f"B10 {route}: not rendered")
+        if errorsR10:
+            FAILS.append(f"B10 {route} page errors: {errorsR10[:3]}")
+        ctxR10.close()
+
+    for route, mid in [("sampleTypeMediaMappingMaster", 426), ("mappingofMicroorganism", 443)]:
+        ctxL10 = browser.new_context()
+        pageL10 = ctxL10.new_page()
+        errorsL10 = []
+        pageL10.on("pageerror", lambda e: errorsL10.append(str(e)))
+        pageL10.on("console", lambda m: errorsL10.append(m.text) if m.type == "error" else None)
+        ctxL10.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageL10.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageL10.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageL10.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageL10.inner_text("body")
+        ok_l10 = "fall-through" in body and "Internal Server Error" in body
+        print(f"B10 {route}: masked-lis-banner={ok_l10} url={pageL10.url.split('/')[-1][:40]}")
+        if not ok_l10:
+            FAILS.append(f"B10 {route}: LIS masked banner not rendered")
+        if errorsL10:
+            FAILS.append(f"B10 {route} page errors: {errorsL10[:3]}")
+        ctxL10.close()
+
+    for route, mid in [("bacteriaClassification", 428), ("subdepartmentMaster", 373)]:
+        ctxN10 = browser.new_context()
+        pageN10 = ctxN10.new_page()
+        errorsN10 = []
+        pageN10.on("pageerror", lambda e: errorsN10.append(str(e)))
+        pageN10.on("console", lambda m: errorsN10.append(m.text) if m.type == "error" else None)
+        ctxN10.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageN10.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageN10.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageN10.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageN10.inner_text("body")
+        ok_n10 = "no-endpoint" in body and "accessDenied" not in pageN10.url
+        print(f"B10 {route}: noData-state={ok_n10} url={pageN10.url.split('/')[-1][:40]}")
+        if not ok_n10:
+            FAILS.append(f"B10 {route}: noData state not rendered")
+        if errorsN10:
+            FAILS.append(f"B10 {route} page errors: {errorsN10[:3]}")
+        ctxN10.close()
     # 9. Batch 9 (DQ-2026-08-12-020): templateMaster real (raw [] empty state)
     # + 9 noData screens (missing-controller + MasterController shells).
     ctxT9 = browser.new_context()

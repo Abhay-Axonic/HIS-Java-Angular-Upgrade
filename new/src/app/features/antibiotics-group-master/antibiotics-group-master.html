@@ -1,0 +1,17 @@
+<div class="ac-wrap">
+  <header class="ac-header">
+    <h2>Antibiotics Group</h2>
+    <span class="ac-sub">Module 431 -- MasterController shell</span>
+  </header>
+
+  @if (noData()) {
+    <div class="ac-state ac-nodata">
+      <p>{{ error() }}</p>
+      <p class="ac-muted">
+        This is the no-endpoint state, permanent: the legacy screen is driven by a MasterController shell (common-controller.js) that performs zero endpoint calls -- there is
+        no backend list endpoint at all (DQ-2026-08-12-022). The legacy screen
+        never loads data either; this state is the honest parity.
+      </p>
+    </div>
+  }
+</div>

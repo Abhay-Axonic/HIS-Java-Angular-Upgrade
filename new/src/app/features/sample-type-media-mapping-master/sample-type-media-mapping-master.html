@@ -1,0 +1,51 @@
+<div class="stm-wrap">
+  <header class="stm-header">
+    <h2>Sample Type Media Mapping Master</h2>
+    <span class="stm-sub">LIS / Global — module 426</span>
+  </header>
+
+  @if (loading()) {
+    <p class="stm-muted">Loading sample type media mappings…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="stm-state stm-masked">
+        <p class="stm-banner-title">LIS fall-through (size()>0 guard dead-branch, DQ-003/-023) — the endpoint returns Internal Server Error for empty tables.</p>
+        <p class="stm-muted">
+          The list DAO's <code>size()&gt;0</code> guard is a dead branch: the
+          HQL projection (<code>Transformers.aliasToBean</code> into Long-typed
+          <code>createdDate</code>/<code>updatedDate</code> DTO fields, no
+          <code>@Convert</code> converter) throws on every call, empty DB or
+          not, and the exception is swallowed at DAO/service/controller — the
+          observed envelope is HTTP 200 <code>status=error</code>
+          "Internal Server Error" (or a real HTTP 500). The table is not
+          simply empty.
+        </p>
+      </div>
+    } @else {
+      <div class="stm-state stm-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="stm-table">
+      <thead>
+        <tr>
+          <th>Sample Type</th>
+          <th>Media</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="stm-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
