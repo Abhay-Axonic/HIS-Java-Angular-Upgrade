@@ -2100,3 +2100,50 @@ LOOP SCORECARD (Amendment 11) now at 4 flows: UI-convention machine (loyalty
 W2->W3), error swallowing (transfer W2/W3 empty catches), and now
 FLUSH-BOUNDARY non-atomicity as a 4th class — the trace caught it because
 Amendment 10 mandates psql-after-every-response.
+
+## DQ-2026-08-12-049 — TRANSFER (65) W3: LEGACY'S OWN PAYLOAD 400s (typo'd field names) + DQ-048 PER-ENTITY SPECIFICS
+
+FINDING 1 (new, most consequential): the legacy's finalTransfer JS payload
+is {"organizationId, unitId, transferdId, tranferRequestId"} — TWO TYPO'D
+FIELD NAMES (transferdId, tranferRequestId). TransferDto has NO such fields
+(106 known properties incl. the CORRECT transferId/transferRequestId) and
+strict Jackson (FAIL_ON_UNKNOWN_PROPERTIES) rejects them: LIVE-PROVEN
+HTTP 400 "Bad request: Invalid parameters" with tomcat:
+UnrecognizedPropertyException: Unrecognized field "transferdId" (class
+TransferDto), not marked as ignorable. The legacy "Execute final transfer"
+button CANNOT reach the W3 DAO — the payload dies at deserialization.
+CLASS: broken screen (Amendment 7, honest 400) — the legacy W3 is
+DOUBLY broken: unreachable typo payload + the non-atomic type-null DAO
+branch (DQ-048). The rebuild sends the CORRECT field names
+(transferId/transferRequestId) — a deliberate deviation from literalism,
+logged for the owner: the literal payload is a backend-breaking typo, not
+a contract to preserve (unlike orgnisationId which the backend READS).
+FINDING 2 (DQ-048 specifics, now clean): with corrected field names, the
+W3 type-null branch (transferTypeId absent) is NOT atomic:
+  LAND on the failing call (before the BedLogStatus INSERT fails):
+    1. t_transfer -> transfer_status_id=9, status='I'
+    2. t_transfer_request -> transfer_status_id=9, status='I'
+    3. t_admission_details -> bed_id/ward_id/room_id updated (to the
+       payload destination)
+    4. t_order_master.visit_type_id (if newVisitTypeId)
+    5. pharmacy.t_issue.visit_type_id (if newVisitTypeId)
+  DO NOT LAND (after the failure point, line 576):
+    6. t_bed_log_status to-bed inactivate + new 'A' row
+    7. m_bed_master to-bed -> bed_status_id=4
+    8. m_bed_master from-bed release (bedStatusId=2/3)
+    9. from-bed t_bed_log_status inactivate + new 'A' row
+    10. NEW t_transfer row (status 1, isPrimary 'N', from=new bed)
+    11. t_housekeeping entry
+  RETRY COMPLETENESS: a retry with the SAME corrected payload re-runs the
+  whole branch -> lands 6-11 too -> RECOVERY IS COMPLETE (verified:
+  adm_details.bed fixed 999999->1, new transfer row created, from-bed
+  released). The earlier "papers over" reading was a FIXTURE artifact
+  (missing from_bed_id in the fixture; bed 2 nonexistent). With a real
+  from-bed (bed 3), the retry restores every entity.
+  STATE LEFT BY A FAILED W3: transfer marked Transferd (9|I) + admission-
+  details pointing at the destination bed + bed-log/bed-master NOT updated
+  + no new transfer row — a patient RECORDED as transferred whose bed
+  bookkeeping was never done. The ERROR envelope is honest but the record
+  is dangerously ahead of reality until the retry.
+NEXT: golden trace through the UI (merge gate) — will show the honest 400
+on the legacy W3 shape and the rebuild's corrected-name path.
