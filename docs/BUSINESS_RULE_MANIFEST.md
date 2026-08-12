@@ -2859,3 +2859,22 @@ icpc_id ... — is the FIX candidate and must NOT be applied as a side effect
 of the frontend rebuild: a schema change on a table whose other query works
 fine needs backend review on its own terms. 4th phantom column found
 (technique_id, is_bed_charges_service, form_template, icpc_id).
+
+
+## BR-2026-08-12-033 — LOYALTY CARD ASSIGN: NO ONE-CARD-PER-PATIENT GUARD (BR candidate, NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (Rule 10). assignLoyaltyCard (752) flow:
+PatientLoyaltyCardMapperDaoImpl.savePatientLoyaltiCardMapper (35-70) is a
+blind save() — no duplicate-patient check, no unique constraint on
+(patientId, cardNo). The only guard is checkLoyaltyCard (card-number
+uniqueness in m_loyalty_card), which prevents assigning the SAME number
+twice but not a second DIFFERENT card to the same patient. The legacy UI
+enforces one-card-per-patient by convention only. Classified Amendment 4
+NO-GUARD-LOW-STAKES: a patient holding two loyalty cards corrupts nothing,
+moves no money, falsifies no clinical record — a business-rules gap, not a
+security defect (owner decision 2026-08-12). LIKELY FIX: unique constraint
+on m_loyalty_card (patient_id, card_no); whether multiple cards per patient
+is intended is a question for the loyalty-scheme owner. COMPANION FINDING:
+the assign is NOT idempotent by construction (no business key; each POST
+creates a new card + mapper row) — Amendment 5: discovery at T0, replay
+runs as a DEMONSTRATION on the fixture, cleaned same-run.
