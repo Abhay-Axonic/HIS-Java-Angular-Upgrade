@@ -1622,3 +1622,36 @@ OWED (unchanged): assign write behavior, on the dedicated seed fixture
 
 NEXT: T1 golden trace + T2 flow map for owner sign-off (first of the three
 full sign-offs per Amendment 2).
+
+## DQ-2026-08-12-038 — T0 GAP CLOSED: WHAT MAKES A CARD FAIL (owner's a-c)
+
+(a) WHAT checkLoyaltyCard CHECKS (Java: LoyaltiCardMasterServiceImpl 140-180,
+LoyaltiCardMasterDaoImpl 133-148, CHECK_LOYALATI_CARD_NO): (1) config exists
+for (orgId, unitId) in m_loyalty_card_configuration (isDeleted='N'); absent ->
+"Please configure loyalty for this unit." (2) then card existence count in
+m_loyalty_card WHERE organisation_id=orgId AND status='A' AND is_deleted='N'
+AND card_no=cardNo. DOES NOT check: expiry (no expiry in query), already-
+assigned (patient_id in table but not filtered), unit scope of card
+(org-scoped only), 16-digit format (client-side only; server accepts '12345').
+
+(b) LIVE, body status inspected:
+- free card:                200 status=success (table empty today)
+- seeded duplicate:         200 status=error code=500 "Card No is Already
+  Exists."  (constructed: insert card row -> probe -> delete same-run,
+  cleanup verified 0)
+- org 2 (no config):        200 status=error code=500 "Please configure
+  loyalty for this unit."
+- unit 999 (no config):     200 status=error code=500 (same message)
+- short card '12345':       200 status=success (16-digit NOT server-enforced)
+
+(c) FIXTURE-CONSTRUCTIBLE: patient with searchable UHID YES; valid card YES
+(any unseeded 16-digit); FAILING card YES two kinds — duplicate (seed second
+m_loyalty_card row with same card_no) and no-config unit (no config row).
+Masked exception path NOT constructible deliberately; Amendment 3 psql
+disambiguation applies if it appears.
+
+FIXTURE SPEC (T1): DEMO-001 patient (searchable name/UHID), card A free,
+card B duplicate of A, one un-configured unit. All additive/idempotent/
+DEMO-001-scoped/his_local-guarded/cleaned same-run (owner decision 1).
+
+NEXT: T1 golden trace + T2 flow map (first full sign-off per Amendment 2).
