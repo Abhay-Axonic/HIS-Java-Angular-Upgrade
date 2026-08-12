@@ -1468,3 +1468,62 @@ than assumed. VERIFIED by direct route/dispatch lookup on main (610ebbf6):
   dispatcher-covered states; the remaining are transaction-class, not
   already-rebuilt. No action: the 2 rebuilt states stay covered by the
   dispatcher; the 13 stay in the deferred transaction pool (DQ-025/032).
+
+## DQ-2026-08-12-034 — FINAL MASTER BATCH CLOSED (a) + TRANSACTION METHODOLOGY PROPOSAL (b)
+
+(a) FINAL MASTER BATCH — LIVE AUDIT SHRANK THE CANDIDATES:
+The DQ-032 estimate of "10-15 genuine master-style screens" was tested by
+live calls. Result: ONE confirmed master-list screen —
+departmentNursingStationMapper (746, POST /api/global/getDepartmentNursing
+StationMapperlist {organisationId, unitId, noOfRecordsPerPage, offset} ->
+SUCCESS 2 rows; built 9879cef6). The other 9 were NOT master lists: 660
+applicationConfiguration is a config FORM fed by the service-master dropdown
+(100-field service DTO); 635 storeWiseGenericMapper is a raw-array feed
+(non-envelope); 597/598/600 (cash desk), 625 (package), 650 (staff reg),
+719 (donor reg), 722 (TTD — SEARCH_BAG_DETAILS only) are registration/
+entry/search forms = transaction class. THE MASTER PHASE IS NOW CLOSED.
+Remaining non-master candidates stay parked per DQ-032/025.
+
+(b) TRANSACTION METHODOLOGY — PROPOSED LOOP (the deliverable the owner reads
+before any transaction screen is built; NOT executed):
+
+The master loop (list endpoint + envelope + grid + status toggle) does NOT
+transfer. The transaction loop must add, per screen:
+
+1. PATIENT/ENCOUNTER CONTEXT — every transaction screen keys off a selected
+   patient/visit/encounter. Step 0 of the loop is a picker + context
+   propagation, NOT a flat (orgId, unitId, offset, size) call. Golden trace
+   starts at the picker, not the grid.
+2. MULTI-STEP FLOW MAP — before building, map the state machine: create ->
+   validate -> approve -> settle chains with per-step components/routes and
+   status transitions (e.g. PO -> approval -> GRN; bill -> payment ->
+   settlement). Each step is a golden-traced endpoint set.
+3. WRITE-PATH VERIFICATION (the Rule 1 audit, higher stakes) — transaction
+   writes mutate billing/stock/patient state: verify idempotency (no
+   double-post on retry), transactional integrity (all-or-nothing across
+   sub-writes), and audit fields. The master save/update/status-toggle
+   checks are insufficient; every write path gets its own trace +
+   rollback test.
+4. COMPOSED-DATA CONTRACT — transactions aggregate entities (orderset ->
+   tests; bill -> line items -> payments). The single-listObject envelope +
+   one getList() doesn't model it. The loop defines per-sub-entity detail
+   endpoints and their join keys BEFORE the component.
+5. STATUS MACHINES + WORKLISTS — pending/approved/rejected/settled states
+   with worklists keyed by status. The 13 dashboard/worklist screens are
+   this class; they may be built by the same loop (status-keyed list +
+   transition action) — the owner's DQ-032 (d) observation.
+6. CROSS-ENTITY VALIDATION — stock availability, credit limits, insurance
+   eligibility checked across entities on write; masters validate one row.
+   Each screen's business-rule set is enumerated in the manifest before
+   build (BR additions required, per the constitution).
+
+Proposed loop shape (to be refined with the owner before use):
+  T0 classify (live call: endpoint truth + envelope + write path, not name)
+  T1 golden trace the FULL flow (picker -> each step -> write -> status change)
+  T2 flow map (states, transitions, per-step endpoints) — owner sign-off
+  T3 rebuild per step (house pattern + per-step service)
+  T4 write-path verification (idempotency, rollback, audit)
+  T5 live probe per flow (freshness gate first) + negative controls
+  T6 BR manifest additions for every business rule touched
+
+NOT STARTED — pending owner review of this proposal.
