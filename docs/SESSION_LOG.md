@@ -1283,3 +1283,52 @@ WHAT IS IN WORKING CONTEXT BUT NOT IN ANY FILE (a fresh session must read this):
   decision (DQ-025) — do NOT start the 186 transaction screens unilaterally.
 ════════════════════════════════════════════════════════════════════════════
 2026-08-12 | Maker | Hermes (deepseek-v4-flash) | rebuild/consent-type-rebuild | consentType (528) corrected noData→REAL DATA (DQ-029): decoy-groundwork Group A was right; batch-10 noData misbuild + unstaged dir (route dangled) both fixed. Branch d79cf808 + probe guard 038d8e79, dry run CLEAN, probe PASS (CNTDUP2 renders). tools/check_route_targets.py added (static route→file preflight; retro-validated on 972c69dd/1c97986f; negative control FAILs). | new/src/app/features/consent-type/*, tools/check_route_targets.py, tools/probe_unit_master_billing.py | N
+
+════════════════════════════════════════════════════════════════════════════
+CONTINUITY ENTRY 2 — 2026-08-12 (post-merge close-out; supersedes entry 1's
+open items)
+════════════════════════════════════════════════════════════════════════════
+- ALL overnight batches MERGED: b7 ef5cf3aa, b8 b55c8ca5, b9 d644cff8, b10
+  00cac8be, consentType fix 8c08997d. main = 8c08997d. Census 339 rebuilt dirs
+  (343 - 4 exclusion). Remaining 186 = deferred transaction/report/dashboard
+  class (DQ-025). Master-rebuild program COMPLETE; transaction phase = owner
+  decision (DQ-025), do NOT start unilaterally.
+- consentType (528) saga (DQ-029): route dangled in b10 (delegation never
+  staged features/consent-type/), then the build was found WRONG-CLASS —
+  consentType is REAL DATA (3 rows), not noData. Corrected at d79cf808
+  (real-data build), probe guard updated to assert CNTDUP2 renders. THE
+  DECOY CLASS IS PARTIALLY WRONG — see DQ-030.
+- DECOY RECHECK (DQ-030, all 17 called live): 580 + 582 are REAL SCREENS
+  (5 rows each; payload {orgId, orgUnitId} — NOT organizationId/unitId);
+  587 + 588 share a MASKED failing feed (/api/orderset/orderSetsList ->
+  'Something went wrong!!', root-cause owed, ONE investigation);
+  578 is a real but VISIT-SCOPED endpoint (transaction class, defer);
+  12 genuine shells (577/581/586/589/591/593/594/595/596/599/601/620 —
+  591's java is commented-out dead code, 593 save-only, 599 DTO-field hits).
+  batch-9 noData for 586/599/620 CORRECT. Corrected decision: A) BUILD
+  580+582; B) root-cause 587+588 then build; C) leave the 12 shells + 578.
+- PREFLIGHT TOOL: tools/check_route_targets.py — static route→file
+  resolution gate (WORKTREE or --ref <sha>; catches dangling lazy imports
+  tsc misses). RUN BEFORE EVERY PROBE. Validated: clean PASS (342), retro
+  FAIL on 1c97986f/972c69dd naming consentType, negative control FAILs.
+- TOKEN GOTCHA (confirmed again): get_dev_token.py --check can say
+  LOGIN-OK while the cached token 401s; a probe flooded with 401s =
+  stale token, re-run get_dev_token.py.
+- GATES (current): 1) tsc -p tsconfig.app.json (plain tsc --noEmit is
+  VACUOUS — files:[] tsconfig, DQ-027); 2) ng build EXIT 0; 3)
+  tools/check_route_targets.py PASS; 4) live probe freshness-gate-first;
+  5) route survival each-exactly-once + import target EXISTS; 6) C9
+  (@if/@for only); 7) negative control denies.
+- SUBAGENT RULE (DQ-011): never trust self-reports — re-run EVERY gate.
+  The consentType unstaged-dir incident is the proof; check_route_targets
+  now catches the class statically.
+- VERBAL OWNER DECISIONS (in entry 1, still binding): stack overnight
+  batches; distrust merge labels (verify parents); no merge/push by agent;
+  no git reset --hard.
+- OPEN: rebuild/consent-type-rebuild (d79cf808) MERGED at 8c08997d — the
+  probe guard commit (4a54dde3→038d8e79) went with it. Next-session start:
+  sync, RULES.md + last 10 SESSION_LOG + MANIFEST, probe once with fresh
+  token, await owner's DQ-025 (transaction phase) + DQ-030 (decoy build
+  list) decisions. 580/582 builds would be the natural next batch IF the
+  owner approves Group A.
+════════════════════════════════════════════════════════════════════════════
