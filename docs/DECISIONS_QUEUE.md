@@ -1290,3 +1290,34 @@ Merged origin/main (4458ff4a, post b7/b8/b9) into rebuild/global-master-batch10:
   (B10 masked banner + real screens, B9/B7/B8 all render, negative control).
 - Diff --stat main..b10 = 122 files +4000, intended set only; dry run CLEAN
   0 conflicts.
+
+## DQ-2026-08-12-029 — consentType (528) MISCLASSIFICATION CORRECTED + ROUTE-TARGET PREFLIGHT
+
+THREE-PART INCIDENT CLOSE-OUT (owner questions 2026-08-12):
+
+1. consentType HISTORY (answer): the legacy state (app.js:12585) binds the
+   generic MasterController shell with a zero-binding template — the DECOY
+   shape. The decoy-groundwork (queue line 276) classified 528 as Group A:
+   REAL backend (POST /adt/getConsentTypeMasterList — verified live: 3 rows,
+   "Fresh Consent Modal Test"/CNTDUP2) + REAL controller
+   (consentTypeMasterController.js, 396 lines, self-registers no state).
+   DQ-2026-08-12-022 WRONGLY classified it as "MasterController shell →
+   noData" — the sweep treated the decoy shell as the whole story. The b10
+   delegation built the noData shell AND never staged the dir (route dangled
+   in 972c69dd). The batch-10-fix merge (03784add) committed the noData
+   build — WRONG CLASS on main. Corrected on rebuild/consent-type-rebuild
+   (d79cf808): real-data build rendering the 3 rows.
+
+2. FULL ROUTE AUDIT (answer): every route across all batches checked for
+   unresolvable loadComponent targets — consentType is the ONLY one. Both
+   the original b10 commit (972c69dd: 323 routes, 1 missing) and the
+   resolved tip (1c97986f: 342 routes, 1 missing) have exactly one dangling
+   target: consentType. The regression guard is NOT narrow — the audit
+   proves it covers the only instance.
+
+3. PREFLIGHT TOOL (new): tools/check_route_targets.py — static route→file
+   resolution gate (working tree or --ref <sha>). Validated: PASS on clean
+   tree (342 routes), FAIL naming consentType on both pre-fix commits,
+   negative control (fake route → nonexistent component) FAILS naming it.
+   Would have caught the defect before any probe ran. Gate list updated:
+   run it before every probe.
