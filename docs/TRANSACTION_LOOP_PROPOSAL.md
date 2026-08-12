@@ -109,16 +109,21 @@ The negative control for a status machine is the ILLEGAL TRANSITION:
 - Nothing here is executed until the owner approves this document. First
   transaction build only after sign-off.
 
-## Open questions for the owner (answered before the first build)
+## Owner decisions (2026-08-12 — these are the rules, not questions)
 
-1. Does the golden trace need to run against REAL patient data in dev (the
-   picker must find a patient), or is a seeded dev patient acceptable?
-   (Master loop had zero seeding — but a picker with no patients cannot be
-   probed end-to-end.)
-2. Write-path probing posts real transactions against dev billing/stock.
-   Is a dedicated dev-only transaction dataset required, or do the legacy
-   dev rows suffice with rollback verification?
-3. The masked write-path class (200 status=error with code=null) — for
-   transaction writes this is the highest-stakes mask class. Confirm the
-   rule: every masked write is logged as a BR/DDL candidate AND the rebuild
-   renders an honest error (no false success), consistent with Rule 10.
+1. DEV PATIENT DATA: SEEDED, not real. Every seed is additive, idempotent,
+   DEMO-001-scoped, guarded to the his_local database, and cleaned in the
+   same run (per Q28). No production data reaches this machine.
+2. DEV TRANSACTION DATASET: YES — one documented, reproducible SEED SCRIPT
+   (not ad-hoc rows). A transaction chain needs a patient, an encounter, a
+   bill and a payment to trace end to end; hand-made rows drift. Same rules
+   as (1): additive, idempotent, DEMO-001-scoped, his_local-guarded, cleaned
+   in the same run. The seed script lives under tools/ with the probe set
+   and is part of the T1 golden-trace setup.
+3. THE MASKED-WRITE-PATH RULE (BR-187 shape — save reports success, writes
+   nothing): a transaction screen whose WRITE path is masked does NOT ship
+   with a banner. IT STOPS AND COMES TO THE OWNER. Banner parity is
+   acceptable for READS and UNACCEPTABLE for WRITES: a read that lies costs
+   a user a confused minute; a write that lies costs a payment, a
+   prescription or a consultation record. A masked write is logged as a
+   BR/DDL candidate AND blocks the screen's build until the owner decides.
