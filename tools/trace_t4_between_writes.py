@@ -182,10 +182,34 @@ def main():
     # insert fails -> honest ERROR envelope with most state landed); the
     # retry recovers the bed move (unlike OPD Bill's locked retry). An
     # ERROR envelope here does NOT mean nothing happened — Amendment 10.
-    admd_bed = psql(f"select bed_id from adt.t_admission_details where admission_id={adm_id};")
-    t9 = psql(f"select transfer_status_id from adt.t_transfer where transfer_id={tr_id};")
-    recovered = t9 == "9" and admd_bed == "1"
-    print(f"\nVERDICT: {'RECOVERY CONFIRMED — retry fixed the bed move (adm_details bed=' + admd_bed + ', transfer 9)' if recovered else f'NOT recovered: transfer={t9} adm_details_bed={admd_bed}'}")
+    # PER-ENTITY CHECKLIST (the owner's DQ-048 specifics): which of the
+    # 11 entities land on the failing call, and does the retry restore ALL?
+    print("\n=== PER-ENTITY CHECKLIST after W3-fail then W3-retry ===")
+    # after the failed call:
+    t_a = psql(f"select transfer_status_id||'|'||status from adt.t_transfer where transfer_id={tr_id};")
+    tr_a = psql(f"select transfer_status_id||'|'||status from adt.t_transfer_request where transfer_request_id={req_id};")
+    admd_a = psql(f"select bed_id from adt.t_admission_details where admission_id={adm_id};")
+    newtr_before = psql(f"select count(*) from adt.t_transfer where admission_id={adm_id} and transfer_id<>{tr_id};")
+    frombed_a = psql(f"select bed_status_id from adt.m_bed_master where bed_id=2 and organization_id=1 and unit_id=1;")
+    print(f"  AFTER W3-FAIL: transfer={t_a} | request={tr_a} | adm_details.bed={admd_a} "
+          f"| new-transfer-row={newtr_before} | from-bed(2).status={frombed_a}")
+    # after the retry:
+    t_b = psql(f"select transfer_status_id||'|'||status from adt.t_transfer where transfer_id={tr_id};")
+    admd_b = psql(f"select bed_id from adt.t_admission_details where admission_id={adm_id};")
+    newtr_after = psql(f"select count(*) from adt.t_transfer where admission_id={adm_id} and transfer_id<>{tr_id};")
+    frombed_b = psql(f"select bed_status_id from adt.m_bed_master where bed_id=2 and organization_id=1 and unit_id=1;")
+    print(f"  AFTER W3-RETRY: transfer={t_b} | adm_details.bed={admd_b} "
+          f"| new-transfer-row={newtr_after} | from-bed(2).status={frombed_b}")
+    recovered = t_b == "9|I" and admd_b == "1"
+    newrow_ok = newtr_after == "1"
+    frombed_ok = (frombed_b or "").strip() not in ("", "None")
+    print(f"  RETRY COMPLETENESS: move-recovered={recovered} "
+          f"new-transfer-row-created={newrow_ok} from-bed-released={frombed_ok}")
+    if not (recovered and newrow_ok and frombed_ok):
+        print("  NOTE: retry restored the bed move but NOT every entity — "
+              "partial recovery (the from-bed release / new transfer row "
+              "may be missing) — DQ-048 specific.")
+    print(f"\nVERDICT: {'RECOVERY CONFIRMED — retry fixed the bed move (adm_details bed=' + admd_b + ', transfer 9)' if recovered else f'NOT recovered: transfer={t_b} adm_details_bed={admd_b}'}")
     print("FINDING: W3 type-null branch is NOT atomic (DQ-048) — transfer/"
           "request/admission-details commit before the failing bed-log insert;"
           " ERROR envelope is honest but incomplete (empty catch hides the"
