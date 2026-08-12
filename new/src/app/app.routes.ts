@@ -2292,6 +2292,20 @@ export const routes: Routes = [
           import('./features/kit-creation/kit-creation').then((m) => m.KitCreation),
       },
       {
+        path: 'accountPayable',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 580, title: 'Account Payable' },
+        loadComponent: () =>
+          import('./features/account-payable/account-payable').then((m) => m.AccountPayable),
+      },
+      {
+        path: 'accountPayableStatus',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 582, title: 'Account Payable Status' },
+        loadComponent: () =>
+          import('./features/account-payable-status/account-payable-status').then((m) => m.AccountPayableStatus),
+      },
+      {
         path: 'RMOAllocationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 824, title: 'RMO Allocation Master' },

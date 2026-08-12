@@ -1,0 +1,37 @@
+<div class="aps-wrap">
+  <header class="aps-header">
+    <h2>Account Payable Status</h2>
+    <span class="aps-sub">Unit Master / Billing — module 582</span>
+  </header>
+
+  @if (loading()) {
+    <p class="aps-muted">Loading account payables…</p>
+  } @else if (error()) {
+    <div class="aps-state aps-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="aps-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Payable Code</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.accPayableMstId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="aps-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

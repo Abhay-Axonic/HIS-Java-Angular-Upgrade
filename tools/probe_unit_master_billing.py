@@ -871,6 +871,33 @@ with sync_playwright() as p:
         FAILS.append(f"consentType: real_rows={ok_ct} chunk_fail={chunk_fail}")
     ctxCT.close()
 
+    # 12. DQ-030 builds: accountPayable (580) + accountPayableStatus (582)
+    # — REAL DATA (5 rows each; payload {orgId, orgUnitId}).
+    for route, mid, terms in [("accountPayable", 580, ["Account Payable", "AP-LIST-TEST"]),
+                              ("accountPayableStatus", 582, ["Account Payable Status", "AP-LIST-TEST"])]:
+        ctxAP = browser.new_context()
+        pageAP = ctxAP.new_page()
+        errorsAP = []
+        pageAP.on("pageerror", lambda e: errorsAP.append(str(e)))
+        pageAP.on("console", lambda m: errorsAP.append(m.text) if m.type == "error" else None)
+        ctxAP.add_cookies([{"name": "cookieObject", "value": CO, "url": BASE}])
+        pageAP.goto(BASE, wait_until="domcontentloaded")
+        time.sleep(4)
+        pageAP.evaluate(
+            "() => localStorage.setItem('permissions', "
+            f"JSON.stringify({{modules: [{{id: {mid}}}]}}))"
+        )
+        pageAP.goto(BASE + f"/{route}", wait_until="domcontentloaded")
+        time.sleep(6)
+        body = pageAP.inner_text("body")
+        ok_ap = terms[0] in body and terms[1] in body and "accessDenied" not in pageAP.url
+        print(f"DQ030 {route}: real_rows({terms[1]})={ok_ap} url={pageAP.url.split('/')[-1][:40]}")
+        if not ok_ap:
+            FAILS.append(f"DQ030 {route}: real rows not rendered")
+        if errorsAP:
+            FAILS.append(f"DQ030 {route} page errors: {errorsAP[:3]}")
+        ctxAP.close()
+
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
     # path: intercept the role fetch with {id:999999}, then poll location).
     ctx2 = browser.new_context()
