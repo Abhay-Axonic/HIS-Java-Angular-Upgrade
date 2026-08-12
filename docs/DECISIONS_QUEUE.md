@@ -2062,3 +2062,41 @@ LOOP-WEAKNESS READ (honest):
    accepted row state.
 NEXT: owner signs off -> T3 build (transfer screen: list -> request ->
 accept -> final + reject; C9 patterns; routes; probe).
+
+## DQ-2026-08-12-048 — TRANSFER (65) T4 BETWEEN-WRITES TRACE: W3 TYPE-NULL BRANCH IS NOT ATOMIC (finding + recovery)
+
+The owner's flow-map ask (weakness 3) — W2's 5-entity atomicity — answered
+TWICE:
+1. W2 acceptTransferRequestForADT IS ATOMIC (trace_w2_atomicity.py, 61f6c1a1):
+   forced FK failure on the final BedLogStatus INSERT -> honest ERROR
+   envelope; psql: transfer/request stayed at W1's status 2, no bed booked,
+   zero bed-log rows — all five rolled back via the session's single
+   transaction despite the empty catch.
+2. W3 acceptFinalTransferRequest type-null branch IS NOT ATOMIC
+   (trace_t4_between_writes.py, 8566f3de): W1 ok -> W2 ok -> W3 with a
+   nonexistent toBedId:
+   - transfer -> 9|I and request -> 9|I COMMIT (marked Transferd/inactive)
+   - admission_details UPDATE lands with bed_id=999999 (a nonexistent bed!)
+   - the LATER BedLogStatus insert fails -> empty catch -> ERROR envelope
+   - psql is the only truth: the ERROR hides that most of the write landed
+     (Amendment 10 case, exactly)
+   - W3 RETRY (correct bed) RECOVERS: admission_details bed fixed to 1,
+     transfer stays 9, bed booked, bed-log present — a recovery path
+     EXISTS (unlike OPD Bill's locked retry, BR-035)
+WHY THE DIFFERENCE: W2's five statements share the session transaction and
+roll back together (no entity load between them). W3's type-null branch
+executes transfer/request updates, then findById(transferId) FORCES A FLUSH
+(line 487) — the first updates commit to their own mini-transaction BEFORE
+the failing bed-log insert, so the later failure cannot roll them back.
+CLASS: honest-error envelope (Amendment 7: broken-screen, not masked) BUT
+the state it leaves is dangerous — a transfer recorded as Transferd (9|I)
+whose admission-details bed points at a nonexistent bed until retried.
+NOT a STOP: the retry recovers, the screen's normal path (correct bed)
+never hits it, and the ERROR is honest (not a lie). LOGGED as a BR
+candidate (backend: reorder the statements / single transaction boundary;
+also fix the empty catch to log the mechanism — Rule 10 error-swallowing).
+LOOP SCORECARD (Amendment 11) now at 4 flows: UI-convention machine (loyalty
+2nd-assign, transfer machine), response-built payload (OPD W1->W2, transfer
+W2->W3), error swallowing (transfer W2/W3 empty catches), and now
+FLUSH-BOUNDARY non-atomicity as a 4th class — the trace caught it because
+Amendment 10 mandates psql-after-every-response.
