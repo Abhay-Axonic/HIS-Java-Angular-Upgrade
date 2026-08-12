@@ -2147,3 +2147,45 @@ W3 type-null branch (transferTypeId absent) is NOT atomic:
   is dangerously ahead of reality until the retry.
 NEXT: golden trace through the UI (merge gate) — will show the honest 400
 on the legacy W3 shape and the rebuild's corrected-name path.
+
+## DQ-2026-08-12-050 — TRANSFER (65) PICKER FEED BROKEN FOR ALL INPUTS (duplicate bedId alias) + FIXTURE-VS-FEED VERDICT
+
+(a) THE FAILURE (owner's (a)): POST /adt/searchAdmittedPatientByNameAndUhid
+  (ModalityTransferDaoImpl:48) returns {"status":"error","code":null,
+  "message":"Something went wrong !!"} for EVERY input — verified live with
+  "zzzz" (guaranteed 0 rows), "Test" (real admitted patient), and the
+  DEMO-001 fixture patient. ROOT CAUSE (Admission.java:844-855): the named
+  query GET_ADMITTED_PATIENT_LIST_LIKE selects `bm.bed_id as "bedId"` AND
+  `admissionDetails.bed_id as "bedId"` — a DUPLICATE column alias.
+  Hibernate's native-query ResultSet handling rejects the duplicate label
+  at execution, for ANY result set. Manual psql of the same joins runs
+  clean (0 rows or 1 row) — the SQL is valid; the NAMED QUERY's duplicate
+  alias is what breaks it. EMPTY CATCH (ModalityTransferDaoImpl:57-61)
+  swallows the exception with NO log — the SAME error-swallowing class as
+  W2/W3 (PendingTransferRequestDaoImpl:298-301) — FOURTH INSTANCE of the
+  class (transfer W2, transfer W3, this feed; the fifth if the BillingMaster
+  NPE at :1335 counts its own — it is a distinct masked-NPE class, so this
+  is the fourth swallow). Added to the Amendment 11 expected-findings list.
+  The real legacy transfer picker CANNOT find patients — the screen's first
+  step is broken for all users.
+(b) FIXTURE-VS-FEED VERDICT (owner's (b)): the FEED IS BROKEN, NOT THE
+  FIXTURE. The fixture patient is well-formed (psql: registration +
+  admission + admission_details with nursing_acceptance='Y' + doctor_id +
+  bed + ward all present and join-satisfiable; manual SQL returns the row).
+  The feed rejects it AND rejects every other input (including nonexistent
+  names), so no seeding change can make it work. The fixture spec needs NO
+  change for this feed; it DID reveal two real fixture gaps for the chain
+  itself (from_bed_id + nursing_acceptance were missing — fixed in the
+  trace tools' seeds).
+CLASS: broken feed (backend defect), Amendment 7 honest-error class (not
+masked). The rebuild's picker cannot work against this feed — same shape as
+OPD Bill's blocked write, but a READ: banner-parity class is acceptable for
+reads per the owner's rule (a read that lies costs a confused minute). The
+rebuild ships the picker with an honest "search unavailable" state + the
+finding logged, OR the backend fixes the duplicate alias (one-line: remove
+the bm.bed_id duplicate). LOGGED for the owner; NOT a stop (read class).
+NEXT: the UI golden trace proceeds via the LIST path (the pending-transfer
+list + W1/W2/W3 + reject are all live-verified working); the picker step is
+documented as broken-feed with the honest-error banner state. The chain
+writes are the merge gate — the picker being a broken read does not block
+proving the writes through the UI.
