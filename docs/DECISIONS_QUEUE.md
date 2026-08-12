@@ -1973,3 +1973,92 @@ NEXT: T1 golden trace + T2 flow map (owner's go) — the flow map will carry
 the W1->W2->W3 data contracts, the T4 mid-chain-failure test, the T5
 guard questions (clinical-state class), and the loop-weakness read for a
 3-state machine flow.
+
+## DQ-2026-08-12-046 — T1+T2 TRANSFER CHAIN (65): FLOW MAP (second full sign-off)
+
+DATA CONTRACTS (the per-endpoint-probes-go-blind points):
+- LIST -> W1: the flow opens from a pending-transfer list (getPending-
+  TransferRequestList / ForADT / Final). The selected row carries
+  transferId + admissionId + transferRequestId (if a prior request exists).
+- W1 saveTransferRequest payload: transferId + transferTypeId +
+  transferStatusId + toBedCategory/toBillingBedCategory/toWard/toRoom/toBed +
+  admissionId + org/unit (screen state: the destination chosen by the user).
+  RESPONSE: the new transferRequestId (created by the DAO).
+- W1 -> W2 (THE blind point): W2's payload is built from
+  $scope.itemSelectedsAccept — a ROW SELECTED FROM THE PENDING LIST — NOT
+  from W1's response in the simple path; BUT the accept flow requires
+  transferRequestId + toBedId + admissionId from that row. In the
+  request->accept chain (request created by W1 then accepted), the
+  transferRequestId in W2's payload IS W1's response id. Per-endpoint
+  probes cannot construct W2 without the list row or W1's response.
+- W2 -> W3: W3's payload uses $scope.transferdId + $scope.transferReqestId
+  — set from the FINAL list selection (the row W2 accepted). W3 needs
+  transferId + transferRequestId + destination again.
+WRITE SURFACES (Amendment 6 guard read, scoped to write methods):
+- W1 saveTransferRequest (TransferRequestDaoImpl:152): 3 entities —
+  insert t_transfer_request; update t_transfer (dest + statusId); update
+  t_admission (visitType/doctor/speciality when newVisitTypeId present).
+- W2 acceptTransferRequestForADT (PendingTransferRequestDaoImpl:235):
+  5 entities — update Transfer -> status 6; update TransferRequest ->
+  status 6; update BedMaster -> bedStatusId 5 (booked); update BedLogStatus
+  'I' (inactivate old); insert BedLogStatus 'A'. EMPTY CATCH BLOCKS:
+  HibernateException/Exception swallowed -> return ERROR (error-swallowing
+  class, Rule 10 candidate — logged, not fixed here).
+- W3 acceptFinalTransferRequest (:396): 5 entities — Transfer -> status 9
+  (+toDate/toTime); TransferRequest -> status 9; BedMaster -> 5; BedLog
+  inactivate+insert. Type-null branch: Transfer status 9 + status='I'.
+- Reject (:306): Transfer -> status 5 + 'I'; TransferRequest -> status 5 +
+  'I' + reject reason.
+STATUS MACHINE (m_transfer_status_master, live): 1 Pending -> 2 Requested
+-> 3 Sent to doctor -> 4 Sent to ADT -> 6 Ready For Transfer (W2) ->
+9 Transferd (W3); 5 Rejected (reject); 8 Abort; 10 ICU Transfer.
+T5 GUARD READ (THE finding): NO write method has a status precondition —
+every UPDATE's WHERE is transferId + unitId + orgId ONLY. W2 can accept an
+already-completed (9) transfer; W3 can finalize a rejected (5) transfer;
+W1 can request a transfer for a transferred patient. The machine is UI
+CONVENTION, not server-enforced. Clinical-state class (Amendment 4
+HIGH-STAKES band). Sharpened Amendment 4 applies: the rebuild's UI follows
+the same state flow as the legacy -> the screen does NOT reach the gap
+(each button only shows in its legal state) -> BUILD PROCEEDS, logged as
+BR candidate (server-side status-precondition guards absent). NOT stopped:
+the screen being built cannot reach the illegal transition.
+T4 SHAPE (the multi-write failure case, given the smoke passed): the chain
+is W1 (request) -> W2 (accept: 5 entities) -> W3 (final: 5 entities).
+The failure case to force: W2 succeeds (transfer + request + bed all
+updated to 6/6/5) but W3 FAILS (bad destination payload) — what does the
+legacy leave? A transfer at status 6 (Ready For Transfer) with the bed
+booked (bedStatusId 5) and the patient NOT actually moved. The bed stays
+booked -> the retry path: re-calling W3 with the correct payload should
+succeed (W3 is idempotent-ish: blind update to 9 + bed book again). The
+real risk: a HALF-W2 (some of the 5 updates land, then a mid-call failure
+rolls back — Hibernate transaction boundary at the service call) vs a
+completed-W2-then-failed-W3 (the BETWEEN-writes state, Amendment 6's
+subject). T4 asserts both: (i) force a mid-W2 failure -> all-or-nothing
+(0 of 5 updates land), (ii) W2-ok W3-fail -> psql shows status 6 + bed 5
+left behind (the legacy's between-writes debris), then (iii) W3 retry
+succeeds (recovery path exists — better than the OPD Bill lock).
+FIXTURE: smoke_transfer_write.py extends: seed -> W1 -> W2 -> force W3
+fail -> psql -> W3 retry -> teardown. All DEMO-001-scoped, same-run clean.
+LOOP-WEAKNESS READ (honest):
+1. The machine is UI-convention-only — T5's "drive the illegal transition
+   and assert rejection" cannot run against the server (it would SUCCEED,
+   like the loyalty-card second assign). The loop needs the Amendment 4
+   classification to decide BEFORE the probe whether "guard absent +
+   screen-can't-reach + high stakes" = log-and-proceed (this case) — the
+   current wording only covers low-stakes log-and-proceed. Amendment
+   candidate: add the screen-reachability leg to the HIGH-STAKES branch.
+2. The empty catch blocks (W2:298-301) mean a FAILED write returns ERROR
+   with no mechanism — the trace must psql-verify every "success" AND every
+   "error" (an error may have half-written before the swallow).
+3. W2's 5-entity write is where T4's all-or-nothing gets its real test —
+   but Hibernate's flush-at-commit means the 5 updates may not be atomic
+   unless the service is @Transactional; the trace must check whether a
+   mid-call exception leaves partial state (the empty catch makes this
+   OBSERVABLE: ERROR returned + partial rows = the half-commit).
+4. The transferRequestId contract (W1's response -> W2's payload) is the
+   loop's second instance of the OPD Bill W1->W2 shape — the golden trace
+   earns its keep again: a per-screen build would ship a transfer screen
+   that can never complete a transfer, because W3's payload needs W2's
+   accepted row state.
+NEXT: owner signs off -> T3 build (transfer screen: list -> request ->
+accept -> final + reject; C9 patterns; routes; probe).
