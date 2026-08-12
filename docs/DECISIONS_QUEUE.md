@@ -1575,3 +1575,41 @@ Gates: tsc -p RC=0, ng build EXIT 0 (2 ICU-brace template bugs found+fixed:
   honest write-path state, corrected).
 THE MASTER PHASE IS CLOSED (341 + 3 Group B + 746 + 10 = 355 rebuilt dirs
 excl. decoys; remaining = transaction/report/dashboard class only).
+
+## DQ-2026-08-12-037 — T0 FIRST TRANSACTION FLOW: ASSIGN LOYALTY CARD (752)
+
+Owner picked the shortest chain; 752 assignLoyaltyCard is it (2 service calls
+vs 5 for updatePayeeInformation/cancelDischarge). T0 classification complete:
+
+FLOW (the whole chain, one write):
+1. PICKER: patient search — POST /adt/patientSearchByMultipleCriteria
+   {uhIdNumber, patientName, genderId, mobileNo, birthDate,
+   identificationNo, patientType:"1", unitId, organizationId}. LIVE:
+   SUCCESS 0 rows for "Demo" (exact legacy payload required; my earlier 400
+   was a wrong-payload artifact). Requires >=3 chars patientName (legacy
+   warns under 3).
+2. FEEDS (dropdowns on the picker form): GETACTIVEGENDERLIST
+   (/adt/getActiveGenderList), GETACTIVEIDENTIFICATION, bankMaster,
+   hospitalBank, transactiontypes, cardTypeMaster.
+3. CARD CHECK: GET /api/unit/checkLoyaltyCard/{orgId}/{unitId}/{16-digit}
+   — LIVE SUCCESS (validity gate; 16-digit rule enforced client-side).
+4. EXISTING-CARD LOOKUP: /api/loyaltyCard/getLoyaltiCardDetailsByPatientId
+   (path/param shape pending exact resolution; 404 on my /1 guess).
+5. WRITE: POST /api/loyaltyCard/patientLoyaltyCard {patientLoyaltyCardMpprId,
+   loyaltyCardId, patientId, patientCategoryId, cardConfigurationId,
+   organisationId, unitId, status:"A", createdBy, updatedBy, isDeleted:"N",
+   isUserDefined:"Y", cardNo}. THE single write of the flow.
+
+STATUS MACHINE: card-assignment state per patient — unassigned -> assigned
+(A). No reassign path visible in the legacy controller (the illegal
+transition candidate: assigning a second card to an already-assigned
+patient — T5 negative control).
+
+BUSINESS RULES TOUCHED: 16-digit card format; checkLoyaltyCard validity;
+one-card-per-patient (assign guard). BR manifest additions required at T3.
+
+OWED: exact shape of getLoyaltiCardDetailsByPatientId (the 4th endpoint);
+assign write live-probe (on the dedicated seed fixture per Amendment 1).
+
+NEXT: T1 golden trace + T2 flow map for owner sign-off (first of the three
+full sign-offs per Amendment 2).
