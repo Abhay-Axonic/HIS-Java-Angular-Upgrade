@@ -2327,6 +2327,76 @@ export const routes: Routes = [
           import('./features/department-nursing-station-mapper/department-nursing-station-mapper').then((m) => m.DepartmentNursingStationMapper),
       },
       {
+        path: 'cashOpeningBalance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 597, title: 'Cash Opening Balance' },
+        loadComponent: () =>
+          import('./features/cash-opening-balance/cash-opening-balance').then((m) => m.CashOpeningBalance),
+      },
+      {
+        path: 'interimHandover',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 598, title: 'Interim Handover' },
+        loadComponent: () =>
+          import('./features/interim-handover/interim-handover').then((m) => m.InterimHandover),
+      },
+      {
+        path: 'shiftClosing',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 600, title: 'Shift Closing' },
+        loadComponent: () =>
+          import('./features/shift-closing/shift-closing').then((m) => m.ShiftClosing),
+      },
+      {
+        path: 'allInclusivePackage',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 625, title: 'All Inclusive Package' },
+        loadComponent: () =>
+          import('./features/all-inclusive-package/all-inclusive-package').then((m) => m.AllInclusivePackage),
+      },
+      {
+        path: 'storewiseGenericMapper',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 635, title: 'Storewise Generic Mapper' },
+        loadComponent: () =>
+          import('./features/storewise-generic-mapper/storewise-generic-mapper').then((m) => m.StorewiseGenericMapper),
+      },
+      {
+        path: 'staffRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 650, title: 'Staff Registration' },
+        loadComponent: () =>
+          import('./features/staff-registration/staff-registration').then((m) => m.StaffRegistration),
+      },
+      {
+        path: 'applicationConfiguration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 660, title: 'Application Configuration' },
+        loadComponent: () =>
+          import('./features/application-configuration/application-configuration').then((m) => m.ApplicationConfiguration),
+      },
+      {
+        path: 'donorRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 719, title: 'Donor Registration' },
+        loadComponent: () =>
+          import('./features/donor-registration/donor-registration').then((m) => m.DonorRegistration),
+      },
+      {
+        path: 'transfusionTransmittedDiseases',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 722, title: 'Transfusion Transmitted Diseases' },
+        loadComponent: () =>
+          import('./features/transfusion-transmitted-diseases/transfusion-transmitted-diseases').then((m) => m.TransfusionTransmittedDiseases),
+      },
+      {
+        path: 'discountRights',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 745, title: 'Discount Rights' },
+        loadComponent: () =>
+          import('./features/discount-rights/discount-rights').then((m) => m.DiscountRights),
+      },
+      {
         path: 'RMOAllocationMaster',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 824, title: 'RMO Allocation Master' },
