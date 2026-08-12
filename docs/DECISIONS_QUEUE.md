@@ -1608,8 +1608,17 @@ patient — T5 negative control).
 BUSINESS RULES TOUCHED: 16-digit card format; checkLoyaltyCard validity;
 one-card-per-patient (assign guard). BR manifest additions required at T3.
 
-OWED: exact shape of getLoyaltiCardDetailsByPatientId (the 4th endpoint);
-assign write live-probe (on the dedicated seed fixture per Amendment 1).
+T0 COMPLETE (all endpoints live-called with exact legacy payloads):
+- getLoyaltiCardDetailsByPatientId is a POST (not GET) with {patientId,
+  organisationId, unitId, status:'A', isDeleted:'N', isUserDefined:'Y'}
+  -> SUCCESS rows=0. My earlier 404 was a wrong-method guess.
+- cardTypeMaster masked-500 was an EMPTY-BODY artifact: exact legacy payload
+  {orgnisationId, unitId} (LEGACY TYPO field name, missing 'i') -> SUCCESS
+  14 rows. The run's payload-shape lesson applied twice more.
+- card check GET /api/unit/checkLoyaltyCard/1/1/0000000000000001 -> SUCCESS.
+- MASKED COUNT: 0 across the flow. All reads standard envelope.
+OWED (unchanged): assign write behavior, on the dedicated seed fixture
+(Amendment 1), before T3/T4.
 
 NEXT: T1 golden trace + T2 flow map for owner sign-off (first of the three
 full sign-offs per Amendment 2).
