@@ -54,6 +54,18 @@ the source. Output per screen:
   admission, pharmacy, lab, blood bank): the agent proceeds within a signed
   family on its own, surfacing only what does NOT match the family's signed
   shape. Review stays on the shape, off the repetition.
+- GUARD EXISTENCE AT T0 (Amendment 4): before designing ANY illegal-transition
+  control, T0 reads the DAO and service for the guard that would reject it.
+  Three outcomes:
+    * GUARD EXISTS -> T5 drives the illegal transition and asserts rejection.
+    * NO GUARD, LOW STAKES (nothing corrupted, no money/stock/clinical state
+      wrongly moved) -> log as a BR candidate, note the UI enforces by
+      convention, build proceeds. (assignLoyaltyCard's second-card-per-patient
+      is this case.)
+    * NO GUARD, HIGH STAKES (money, stock, clinical state, permissions) ->
+      STOP and come to the owner. THIS is where the stop rule belongs — the
+      severity test is what the missing guard lets someone DO, not that it is
+      missing.
 
 ## T3 — BUILD (house pattern per step)
 
@@ -71,7 +83,14 @@ A transaction write mutates billing/stock/patient state — the master-loop
 "save returns 200" check is insufficient. For every write path:
 - IDEMPOTENCY: replay the same write twice; the second must not double-post
   (legacy contracts with business keys — assert the key is reused, or the
-  duplicate is rejected with the same body status).
+  duplicate is rejected with the same body status). IDEMPOTENCY DISCOVERY IS
+  T0 (Amendment 5): whether the write is idempotent by construction is
+  established when the DAO/service is read at T0 — never discovered by
+  running the replay. The replay then runs as a DEMONSTRATION of a known
+  finding, on the fixture, cleaned same-run (assignLoyaltyCard: no business
+  key, each POST creates a new card + mapper row -> double-posts by
+  construction; demonstrated, logged as BR candidate, not replicated, not
+  stopped at this stake level).
 - ROLLBACK/ALL-OR-NOTHING: flows that write multiple entities (bill -> line
   items -> payment) must fail as a unit; the probe forces a mid-flow failure
   (e.g. invalid line item) and asserts NO partial write landed (the legacy
