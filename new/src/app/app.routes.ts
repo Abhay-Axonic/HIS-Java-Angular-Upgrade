@@ -2397,6 +2397,13 @@ export const routes: Routes = [
           import('./features/discount-rights/discount-rights').then((m) => m.DiscountRights),
       },
       {
+        path: 'transferScreen',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 65, title: 'Direct Transfer' },
+        loadComponent: () =>
+          import('./features/transfer-screen/transfer').then((m) => m.TransferScreen),
+      },
+      {
         path: 'assignLoyaltyCard',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 752, title: 'Assign Loyalty Card' },
