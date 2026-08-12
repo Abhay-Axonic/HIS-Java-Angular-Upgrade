@@ -1394,3 +1394,58 @@ both, as the owner ordered):
   doctor.m_orderset_master (DDL change, BR review) OR rebuild 587/588 with
   AMBER masked banners naming the phantom column (parity of the current
   behavior). Owner's call; both screens share one banner text.
+
+## DQ-2026-08-12-032 — DQ-025 SCOPING SWEEP: THE 212 REMAINING ARE NOT MASTERS
+
+Sweep of all 1,077 menu nodes: 240 rebuilt (name-matched routes), 212
+state-candidates (state exists, not rebuilt), 625 no-state (reports/leaves/
+sections). The 186 ledger figure derived from 233-47; the sweep's
+authoritative candidate count is 212.
+
+CLASSIFICATION of the 212 (name heuristics + controller spot-checks):
+- TRANSACTION (patient/billing workflows): ~108 (~50%) — OPD Bill, Admission,
+  Transfer, Invoices, Sterilization, Appointments, Allergies, Vitals, Service
+  Rendering, Progress Note, cash desk, etc. Multi-step, patient-context,
+  write paths.
+- REPORT: 35 (17%) — Bill List, Debit/Credit Note List, Refund List,
+  Discharge Summary, Report Entry/Validation/Release.
+- DASHBOARD: 13 (6%) — worklists/queues (Nursing, Donor Screening, Blood Bag,
+  Casualty, Day Care).
+- DUPLICATE-ID RELISTS: ~20 — unitMaster/departmentMaster/allergies/
+  appointments/ambulanceCharges/IncubationMaster/houseKeeping/assetPMS/
+  macroscopic/microscopic/dischargeSummary/readyForBilling appear 2-3x under
+  different parents; already-rebuilt states re-listed.
+- GENUINE MASTER-STYLE: ~10-15 (5-7%) — 597/598/600 cash desk, 625 package,
+  635 storewise generic mapper, 650 staff registration, 660 application
+  config, 719 donor registration, 722 transfusion TTD, 745 discount rights,
+  746 dept nursing station mapper. Real controllers exist.
+- DECOY SHELLS: 12 (correctly classified, DQ-030) — leave.
+
+WHAT A TRANSACTION SCREEN NEEDS THAT A MASTER DOES NOT (the loop gap):
+1. PATIENT/ENCOUNTER CONTEXT: a selected patient/visit/encounter drives the
+   screen — needs a search/picker + context propagation, not a flat org/unit
+   list. The master loop's (orgId, unitId, offset, size) contract doesn't
+   fit.
+2. MULTI-STEP FLOWS: create -> validate -> approve -> settle chains (e.g.
+   PO creation -> approval -> GRN), each step a different state/component
+   with status transitions. Masters are single-view CRUD.
+3. WRITE PATHS THAT MATTER: save/update/status-toggle on masters are
+   low-risk; transaction writes (billing, stock movement, patient state)
+   need transactional integrity, idempotency, and audit — the error
+   swallowing audit (Rule 1) applies with much higher stakes.
+4. COMPOSED DATA: transactions aggregate many entities (orderset -> tests,
+   bill -> line items -> payments) — the single-listObject envelope + one
+   getList() pattern doesn't model it; detail endpoints per sub-entity.
+5. WORKFLOW STATE: status machines (pending/approved/rejected/settled) with
+   worklists keyed by status — the dashboard/worklist class is its own
+   shape (13 of them).
+6. VALIDATION/DUPLICATE CHECKS: business rules across entities (stock
+   availability, credit limits, insurance eligibility) — masters validate
+   a single row.
+
+RECOMMENDATION: do NOT run the master loop on the 212. If the owner wants
+the transaction phase, it is a SEPARATE build pattern (patient-context
+pick-and-probe, per-flow golden traces, write-path verification, status
+machines) with its own estimate. The 10-15 genuine master-style screens
+could be built with the existing loop as a small closing batch (owner's
+call), everything else needs the transaction methodology first.
