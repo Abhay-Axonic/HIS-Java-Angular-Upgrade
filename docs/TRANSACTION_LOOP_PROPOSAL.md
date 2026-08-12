@@ -66,6 +66,14 @@ the source. Output per screen:
       STOP and come to the owner. THIS is where the stop rule belongs — the
       severity test is what the missing guard lets someone DO, not that it is
       missing.
+    * SHARPER SEVERITY TEST (owner refinement, 2026-08-12, OPD Bill T0): what
+      matters is whether THE SCREEN BEING BUILT can reach the gap, not whether
+      the gap exists. A money-class gap reachable only by a crafted API
+      payload (not by this screen's path) does NOT stop the build — the
+      rebuild sends the same flags the legacy sends and stays on the guarded
+      path. It is logged as a money-class BR candidate with the mechanism,
+      explicitly framed as an API-surface defect (reachable by direct API
+      call) rather than a UI one — that framing matters for whoever fixes it.
 
 ## T3 — BUILD (house pattern per step)
 
