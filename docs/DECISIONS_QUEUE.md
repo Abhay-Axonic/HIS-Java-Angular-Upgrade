@@ -1368,3 +1368,29 @@ CORRECTED CLASS DECISION (replaces the single 'build or leave' question):
      AMBER banner — owner's call)
   C) LEAVE/design-new: 578 (transaction editor — defer with the transaction
      class), 577/581/586/589/591/593/594/595/596/599/601/620 (true shells)
+
+## DQ-2026-08-12-031 — ORDERSET MASKED FEED ROOT-CAUSED: 4TH PHANTOM COLUMN (icpc_id)
+
+587 Order Set + 588 Order Set List share POST /api/orderset/orderSetsList ->
+200 status=error "Something went wrong!!". MECHANISM (one investigation for
+both, as the owner ordered):
+- DAO OrdersetMasterDaoImpl.getOrderSetsList (184-203) runs TWO named native
+  queries: LIST_ORDER_MASTER then LIST_ORDER_MASTER_FOR_ICPC, returning both
+  lists in one Response.
+- LIST_ORDER_MASTER_FOR_ICPC (OrdersetMaster.java:179-207) joins
+  `osm.icpc_id = icpc.icpc_id` (line 199) — but doctor.m_orderset_master has
+  NO icpc_id column (verified information_schema: 14 columns, no icpc_id).
+- The same phantom ref appears in the search query (:icpcId, line 144) and
+  the BY_ID variant (line ~241).
+- Chain: Hibernate throws on Q2 -> DAO rethrows (184-202, no swallow) ->
+  service rethrows (155-161, no swallow) -> OrdersetController:93-96 catches
+  and returns COMMON_ERROR_MESSAGE "Something went wrong!!" -> masked
+  envelope. Q1 (the diagnosis join) is never reached for the response.
+- psql proof: Q1 runs clean (0 rows — inner diagnosis join is empty data,
+  not error); Q2 fails: `ERROR: column osm.icpc_id does not exist`.
+- This is the FOURTH phantom column (technique_id, is_bed_charges_service,
+  form_template, icpc_id). Same Rule 10 treatment: NOT fixed; BR candidate.
+- DECISION for the owner (DQ-030 Group B): fix = add icpc_id to
+  doctor.m_orderset_master (DDL change, BR review) OR rebuild 587/588 with
+  AMBER masked banners naming the phantom column (parity of the current
+  behavior). Owner's call; both screens share one banner text.
