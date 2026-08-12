@@ -1887,3 +1887,42 @@ proceed with a banner):
 OWNER'S CALL. The T4/T5 plan for this flow cannot execute until the write
 completes — the trace proved the loop by finding the flow is unmaskably
 broken.
+
+## DQ-2026-08-12-044 — OPD BILL STOP: THE MECHANISM (owner's a-d answered, no fixes applied)
+
+(a) TABLE/QUERY/DDL: billing.t_package_consumption_master has 38 columns
+  (verified information_schema) — NO package_applicable_date. The ENTITY
+  TPackageConsumptionMaster declares @Column(name="package_applicable_date")
+  (TPackageConsumptionMaster.java:156) which exists NOWHERE in any schema
+  (count 0). The failing query is Hibernate's generated SELECT for
+  TPackageConsumptionMaster via the @OneToMany LAZY collection
+  OrderDetailsMaster.java:461 (mappedBy orderDetailsMaster) — alias
+  listtpacka12_ in the error. saveBill loads order details; the collection
+  join selects every mapped column including the phantom -> "could not
+  extract ResultSet" -> wrapped BillingException at saveBill:1335 -> masked
+  ERR-xxxx.
+(b) FAILURE MODE: the write FAILS AND REPORTS FAILURE ({"status":"error",
+  "code":"500","message":"Something went wrong. Reference: ERR-3586ead6"}).
+  NOT a masked success — the envelope honestly says error. Classification:
+  this is a BROKEN SCREEN (backend defect), not a "write that lies".
+  (Distinction per owner: masked-write rule exists for writes that LIE;
+  this one reports the truth.)
+(c) PSQL AFTER FAILED ATTEMPT (verified live, patient 99032): bill rows 0,
+  bill details 0, payment rows 0, order detail (id 22) service_is_billed=0
+  service_bill_id EMPTY, encounter intact. THE LOCK DID NOT SET — the
+  transaction rolled back cleanly. UPDATE_IS_BILLED_STATUS (runs at
+  service:1068-1069 AFTER the phantom query) never committed. The owner's
+  feared "write fails but lock sets" does NOT happen here — the phantom
+  fires BEFORE the lock, and the whole saveBill is one transaction.
+(d) REACHABILITY: EVERY saveBill, package or not. The collection is on the
+  order-details entity itself (OrderDetailsMaster.java:461), NOT gated on
+  packageId. My NON-package bill (order detail service_id=3, no package)
+  hit it — reproduced cleanly (ERR-3586ead6, same-second SQL error line).
+  The "narrower finding" (only package bills) is FALSE: the flow is not
+  buildable on any path until the backend fixes the entity/DDL mismatch.
+VERDICT FOR THE OWNER: PARK the flow (owner's inclination). The rebuild
+cannot complete a bill on ANY path; fixing the backend (add the column or
+drop the mapping — Rule 10, BR fix discipline, maker-checker inverted if we
+do it for a frontend build) unblocks it. Recommend: log BR candidate
+(BR-2026-08-12-035 shape), pick a different second flow (admission/transfer
+chain), revisit OPD Bill after the backend owns the fix.
