@@ -1681,3 +1681,36 @@ T3-T5 executed per the signed-off flow map (f45da822, dry run CLEAN 7 files
 - UI: assignLoyaltyCard renders (picker + card sections), zero page errors.
 NEXT: owner reads the T3-T5 evidence; then the SECOND transaction flow
 (another full sign-off) or a family, per Amendment 2.
+
+## DQ-2026-08-12-040 — GOLDEN TRACE END-TO-END: ALL 7 STEPS + T4 + T5 (merge evidence)
+
+ONE browser session, real UI, module-752 grant, DEMO-001 fixture:
+STEP 1 PICKER: search "DEMO" -> fixture patient renders. PASS
+STEP 2 FEEDS: cardType dropdown populated (14 types via the literal
+  orgnisationId typo payload); config id 1 selected. PASS (the typo'd feed
+  -> cardConfigurationId contract holds end-to-end)
+STEP 3 CHECK: card A -> "Card available." PASS
+STEP 4 LOOKUP: (fires on Select)
+STEP 5 WRITE: assign via UI -> "Card assigned." PASS
+STEP 6 READ-BACK: fresh psql — m_loyalty_card rows for patient = 1. PASS
+STEP 7 SIDE-EFFECT (owner's priority): card row =
+  1111222233330001|99020|Y|A|1|1 — patient_id SET, is_active=Y, status=A,
+  created_by/updated_by=1 (session user). THE PATIENT ROW CHANGED, not just
+  the mapper. PASS
+AUDIT: created_by|updated_by = 1|1. PASS
+T4 REPLAY (Amendment 5 demonstration): 2nd identical assign SUCCEEDED ->
+  2 card rows + 2 mapper rows — DOUBLE-POST demonstrated (BR-033 known
+  finding, not discovery). PASS
+T5 NEG-1 duplicate card B: error "Card No is Already Exists." PASS (rejected)
+T5 NEG-2 un-configured unit: error "Please configure loyalty for this
+  unit." PASS (rejected)
+T5 SECOND-CARD: 2nd different card to same patient -> SUCCESS (accepted) —
+  guard absent, BR-033 confirmed; Amendment 4 NO-GUARD-LOW-STAKES, logged
+  not stopped. PASS (finding)
+FIXTURE: cleaned same-run, 0 leftovers. PASS
+THE LOOP'S GAP-QUESTION ANSWERED: the side-effect IS visible to the golden
+trace (psql read-back after the write shows patient_id+is_active changed) —
+a per-endpoint probe would never look there; the trace does. The loop has
+no gap on this flow.
+NEXT: owner merges (branch rebuild/assign-loyalty-card @ f45da822, dry run
+CLEAN); then the second transaction flow.
