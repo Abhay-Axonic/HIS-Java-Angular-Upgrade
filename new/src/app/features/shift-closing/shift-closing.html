@@ -1,0 +1,63 @@
+<div class="sc-wrap">
+  <header class="sc-header">
+    <h2>Shift Closing</h2>
+    <span class="sc-sub">Unit Master / Billing — module 600</span>
+  </header>
+
+  <div class="sc-state sc-deferred">
+    <p><strong>Classification:</strong> write-path cash-entry form — not a master list.</p>
+    <p class="sc-muted">
+      The refund feed this screen loads is a POST endpoint with a complex
+      payload (<code>/api/global/getRefundList</code>), not a simple list —
+      deferred to the transaction methodology. Live probe (2026-08-12) with
+      <code>&#123;organizationId, unitId, createdBy, openingDate, currentDate,
+      offset, noOfRecordsPerPage&#125;</code> returned HTTP 400 "Invalid
+      parameters" (payload incomplete); the DAO also carries a stray-quote
+      SQL syntax bug (<code>ShiftClosingMasterDaoImpl.java:541-542</code>),
+      so no refund rows are currently consumable. The legacy surface
+      (<code>shiftClosingController.js</code>) is a shift-close entry form:
+      cash/cheque/card receipt totals, refund list, handover amounts and
+      closing summary.
+    </p>
+  </div>
+
+  @if (loading()) {
+    <p class="sc-muted">Probing live endpoint…</p>
+  } @else if (probed()) {
+    <div class="sc-state sc-probe">
+      <p>
+        Live probe (2026-08-12): status=<code>{{ probeStatus() }}</code>,
+        rows=<code>{{ rows().length }}</code>, message=<code>{{ probeMessage() }}</code>.
+      </p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="sc-state sc-error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  @if (rows().length > 0) {
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th>Voucher No</th>
+          <th>Date</th>
+          <th>Patient</th>
+          <th>UHID</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.paymentRefundId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

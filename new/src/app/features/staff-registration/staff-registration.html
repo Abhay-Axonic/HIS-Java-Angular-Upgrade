@@ -1,0 +1,42 @@
+<div class="sr-wrap">
+  <header class="sr-header">
+    <h2>Staff Registration</h2>
+    <span class="sr-sub">Admission / Discharge — screen 650 (legacy state staffRegistration)</span>
+  </header>
+
+  <p class="sr-muted">
+    Write-path form, no list endpoint — the legacy state is a staff-registration
+    form (staffRegistrationController, app.js:14382), deferred to the
+    transaction methodology (DQ-2026-08-12-034). The only live feed on its path
+    is the relation master list (2 rows) — rendered below.
+  </p>
+
+  @if (loading()) {
+    <p class="sr-muted">Loading relations…</p>
+  } @else if (error()) {
+    <div class="sr-state sr-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="sr-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="sr-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

@@ -1,0 +1,57 @@
+<div class="cob-wrap">
+  <header class="cob-header">
+    <h2>Cash Opening Balance</h2>
+    <span class="cob-sub">Unit Master / Billing — module 597</span>
+  </header>
+
+  <div class="cob-state cob-deferred">
+    <p><strong>Classification:</strong> write-path cash-entry form — not a master list.</p>
+    <p class="cob-muted">
+      The denomination feed this screen loads is a POST save endpoint
+      (<code>/api/global/getListOfDenominations</code>), not a list —
+      deferred to the transaction methodology. The legacy surface
+      (<code>cashOpeningBalanceController.js</code>) is a qty-entry form:
+      handover-to user, date, per-denomination quantity/amount rows,
+      remarks and a running total, persisted via
+      <code>/api/global/saveCashHandoverMaster</code>.
+    </p>
+  </div>
+
+  @if (loading()) {
+    <p class="cob-muted">Probing live endpoint…</p>
+  } @else if (probed()) {
+    <div class="cob-state cob-probe">
+      <p>
+        Live probe (2026-08-12): HTTP 200, status=<code>{{ probeStatus() }}</code>,
+        rows=<code>{{ rows().length }}</code>, message=<code>{{ probeMessage() }}</code>.
+      </p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="cob-state cob-error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  @if (rows().length > 0) {
+    <table class="cob-table">
+      <thead>
+        <tr>
+          <th>Denomination</th>
+          <th>Currency</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.denominationId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

@@ -1,0 +1,42 @@
+<div class="aip-wrap">
+  <header class="aip-header">
+    <h2>All Inclusive Package</h2>
+    <span class="aip-sub">Billing / Package Creation — screen 625 (legacy state allInclusivePackage)</span>
+  </header>
+
+  <p class="aip-muted">
+    Write-path form, no list endpoint — the legacy state is a package-creation
+    form (MasterController shell, app.js:10219), deferred to the transaction
+    methodology (DQ-2026-08-12-034). The only live feed on its path is the
+    gender master list (3 rows) — rendered below.
+  </p>
+
+  @if (loading()) {
+    <p class="aip-muted">Loading genders…</p>
+  } @else if (error()) {
+    <div class="aip-state aip-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="aip-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="aip-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

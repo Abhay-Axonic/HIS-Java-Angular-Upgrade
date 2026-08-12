@@ -1,0 +1,43 @@
+<div class="sgm-wrap">
+  <header class="sgm-header">
+    <h2>Storewise Generic Mapper</h2>
+    <span class="sgm-sub">Unit Master / Pharmacy — screen 635 (legacy state storewiseGenericMapper)</span>
+  </header>
+
+  <p class="sgm-muted">
+    Raw-array feed (non-envelope class, DQ-2026-08-12-034): the endpoint returns
+    a bare array — no &#123;status, listObject&#125; envelope — consumed by the legacy
+    controller directly (storeWiseGenericMapperController.js, ctrl:67-84).
+    Live-verified 2026-08-12: HTTP 200, raw array body.
+  </p>
+
+  @if (loading()) {
+    <p class="sgm-muted">Loading mapper rows…</p>
+  } @else if (error()) {
+    <div class="sgm-state sgm-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="sgm-table">
+      <thead>
+        <tr>
+          <th>Generic Code</th>
+          <th>Generic Name</th>
+          <th>Store</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="sgm-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

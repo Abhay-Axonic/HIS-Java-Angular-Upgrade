@@ -1,0 +1,43 @@
+<div class="ac-wrap">
+  <header class="ac-header">
+    <h2>Application Configuration</h2>
+    <span class="ac-sub">Unit Master / Configuration — screen 660 (legacy state applicationConfiguration)</span>
+  </header>
+
+  <p class="ac-muted">
+    Config-form state, no list endpoint — the legacy state is a configuration
+    form fed by the service-master dropdown (applicationConfigurationController.js,
+    ctrl:953-966), deferred to the transaction methodology (DQ-2026-08-12-034).
+    The service-master feed (1 row) — rendered below — is the dropdown's data
+    source on this screen's path.
+  </p>
+
+  @if (loading()) {
+    <p class="ac-muted">Loading service masters…</p>
+  } @else if (error()) {
+    <div class="ac-state ac-error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <table class="ac-table">
+      <thead>
+        <tr>
+          <th>Service Master Id</th>
+          <th>Service Standard Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.serviceMasterId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="ac-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

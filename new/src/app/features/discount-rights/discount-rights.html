@@ -1,0 +1,59 @@
+<div class="dr-wrap">
+  <header class="dr-header">
+    <h2>Discount Rights (Financial Rights)</h2>
+    <span class="dr-sub">Unit Master / Billing — module 745</span>
+  </header>
+
+  @if (loading()) {
+    <p class="dr-muted">Loading discount rights…</p>
+  } @else if (error()) {
+    @if (masked()) {
+      <div class="dr-state dr-masked">
+        <p>{{ error() }}</p>
+        <p class="dr-muted">
+          Request-level failure only — the endpoint itself was live-verified
+          healthy (2026-08-12: real rows, no masked envelope), so a persistent
+          masked banner has no phantom cause to name here.
+        </p>
+      </div>
+    } @else {
+      <div class="dr-state dr-error">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  } @else {
+    <table class="dr-table">
+      <thead>
+        <tr>
+          <th>User Role</th>
+          <th>Employee Name</th>
+          <th>Discount From</th>
+          <th>Discount To</th>
+          <th>Fin. Clearance From</th>
+          <th>Fin. Clearance To</th>
+          <th>Credit Note From</th>
+          <th>Credit Note To</th>
+          <th>Expense Appr. From</th>
+          <th>Expense Appr. To</th>
+          <th>Bad Debts From</th>
+          <th>Bad Debts To</th>
+          <th>Refund From</th>
+          <th>Refund To</th>
+          <th>UHID</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.discountRightId) {
+          <tr>
+            @for (cell of rowCells(row); track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="16" class="dr-empty">No records.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
