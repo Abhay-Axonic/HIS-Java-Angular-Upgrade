@@ -1449,3 +1449,22 @@ pick-and-probe, per-flow golden traces, write-path verification, status
 machines) with its own estimate. The 10-15 genuine master-style screens
 could be built with the existing loop as a small closing batch (owner's
 call), everything else needs the transaction methodology first.
+
+## DQ-2026-08-12-033 — DUPLICATE-ID RELISTS VERIFIED (call it, not inferred)
+
+Owner's (c): confirm the ~20 duplicate-id relists are already-rebuilt rather
+than assumed. VERIFIED by direct route/dispatch lookup on main (610ebbf6):
+- GENUINELY REBUILT (2 states, 6 tree nodes): unitMaster (417/467/531) and
+  departmentMaster (372/533/564) — both are commonMaster dispatcher branches
+  (common-master.service.ts:67 departmentMaster, :141 unitMaster). All 6
+  nodes duplicate ONE rebuilt feature each.
+- NOT REBUILT (13 states, 26 nodes): allergies, appointments,
+  ambulanceCharges, IncubationMaster, houseKeeping, assetPMSScheduler,
+  macroscopicExamination, microscopicExamination, dischargeSummary,
+  readyForBilling, finalDischarge, transfer, transferRequestAcceptance —
+  all transaction/deferred class (DQ-032), 2 nodes each = genuine tree
+  duplication of UNWALKED states.
+- The DQ-032 "~20" estimate was inflated: ~6 of those nodes fold into the 2
+  dispatcher-covered states; the remaining are transaction-class, not
+  already-rebuilt. No action: the 2 rebuilt states stay covered by the
+  dispatcher; the 13 stay in the deferred transaction pool (DQ-025/032).
