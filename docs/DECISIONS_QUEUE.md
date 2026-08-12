@@ -1842,3 +1842,48 @@ WHERE THE LOOP IS WEAK ON THIS FLOW (the honest read):
    A per-screen probe here would render a screen that can never complete a
    bill.
 NEXT: owner signs off the flow map -> T3 build.
+
+## DQ-2026-08-12-043 — OPD BILL (11): MASKED WRITE PATH — 5TH PHANTOM COLUMN (package_applicable_date)
+
+STOP-CLASS FINDING (owner rule: a masked WRITE path stops and comes to the
+owner — a write that lies costs money). During T3/T4 of the OPD Bill flow,
+W1 (POST /api/billing/saveBill) could NOT complete for a legitimately-
+constructed DEMO-001 bill:
+- After fixing MY payload artifacts (unknown fields serviceMasterId +
+  listBillingDetailsDto 400'd on strict Jackson; is_dummy_service NULL caused
+  the matchBillAmounts "Dispute" guard; isFinancialClearance null caused an
+  NPE at BillingMasterServiceImpl:1335 — all logged as payload/fixture
+  lessons), W1 consistently returns the masked envelope:
+  {"status":"error","code":"500","message":"Something went wrong. Reference:
+  ERR-2aed5e3d"}
+- tomcat: ERROR: column listtpacka12_.package_applicable_date does not exist
+  — Hibernate alias for TPackageConsumptionMaster. The entity declares
+  @Column(name="package_applicable_date") (TPackageConsumptionMaster.java:156)
+  but the column exists NOWHERE (information_schema count 0). Loaded via
+  session.get(TPackageConsumptionMaster.class, ...) at
+  MPackageMasterDaoImpl:1674 during the saveBill flow.
+- 5TH PHANTOM COLUMN (technique_id, is_bed_charges_service, form_template,
+  icpc_id, package_applicable_date) — and the FIRST that masks a TRANSACTION
+  WRITE entirely (the others masked reads).
+- ALL-OR-NOTHING HELD: after each masked failure, psql confirmed 0 bill rows,
+  0 payment rows, order detail service_is_billed STILL 0 — the transaction
+  rolled back cleanly. The lock hypothesis (UPDATE_IS_BILLED_STATUS inside
+  W1) was NOT reached because W1 never completes — the phantom column fires
+  BEFORE the lock.
+- RECOVERY-PATH VERDICT (still stands): no billing cancel/void resets
+  service_is_billed; manual SQL is the only recovery — but the lock itself
+  is not yet LIVE-PROVEN because W1 cannot complete on this backend state.
+
+WHAT THE OWNER MUST DECIDE (per the masked-write rule — build does NOT
+proceed with a banner):
+  A) The OPD Bill screen CANNOT be built to parity: the legacy write is
+     masked for every bill. Rebuilding it would ship a screen that cannot
+     bill anyone.
+  B) The fix (add package_applicable_date to the table, or remove the
+     mapping) is a DDL/entity change — backend-owned, Rule 10, and now
+     REQUIRED for the flow to work at all, not cosmetic.
+  C) Alternative: pick a different second flow whose write is not masked
+     (admission/transfer chain), park OPD Bill until the backend decision.
+OWNER'S CALL. The T4/T5 plan for this flow cannot execute until the write
+completes — the trace proved the loop by finding the flow is unmaskably
+broken.
