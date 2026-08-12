@@ -1770,3 +1770,75 @@ half-commit that matters for money).
 
 NEXT: T1 golden trace + T2 flow map (second full sign-off) — draft on owner's
 go.
+
+## DQ-2026-08-12-042 — T1+T2 OPD BILL (11): FLOW MAP (second full sign-off)
+
+DATA CONTRACTS (the per-screen-probes-go-blind points, named explicitly):
+- PICKER -> W1: selected encounter (encounterId) + orderDetailsMasterDtosList
+  + auto-rendered services + visitTypeId/patientId/unitId/orgId + the bill
+  flags (isFinalBill/isIntermediateBill — the rebuild sends them, staying on
+  the guarded path per sharpened Amendment 4).
+- W1 -> W2 (THE blind point): W1's response returns response.data.object =
+  the BillingMaster (billingMasterId, netAmount); the legacy stores it as
+  $scope.billingMaster and sets totalPaymentAmount = billingMaster.netAmount.
+  W2's collectPayment payload is BUILT FROM W1'S RESPONSE (billingMasterId +
+  netAmount), not from screen state. A per-endpoint probe of W2 cannot
+  construct its payload correctly.
+- W2 -> W3: after payment success, the appointment status update fires with
+  the encounter's appointmentId (from the encounter context).
+- W1 also marks orderDetails serviceIsBilled=1 + serviceBillId (INSIDE W1,
+  service:1068-1069, UPDATE_IS_BILLED_STATUS) — THE LOCK: if W2 fails, the
+  retry of the same order details hits checkIsBilledServices -> "Bill is
+  already generated !" -> the patient cannot be re-billed without manual
+  service_is_billed flip. Confirmed by code read (OrderDetailsMaster.java:42).
+
+T4 HALF-COMMIT TEST (the trace's centerpiece): seed DEMO-001 patient +
+encounter + order details (service_is_billed=0). W1 with isFinalBill='Y'
+-> SUCCESS. Then force W2 to FAIL (a payment mode/payload the legacy rejects,
+e.g. invalid mode id or a gateway validation error). psql the bill state:
+  * does the bill row exist? (PENDING — written at saveBillingDetails 1065-66)
+  * is there an orphaned receipt? (no — collectPayment never ran)
+  * are the order details marked service_is_billed=1? (YES — the lock)
+  * then RETRY W1 with the same order details -> assert "Bill is already
+    generated !" — proving the retry path is locked. THE FINDING: a
+    half-commit that locks the retry is worse than either failure alone;
+    logged as a BR candidate (the legacy needs a rollback/compensation or a
+    service_is_billed reset path), NOT replicated.
+
+T5 NEGATIVES (guards exist — Amendment 4 outcome #1):
+- NEG-1: W1 with already-billed order details (service_is_billed=1) ->
+  assert "Bill is already generated !".
+- NEG-2: final bill with mismatched amounts (isBillManipulationAllowed
+  false) -> assert "Dispute in orders count, refreshing orders !".
+- NEG-3 (machine): attempt to collect payment for a bill already SETTLED
+  (netAmount==0 bills auto-settle) -> assert rejection or logged mechanism.
+
+FIXTURE: extends seed_loyalty_fixture.py (or a sibling opd_bill_fixture.py):
+DEMO-001 patient + encounter + t_order_details rows (service_is_billed=0
+for the happy path, =1 for NEG-1) + payment modes. Same rules: additive,
+idempotent, DEMO-001-scoped, his_local-guarded, cleaned same-run incl. the
+bill/receipt/order-detail artifacts the writes create.
+
+WHERE THE LOOP IS WEAK ON THIS FLOW (the honest read):
+1. T4's all-or-nothing clause assumes a SINGLE transaction boundary. This
+   flow's three writes are THREE transactions — the loop must extend the
+   clause to FLOW-LEVEL atomicity: what the legacy leaves behind between
+   writes is the finding. The current wording ("must fail as a unit")
+   doesn't fit a 3-http-call chain; amend to "the golden trace records what
+   the legacy leaves between sequential writes; a partial write that locks
+   the retry is the worst finding class".
+2. The fixture for a billing chain needs ORDER DETAILS + ENCOUNTER + PATIENT
+   — three tables with FK chains, not one. The seed script grows
+   substantially; the loop should expect transaction fixtures to be
+   multi-table and versioned with the flow.
+3. W1's 6650-line service makes the guard read (Amendment 4) the long pole —
+   T0 on a big billing flow is hours of DAO/service reading. The loop
+   should note that big flows need the guard read scoped to the WRITE
+   METHODS the flow actually calls (saveBill, collectPayment), not the
+   whole service.
+4. The W1->W2 response-contract blind point is the strongest argument yet
+   for the golden trace: even the FEED endpoints on this screen are
+   pre-write reads, but W2's payload cannot be built without W1's response.
+   A per-screen probe here would render a screen that can never complete a
+   bill.
+NEXT: owner signs off the flow map -> T3 build.
