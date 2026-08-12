@@ -284,3 +284,4 @@ BR-195 | MASKED-ERROR on the tariff grid: the legacy primary list endpoint gener
 | BR-2026-08-12-033 | loyalty card assign: no one-card-per-patient guard + non-idempotent write — BR candidate, NOT applied (Amendment 4 low-stakes; owner: build proceeds) |
 | BR-2026-08-12-034 | OPD Bill double-bill guard bypass (flags-gated at BillingMasterServiceImpl:772, blind save beneath) — money-class API-surface defect, NOT applied; screen cannot reach it, build proceeds |
 | BR-2026-08-12-035 | OPD Bill saveBill phantom column package_applicable_date blocks EVERY write — backend-owned choice (add column or drop mapping); PARKED flow, honest-error class (Amendment 7), all-or-nothing held; fixture on main |
+| BR-2026-08-12-036 | Transfer (65) status machine UI-convention only — no server-side preconditions on any write (API-surface reachable; screen can't reach -> log-and-proceed, Amendment 9); clinical-state class; likely fix: status preconditions on W2/W3/reject |
