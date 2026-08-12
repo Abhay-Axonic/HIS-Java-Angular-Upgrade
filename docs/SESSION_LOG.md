@@ -1282,3 +1282,4 @@ WHAT IS IN WORKING CONTEXT BUT NOT IN ANY FILE (a fresh session must read this):
   probe once with a FRESH token; then await the owner's transaction-phase
   decision (DQ-025) — do NOT start the 186 transaction screens unilaterally.
 ════════════════════════════════════════════════════════════════════════════
+2026-08-12 | Maker | Hermes (deepseek-v4-flash) | rebuild/consent-type-rebuild | consentType (528) corrected noData→REAL DATA (DQ-029): decoy-groundwork Group A was right; batch-10 noData misbuild + unstaged dir (route dangled) both fixed. Branch d79cf808 + probe guard 038d8e79, dry run CLEAN, probe PASS (CNTDUP2 renders). tools/check_route_targets.py added (static route→file preflight; retro-validated on 972c69dd/1c97986f; negative control FAILs). | new/src/app/features/consent-type/*, tools/check_route_targets.py, tools/probe_unit_master_billing.py | N
