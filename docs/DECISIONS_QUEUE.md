@@ -1926,3 +1926,50 @@ drop the mapping — Rule 10, BR fix discipline, maker-checker inverted if we
 do it for a frontend build) unblocks it. Recommend: log BR candidate
 (BR-2026-08-12-035 shape), pick a different second flow (admission/transfer
 chain), revisit OPD Bill after the backend owns the fix.
+
+## DQ-2026-08-12-045 — T0 ADMISSION CHAIN: DIRECT TRANSFER (65) — SMOKE PASS, BUILDABLE
+
+Picked as the second full sign-off after OPD Bill PARKED (BR-035). The
+admission chain: multi-entity write, clinically meaningful (patient
+location), status machine with request->accept->final chain.
+
+(a) PICKER: transfer list screens (getPendingTransferRequestList,
+  getPendingTransferRequestListForADT, getFinalTransferRequestList —
+  universal search) — the flow opens from a pending-transfer list.
+
+(b) THE CHAIN (all POST, PendingTransferRequestController @/adt +
+  TransferRequestController):
+  W1 POST /adt/saveTransferRequest (TransferRequestDaoImpl:152) — writes
+     THREE entities in one call: (1) insert t_transfer_request, (2) update
+     t_transfer (to_bed_category/to_bed/to_ward/to_room/to_billing_bed_cat +
+     transfer_status_id, type 1 = bed-category update, type 2 = full bed
+     update), (3) update t_admission (visitType/doctor/speciality when
+     newVisitTypeId present).
+  W2 POST /adt/acceptTransferRequestForADT (PendingTransferRequestController:45)
+  W3 POST /adt/acceptFinalTransferRequest (:141) — the executing write
+  R POST /adt/rejectTransferRequestForADT (:55) — the negative path
+(c) STATUS MACHINE (m_transfer_status_master): 1 Pending -> 2 Requested ->
+  3 Request sent to doctor ... -> final transferred; reject path from
+  Requested. States verified in the master table.
+(d) AMENDMENT 4 GUARD READ (scoped to write methods per Amendment 6):
+  saveTransferRequest DAO:152-215 — reads NO guard against duplicate
+  transfer requests for the same admission, NO status-transition check
+  (blind inserts/updates). NOT money-class (no amounts), clinical-state
+  class (patient location) — the missing guard lets someone request a
+  transfer for an already-transferred patient: CLINICAL STATE =
+  Amendment 4 HIGH-STAKES candidate. The guard-question for T5: does
+  W2/W3 reject a request already past its state (accept a Final'd
+  transfer)? Need the service-level read at T2.
+(e) AMENDMENT 8 WRITE SMOKE (NEW T0 STEP — PASSED): tools/smoke_transfer_write.py
+  seeded DEMO-001 patient+admission+transfer (status 1), called
+  POST /adt/saveTransferRequest (transferTypeId=2, status 2) ->
+  HTTP 200 status=success; psql: 1 transfer_request row, transfer row
+  (2|2|2) — multi-entity write landed, NO phantom, NO masking. Cleanup 0
+  leftovers. BUILDABLE — flow map may be drafted.
+FIXTURE: tools/smoke_transfer_write.py doubles as the T1 fixture (seed
++ write + teardown same-run); extends for T4 (force W2 fail after W1) and
+T5 (second transfer for a transferred admission — the guard-absent probe).
+NEXT: T1 golden trace + T2 flow map (owner's go) — the flow map will carry
+the W1->W2->W3 data contracts, the T4 mid-chain-failure test, the T5
+guard questions (clinical-state class), and the loop-weakness read for a
+3-state machine flow.
