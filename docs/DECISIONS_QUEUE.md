@@ -1714,3 +1714,59 @@ a per-endpoint probe would never look there; the trace does. The loop has
 no gap on this flow.
 NEXT: owner merges (branch rebuild/assign-loyalty-card @ f45da822, dry run
 CLEAN); then the second transaction flow.
+
+## DQ-2026-08-12-041 — T0 SECOND FLOW: OPD BILL (11) — MULTI-ENTITY WRITE CHAIN
+
+Picked as the second full sign-off: the canonical billing chain with THREE
+sequential writes, each its own HTTP call/transaction — where T4's flow-level
+all-or-nothing gets its real test (bill saved but payment failed = the
+half-commit that matters for money).
+
+(a) PICKER: encounter/patient search (OpdBillingController; patient search +
+  encounter lookup feeds the bill). Golden trace starts here.
+
+(b) THE 3-WRITE CHAIN (all in OpdBillingController):
+  W1 POST /api/billing/saveBill (BillingMasterController:194) — billingMasterObj:
+     bill header (net/gross/discount/concession/gst/total/outstanding) +
+     listBillingDetailsDto + orderMasterDto.listOrderDetailsMasterDto +
+     autoRendered services + paymentReceiptDetailsDtosList (ccAvenue check).
+     Service BillingMasterServiceImpl.saveBill (6650 lines) orchestrates.
+  W2 POST /api/billing/collectPayment (BillingMasterController:757) — paymentObj.
+  W3 POST /api/opd/updateAppointmentStatus — appointment status flip.
+  FEEDS: serviceMaster/autoRendered, variable-pricing/getServiceCharges,
+  bankMaster, cardTypeMaster (all pre-write reads).
+
+(c) STATUS MACHINE (DAO saveBillingMaster:147-182): netAmount==0 -> SETTLED;
+  selfPayable==0&&creditPayable>0 -> ONHOLD; isFinancialClearance=='Y' ->
+  PENDING/ONHOLD; else PENDING. Real machine: PENDING -> ONHOLD -> SETTLED.
+
+(d) AMENDMENT 4 GUARD READ (DAO/service):
+  GUARD EXISTS (2):
+  1. checkIsBilledServices (OrderDetailsMasterDaoImpl:2072) — counts
+     t_order_details where service_is_billed=1 for the bill's order ids;
+     count>0 -> service returns ERROR "Bill is already generated !"
+     (BillingMasterServiceImpl:774-778). The anti-double-bill guard.
+  2. matchBillAmounts (final bills, isBillManipulationAllowed false) ->
+     "Dispute in orders count, refreshing orders !" (:780-785).
+  GAP FOUND: BOTH guards only run when isFinalBill=='Y' OR
+  isIntermediateBill=='Y' (:772). A bill with neither flag BYPASSES the
+  double-bill check entirely — the saveBillingMaster DAO (147-182) has no
+  guard of its own (blind save). MONEY STAKE: re-billing the same
+  encounter/order-details without the flags double-charges.
+  CLASSIFICATION: the guard-gap is MONEY class -> Amendment 4 STOP band?
+  NO — the guard EXISTS for the normal path (final/intermediate bills are
+  the standard flows); the gap is a bypass only for non-flagged bills. T0
+  verdict: GUARD EXISTS (normal path), GAP LOGGED for the bypass path; the
+  T5 negative drives the guard (bill already-generated order -> rejected).
+  The bypass gap is a BR candidate (logged, NOT applied; owner call whether
+  it becomes STOP).
+
+(f) T4 TEST SHAPE: the 3 writes are separate transactions — the flow-level
+  all-or-nothing test: W1 succeeds, W2 fails (e.g. payment rejects) ->
+  does the bill remain PENDING/unbilled or is it half-written? The legacy's
+  behavior here IS the finding (log, don't replicate). Fixture: DEMO-001
+  patient + encounter + order details (service_is_billed=0) for W1; a
+  second attempt with service_is_billed=1 for the T5 negative.
+
+NEXT: T1 golden trace + T2 flow map (second full sign-off) — draft on owner's
+go.
