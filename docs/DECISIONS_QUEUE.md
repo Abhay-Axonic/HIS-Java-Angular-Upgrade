@@ -1973,3 +1973,261 @@ NEXT: T1 golden trace + T2 flow map (owner's go) — the flow map will carry
 the W1->W2->W3 data contracts, the T4 mid-chain-failure test, the T5
 guard questions (clinical-state class), and the loop-weakness read for a
 3-state machine flow.
+
+## DQ-2026-08-12-046 — T1+T2 TRANSFER CHAIN (65): FLOW MAP (second full sign-off)
+
+DATA CONTRACTS (the per-endpoint-probes-go-blind points):
+- LIST -> W1: the flow opens from a pending-transfer list (getPending-
+  TransferRequestList / ForADT / Final). The selected row carries
+  transferId + admissionId + transferRequestId (if a prior request exists).
+- W1 saveTransferRequest payload: transferId + transferTypeId +
+  transferStatusId + toBedCategory/toBillingBedCategory/toWard/toRoom/toBed +
+  admissionId + org/unit (screen state: the destination chosen by the user).
+  RESPONSE: the new transferRequestId (created by the DAO).
+- W1 -> W2 (THE blind point): W2's payload is built from
+  $scope.itemSelectedsAccept — a ROW SELECTED FROM THE PENDING LIST — NOT
+  from W1's response in the simple path; BUT the accept flow requires
+  transferRequestId + toBedId + admissionId from that row. In the
+  request->accept chain (request created by W1 then accepted), the
+  transferRequestId in W2's payload IS W1's response id. Per-endpoint
+  probes cannot construct W2 without the list row or W1's response.
+- W2 -> W3: W3's payload uses $scope.transferdId + $scope.transferReqestId
+  — set from the FINAL list selection (the row W2 accepted). W3 needs
+  transferId + transferRequestId + destination again.
+WRITE SURFACES (Amendment 6 guard read, scoped to write methods):
+- W1 saveTransferRequest (TransferRequestDaoImpl:152): 3 entities —
+  insert t_transfer_request; update t_transfer (dest + statusId); update
+  t_admission (visitType/doctor/speciality when newVisitTypeId present).
+- W2 acceptTransferRequestForADT (PendingTransferRequestDaoImpl:235):
+  5 entities — update Transfer -> status 6; update TransferRequest ->
+  status 6; update BedMaster -> bedStatusId 5 (booked); update BedLogStatus
+  'I' (inactivate old); insert BedLogStatus 'A'. EMPTY CATCH BLOCKS:
+  HibernateException/Exception swallowed -> return ERROR (error-swallowing
+  class, Rule 10 candidate — logged, not fixed here).
+- W3 acceptFinalTransferRequest (:396): 5 entities — Transfer -> status 9
+  (+toDate/toTime); TransferRequest -> status 9; BedMaster -> 5; BedLog
+  inactivate+insert. Type-null branch: Transfer status 9 + status='I'.
+- Reject (:306): Transfer -> status 5 + 'I'; TransferRequest -> status 5 +
+  'I' + reject reason.
+STATUS MACHINE (m_transfer_status_master, live): 1 Pending -> 2 Requested
+-> 3 Sent to doctor -> 4 Sent to ADT -> 6 Ready For Transfer (W2) ->
+9 Transferd (W3); 5 Rejected (reject); 8 Abort; 10 ICU Transfer.
+T5 GUARD READ (THE finding): NO write method has a status precondition —
+every UPDATE's WHERE is transferId + unitId + orgId ONLY. W2 can accept an
+already-completed (9) transfer; W3 can finalize a rejected (5) transfer;
+W1 can request a transfer for a transferred patient. The machine is UI
+CONVENTION, not server-enforced. Clinical-state class (Amendment 4
+HIGH-STAKES band). Sharpened Amendment 4 applies: the rebuild's UI follows
+the same state flow as the legacy -> the screen does NOT reach the gap
+(each button only shows in its legal state) -> BUILD PROCEEDS, logged as
+BR candidate (server-side status-precondition guards absent). NOT stopped:
+the screen being built cannot reach the illegal transition.
+T4 SHAPE (the multi-write failure case, given the smoke passed): the chain
+is W1 (request) -> W2 (accept: 5 entities) -> W3 (final: 5 entities).
+The failure case to force: W2 succeeds (transfer + request + bed all
+updated to 6/6/5) but W3 FAILS (bad destination payload) — what does the
+legacy leave? A transfer at status 6 (Ready For Transfer) with the bed
+booked (bedStatusId 5) and the patient NOT actually moved. The bed stays
+booked -> the retry path: re-calling W3 with the correct payload should
+succeed (W3 is idempotent-ish: blind update to 9 + bed book again). The
+real risk: a HALF-W2 (some of the 5 updates land, then a mid-call failure
+rolls back — Hibernate transaction boundary at the service call) vs a
+completed-W2-then-failed-W3 (the BETWEEN-writes state, Amendment 6's
+subject). T4 asserts both: (i) force a mid-W2 failure -> all-or-nothing
+(0 of 5 updates land), (ii) W2-ok W3-fail -> psql shows status 6 + bed 5
+left behind (the legacy's between-writes debris), then (iii) W3 retry
+succeeds (recovery path exists — better than the OPD Bill lock).
+FIXTURE: smoke_transfer_write.py extends: seed -> W1 -> W2 -> force W3
+fail -> psql -> W3 retry -> teardown. All DEMO-001-scoped, same-run clean.
+LOOP-WEAKNESS READ (honest):
+1. The machine is UI-convention-only — T5's "drive the illegal transition
+   and assert rejection" cannot run against the server (it would SUCCEED,
+   like the loyalty-card second assign). The loop needs the Amendment 4
+   classification to decide BEFORE the probe whether "guard absent +
+   screen-can't-reach + high stakes" = log-and-proceed (this case) — the
+   current wording only covers low-stakes log-and-proceed. Amendment
+   candidate: add the screen-reachability leg to the HIGH-STAKES branch.
+2. The empty catch blocks (W2:298-301) mean a FAILED write returns ERROR
+   with no mechanism — the trace must psql-verify every "success" AND every
+   "error" (an error may have half-written before the swallow).
+3. W2's 5-entity write is where T4's all-or-nothing gets its real test —
+   but Hibernate's flush-at-commit means the 5 updates may not be atomic
+   unless the service is @Transactional; the trace must check whether a
+   mid-call exception leaves partial state (the empty catch makes this
+   OBSERVABLE: ERROR returned + partial rows = the half-commit).
+4. The transferRequestId contract (W1's response -> W2's payload) is the
+   loop's second instance of the OPD Bill W1->W2 shape — the golden trace
+   earns its keep again: a per-screen build would ship a transfer screen
+   that can never complete a transfer, because W3's payload needs W2's
+   accepted row state.
+NEXT: owner signs off -> T3 build (transfer screen: list -> request ->
+accept -> final + reject; C9 patterns; routes; probe).
+
+## DQ-2026-08-12-048 — TRANSFER (65) T4 BETWEEN-WRITES TRACE: W3 TYPE-NULL BRANCH IS NOT ATOMIC (finding + recovery)
+
+The owner's flow-map ask (weakness 3) — W2's 5-entity atomicity — answered
+TWICE:
+1. W2 acceptTransferRequestForADT IS ATOMIC (trace_w2_atomicity.py, 61f6c1a1):
+   forced FK failure on the final BedLogStatus INSERT -> honest ERROR
+   envelope; psql: transfer/request stayed at W1's status 2, no bed booked,
+   zero bed-log rows — all five rolled back via the session's single
+   transaction despite the empty catch.
+2. W3 acceptFinalTransferRequest type-null branch IS NOT ATOMIC
+   (trace_t4_between_writes.py, 8566f3de): W1 ok -> W2 ok -> W3 with a
+   nonexistent toBedId:
+   - transfer -> 9|I and request -> 9|I COMMIT (marked Transferd/inactive)
+   - admission_details UPDATE lands with bed_id=999999 (a nonexistent bed!)
+   - the LATER BedLogStatus insert fails -> empty catch -> ERROR envelope
+   - psql is the only truth: the ERROR hides that most of the write landed
+     (Amendment 10 case, exactly)
+   - W3 RETRY (correct bed) RECOVERS: admission_details bed fixed to 1,
+     transfer stays 9, bed booked, bed-log present — a recovery path
+     EXISTS (unlike OPD Bill's locked retry, BR-035)
+WHY THE DIFFERENCE: W2's five statements share the session transaction and
+roll back together (no entity load between them). W3's type-null branch
+executes transfer/request updates, then findById(transferId) FORCES A FLUSH
+(line 487) — the first updates commit to their own mini-transaction BEFORE
+the failing bed-log insert, so the later failure cannot roll them back.
+CLASS: honest-error envelope (Amendment 7: broken-screen, not masked) BUT
+the state it leaves is dangerous — a transfer recorded as Transferd (9|I)
+whose admission-details bed points at a nonexistent bed until retried.
+NOT a STOP: the retry recovers, the screen's normal path (correct bed)
+never hits it, and the ERROR is honest (not a lie). LOGGED as a BR
+candidate (backend: reorder the statements / single transaction boundary;
+also fix the empty catch to log the mechanism — Rule 10 error-swallowing).
+LOOP SCORECARD (Amendment 11) now at 4 flows: UI-convention machine (loyalty
+2nd-assign, transfer machine), response-built payload (OPD W1->W2, transfer
+W2->W3), error swallowing (transfer W2/W3 empty catches), and now
+FLUSH-BOUNDARY non-atomicity as a 4th class — the trace caught it because
+Amendment 10 mandates psql-after-every-response.
+
+## DQ-2026-08-12-049 — TRANSFER (65) W3: LEGACY'S OWN PAYLOAD 400s (typo'd field names) + DQ-048 PER-ENTITY SPECIFICS
+
+FINDING 1 (new, most consequential): the legacy's finalTransfer JS payload
+is {"organizationId, unitId, transferdId, tranferRequestId"} — TWO TYPO'D
+FIELD NAMES (transferdId, tranferRequestId). TransferDto has NO such fields
+(106 known properties incl. the CORRECT transferId/transferRequestId) and
+strict Jackson (FAIL_ON_UNKNOWN_PROPERTIES) rejects them: LIVE-PROVEN
+HTTP 400 "Bad request: Invalid parameters" with tomcat:
+UnrecognizedPropertyException: Unrecognized field "transferdId" (class
+TransferDto), not marked as ignorable. The legacy "Execute final transfer"
+button CANNOT reach the W3 DAO — the payload dies at deserialization.
+CLASS: broken screen (Amendment 7, honest 400) — the legacy W3 is
+DOUBLY broken: unreachable typo payload + the non-atomic type-null DAO
+branch (DQ-048). The rebuild sends the CORRECT field names
+(transferId/transferRequestId) — a deliberate deviation from literalism,
+logged for the owner: the literal payload is a backend-breaking typo, not
+a contract to preserve (unlike orgnisationId which the backend READS).
+FINDING 2 (DQ-048 specifics, now clean): with corrected field names, the
+W3 type-null branch (transferTypeId absent) is NOT atomic:
+  LAND on the failing call (before the BedLogStatus INSERT fails):
+    1. t_transfer -> transfer_status_id=9, status='I'
+    2. t_transfer_request -> transfer_status_id=9, status='I'
+    3. t_admission_details -> bed_id/ward_id/room_id updated (to the
+       payload destination)
+    4. t_order_master.visit_type_id (if newVisitTypeId)
+    5. pharmacy.t_issue.visit_type_id (if newVisitTypeId)
+  DO NOT LAND (after the failure point, line 576):
+    6. t_bed_log_status to-bed inactivate + new 'A' row
+    7. m_bed_master to-bed -> bed_status_id=4
+    8. m_bed_master from-bed release (bedStatusId=2/3)
+    9. from-bed t_bed_log_status inactivate + new 'A' row
+    10. NEW t_transfer row (status 1, isPrimary 'N', from=new bed)
+    11. t_housekeeping entry
+  RETRY COMPLETENESS: a retry with the SAME corrected payload re-runs the
+  whole branch -> lands 6-11 too -> RECOVERY IS COMPLETE (verified:
+  adm_details.bed fixed 999999->1, new transfer row created, from-bed
+  released). The earlier "papers over" reading was a FIXTURE artifact
+  (missing from_bed_id in the fixture; bed 2 nonexistent). With a real
+  from-bed (bed 3), the retry restores every entity.
+  STATE LEFT BY A FAILED W3: transfer marked Transferd (9|I) + admission-
+  details pointing at the destination bed + bed-log/bed-master NOT updated
+  + no new transfer row — a patient RECORDED as transferred whose bed
+  bookkeeping was never done. The ERROR envelope is honest but the record
+  is dangerously ahead of reality until the retry.
+NEXT: golden trace through the UI (merge gate) — will show the honest 400
+on the legacy W3 shape and the rebuild's corrected-name path.
+
+## DQ-2026-08-12-050 — TRANSFER (65) PICKER FEED BROKEN FOR ALL INPUTS (duplicate bedId alias) + FIXTURE-VS-FEED VERDICT
+
+(a) THE FAILURE (owner's (a)): POST /adt/searchAdmittedPatientByNameAndUhid
+  (ModalityTransferDaoImpl:48) returns {"status":"error","code":null,
+  "message":"Something went wrong !!"} for EVERY input — verified live with
+  "zzzz" (guaranteed 0 rows), "Test" (real admitted patient), and the
+  DEMO-001 fixture patient. ROOT CAUSE (Admission.java:844-855): the named
+  query GET_ADMITTED_PATIENT_LIST_LIKE selects `bm.bed_id as "bedId"` AND
+  `admissionDetails.bed_id as "bedId"` — a DUPLICATE column alias.
+  Hibernate's native-query ResultSet handling rejects the duplicate label
+  at execution, for ANY result set. Manual psql of the same joins runs
+  clean (0 rows or 1 row) — the SQL is valid; the NAMED QUERY's duplicate
+  alias is what breaks it. EMPTY CATCH (ModalityTransferDaoImpl:57-61)
+  swallows the exception with NO log — the SAME error-swallowing class as
+  W2/W3 (PendingTransferRequestDaoImpl:298-301) — FOURTH INSTANCE of the
+  class (transfer W2, transfer W3, this feed; the fifth if the BillingMaster
+  NPE at :1335 counts its own — it is a distinct masked-NPE class, so this
+  is the fourth swallow). Added to the Amendment 11 expected-findings list.
+  The real legacy transfer picker CANNOT find patients — the screen's first
+  step is broken for all users.
+(b) FIXTURE-VS-FEED VERDICT (owner's (b)): the FEED IS BROKEN, NOT THE
+  FIXTURE. The fixture patient is well-formed (psql: registration +
+  admission + admission_details with nursing_acceptance='Y' + doctor_id +
+  bed + ward all present and join-satisfiable; manual SQL returns the row).
+  The feed rejects it AND rejects every other input (including nonexistent
+  names), so no seeding change can make it work. The fixture spec needs NO
+  change for this feed; it DID reveal two real fixture gaps for the chain
+  itself (from_bed_id + nursing_acceptance were missing — fixed in the
+  trace tools' seeds).
+CLASS: broken feed (backend defect), Amendment 7 honest-error class (not
+masked). The rebuild's picker cannot work against this feed — same shape as
+OPD Bill's blocked write, but a READ: banner-parity class is acceptable for
+reads per the owner's rule (a read that lies costs a confused minute). The
+rebuild ships the picker with an honest "search unavailable" state + the
+finding logged, OR the backend fixes the duplicate alias (one-line: remove
+the bm.bed_id duplicate). LOGGED for the owner; NOT a stop (read class).
+NEXT: the UI golden trace proceeds via the LIST path (the pending-transfer
+list + W1/W2/W3 + reject are all live-verified working); the picker step is
+documented as broken-feed with the honest-error banner state. The chain
+writes are the merge gate — the picker being a broken read does not block
+proving the writes through the UI.
+
+## DQ-2026-08-12-051 — TRANSFER (65): UI GOLDEN TRACE PASS + RETRY-COMPLETENESS ANSWER (owner's merge-gate asks)
+
+THE MERGE GATE — GOLDEN TRACE THROUGH THE UI (ONE browser session, real
+DOM, module-65 grant, DEMO-001 fixture):
+ACCEPT PATH 6/6 GREEN:
+  STEP 1 screen renders; STEP 2 pending list (getPendingTransferRequest-
+  ListForADT, status-4) shows the seeded row + Accept button; STEP 3 W2
+  accept via UI -> psql transfer=6, to-bed(1) bed_status=5 (booked);
+  STEP 4 W3 final via UI -> psql transfer=9|I, adm_details.bed=1 (patient
+  moved). The screen reported the honest read-back: "row left the pending
+  list (status 9)" — the W3 ERROR envelope (DQ-048 empty catch) was
+  disambiguated by the refreshed list (T4 read-back rule implemented in
+  the screen, not just the probe).
+REJECT PATH 4/4 GREEN: list -> select -> Reject via UI -> psql transfer=
+  5|I, request=5|I.
+FIXTURE: 0 leftovers after both paths (bills none, transfers/requests/
+  admission-details/bed-log all torn down, bed-status reset).
+SCREEN FIXES THE TRACE DEMANDED (committed 0fb11def): pending list
+  endpoint corrected to the ADT status-4 list (the universal list filters
+  status 7); LEGAL_TRANSITIONS +3->4, +4->6/5; W2 success reflects status
+  6 locally so the W3 gate opens; W3 read-back verification (never trust
+  the envelope); reject gate covers status-4 rows (list rows carry null
+  transferStatusId — the query does not select it — defaulted to 4).
+RETRY-COMPLETENESS ANSWER (owner's explicit ask, stated plainly): the
+  retry restores ONLY THE BED, NOT ALL ELEVEN ENTITIES. With a REAL
+  from-bed (3) and corrected to-bed (1): after the retry, transfer=9|I,
+  adm_details.bed=1, to-bed(1)=5, bed-log A present — BUT new-transfer-
+  row=0 (the chained transfer record at DAO:611-629 is NEVER created) and
+  from-bed(3) NOT released (bed_status untouched). The envelope says ERROR
+  on BOTH the failed call and the retry (the empty catch fires again in
+  the from-bed block, before the new-transfer-row save) — so the UI/user
+  can NEVER tell from the response whether the move landed; only psql
+  shows the partial state. Patient recorded Transferd (9|I) with the
+  correct new bed; old bed never released; chained transfer never
+  recorded. This is the DQ-048 finding's full shape: W3 type-null branch
+  is non-atomic AND its retry is a partial recovery masked by an
+  always-ERROR envelope. CLASS: honest-error (Amendment 7) but
+  operationally severe (clinical path: bed bookkeeping silently left
+  behind); logged BR candidate (backend: reorder W3 so the from-bed/new-
+  transfer-row run BEFORE the failing insert, single transaction, and
+  LOG the catch).

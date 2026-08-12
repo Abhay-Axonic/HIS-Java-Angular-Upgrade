@@ -2926,3 +2926,28 @@ form_template, icpc_id, package_applicable_date) and the FIRST that blocks a
 transaction WRITE. Fixture preserved at tools/seed_opd_bill_fixture.py
 (branch rebuild/opd-bill-investigation, merged to main) for the flow's
 resumption.
+
+
+## BR-2026-08-12-036 — DIRECT TRANSFER (65): STATUS MACHINE IS UI-CONVENTION ONLY, NO SERVER-SIDE PRECONDITIONS (candidate, NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (owner decision 2026-08-12, Amendment 9:
+clinical-state HIGH-stakes band, screen CANNOT reach the gap — the rebuild's
+buttons only appear in their legal state — so log-and-proceed; the BR notes
+it is API-surface reachable).
+MECHANISM (DQ-046, DAO read): every write method's UPDATE WHERE is
+transferId + unitId + organizationId ONLY — no status precondition:
+- W1 saveTransferRequest (TransferRequestDaoImpl:152): no check that the
+  patient/transfer is not already completed; can request a transfer for a
+  transferred (status 9) transfer.
+- W2 acceptTransferRequestForADT (PendingTransferRequestDaoImpl:235): can
+  accept an already-completed (9) or rejected (5) transfer — sets status 6.
+- W3 acceptFinalTransferRequest (:396): can finalize a rejected (5) or
+  accepted (6) transfer — sets status 9 + status='I'.
+- rejectTransferRequestForADT (:306): can reject a completed transfer.
+CLINICAL-STATE CLASS (patient location). A direct API call can accept a
+completed transfer or finalise a rejected one — the machine exists only in
+the UI's button visibility. Likely fix (backend-owned): add
+WHERE transferStatusId=<legal-from> to each write (W2: 2/3/4; W3: 6; reject:
+2/3/4) or a status-transition table. Companion finding: W2/W3 empty catch
+blocks swallow exceptions -> generic ERROR (error-swallowing class, Rule 10
+— see BR-2026-08-12-037).
