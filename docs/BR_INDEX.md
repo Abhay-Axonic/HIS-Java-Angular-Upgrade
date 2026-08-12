@@ -282,3 +282,4 @@ BR-195 | MASKED-ERROR on the tariff grid: the legacy primary list endpoint gener
 
 | BR-2026-08-12-032 | orderset icpc_id phantom column — DDL alternative logged, NOT applied (Rule 10); masked feed documented with AMBER banner (DQ-031) |
 | BR-2026-08-12-033 | loyalty card assign: no one-card-per-patient guard + non-idempotent write — BR candidate, NOT applied (Amendment 4 low-stakes; owner: build proceeds) |
+| BR-2026-08-12-034 | OPD Bill double-bill guard bypass (flags-gated at BillingMasterServiceImpl:772, blind save beneath) — money-class API-surface defect, NOT applied; screen cannot reach it, build proceeds |

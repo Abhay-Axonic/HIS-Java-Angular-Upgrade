@@ -2878,3 +2878,23 @@ is intended is a question for the loyalty-scheme owner. COMPANION FINDING:
 the assign is NOT idempotent by construction (no business key; each POST
 creates a new card + mapper row) — Amendment 5: discovery at T0, replay
 runs as a DEMONSTRATION on the fixture, cleaned same-run.
+
+
+## BR-2026-08-12-034 — OPD BILL: DOUBLE-BILL GUARD BYPASS VIA MISSING BILL FLAGS (BR candidate, NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (Rule 10). MONEY-CLASS. The anti-double-bill
+guard (checkIsBilledServices, OrderDetailsMasterDaoImpl:2072; service gate
+BillingMasterServiceImpl:772-778 -> ERROR "Bill is already generated !") and
+the amount-match guard (matchBillAmounts :780-785 -> "Dispute in orders
+count") BOTH run only when isFinalBill=='Y' OR isIntermediateBill=='Y'
+(:772). A bill with NEITHER flag bypasses both checks entirely, and
+saveBillingMaster (BillingMasterDaoImpl:147-182) is a blind save with no
+guard of its own — re-billing the same encounter/order-details without the
+flags double-charges. FRAMING (owner decision 2026-08-12): API-SURFACE
+defect, not UI — reachable by direct API call with neither flag set, NOT by
+the OPD Bill screen (the rebuild sends isFinalBill/isIntermediateBill like
+the legacy, staying on the guarded path). Sharpened Amendment 4 severity
+test: the screen being built cannot reach the gap -> does NOT stop the
+build; logged with the mechanism for whoever fixes it (likely fix: run the
+guard unconditionally, or gate on isFinalBill||isIntermediateBill||both
+absent).
