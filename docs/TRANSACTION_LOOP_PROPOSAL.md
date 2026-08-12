@@ -191,3 +191,21 @@ The negative control for a status machine is the ILLEGAL TRANSITION:
    a user a confused minute; a write that lies costs a payment, a
    prescription or a consultation record. A masked write is logged as a
    BR/DDL candidate AND blocks the screen's build until the owner decides.
+   BROKEN-SCREEN vs MASKED-WRITE (Amendment 7, 2026-08-12, OPD Bill DQ-044):
+   the STOP applies to writes that LIE (envelope says success or omits the
+   error while the write failed), NOT to writes that FAIL HONESTLY (envelope
+   says error / code 500 and psql confirms rollback). A screen whose write
+   is honestly broken is a PARK-OR-BANNER decision for the owner (backend
+   availability defect; the BR fix is backend-owned per Rule 10 and
+   maker-checker), not a STOP. The class is read from the response envelope
+   PLUS psql state: honest-error + clean rollback = broken screen;
+   masked + state unchanged = rejection with a bad message (log, banner);
+   masked + state changed = security defect (STOP).
+4. T0 SMOKE THE PRIMARY WRITE FIRST (Amendment 8, 2026-08-12, from the OPD
+   Bill phantom-column lesson): before designing the flow map, call the
+   flow's PRIMARY WRITE endpoint ONCE against the seeded fixture with an
+   exact-payload minimal body. Five minutes of calling saveBill would have
+   found the package_applicable_date phantom (every-saveBill masked failure)
+   BEFORE the map was drafted. A write that cannot complete on ANY payload
+   shape is a park-candidate, not a build; the smoke result gates whether
+   the flow map is even drafted.
