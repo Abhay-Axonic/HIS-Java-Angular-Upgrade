@@ -1527,3 +1527,25 @@ Proposed loop shape (to be refined with the owner before use):
   T6 BR manifest additions for every business rule touched
 
 NOT STARTED — pending owner review of this proposal.
+
+## DQ-2026-08-12-035 — DUPLICATE-ID RELISTS LIVE-VERIFIED (owner item c, complete)
+
+FULL duplicate-state sweep (30 states with 2+ tree nodes — MORE than the ~20
+estimate). Each covered state verified by LIVE browser probe, not inferred:
+- 10 GENUINELY REBUILT (25 tree nodes) — all LIVE-RENDER confirmed:
+  QMS (791/790), appointmentScheduling (4/653), bloodComponent (736/481,
+  route grants 481), chargeConversion (592/593), consentMaster (400/527),
+  icutypeMaster (374/535), patientRegistration (3/380), departmentMaster
+  (372/533/564), subdepartmentMaster (373/534), unitMaster (531/417/467).
+  The last three are commonMaster dispatcher branches (45-id family grant).
+- 20 NOT REBUILT (45 nodes) — ALL transaction/report/dashboard class:
+  admissionRequest, allergies, transfer, billList, dischargeSummary,
+  readyForBilling, finalDischarge, reportEntry, reportRelease,
+  dueForDischarge, cancelDischarge, washingRequest, assetIssue,
+  assetPMSScheduler, macroscopicExamination, microscopicExamination,
+  IncubationMaster, secondOpinionRequest, bedAllocation,
+  transferRequestAcceptance. Genuine tree duplication of UNWALKED states —
+  correctly deferred to the transaction phase (DQ-025/032/034).
+- Probe-grant lesson: the dispatcher route guards on the 45-id family array,
+  NOT per-branch ids; single-id grants deny (probe artifact, not rebuild
+  defect — departmentMaster etc. render fine with the family grant).
