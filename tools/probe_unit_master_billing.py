@@ -840,11 +840,13 @@ with sync_playwright() as p:
             FAILS.append(f"B8 {route} page errors: {errorsA8[:3]}")
         ctxA8.close()
 
-    # 11. consentType (528) noData — REGRESSION GUARD (DQ-028 follow-up):
-    # the b10 delegation created features/consent-type/ but never staged it;
-    # the route dangled until the fix branch committed the dir (24a23f6f).
-    # Assert the lazy import target resolves (chunk loads) AND the noData
-    # state renders — a dangling route fails with a chunk-load error.
+    # 11. consentType (528) — REAL-DATA REGRESSION GUARD (DQ-028 follow-up +
+    # correction): the b10 delegation created features/consent-type/ but
+    # never staged it (route dangled; fixed by committing the dir), AND the
+    # build was misclassified as noData — the decoy-groundwork Group A
+    # classification is correct (real backend, 3 live rows). The corrected
+    # build renders the real rows. Assert: lazy import resolves (chunk loads)
+    # AND the 3 real rows render.
     ctxCT = browser.new_context()
     pageCT = ctxCT.new_page()
     errorsCT = []
@@ -862,10 +864,11 @@ with sync_playwright() as p:
     body = pageCT.inner_text("body")
     chunk_fail = any("Failed to fetch dynamically imported module" in e or "chunk" in e.lower()
                      for e in errorsCT)
-    ok_ct = "Consent Type" in body and "no-endpoint" in body and "accessDenied" not in pageCT.url
-    print(f"consentType-regression-guard: renders={ok_ct} chunk_fail={chunk_fail} url={pageCT.url.split('/')[-1][:40]}")
+    ok_ct = "Consent Type" in body and "Fresh Consent Modal Test" in body and "CNTDUP2" in body
+    ok_ct = ok_ct and "accessDenied" not in pageCT.url and "No list endpoint" not in body
+    print(f"consentType-real-data-guard: real_rows(CNTDUP2)={ok_ct} chunk_fail={chunk_fail} url={pageCT.url.split('/')[-1][:40]}")
     if not ok_ct or chunk_fail:
-        FAILS.append(f"consentType: renders={ok_ct} chunk_fail={chunk_fail}")
+        FAILS.append(f"consentType: real_rows={ok_ct} chunk_fail={chunk_fail}")
     ctxCT.close()
 
     # 4. Negative control — non-family id denied (the app's REAL bootstrap
