@@ -22,18 +22,33 @@ ACCURACY / CONFIDENCE SPLIT (2026-08-12, re-run with comment-stripping): the
 sweep is a SCREENING tool. The earlier 371/177 included ~15 commented-out
 @Column artifacts (e.g., m_blood_bank_status_master.name — the column EXISTS
 in DDL; the flag came from a commented-out annotation in the entity source).
+**WHAT IS ACTUALLY WRONG — READ FIRST (2026-08-13)**: THE 3:0 RATIO — the
+seed (tools/seed_number_config.py) has unblocked THREE flows (donor
+registration, walk-in sale, deposit — all blocked by the empty number
+configuration) and code changes have unblocked NONE. Part of what looks like
+a broken system is an environment nobody finished setting up, and the
+seeding is the instrument that tells it apart from the real drift. Then: 11
+CONFIRMED phantoms (live endpoint errors — the real drift), and the bands
+below (the screening set).
+
 Comment-stripped totals and bands (all case-insensitive):
 
 - TOTAL flagged: 356 columns across 177 tables (354 after 2026-08-13
   corrections: +1 promoted, -1 artifact removed, -1 comment artifact).
-- CONFIRMED (reproduced by a live endpoint error): 9 — 8 columns of the 356
+- CONFIRMED (reproduced by a live endpoint error): 11 — 10 columns of the 356
   (technique_id, is_bed_charges_service, form_template_id, icpc_id,
-  package_applicable_date, family_id, appointment_unique_id, cash_in_out_id)
-  + the phantom TABLE t_message_queue (the 9th instance, outside the column
+  package_applicable_date, family_id, appointment_unique_id, cash_in_out_id,
+  cancel_reason_id, medication_type)
+  + the phantom TABLE t_message_queue (the 11th instance, outside the column
   count). cash_in_out_id promoted PROBABLE->CONFIRMED 2026-08-13 (cash
   handover smoke: live SQL error, honest 500, full rollback).
+  cancel_reason_id (billing.m_deposit_master) + medication_type
+  (pharmacy.t_prescription) promoted PROBABLE->CONFIRMED 2026-08-13 — the
+  DQ-067 number-config seed unblocked the deposit + walk-in writes and they
+  hit the real columns (live SQLGrammarExceptions).
 - PROBABLE (entity declares it; ZERO case-insensitive matches anywhere in the
-  DB): 179 (was 180; cash_in_out_id promoted out).
+  DB): 177 (was 179; cash_in_out_id + cancel_reason_id + medication_type
+  promoted out).
 - SUSPECT (name exists on ANOTHER table — plausible typo/mapping artifact,
   e.g. orgnisation_id vs organisation_id; unverified): 175 (was 176;
   cross_match_register_id removed — DDL-present artifact: the column EXISTS
@@ -50,12 +65,24 @@ columns in most cases (contract-400s on nested DTOs — deposit/walk-in; the
 inverted admission gate; the I/O-chart LocalTime NPE; the stock-gated blood
 issue) — "zero disconfirmations" is STRUCTURAL (the smokes rarely reach the
 SQL), NOT calibration evidence. No claim of confirmation follows from it.
-The CHEAP confirm/kill instrument for a PROBABLE is the per-table
-DDL-vs-entity diff (this sweep already computes it): a column that the entity
-declares and the DDL lacks case-insensitively anywhere is PROBABLE by
-construction — each row in the band is the diff result, no working write
-path needed. Live confirmation (a real endpoint error) is reserved for the
-CONFIRMED band.
+PROBABLE-REACH EVIDENCE (2026-08-13): the FIRST two PROBABLE entries reached
+by a live write BOTH confirmed — cancel_reason_id (m_deposit_master) and
+medication_type (t_prescription) promoted the moment the DQ-067 seed let the
+deposit and walk-in writes reach SQL. That establishes the band is REAL, not
+regex noise — but two of 179 is a SAMPLE, not a proof. The band remains
+largely untested, and the per-table DDL diff is still the cheap instrument:
+a column the entity declares and the DDL lacks case-insensitively anywhere
+is PROBABLE by construction — each row in the band is the diff result, no
+working write path needed. Live confirmation (a real endpoint error) is
+reserved for the CONFIRMED band.
+
+THE 3:0 RATIO (2026-08-13) — the sharpest statement of what is actually
+wrong: the seed has unblocked THREE flows (donor registration, walk-in
+sale, deposit — all three blocked by the empty number configuration) and
+code changes have unblocked NONE. Some of what looked like a broken backend
+was an unseeded environment; some of it is real drift (the two CONFIRMED
+promotions appeared the moment the seeding let the writes reach SQL); the
+seeding is what separates them.
 resolves it. Use the sweep to SIZE and PRIORITIZE; use live calls to CONFIRM.
 
 ## Confirmed live instances (8) — the class as observed, not inferred

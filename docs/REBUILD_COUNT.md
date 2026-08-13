@@ -32,3 +32,4 @@ On every merge of a rebuilt screen (or screen group), add one row to the
 table above with the merge hash and the running total. The transaction phase
 targets the remaining ~170 (≈108 transaction + 35 reports + 13 dashboards
 per DQ-025/032/034) — update the count as each merges.
+| 9 | crossMatchRegister (blood bank) — FIFTH TRANSACTION FORM (T0-T6 signed flow map: write BUILDABLE DQ-068 after the SEVEN-LAYER contract peel + the DQ-067 stock extension; golden trace landed master id 22 + 1 detail with the exact form values, teardown clean incl. the DETAILS table — the TEARDOWN RULE; PARITY RECORD: legacy states app.js:18494/18500 ungated -> ungated route; BR-041 legacy issueDate NPE found while contract-hunting) — pending merge of rebuild/deposit-walkin-batch | 1 new (blood bank) | **359** |

@@ -2542,6 +2542,180 @@ Both flows need the legacy JS payload construction (the exact DTO shapes)
 before the drift can be confirmed or disconfirmed — the next batch's work
 alongside the blood-request + LIS sample-registration endpoint hunts.
 
+## DQ-2026-08-12-067 — DEPOSIT + WALK-IN SALE contract-complete smokes: the EMPTY t_prefix_running_number CONFIG is a CLASS blocker (3 flows: donor, walk-in prescription, deposit) — seed-owned, NOT a code defect
+
+T0 sweep, contract-complete payloads (the legacy JS shapes, 2026-08-13):
+- WALK-IN SALE (POST /api/pharmacy/sales/walkins/save/prescription, the
+  legacy WalkInPrescriptionReq shape from walkinPrescriptionController.js:2026):
+  the JSON parse PASSES (the request shape is right) -> honest 500:
+  "not-null property references a null or transient value:
+  Prescription.prescriptionNo" — the prescription NUMBER generation returns
+  null because public.t_prefix_running_number is EMPTY (the same config gap
+  as the donor's donorNumber, DQ-056).
+- DEPOSIT (POST /api/billing/unit/deposit, the DepositCollectionReqDto shape
+  — DepositMasterDto.depositAmount + PaymentDepositDetailsDto; the
+  loyalty-recharge JS at patientLoyaltiCardMapperController.js:904):
+  Jackson-clean after the field fixes -> first the sequence error
+  ("setval: value 0 out of bounds for sequence deposit_master_seq" — the
+  sequence never advanced) -> then "Please Configure Deposit Number."
+  (the deposit-number prefix config row absent — the SAME empty config
+  table).
+CLASS FINDING: the empty t_prefix_running_number (and the unseeded
+deposit_master_seq) block number generation in EVERY flow that generates a
+number — three instances now: donor (donorNumber null, DQ-056), walk-in sale
+(prescriptionNo NOT-NULL 500), deposit ("Please Configure Deposit Number").
+ONE seed item (the prefix-config rows + the deposit sequence) unblocks all
+three — seed/config-owned (the owner's seeded-dev-data decision), NOT code
+defects. The drift flags (pharmacy.t_sale x12, billing.m_deposit_master x4)
+remain UNREACHED — neither confirmed nor disconfirmed (the number gates
+precede the INSERTs).
+
+SEED + RE-SMOKE OUTCOME (2026-08-13, the DQ-067 decision implemented):
+tools/seed_number_config.py seeded m_screen 164 (missing!), the three
+m_prefix_configuration rows (146 DON, 164 PRE, 123 DEP), the three
+t_prefix_running_number rows (store_id NULL — store 0 has no m_store row),
+and billing.deposit_master_seq -> 1. Idempotent, persistent (never torn
+down), his_local-guarded, per-row docs. RE-SMOKE:
+- DONOR (screen 146): BUILDABLE — donorNumber "DON-" generated (the running
+  part is empty — the format_id's padding row is the next dev gap, cosmetic),
+  registration=1 details=1 donor_id=9 landed, teardown clean.
+- DEPOSIT (screen 123): the config gate CLEARED ("Please Configure Deposit
+  Number" gone) — the write then hit the REAL drift: SQLGrammarException
+  "column \"cancel_reason_id\" of relation \"m_deposit_master\" does not
+  exist" — the 10th CONFIRMED phantom. PARK CLASS reclassified:
+  config-blocked -> DRIFT-BLOCKED (CONFIRMED).
+- WALK-IN SALE (screen 164): the config gate CLEARED (prescriptionNo
+  NOT-NULL gone) — the write then hit the REAL drift: SQLGrammarException
+  "column \"medication_type\" of relation \"t_prescription\" does not
+  exist" — the 11th CONFIRMED phantom. PARK CLASS reclassified:
+  config-blocked -> DRIFT-BLOCKED (CONFIRMED).
+The seed UNBLOCKED three flows' number generation (nothing was broken, it
+was unconfigured); the two remaining blockers are genuine phantom columns.
+The owner's prediction held: a working write is the only thing that
+confirms the flags.
+
+## DQ-2026-08-12-068 — BLOOD REQUEST (cross-match register): PARK — context-dependent (referenced entity load); the contract iteration peeled 5 layers
+
+T0 sweep (park_sweep.py, 2026-08-13): POST
+/api/bloodbank/crossMatch/saveCrossMatchRegister (CrossMatchRegisterController:34)
+-> honest 500s through the contract, one layer per probe: null-date NPE
+(requisitionDate/issueDate/fromDate/toDate) -> null list NPE
+(crossMatchRegisterDetails) -> null pendingQty NPE -> "id to load is
+required for loading" (Hibernate load of the referenced entity — the
+component/requisition — by the DTO's null id). The flow NEEDS the referenced
+blood-component/requisition context (dev data) — the same class as the
+blood-issue (stock/context-dependent). The t_cross_match_register table is
+CLEAN (not flagged — zero drift) — if the flow could reach the INSERT it
+would likely be buildable — the full legacy cross-match payload (the legacy
+JS construction) + a referenced-component seed are the completion path.
+PARK CLASS: context-dependent (referenced-entity ids + seed needed).
+
+COMPLETION ATTEMPT (2026-08-13, the full legacy payload from
+detailsCrossMatchRegisterController.js:553-571): the contract iteration
+peeled EVERY layer — requisitionDate/issueDate (DAO reads issueDate at
+CrossMatchRegisterDaoImpl:55), the crossMatchRegisterDetails entry
+(componentId 5 — the component master HAS one row), the detail's
+createdDate/updatedDate, the bloodComponentOrderId (seeded order
+SMOKE-CM), the patientRequisitionId (seeded requisition) — and the FINAL
+blocker is the detail's bloodBankStockId (CrossMatchRegisterServiceImpl:96 —
+updateLoanInStatus loads the STOCK by it): the dev's blood-bank stock is
+EMPTY (the same class as the blood-issue DQ-060). RECLASSIFIED:
+context-dependent -> STOCK-DEPENDENT (the referenced bag stock; the
+completion path = the DQ-067 seed's blood-bank stock extension). The
+t_cross_match_register remains CLEAN (zero drift); the master rolls back on
+the error (atomic — nothing lands).
+
+## OPERATIONAL-DATA CLASS (2026-08-13) — a flow that needs an order, a requisition, a bag, stock, a donor and a cross-match before its write can be exercised is NOT a park and NOT a defect — it is evidence about the DEV DATABASE, not the backend
+
+Class rule (owner, 2026-08-13): a screen that can only be exercised in an
+environment with REAL OPERATIONAL DATA is its own class. It is not a park
+(nothing is broken) and not a defect (no backend finding); the flow's layers
+are the environment's responsibilities. Members (from the sweep):
+- BLOOD-ISSUE (DQ-070): six layers peeled before the write can be exercised —
+  the BLOOD_BAG_ISSUE_NUMBER config, the bag + segment, the DONOR, the
+  stock's load, the master's contract, and the referenced cross-match. Each
+  layer is a missing piece of a real operational dataset, not a code defect.
+- LIS CENTRAL-RECEIVING (DQ-069): the acceptOrRejectSample endpoint located;
+  the write needs the referenced lab order/visit context.
+These two are NOT evidence about the backend at all. Their t_issue_blood_bag /
+t_lab_sample_dtls drift flags remain UNREACHED — neither confirmed nor
+disconfirmed — and the per-table DDL diff is the cheap instrument for those.
+The completion path for both is operational data (a populated dev dataset),
+not a code fix.
+
+## DQ-2026-08-13-070 — BLOOD-ISSUE chain close-out: peeled 6 layers; the remaining blocker is the referenced cross-match (OPERATIONAL-DATA class)
+
+The stock seed unblocked the chain layer by layer; the final peel (the full
+IssueBloodBagDaoImpl:36-97 contract + IssueBloodBagServiceImpl:56-115):
+1. the BLOOD_BAG_ISSUE_NUMBER config (the 4th prefix-config screen — the
+   seed's next extension item; the number's generation),
+2. the bag + segment (the detail's bagNo/segmentNo),
+3. the DONOR (the bag's donor_id — the seed's DON-SEED),
+4. the stock's updateLoanInStatus (the detail's bloodBankStockId — the
+   seeded bag),
+5. the master's contract (btoId/issuerId/receivedId/bloodUnitQty/
+   bloodBagIssueNo/remarks),
+6. the FINAL call updateCrossMatchingReqQtyByCrossMatchId (the service's
+   line 114) loads the CROSS-MATCH by the master's crossMatchRegisterId —
+   the payload lacks it and the dev has no cross-match rows (the sweep
+   cleaned them).
+PARK CLASS: context-dependent (the referenced cross-match row — the
+cross-match flow's own BUILDABLE path can supply it; the next seed item).
+The issue's INSERT never reached (the loads precede the master's save);
+t_issue_blood_bag's drift flags remain unconfirmed.
+
+## DQ-2026-08-13-069 — LIS SAMPLE-REGISTRATION (central receiving): PARK — context-dependent (referenced lab order); endpoint LOCATED
+
+The t_lab_sample_dtls writer hunt RESOLVED: POST
+/LIS/centralReceiving/acceptOrRejectSample (LabCentralReceivingController:73)
+— @RequestBody List<LabSampleDetailsMasterDto> (a LIST — the single-object
+probe 400s). The smoke: the list-form payload passes the Jackson parse ->
+honest 500 "id to load is required for loading" — the service loads the
+referenced lab order/visit context; the dev's lab-order data is empty (the
+same referenced-entity class as the cross-match DQ-068). PARK CLASS:
+context-dependent (the referenced lab order + the sample master's row
+needed). t_lab_sample_dtls stays EMPTY; its drift flags (if any) remain
+unreached — the per-table DDL diff is the cheap instrument.
+
+## DEV-ENVIRONMENT-GAP CLASS (2026-08-13, four instances in one seed script) — a flow blocked by a missing config row is NOT a park, it is an unseeded environment
+
+Class rule (owner, 2026-08-13): a flow blocked by a missing CONFIGURATION row
+(m_prefix_configuration / t_prefix_running_number / m_screen / a sequence)
+is an UNSEEDED environment, not a park, and must never be conflated with
+parks in the park list. The two live in different ledgers: parks = the
+application's own defects (drift, masked writes, inverted gates, contract
+shapes); unseeded environments = the dev database lacking what the
+application requires to function (fixed by tools/seed_number_config.py, which
+is idempotent + persistent + guarded, never a fixture).
+
+Instances found while seeding the number config (tools/seed_number_config.py):
+1. m_screen row 164 MISSING (the walk-in prescription screen — the
+   getGeneratedNo join requires it with is_global=false). The neighbours 123
+   and 146 exist.
+2. t_prefix_running_number.store_id FK: store 0 has NO m_store row — the
+   running rows must carry store_id NULL (the function matches on
+   p_store_id = 0 regardless).
+3. billing.deposit_master_seq at ZERO — "setval: value 0 is out of bounds
+   for sequence" — the deposit INSERT died before the columns; setval to 1
+   (the table was empty, so no id collision).
+4. FORMAT PADDING: the generated numbers come back as "DON-" (the
+   generated_code) with an EMPTY running part — the format_id's padding row
+   is absent (the format master's definition), so the length/padding never
+   applies. Cosmetic (the flow works — rows land) but a visible gap.
+
+EXPECT MORE OF THE CLASS (owner's note): the deposit sequence at 0 showed
+dev seeding has gaps beyond the config tables; treat a fresh "missing
+something" 500 on any write as a candidate unseeded-environment before
+reading it as a park.
+
+RE-AUDIT RESULT (owner's directive): the park list now carries NO
+config-blocked/contract-incomplete entries that are actually unseeded
+environments — the deposit + walk-in were contract-incomplete -> config-
+blocked -> then DRIFT-BLOCKED (CONFIRMED, DQ-067 outcome; the seed made the
+real blockers visible); the cross-match stays contract-incomplete (its
+blocker is the referenced componentId in the payload, not a config row);
+blood-issue stays stock-dependent (transactional stock DATA, not config).
+
 FLOW-MAP READ-SIDE FINDINGS (T1, 2026-08-12, live calls):
 1. patientAutofillSearch is a TODO STUB — DonorRegistrationServiceImpl:296-299
    `return null` — POST /api/bloodbank/patientAutofillSearch returns HTTP 200
