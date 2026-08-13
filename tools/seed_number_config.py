@@ -237,6 +237,46 @@ def main():
     )
     print("SEEDED t_blood_bank_stock_details (component 5, available 5)")
 
+    # --- LIS context (2026-08-13, the compounding audit) ---
+    # The LIS central-receiving (DQ-069) needs the sample-TYPE (m_sample_master
+    # — the BUILDABLE lab-sample-type flow's output, but the sweep's teardown
+    # cleans the smoke rows) and the sample MASTER (t_lab_sample_master — no
+    # buildable producer). Both are unseeded-environment gaps, same class as
+    # the stock/orders/requisitions.
+    psql(
+        "insert into lab.m_sample_master "
+        "(sample_id, sample_code, sample_desc, sample_status, created_by, created_date, updated_by, updated_date, org_id) "
+        "select 1, 'SAMPLE-1', 'whole blood (seeded)', 'A', 1, now(), 1, now(), 1 "
+        "where not exists (select 1 from lab.m_sample_master where sample_id = 1);"
+    )
+    psql(
+        "update lab.m_sample_master set sample_code='SAMPLE-1', sample_desc='whole blood (seeded)', org_id=1 "
+        "where sample_id = 1 and (sample_code is null or sample_code <> 'SAMPLE-1');"
+    )
+    print("SEEDED lab.m_sample_master sample_id=1 (the sample-TYPE the LIS references)")
+    psql(
+        "insert into lab.t_lab_sample_master "
+        "(lab_sample_id, org_id, org_unit_id, order_id, visit_type_id, admission_id, patient_id, created_by, created_date, updated_by, updated_date, encounter_id, sample_no, sample_id, sample_gen_datetime) "
+        "select 1, 1, 1, 1, 1, null, (select patient_id from patient.t_patient_details limit 1), 1, now(), 1, now(), null, 'SMOKE-LAB1', 1, now() "
+        "where not exists (select 1 from lab.t_lab_sample_master where lab_sample_id = 1);"
+    )
+    psql(
+        "update lab.t_lab_sample_master set order_id=1, sample_no='SMOKE-LAB1', sample_id=1 "
+        "where lab_sample_id = 1 and (order_id is null or order_id <> 1);"
+    )
+    print("SEEDED lab.t_lab_sample_master lab_sample_id=1 (the sample MASTER — the LIS's order reference)")
+    psql(
+        "insert into lab.t_lab_sample_dtls "
+        "(lab_sample_dtls_id, test_id, dept_id, sub_dept_id, created_by, created_date, org_id, org_unit_id, lab_sample_id, sample_barcode, sample_no, order_details_id, order_id) "
+        "select 1, 1, 1, 1, 1, now(), 1, 1, 1, 'BARCODE-1', 1, 1, 1 "
+        "where not exists (select 1 from lab.t_lab_sample_dtls where lab_sample_dtls_id = 1);"
+    )
+    psql(
+        "update lab.t_lab_sample_dtls set lab_sample_id=1, sample_no=1, order_id=1, order_details_id=1 "
+        "where lab_sample_dtls_id = 1 and (lab_sample_id is null or lab_sample_id <> 1);"
+    )
+    print("SEEDED lab.t_lab_sample_dtls lab_sample_dtls_id=1 (the sample DETAILS — the acceptOrReject load)")
+
     # --- verification ---
     counts = psql(
         "select (select count(*) from public.m_prefix_configuration where unit_id=1 and screen_id in (123,146,164,149) and is_deleted=false) "
