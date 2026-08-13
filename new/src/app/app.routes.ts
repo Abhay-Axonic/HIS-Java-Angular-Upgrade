@@ -2466,6 +2466,21 @@ export const routes: Routes = [
             (m) => m.OtManagerDashboardComponent
           ),
       },
+      // Report batch (2026-08-13): the T0-surviving read-only screens.
+      {
+        path: 'mlcReportingWorklist',
+        data: { title: 'MLC Reporting Worklist' },
+        loadComponent: () =>
+          import('./features/mlc-reporting-worklist/mlc-reporting-worklist').then(
+            (m) => m.MlcReportingWorklistComponent
+          ),
+      },
+      {
+        path: 'misReports',
+        data: { title: 'MIS Reports' },
+        loadComponent: () =>
+          import('./features/mis-reports/mis-reports').then((m) => m.MisReports),
+      },
       {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],
