@@ -2646,6 +2646,31 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-090 — THE HONEST PASS: every verdict live-vs-method + the count confirmed
+
+THE COUNT: REBUILD_COUNT.md's table lags (357 + the appended uncounted rows);
+the actual feature-dir census with the exclusion set (`_decoy-groundwork`,
+`_recheck-20-bucket`, `_screen-template`, `access-denied` — 4 dirs, 382 total)
+is **378 rebuilt**. The owner's 380 vs 378 = a 2-dir discrepancy, named:
+the file's own table is 21 rows behind the merges (the count is computed from
+the dirs, not from the file — the file's next update row should read 378).
+
+THE LIVE-VS-METHOD AUDIT (the question that moved the boundary three times):
+- **LIVE CAUSES ✓ (all of them):** the 15 confirmed phantoms (live SQL
+  errors), the 2 code defects (the I/O masked-partial was live-traced; the
+  admission gate's inversion is a code-read but its effect was live-seen in
+  the 501 chain), PatientFall + pharmacy (live literal-payload 400s), the 7
+  buildable (live renders + feeds), the incident/LIS/workload/histo/diag/
+  result-entry families (live 500s with named columns).
+- **METHOD — the two legacy-defect save-wiring verdicts** (medication's
+  saveRack-undefined, Uti's no-wired-save) rested on the static scan. LIVE-
+  TESTED this pass: both Save buttons were clicked through the app's own
+  login flow — both open the store-select modal (the bootstrap data-toggle)
+  with CLEAN consoles; the save function is not reached by the click (the
+  modal intercepts). The verdicts stand — the writes are not wired — but
+  the evidence is now the live click behavior, not the scan. No other
+  verdict leans on a method.
+
 ## DQ-2026-08-13-089 — THE SEVEN BUILDABLE BUILT (shorter loop): all seven render-trace gated and PASSED through the app's own login flow
 
 The seven from DQ-088, built as read-only screens (no T4/T5; the render
