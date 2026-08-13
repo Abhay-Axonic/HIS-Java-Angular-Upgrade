@@ -115,18 +115,27 @@ def main():
         "where not exists (select 1 from public.m_screen where id = 164);"
     )
     print("SEEDED m_screen id=164 'Walkin Prescription' (was missing; the getGeneratedNo join needs it)")
+    psql(
+        "insert into public.m_screen "
+        "(id, name, is_active, updated_by, updated_date, added_by, added_date, is_deleted, "
+        " code, is_prefix_required, organization_id, is_global, doctypenumber) "
+        "select 149, 'Blood Bag Issue Number', true, 1, now(), 1, now(), false, "
+        " 'BBI', true, 1, false, null "
+        "where not exists (select 1 from public.m_screen where id = 149);"
+    )
+    print("SEEDED m_screen id=149 'Blood Bag Issue Number' (the 4th config screen)")
 
     # Pre-check: the screens must exist in m_screen (the getGeneratedNo query
     # joins m_screen with is_global = false).
     missing = psql(
-        "select string_agg(s::text, ',') from unnest(array[123,146,164]) s "
+        "select string_agg(s::text, ',') from unnest(array[123,146,164,149]) s "
         "where not exists (select 1 from public.m_screen scr where scr.id = s and scr.is_global = false);"
     )
     if missing and missing.strip():
         print(f"PRE-CHECK: missing m_screen rows (is_global=false): {missing.strip()} — "
               f"the config rows would never be read; aborting")
         return 1
-    print("PRE-CHECK: screens 123/146/164 present in m_screen (is_global=false)")
+    print("PRE-CHECK: screens 123/146/164/149 present in m_screen (is_global=false)")
 
     # --- m_prefix_configuration rows (idempotent) ---
     # generated_code carries the legacy tokens: [SF] = the sequential running
@@ -137,6 +146,7 @@ def main():
         (146, "DON", "DON-[SF]", 8, 1, "donor registration number (DonorRegistrationServiceImpl:102)"),
         (164, "PRE", "PRE-[SF]", 8, 1, "walk-in prescription number (WalkInSalesService:1485)"),
         (123, "DEP", "DEP-[SF]", 8, 1, "deposit number (DepositMasterServiceImpl:124)"),
+        (149, "BBI", "BB-[SF]", 8, 1, "blood-bag-issue number (IssueBloodBagServiceImpl:56, BLOOD_BAG_ISSUE_NUMBER=149)"),
     ]
     for screen_id, code, generated_code, length, running_number, doc in rows:
         sql = (
@@ -229,9 +239,9 @@ def main():
 
     # --- verification ---
     counts = psql(
-        "select (select count(*) from public.m_prefix_configuration where unit_id=1 and screen_id in (123,146,164) and is_deleted=false) "
+        "select (select count(*) from public.m_prefix_configuration where unit_id=1 and screen_id in (123,146,164,149) and is_deleted=false) "
         "|| ' prefix rows, ' || "
-        "(select count(*) from public.t_prefix_running_number where unit_id=1 and store_id is null and screen_id in (123,146,164)) "
+        "(select count(*) from public.t_prefix_running_number where unit_id=1 and store_id is null and screen_id in (123,146,164,149)) "
         "|| ' running rows';"
     )
     print("VERIFY:", counts)

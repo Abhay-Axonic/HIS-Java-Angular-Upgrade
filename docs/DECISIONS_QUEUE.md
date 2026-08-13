@@ -2625,6 +2625,30 @@ completion path = the DQ-067 seed's blood-bank stock extension). The
 t_cross_match_register remains CLEAN (zero drift); the master rolls back on
 the error (atomic — nothing lands).
 
+## DQ-2026-08-13-072 — OPD-BILL (billing): the real endpoint is /api/billing/saveBillFromMobileApp/saveBill; the mobile-app BillDto 400s the minimal payload (contract-incomplete — the BR-035 phantom stands CONFIRMED)
+
+T0 sweep (park_sweep.py): the /api/billing/saveBill path was WRONG (the real
+mapping is BillingMasterController:3556 saveBillFromMobileApp/saveBill). With
+the corrected endpoint, the minimal payload -> HIS-400 (the mobile-app
+BillDto's Jackson — the field names unknown; the full legacy bill payload's
+construction is the next batch's item). The BR-035 phantom
+(package_applicable_date on billing.m_billing_master — the 5th CONFIRMED)
+stands CONFIRMED from the earlier live 501 evidence; this smoke's minimal
+payload dies at the Jackson before reaching it. PARK CLASS: contract-
+incomplete (the full legacy bill payload needed).
+
+## DQ-2026-08-13-071 — NURSING-ORDER (ADT, /api/opd/saveNursingOrderMapper): masked envelope was a TWO-LAYER contract NPE, not drift — RESOLVED BUILDABLE (the 6th BUILDABLE in the sweep)
+
+T0 sweep (park_sweep.py): the minimal payload -> HTTP 200 envelope
+{"status":"error","code":"500","message":"Something went wrong!!"} with
+nothing landed (MASKED-PARK). MECHANISM (catalina): NursingOrderMapperDaoImpl:54
+iterates the DTO's nursingOrderMapperDtoList (null -> the masked NPE), then
+:62-63 read startDate/stopDate (null -> the same masked NPE — the DAO's empty
+catch swallows both). With the list + the dates in the payload, the write
+LANDED: "Added Successfully." + a t_nursing_order_mapper row (verified,
+teardown clean). The table has NO drift flags (the INSERT passed clean).
+Upgraded: MASKED-PARK -> BUILDABLE.
+
 ## OPERATIONAL-DATA CLASS (2026-08-13) — a flow that needs an order, a requisition, a bag, stock, a donor and a cross-match before its write can be exercised is NOT a park and NOT a defect — it is evidence about the DEV DATABASE, not the backend
 
 Class rule (owner, 2026-08-13): a screen that can only be exercised in an
@@ -2642,6 +2666,14 @@ t_lab_sample_dtls drift flags remain UNREACHED — neither confirmed nor
 disconfirmed — and the per-table DDL diff is the cheap instrument for those.
 The completion path for both is operational data (a populated dev dataset),
 not a code fix.
+
+COMPOUNDING-SEED INSIGHT (2026-08-13): blood-issue's BUILDABLE came from the
+cross-match flow's OUTPUT becoming its INPUT — the first time seeding has
+COMPOUNDED rather than just filled a gap. Some of what looks like it needs
+real hospital data can be MANUFACTURED by flows already working. RULE for
+this class: BEFORE parking anything else in it, check whether an existing
+BUILDABLE flow can produce the missing reference — that may shrink the class
+considerably (blood-issue already moved OUT of it this way).
 
 ## DQ-2026-08-13-070 — BLOOD-ISSUE chain close-out: peeled 6 layers; the remaining blocker is the referenced cross-match (OPERATIONAL-DATA class)
 
@@ -2663,6 +2695,19 @@ PARK CLASS: context-dependent (the referenced cross-match row — the
 cross-match flow's own BUILDABLE path can supply it; the next seed item).
 The issue's INSERT never reached (the loads precede the master's save);
 t_issue_blood_bag's drift flags remain unconfirmed.
+
+RESOLVED 2026-08-13 (the cross-match fixture supplied the LAST layer):
+the persisted cross-match fixture (master 31 + detail 22, via the
+cross-match's own BUILDABLE path) fed the blood-issue's crossMatchRegisterId
++ the detail's crossMatchRegisterDetailsId — the final load passed and the
+write COMPLETED: "Added Successfully." + t_issue_blood_bag + details rows
+landed (verified 14/14 fixture-aware: issue rows teardown-clean, the input
+fixtures persist, zero leftovers). The 7th layer was the last. The flow is
+now BUILDABLE and moves OUT of the operational-data class (the environment's
+data — the seeded cross-match — supplied the final reference). The
+t_issue_blood_bag drift flag (cross_match_register_id) is KILLED by the
+smoke — the INSERT passed with the column (the DDL-present artifact the
+candidate's precheck predicted) — removed from the SUSPECT band (175 -> 174).
 
 ## DQ-2026-08-13-069 — LIS SAMPLE-REGISTRATION (central receiving): PARK — context-dependent (referenced lab order); endpoint LOCATED
 

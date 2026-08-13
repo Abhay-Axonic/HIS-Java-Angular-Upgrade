@@ -50,7 +50,7 @@ Comment-stripped totals and bands (all case-insensitive):
   DB): 177 (was 179; cash_in_out_id + cancel_reason_id + medication_type
   promoted out).
 - SUSPECT (name exists on ANOTHER table — plausible typo/mapping artifact,
-  e.g. orgnisation_id vs organisation_id; unverified): 175 (was 176;
+  e.g. orgnisation_id vs organisation_id; unverified): 174 (was 175;
   cross_match_register_id removed — DDL-present artifact: the column EXISTS
   on the flagged table, 3 matches anywhere).
 
@@ -83,6 +83,13 @@ code changes have unblocked NONE. Some of what looked like a broken backend
 was an unseeded environment; some of it is real drift (the two CONFIRMED
 promotions appeared the moment the seeding let the writes reach SQL); the
 seeding is what separates them.
+
+DEMOTION COUNTERPART (2026-08-13): cross_match_register_id on
+t_issue_blood_bag is the FIRST drift flag KILLED by a live write (SUSPECT
+175 -> 174) — the blood-issue's INSERT passed with the column (a DDL-present
+artifact the precheck predicted). It is the counterpart to the two
+promotions: the method CONFIRMS and DISCONFIRMS when it reaches SQL, which
+is the strongest argument that the bands are real rather than noise.
 resolves it. Use the sweep to SIZE and PRIORITIZE; use live calls to CONFIRM.
 
 ## Confirmed live instances (8) — the class as observed, not inferred
