@@ -35,7 +35,7 @@ flag (three promotions + one demotion below).
 
 ## 2. WHAT IS BROKEN AND NEEDS YOU — the confirmed phantoms + the code defects
 
-**Confirmed phantoms (15) — a column/table the application code references
+**Confirmed phantoms (17) — a column/table the application code references
 that does not exist in the database.** Each was hit by a live call (write or
 read). The fix is one of: drop the entity mapping / add the DDL column /
 create the missing relation.
@@ -57,6 +57,8 @@ create the missing relation.
 | 13 | billing.t_credit_note_detail | `status` | workloadDashboard's live SELECT (`column tcnd.status does not exist` — a READ-side kill; DQ-077) |
 | 14 | public (whole schema) | TABLE `user_chat_details` | incident/NABH reporting lists' live SELECT (`relation "public.user_chat_details" does not exist` — a phantom relation like #8, READ-side; DQ-081) |
 | 15 | lab.t_template_result | `block_capture_note` | histopathology getReport's live SELECT (`column ttemplater0_.block_capture_note does not exist` — a READ-side kill; DQ-082) |
+| 16 | LIS worklist (SearchDto family, `ltlsc`-aliased) | `status` | the report worklists' live SELECT (`column ltlsc.status does not exist` — the second `status` phantom; DQ-083) |
+| 17 | template_mst | `is_html_print` | diagnosticProcedureReport's live SELECT via `/api/global/templates/byService` (`column template_mst.is_html_print does not exist`; DQ-084) |
 
 **Two code defects (not drift — the code evaluates wrongly):**
 1. **Admission bed-occupancy gate** (`BedAllocationController.savePatientAdmission`,
