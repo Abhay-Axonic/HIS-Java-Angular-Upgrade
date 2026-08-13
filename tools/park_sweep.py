@@ -196,6 +196,18 @@ def main():
             "preclean": [
                 "delete from blood_bank.t_issue_blood_bag_details where issue_blood_bag_id > {pre_max};",
                 "delete from blood_bank.t_issue_blood_bag where issue_blood_bag_id > {pre_max};",
+                "delete from blood_bank.t_patient_requisition_details where remark='SMOKE-CM';",
+                "delete from blood_bank.m_blood_component_order_master where requisition_number='SMOKE-CM';",
+                "insert into blood_bank.m_blood_component_order_master "
+                "(blood_component_order_id, blood_component_id, requisition_date, requisition_on_date, priority, created_by, created_date, status, "
+                " updated_by, updated_date, unit_id, organization_id, patient_id, is_required, is_exported, is_requisition_closed, requisition_number) "
+                "values (1, 5, '2026-08-13', '2026-08-13', 1, 1, now(), 'A', 1, now(), 1, 1, "
+                " (select patient_id from patient.t_patient_details limit 1), 'Y', 'N', 'N', 'SMOKE-CM');",
+                "insert into blood_bank.t_patient_requisition_details "
+                "(patient_requisition_id, blood_component_order_id, doctor_id, requisition_type_id, hospital_id, required_blood_group_id, patient_blood_group_id, "
+                " component_id, blood_unit, remark, exported_to_cross_match, exported_to_reservation, patient_id, admission_id, created_by, created_date, status, updated_by, updated_date) "
+                "values (1, 1, 1, 1, 1, 1, 1, 5, 1, 'SMOKE-CM', 'N', 'N', "
+                " (select patient_id from patient.t_patient_details limit 1), null, 1, now(), 'A', 1, now());",
             ],
             "precounts": [("issue rows", "select count(*) from blood_bank.t_issue_blood_bag;")],
             "payload": lambda: {
@@ -206,12 +218,14 @@ def main():
                 "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
                 "btoId": 1, "issuerId": 1, "receivedId": 1, "bloodUnitQty": 1,
                 "bloodBagIssueNo": "ISSUE-1", "remarks": "smoke",
+                "crossMatchRegisterId": int(psql("select cross_match_register_id from blood_bank.t_cross_match_register where remark='fixture' order by 1 desc limit 1;") or 0),
                 "bloodBagIssueList": [{
                     "organizationId": 1, "unitId": 1,
                     "issueBloodBagStatusId": 1,
                     "bagNo": "SMOKE-BAG1", "segmentNo": "S1",
                     "bloodGroupId": 1, "componentId": 5,
                     "bloodBankStockId": int(psql("select blood_bank_stock_id from blood_bank.m_blood_bank_stock where blood_bag_no='SMOKE-BAG1';") or 0),
+                    "crossMatchRegisterDetailsId": int(psql("select cross_match_register_details_id from blood_bank.t_cross_match_register_details where cross_match_register_id = (select cross_match_register_id from blood_bank.t_cross_match_register where remark='fixture' order by 1 desc limit 1) order by 1 desc limit 1;") or 0),
                     "crossMatchReportResult": "Compatible",
                     "createdBy": 1, "updatedBy": 1, "status": "A",
                     "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
@@ -226,7 +240,7 @@ def main():
                 "delete from blood_bank.t_issue_blood_bag_details where issue_blood_bag_id > {pre_max};",
                 "delete from blood_bank.t_issue_blood_bag where issue_blood_bag_id > {pre_max};",
             ],
-            "leftover": "select count(*) from blood_bank.t_issue_blood_bag where issue_blood_bag_id > {pre_max};",
+            "leftover": "select (select count(*) from blood_bank.t_issue_blood_bag where issue_blood_bag_id > {pre_max}) + (select count(*) from blood_bank.t_issue_blood_bag_details where issue_blood_bag_id > {pre_max}) + (select case when count(*)=1 then 0 else 1 end from blood_bank.t_cross_match_register where remark='fixture');",
         },
         "lab-phlebotomist-collection": {
             "endpoint": "/LIS/PhlebotomistHomeCollection/save",
@@ -478,6 +492,60 @@ def main():
                 "delete from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};",
             ],
             "leftover": "select count(*) from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};",
+        },
+        "nursing-order (ADT, /api/opd/saveNursingOrderMapper)": {
+            "endpoint": "/api/opd/saveNursingOrderMapper",
+            "precheck": ("adt.t_nursing_order_mapper — the coversheet nursing-order writer; "
+                         "smoke decides"),
+            "pre_max_sql": "select coalesce(max(nursing_order_mapper_id),0) from adt.t_nursing_order_mapper;",
+            "preclean": [
+                "delete from adt.t_nursing_order_mapper where nursing_order_mapper_id > {pre_max};",
+            ],
+            "precounts": [("nursing rows", "select count(*) from adt.t_nursing_order_mapper;")],
+            "payload": lambda: {
+                "organizationId": 1, "unitId": 1,
+                "patientId": int(first_patient() or 0),
+                "createdBy": 1, "updatedBy": 1, "status": "A",
+                "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+                "nursingOrderMapperDtoList": [{
+                    "nursingOrderId": 1, "frequencyId": 1, "instruction": "smoke",
+                    "startDate": "13-08-2026 00:00:00", "stopDate": "13-08-2026 00:00:00",
+                    "createdBy": 1, "updatedBy": 1, "status": "A",
+                    "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+                }],
+            },
+            "postcounts": [
+                ("nursing", "select count(*) from adt.t_nursing_order_mapper where nursing_order_mapper_id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("nursing", 0)) > 0,
+            "teardown": [
+                "delete from adt.t_nursing_order_mapper where nursing_order_mapper_id > {pre_max};",
+            ],
+            "leftover": "select count(*) from adt.t_nursing_order_mapper where nursing_order_mapper_id > {pre_max};",
+        },
+        "opd-bill (billing, /api/billing/saveBillFromMobileApp/saveBill)": {
+            "endpoint": "/api/billing/saveBillFromMobileApp/saveBill",
+            "precheck": ("billing.m_billing_master flagged package_applicable_date (BR-035 — the 5th "
+                         "CONFIRMED, live 501 on the OPD bill write); smoke re-confirms"),
+            "pre_max_sql": "select coalesce(max(billing_master_id),0) from billing.m_billing_master;",
+            "preclean": [
+                "delete from billing.m_billing_master where billing_master_id > {pre_max};",
+            ],
+            "precounts": [("bill rows", "select count(*) from billing.m_billing_master;")],
+            "payload": lambda: {
+                "organizationId": 1, "unitId": 1,
+                "patientId": int(first_patient() or 0),
+                "createdBy": 1, "updatedBy": 1, "status": "A",
+                "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+            },
+            "postcounts": [
+                ("bill", "select count(*) from billing.m_billing_master where billing_master_id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("bill", 0)) > 0,
+            "teardown": [
+                "delete from billing.m_billing_master where billing_master_id > {pre_max};",
+            ],
+            "leftover": "select count(*) from billing.m_billing_master where billing_master_id > {pre_max};",
         },
     }
     results = {}
