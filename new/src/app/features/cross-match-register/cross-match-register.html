@@ -5,12 +5,19 @@
   </header>
 
   <div class="cmr-note">
-    Live-verified write (DQ-068): the full legacy payload lands the cross-match
-    master <em>and</em> its details rows. The worklist reads are session-gated
-    backend reads and are not wired here.
+    Order and requisition are REAL data you must supply — enter the live ids
+    or the save fails honestly. See README for the fixture-vs-standalone note.
   </div>
 
   <form class="cmr-form" (ngSubmit)="save()">
+    <label>
+      Blood component order ID (required)
+      <input type="number" [(ngModel)]="bloodComponentOrderId" name="bloodComponentOrderId" />
+    </label>
+    <label>
+      Patient requisition ID (required)
+      <input type="number" [(ngModel)]="patientRequisitionId" name="patientRequisitionId" />
+    </label>
     <div class="cmr-grid">
       <label>
         Patient ID

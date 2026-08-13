@@ -40,6 +40,20 @@ session reset); if the console later finds it, the guard can be added
 matching the phlebotomist's 155 pattern — until then an ungated route is the
 honest parity, and check_route_targets does not flag guard absence.
 
+## THE FIXTURE-DEPENDENCY (2026-08-13, owner click-through finding) — the merge gate's lesson
+
+The golden trace (master id 22) ran against the TRANSIENT SMOKE-CM fixtures
+(order + requisition at ids 1, created by the smoke and torn down by its
+teardown). The original screen defaulted to those ids — so a real user's
+save failed ("id to load", fixtures absent) while the trace's save had
+passed. **The trace proved the write's mechanics against a state the
+standalone screen cannot reach; the merge gate did not catch a
+fixture-dependent screen.** The screen now requires the live order /
+requisition ids as inputs (no fixture defaults) and fails honestly with the
+backend's message if they are absent. LESSON for future golden traces: run
+the trace against the state a real user can reach — seeded data only, never
+transient fixtures.
+
 ## Verification registers
 - park_sweep 18/18 (the stock extension + cross-match BUILDABLE + zero
   leftovers incl. the details table).

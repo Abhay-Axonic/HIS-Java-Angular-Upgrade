@@ -40,6 +40,17 @@ Payload contract (literal to `DonorRegistrationDto`, verified 2026-08-12):
 | Identification | GET /adt/getActiveIdentificationList | LIVE (4 rows) |
 | Patient autofill | POST /api/bloodbank/patientAutofillSearch | **TODO STUB** (empty 200) — NOT wired; control omitted (honest state) |
 
+## Dev-data notes (2026-08-13, owner click-through) — correct empties, not defects
+
+- **Nationality dropdown is empty**: `public.m_nationality_master` has ZERO
+  rows in dev (the table exists; the feed returns the correct empty list).
+  This is a dev-data gap, not a truncated feed — seed it or add rows in the
+  admin screens and the dropdown populates.
+- **Prefix has one option**: the donor's prefix feed filters the seeded
+  `m_prefix_configuration` by the donor screen (146) — exactly one row is
+  the CORRECT result of the filter; the 123/164/149 rows belong to other
+  screens. Additional donor prefixes would be a data addition, not a feed fix.
+
 ## Flow findings (DQ-056)
 
 - `donorNumber` is NULL (success envelope reads "Donor null Saved
