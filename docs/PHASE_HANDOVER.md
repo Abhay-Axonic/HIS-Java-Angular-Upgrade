@@ -60,6 +60,29 @@ create the missing relation.
 | 16 | LIS worklist (SearchDto family, `ltlsc`-aliased) | `status` | the report worklists' live SELECT (`column ltlsc.status does not exist` — the second `status` phantom; DQ-083) |
 | 17 | template_mst | `is_html_print` | diagnosticProcedureReport's live SELECT via `/api/global/templates/byService` (`column template_mst.is_html_print does not exist`; DQ-084) |
 
+**THE POSITION, RESTATED (2026-08-13, after the renders + the T0s — the
+boundary moved twice since this document first described it):**
+- **BUILDABLE (7 screens — read-verified, render-trace gated, read-only,
+  shorter loop):** radiologyReportValidation (feeds live), radiologyReportReleaseWorkList,
+  dueDepositReport (live rows), detailsConsignmentManagerDashboard,
+  MPShahEncounterList, MPShahEncounterSummary, MPShahPatientList.
+- **DRIFT-BLOCKED (~20 screens — the 15 confirmed phantoms + the 2 code
+  defects, each named above and in section 5):** the incident/NABH family
+  (the user_chat_details table), the LIS family (the ltlsc status + icmr_id),
+  result-entry (icmr_id), diag-proc (is_html_print), workloadDashboard
+  (tcnd.status), histopathology (block_capture_note), + the transaction
+  parks.
+- **LEGACY-DEFECT (3 — the screens' own writes are broken in the legacy):**
+  medicationErrorReporting (Save calls the undefined saveRack), UtiReporting
+  (no wired save path), PatientFallReporting (its own literal payload gets a
+  service-level 400).
+- **OPEN EXCAVATION (1):** the pharmacy save (its own literal payload gets a
+  non-Jackson 400; the DTO mismatch named in DQ-085).
+- **THE SHELL CLASS IS EMPTY** (11 of 11 live-rendered "shells" are real
+  screens — ledger #14); **the contract-wall class has dissolved** (six of
+  its verdicts were probe-shape and have since become confirmed drift,
+  legacy defects, or builds — ledger #13).
+
 **Two code defects (not drift — the code evaluates wrongly):**
 1. **Admission bed-occupancy gate** (`BedAllocationController.savePatientAdmission`,
    the `isBedBookedOrNot` gate): returns "Bed is already occupied" for
