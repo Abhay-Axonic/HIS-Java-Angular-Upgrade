@@ -1,3 +1,23 @@
+## DQ-2026-08-13-092 — THE PROXY GAP DIAGNOSED PROPERLY (env-class, not the phantom ledger)
+
+(a) The proxy is NOT the gap: angular.json:75 wires proxyConfig; the file
+maps /adt/** → :8080; curl through :4201 returns the BACKEND's 401s, not the
+SPA's fallback; the dueDeposit's live rows rendered THROUGH the proxy. The
+one 404 was `getCountAmbulanceTypeList` — not mapped in the backend's
+AmbulanceController (checked the whole Global module; the legacy's own
+screen calls the same phantom — the count is broken in the legacy too). The
+three dropdown feeds (getAmbulanceTypeActiveList / getServiceProviderActiveList
+/ getAmbulanceFacilitiesActiveList) are mapped POSTs and 200 through the proxy.
+(b) The fix is the PER-SERVICE PATH CONVENTION: not the proxy.conf (works),
+not the API_BASE_URL ('' same-origin is correct; production where the
+backend serves the SPA is unchanged — the proxy is dev-only). Services must
+call only mapped endpoints; auxiliary calls (counts) degrade instead of
+toasting. Applied to the ambulance getCount (catchError → benign 0).
+(c) PROVED live (the control): all five calls fire; the three dropdown
+feeds 200; the count 404 now degrades silently; the console is clean; no
+toast. Env-class — recorded in the campaign's ENVIRONMENT PREREQUISITE, not
+in the phantom ledger.
+
 # DECISIONS_QUEUE — owner review items queued during the campaign cycles
 
 Each entry: what was found, why it needs a decision (not an autonomous fix), the
