@@ -1,0 +1,30 @@
+<div class="st-wrap">
+  <header class="st-header">
+    <h2>Sample Type Master</h2>
+    <span class="st-sub">LIS — write BUILDABLE, ungated parity route</span>
+  </header>
+
+  <div class="st-note">
+    This flow's output (the sample-type row) is the LIS central-receiving's
+    sample-type reference — the compounding rule's second instance.
+  </div>
+
+  <form class="st-form" (ngSubmit)="save()">
+    <label>
+      Sample code
+      <input [(ngModel)]="sampleCode" name="sampleCode" placeholder="SAMPLE-NEW" />
+    </label>
+    <label>
+      Description
+      <input [(ngModel)]="sampleDesc" name="sampleDesc" placeholder="demo sample type" />
+    </label>
+    <label>
+      Status
+      <input [(ngModel)]="sampleStatus" name="sampleStatus" placeholder="A" />
+    </label>
+
+    <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Add Sample Type' }}</button>
+  </form>
+
+  <p class="st-result" [class.ok]="ok()" [class.err]="!ok() && result()">{{ result() }}</p>
+</div>

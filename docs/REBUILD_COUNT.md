@@ -33,3 +33,6 @@ table above with the merge hash and the running total. The transaction phase
 targets the remaining ~170 (≈108 transaction + 35 reports + 13 dashboards
 per DQ-025/032/034) — update the count as each merges.
 | 9 | crossMatchRegister (blood bank) — FIFTH TRANSACTION FORM (T0-T6 signed flow map: write BUILDABLE DQ-068 after the SEVEN-LAYER contract peel + the DQ-067 stock extension; golden trace landed master id 22 + 1 detail with the exact form values, teardown clean incl. the DETAILS table — the TEARDOWN RULE; PARITY RECORD: legacy states app.js:18494/18500 ungated -> ungated route; BR-041 legacy issueDate NPE found while contract-hunting) — pending merge of rebuild/deposit-walkin-batch | 1 new (blood bank) | **359** |
+| 10 | bloodIssue (blood bank issue) — the 6th signed flow (T0 DQ-070 BUILDABLE via the compounding seed; golden trace row 87 | patient 1 | created_by 1; teardown covers the master + details + fixtures) |
+| 11 | nursingOrder (ADT) — the 7th signed flow (T0 DQ-071, the two-layer NPE peel; golden trace row 9 | created_by 1) |
+| 12 | labSampleType (LIS) — the 8th signed flow (T0 BUILDABLE; golden trace 'Record added successfully.' + clean teardown; the compounding rule's 2nd instance — its output feeds the LIS) |

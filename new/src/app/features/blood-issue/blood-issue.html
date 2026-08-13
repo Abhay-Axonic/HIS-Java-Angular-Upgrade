@@ -1,0 +1,42 @@
+<div class="bi-wrap">
+  <header class="bi-header">
+    <h2>Issue Blood Bag</h2>
+    <span class="bi-sub">Blood Bank — write BUILDABLE (DQ-070), ungated parity route</span>
+  </header>
+
+  <div class="bi-note">
+    Demo context: the seeded stock bag (SMOKE-BAG1), donor and cross-match
+    reference. See README for the seven-layer T0 chain.
+  </div>
+
+  <form class="bi-form" (ngSubmit)="save()">
+    <label>
+      Patient ID
+      <input type="number" [(ngModel)]="patientId" name="patientId" />
+    </label>
+    <label>
+      Issuer ID
+      <input type="number" [(ngModel)]="issuerId" name="issuerId" />
+    </label>
+    <label>
+      Received by (ID)
+      <input type="number" [(ngModel)]="receivedId" name="receivedId" />
+    </label>
+    <label>
+      Units
+      <input type="number" [(ngModel)]="bloodUnitQty" name="bloodUnitQty" />
+    </label>
+    <label>
+      Issue date (dd-MM-yyyy HH:mm:ss)
+      <input [(ngModel)]="issueDate" name="issueDate" placeholder="13-08-2026 00:00:00" />
+    </label>
+    <label>
+      Remarks
+      <input [(ngModel)]="remarks" name="remarks" placeholder="demo issue" />
+    </label>
+
+    <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save Issue' }}</button>
+  </form>
+
+  <p class="bi-result" [class.ok]="ok()" [class.err]="!ok() && result()">{{ result() }}</p>
+</div>

@@ -2134,6 +2134,24 @@ export const routes = [
                 data: { title: 'Cross Match Register' },
                 loadComponent: () => import('./features/cross-match-register/cross-match-register').then((m) => m.CrossMatchRegisterComponent),
             },
+            // UNGATED parity routes (2026-08-13): the legacy issueBloodBag (app.js:18516),
+            // nursingOrder (app.js:4719) and LIS sample-type states have NO resolve block —
+            // exact parity (the cross-match precedent); check_route_survival guards survival.
+            {
+                path: 'bloodIssue',
+                data: { title: 'Issue Blood Bag' },
+                loadComponent: () => import('./features/blood-issue/blood-issue').then((m) => m.BloodIssue),
+            },
+            {
+                path: 'nursingOrder',
+                data: { title: 'Nursing Order' },
+                loadComponent: () => import('./features/nursing-order/nursing-order').then((m) => m.NursingOrder),
+            },
+            {
+                path: 'labSampleType',
+                data: { title: 'Sample Type Master' },
+                loadComponent: () => import('./features/lab-sample-type/lab-sample-type').then((m) => m.LabSampleType),
+            },
             {
                 path: 'allInclusivePackage',
                 canActivate: [moduleAccessGuard],
