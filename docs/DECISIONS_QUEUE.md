@@ -2646,6 +2646,54 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-077 — THE FOUR DRIFT-ADJACENT DASHBOARDS: T0 verdicts (2 BUILDABLE, 1 drift-PARKED, 1 shell) + the 13th CONFIRMED phantom
+
+T0 smoked the PRIMARY READ of each drift-adjacent dashboard (DQ-076):
+- **fundStatusDashboard — BUILDABLE (shorter loop, render-trace gate):** the
+  three reads all 200 (getActiveTrustList, getTrustList,
+  getFundCollectionListByTrust — the 405 on GET was a wrong-method probe;
+  POST is the method). Built + render-traced (route renders, honest empty
+  panels). The billing family's writes stay drift-blocked; these reads
+  survive — the (b) verdict's informative direction.
+- **storeStockDashboard — BUILDABLE (shorter loop, render-trace gate):**
+  GET `/api/global/user/stores/1/1/1` → 200 with REAL data (Linen Store,
+  Test Main Store — the first `/api/user/stores` 404 was a wrong-root
+  probe; the constant's root is `/api/global`). Built + render-traced
+  (the live stores render through the browser). The remaining stock feeds
+  are honest-empty (unprobed this pass) and stated so in the README.
+- **workloadDashboard — PARKED: READ-SIDE DRIFT CONFIRMED — the 13th
+  CONFIRMED phantom: `status` on `billing.t_credit_note_detail`**
+  (LabDashBoardDaoImpl.getFilteredDashBoardList; `column tcnd.status does
+  not exist` — tcnd = billing.t_credit_note_detail; the workload's SELECT
+  dies at SQL). The owner's (b) PROVEN: the read dies the same way a write
+  does. Its flags (t_lab_test_result/t_lab_sample_dtls) stay unreached.
+- **dueDepositDashboard — SHELL (confirmed, not parked):** the state binds
+  the shared MasterController with zero API calls (live-verified). The
+  static shell class held up under the live probe — but per the
+  classification-honesty rule it is recorded as CONFIRMED-SHELL, not
+  parked-on-static.
+
+Both buildable dashboards' READMEs state plainly: THE GATE IS A RENDER
+TRACE — NOT A WRITE-VERIFIED SCREEN.
+
+## DQ-2026-08-13-076 — READ-SIDE DRIFT (owner correction, recorded): read-only does NOT make a screen safe from drift
+
+The owner corrected the sweep's (b) framing: "read-only does NOT make a
+screen safe from drift — icmr_id was itself a read-side kill. A dashboard
+reading a drift-hit table dies the same way a write does." The T0 rule
+transfers unchanged: SMOKE THE PRIMARY READ FIRST. A dashboard whose smoke
+SELECT dies on a phantom is park-or-banner, not a build; one whose smoke
+completes is buildable even while its family's writes are drift-blocked.
+The four drift-adjacent dashboards (workloadDashboard, storeStockDashboard,
+fundStatusDashboard, dueDepositDashboard) are the first batch precisely
+because their verdicts are informative either way: buildable proves reads
+survive where writes do not on the same tables; parked confirms drift kills
+both sides. For any buildable: the SHORTER LOOP (no T4, no T5, render trace
+as the merge gate) — each README states plainly the gate is a render trace,
+never a write-verified screen. The nine dangle/shell candidates remain
+STATIC classes — each needs a live probe before parking; none is parked on
+the static read alone.
+
 ## DQ-2026-08-13-075 — THE FIXTURE-DEPENDENCY AUDIT (all eight flows, per-flow verdicts) — ONE additional instance found and fixed
 
 Owner's click found the cross-match; the audit checked all eight the same
