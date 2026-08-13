@@ -2646,6 +2646,37 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-084 — THE FIVE OPEN ITEMS' VERDICTS (the full-payload standard met on four of five): result-entry DRIFT (#12's second screen), diag-proc DRIFT (#17), pharmacy probe-shape (the excavation continues), the trio's two renders login-blocked
+
+- **result-entry — DRIFT-KILLED (the 12th CONFIRMED's second screen):** the
+  controller's literal payload (`$scope.tBiochemicalTestMasterDto`, the
+  biochemicalResultDetailsController's exact shape — master with
+  labSampleDtlsId/orgId/orgUnitId/createdBy/dates/isDeleted/isCompleted +
+  the details list) passes Jackson and dies at SQL: `column labsampled0_.
+  icmr_id does not exist` — the entity @Column on lab.t_lab_sample_dtls,
+  already CONFIRMED as #12 (the LIS central-receiving was the first screen).
+  The NPE-chain was never the story; the SELECT of the lab sample is.
+- **diag-proc — DRIFT-KILLED — the 17th CONFIRMED: `is_html_print` on the
+  `template_mst` table.** The 400s were the WRONG endpoint: the controller's
+  ACTIVE path is `/api/global/templates/byService` (the
+  `/api/dignostic/diagnosisProcedure/templates` line is commented out). The
+  literal payload (orgId/unitId/doctorId/specialityId/templateTypeId/
+  isTemplateTypeReq/serviceId...) passes Jackson and the SELECT dies at
+  `column template_mst.is_html_print does not exist`.
+- **pharmacy issue — PROBE-SHAPE (the excavation continues, honestly):** the
+  500s were the organizationId spelling (TemplateReqDto) then the
+  PharmacologyUpdate fields, then the PharmacologyUpdateItem's (`id` not
+  `itemId`); the current 400 is a non-Jackson "Bad request: Invalid
+  parameters" (no Unrecognized-field in the log — a service-level
+  validation). NOT a verdict on the backend yet.
+- **The trio's two unrendered members (UtiReporting, PatientFallReporting):
+  the renders remain LOGIN-BLOCKED** (the recurring session collision —
+  env-fault; setup_spa_session.py clears it, the login lands, the cookie is
+  set, and the Uti/PatientFall states still bounce to the login — the
+  loop is not yet broken for these two). medicationErrorReporting remains
+  the confirmed REAL write screen; the two are SUSPECT for the same reason
+  and the render is OWED, not a verdict.
+
 ## DQ-2026-08-13-083 — THE FULL-PAYLOAD PASS (the owner's order): the LIS Search family RETRACTED to drift — the 16th CONFIRMED phantom + the result-entry/diag chain + the trio's re-classification
 
 The pass that re-examined the probe-shape verdicts with the full-payload
