@@ -1,3 +1,49 @@
+## DQ-2026-08-13-094 — OVERNIGHT SURVEY, TURN 1: the top-20 complexity batch + the automated classes + the write-smoke auth mechanism FIXED (probe-shape at scale)
+
+THE AUTH MECHANISM (a tool-level lesson, recorded): the backend 401s a
+token-only call AND a cookie-only call — the full shape is Authorization
+Bearer + userId/unitId/organizationId headers + the `cookieObject` cookie
+(the SessionHandlerInterceptor URL-decodes it into the session DTO).
+capture_survey_session.py (new tool, /usr/bin/python3 — the env with
+playwright) does one real UI login and caches (token, cookie, unit) to
+tools/.survey_cookie.json (GITIGNORED — a live credential). The FIRST
+harness bug: get_dev_token's cookie value carries a `cookieObject=` prefix —
+sent raw, the server's Gson saw `cookieObject={...` and 500'd BEGIN_OBJECT-
+at-column-13; stripping + URL-decoding fixed it. The control (allergy save)
+then returns the real 200-error envelope instead of the 500.
+
+THE 400-PROBE CLASS AT SCALE (ledger #13's discipline, automated): with the
+correct auth, census-era writes 400 at Jackson on the generic seeds —
+`orgId` → `organizationId` → `orgUnitId` → per-DTO names, each 400 naming
+the next unknown field AND printing the DTO's complete known-properties
+list. The known-props payload round still 400s (the next unknown /
+collection-shape fields) — the full-payload loop is ~2-4 iterations per
+screen, OWED per screen across the ~200 write screens.
+
+THE AUTOMATED HALF (static hypotheses, Rule 10 — render/call before verdict):
+- bare-toast old-shape: 105 features (no err?.error?.message)
+- C9 dead-filter hypotheses: 8 screens (searchKeyword/issueNo/tab*IndentNo
+  bound but never read: asset-issue-acceptance, asset-scheduler,
+  corrective-maintenance-schedule-worklist, corrective-maintenance-worklist,
+  rejected-asset-acceptance, linen-issue)
+- fixture-default (hardcoded id 10): 10 screens
+- endpoint-vs-backend: 293 unresolved service paths across ~90 screens
+  (hypotheses — the ambulance-count class; the live smokes verify them)
+- route-target PASS (382) + route-survival PASS
+- the top-20 complexity list (the owner's next click batch): book-appointment,
+  detail-schedule-worklist, details-corrective-maintenance-schedule-worklist,
+  pm-request, pm-schedule, asset-scheduler, add-new-corrective-maintenance,
+  ai-button-configuration, bank-master, bed-master, checklist-equipment-mapper,
+  corrective-maintenance-return-worklist, currency-master,
+  general-insurance-master, generic-master, hospital-master, insurance-master,
+  mis-reports, organization-master, assigning-picker-dispenser
+
+BATCH A (45 census-era writes): 44× HIS-400 probe-shape (Jackson — payload
+never reached SQL; a probe limitation, NOT a verdict) + 1× 405
+(asset-return-acceptance-details — endpoint exists, wrong method — a real
+endpoint-shape finding). ZERO landed, ZERO drift-500 yet — nothing to
+tear down; the psql marker-check is OWED once any envelope lands.
+
 ## DQ-2026-08-13-092 — THE PROXY GAP DIAGNOSED PROPERLY (env-class, not the phantom ledger)
 
 (a) The proxy is NOT the gap: angular.json:75 wires proxyConfig; the file
