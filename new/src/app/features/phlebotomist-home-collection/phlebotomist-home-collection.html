@@ -1,0 +1,50 @@
+<div class="phc-wrap">
+  <header class="phc-header">
+    <h2>Home Collection</h2>
+    <span class="phc-sub">LIS / Phlebotomy — module 155</span>
+  </header>
+
+  <div class="phc-state phc-deferred">
+    <p>
+      <strong>Classification:</strong> allocation + save form (write-path).
+      The save is live-verified (BUILDABLE, DQ-061); the search feed
+      (<code>/LIS/PhlebotomistHomeCollection/getUserAllocationHomeCollectionList</code>)
+      is session-gated and not wired — this form exposes the verified write.
+    </p>
+  </div>
+
+  <section class="phc-form">
+    <h3>Record a phlebotomist home collection</h3>
+    <label class="phc-field">
+      <span>Phlebotomist user id</span>
+      <input type="number" [(ngModel)]="form().userId" name="userId" placeholder="1" />
+    </label>
+    <label class="phc-field">
+      <span>Collection date</span>
+      <input type="text" [(ngModel)]="form().collectionDate" name="collectionDate"
+             placeholder="dd-MM-yyyy HH:mm:ss" />
+    </label>
+    <label class="phc-field">
+      <span>From time (HH:mm:ss)</span>
+      <input type="text" [(ngModel)]="form().fromTime" name="fromTime" placeholder="10:00:00" />
+    </label>
+    <label class="phc-field">
+      <span>To time (HH:mm:ss)</span>
+      <input type="text" [(ngModel)]="form().toTime" name="toTime" placeholder="11:00:00" />
+    </label>
+    <button class="phc-save" (click)="save()" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : 'Save home collection' }}
+    </button>
+
+    @if (saveMessage()) {
+      <div class="phc-state phc-probe">
+        <p>{{ saveMessage() }}</p>
+      </div>
+    }
+    @if (saveError()) {
+      <div class="phc-state phc-error">
+        <p>{{ saveError() }}</p>
+      </div>
+    }
+  </section>
+</div>

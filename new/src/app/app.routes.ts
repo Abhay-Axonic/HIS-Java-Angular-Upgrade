@@ -2348,6 +2348,21 @@ export const routes: Routes = [
           import('./features/shift-closing/shift-closing').then((m) => m.ShiftClosing),
       },
       {
+        // DELIBERATE PARITY, NOT AN OMISSION (phlebotomist home collection,
+        // module 155): the legacy state (app.js:7091 userAllocationForHomecollection)
+        // has NO resolve/module check — its access control is the MENU-level
+        // module presence. The guard with moduleId 155 reproduces that menu
+        // gate exactly. Do NOT remove the guard silently; see the feature
+        // README (parity record).
+        path: 'phlebotomistHomeCollection',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 155, title: 'Home Collection' },
+        loadComponent: () =>
+          import('./features/phlebotomist-home-collection/phlebotomist-home-collection').then(
+            (m) => m.PhlebotomistHomeCollection,
+          ),
+      },
+      {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 625, title: 'All Inclusive Package' },

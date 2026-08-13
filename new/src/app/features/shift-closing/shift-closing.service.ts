@@ -3,7 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../core/api-config';
 import { ApiResponse } from '../../core/api-response';
-import { RefundListProbe, ShiftClosingRefundRow } from './shift-closing.models';
+import {
+  RefundListProbe,
+  ShiftClosingRefundRow,
+  ShiftCloseSave,
+  ShiftCloseBalanceRow,
+} from './shift-closing.models';
 
 /**
  * Endpoint + payload taken directly from the legacy
@@ -37,6 +42,18 @@ export class ShiftClosingService {
   getRefundList(payload: RefundListProbe): Observable<ApiResponse<never, ShiftClosingRefundRow>> {
     return this.http.post<ApiResponse<never, ShiftClosingRefundRow>>(
       `${this.base}/api/global/getRefundList`,
+      payload,
+    );
+  }
+
+  // ctrl:shiftClosingController.js save-close block — POST
+  // /api/global/saveShiftCloseBalance (ShiftClosingMasterController:146).
+  // Live-verified 2026-08-13 (BUILDABLE, DQ-059): HTTP 200 "Added
+  // Successfully." + billing.m_shift_close_balance row lands; honest
+  // rethrow on failure (no masking — the controller rethrows).
+  saveShiftCloseBalance(payload: ShiftCloseSave): Observable<ApiResponse<ShiftCloseBalanceRow, never>> {
+    return this.http.post<ApiResponse<ShiftCloseBalanceRow, never>>(
+      `${this.base}/api/global/saveShiftCloseBalance`,
       payload,
     );
   }

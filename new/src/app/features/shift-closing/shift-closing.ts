@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../core/session.service';
 import { ShiftClosingService } from './shift-closing.service';
 import { ShiftClosingRefundRow } from './shift-closing.models';
@@ -26,7 +27,7 @@ import { ShiftClosingRefundRow } from './shift-closing.models';
 @Component({
   selector: 'app-shift-closing',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './shift-closing.html',
   styleUrl: './shift-closing.scss',
 })
@@ -84,5 +85,59 @@ export class ShiftClosing {
       String(row.uhidNumber ?? '—'),
       String(row.amount ?? '—'),
     ];
+  }
+
+  // ---- shift-close WRITE (BUILDABLE, DQ-059) ---------------------------
+  readonly form = signal<{ difference: number | null; refundAmount: number | null }>({
+    difference: null,
+    refundAmount: null,
+  });
+  readonly saving = signal(false);
+  readonly saveMessage = signal('');
+  readonly saveError = signal('');
+  readonly savedId = signal<number | null>(null);
+
+  /** Today as 'dd-M-yyyy' — the mapper's parse format (time suffixes mangle). */
+  today(): string {
+    const d = new Date();
+    return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+  }
+
+  save(): void {
+    this.saving.set(true);
+    this.saveMessage.set('');
+    this.saveError.set('');
+    this.savedId.set(null);
+    const date = this.today();
+    this.service
+      .saveShiftCloseBalance({
+        organizationId: this.session.organizationId ?? 1,
+        unitId: this.session.unitId ?? 1,
+        createdBy: this.session.userId ?? 1,
+        updatedBy: this.session.userId ?? 1,
+        createdDate: date,
+        updatedDate: date,
+        status: 'A',
+        difference: this.form().difference ?? undefined,
+        refundAmount: this.form().refundAmount ?? undefined,
+        listOfIds: [],
+      })
+      .subscribe({
+        next: (res) => {
+          this.saving.set(false);
+          if (res.status === 'success') {
+            this.savedId.set(res.object?.id ?? null);
+            this.saveMessage.set(
+              `Shift-closing balance saved.${res.object?.id ? ` balanceId: ${res.object.id}` : ''}`,
+            );
+          } else {
+            this.saveError.set(`Backend rejected: ${res.message ?? 'unknown'}`);
+          }
+        },
+        error: (err) => {
+          this.saving.set(false);
+          this.saveError.set(`Request failed: ${err?.status ?? 'unknown'} ${err?.message ?? ''}`);
+        },
+      });
   }
 }

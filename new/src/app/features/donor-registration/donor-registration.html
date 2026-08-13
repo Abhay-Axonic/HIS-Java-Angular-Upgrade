@@ -4,39 +4,160 @@
     <span class="dr-sub">Blood Bank / Donor — screen 719 (legacy state donorRegistration)</span>
   </header>
 
-  <p class="dr-muted">
-    Write-path form, no list endpoint — the legacy state is a donor-registration
-    form (donorRegistrationController, app.js:18128), deferred to the
-    transaction methodology (DQ-2026-08-12-034). The only live feed on its path
-    is the prefix master list (1 row) — rendered below.
-  </p>
-
-  @if (loading()) {
-    <p class="dr-muted">Loading prefixes…</p>
-  } @else if (error()) {
+  @if (feedsError()) {
     <div class="dr-state dr-error">
-      <p>{{ error() }}</p>
+      <p>{{ feedsError() }}</p>
     </div>
+  }
+
+  @if (loadingFeeds()) {
+    <p class="dr-muted">Loading feeds…</p>
   } @else {
-    <table class="dr-table">
-      <thead>
-        <tr>
-          <th>Prefix Code</th>
-          <th>Description</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of rows(); track row.prefixId) {
-          <tr>
-            @for (cell of rowCells(row); track $index) {
-              <td>{{ cell }}</td>
+    <form class="dr-form" (ngSubmit)="onSave()" novalidate>
+      <div class="dr-row">
+        <label class="dr-field dr-field-wide">
+          <span class="dr-label">Prefix *</span>
+          <select [(ngModel)]="form().prefixId" name="prefixId">
+            <option [ngValue]="null">— select —</option>
+            @for (p of prefixes(); track p.prefixId) {
+              <option [ngValue]="p.prefixId">{{ p.prefixCode }} — {{ p.prefixDesc }}</option>
             }
-          </tr>
-        } @empty {
-          <tr><td colspan="3" class="dr-empty">No records.</td></tr>
-        }
-      </tbody>
-    </table>
+          </select>
+        </label>
+      </div>
+
+      <div class="dr-row">
+        <label class="dr-field">
+          <span class="dr-label">First name *</span>
+          <input [(ngModel)]="form().firstName" name="firstName" placeholder="First name" />
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Middle name</span>
+          <input [(ngModel)]="form().middleName" name="middleName" placeholder="Middle name" />
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Last name *</span>
+          <input [(ngModel)]="form().lastName" name="lastName" placeholder="Last name" />
+        </label>
+      </div>
+
+      <div class="dr-row">
+        <label class="dr-field">
+          <span class="dr-label">Date of birth *</span>
+          <input type="date" [(ngModel)]="form().dob" name="dob" />
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Gender *</span>
+          <select [(ngModel)]="form().genderId" name="genderId">
+            <option [ngValue]="null">— select —</option>
+            @for (g of genders(); track g.id) {
+              <option [ngValue]="g.id">{{ g.desc }}</option>
+            }
+          </select>
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Blood group *</span>
+          <select [(ngModel)]="form().bloodGroupId" name="bloodGroupId">
+            <option [ngValue]="null">— select —</option>
+            @for (b of bloodGroups(); track b.bloodGroupId) {
+              <option [ngValue]="b.bloodGroupId">{{ b.bloodGroupCode }} — {{ b.bloodGroupDesc }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <div class="dr-row">
+        <label class="dr-field dr-field-narrow">
+          <span class="dr-label">Calling code *</span>
+          <input [(ngModel)]="form().countryCallingCode" name="countryCallingCode" placeholder="91" />
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Mobile number *</span>
+          <input [(ngModel)]="form().mobileNumber" name="mobileNumber" placeholder="10 digits" maxlength="10" />
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Email</span>
+          <input [(ngModel)]="form().email" name="email" placeholder="email" />
+        </label>
+      </div>
+
+      <div class="dr-row">
+        <label class="dr-field">
+          <span class="dr-label">Nationality *</span>
+          <select [(ngModel)]="form().nationalityId" name="nationalityId">
+            <option [ngValue]="null">— select —</option>
+            @for (n of nationalities(); track $index) {
+              <option [ngValue]="n.id">{{ n.desc }}</option>
+            }
+          </select>
+          @if (nationalities().length === 0) {
+            <span class="dr-muted dr-note">
+              Nationality feed is empty in this environment (BR-2026-08-12-038:
+              field optional while the feed has no rows).
+            </span>
+          }
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Identification type *</span>
+          <select [(ngModel)]="form().identificationTypeId" name="identificationTypeId">
+            <option [ngValue]="null">— select —</option>
+            @for (i of identifications(); track i.identificationId) {
+              <option [ngValue]="i.identificationId">{{ i.identificationName }}</option>
+            }
+          </select>
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Identification number *</span>
+          <input [(ngModel)]="form().identificationNumber" name="identificationNumber" placeholder="Doc number" />
+        </label>
+      </div>
+
+      <div class="dr-row">
+        <label class="dr-field">
+          <span class="dr-label">Document expiry *</span>
+          <input type="date" [(ngModel)]="form().documentExpiry" name="documentExpiry" />
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Donor type *</span>
+          <select [(ngModel)]="form().donoTypeId" name="donoTypeId">
+            <option [ngValue]="null">— select —</option>
+            @for (t of donorTypes(); track t.bloodDonorTypeId) {
+              <option [ngValue]="t.bloodDonorTypeId">{{ t.bloodDonorTypeCode }} — {{ t.bloodDonorTypeDesc }}</option>
+            }
+          </select>
+        </label>
+        <label class="dr-field">
+          <span class="dr-label">Address</span>
+          <input [(ngModel)]="form().address" name="address" placeholder="Address" />
+        </label>
+      </div>
+
+      @if (saveError()) {
+        <div class="dr-state dr-error">
+          <p>{{ saveError() }}</p>
+        </div>
+      }
+
+      @if (savedMessage()) {
+        <div class="dr-state dr-success">
+          <p>{{ savedMessage() }}</p>
+          @if (result(); as r) {
+            <p class="dr-muted">
+              donorId: {{ r.donorId ?? '—' }}
+              @if (r.donorNumber) {
+                · donor number: {{ r.donorNumber }}
+              }
+            </p>
+          }
+        </div>
+      }
+
+      <div class="dr-actions">
+        <button type="submit" class="dr-btn dr-btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save Donor' }}
+        </button>
+        <button type="button" class="dr-btn" (click)="reset()">Reset</button>
+      </div>
+    </form>
   }
 </div>
