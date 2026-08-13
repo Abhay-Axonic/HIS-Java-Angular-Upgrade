@@ -2646,6 +2646,27 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-082 — THE TWO PROBE-PENDING 404s RESOLVED: incident-cat BUILDABLE + built; histo-get DRIFT-KILLED — the 15th CONFIRMED phantom
+
+The last two genuine unknowns, resolved (both 404s were probe-shape, not
+class):
+- **incident-cat — BUILDABLE + BUILT:** the real path is GET
+  `/api/global/unit/getActiveIncidentCategoryMaster/{orgId}/{unitId}` (path
+  params — my 404 was a param-less POST). Smoked 200 with REAL rows
+  (incidentCategoryId 2, INC3). Built as the read-only incident-category
+  screen (shorter loop, render-trace gate in the README, precheck passed).
+- **histo-get — DRIFT-KILLED — the 15th CONFIRMED phantom: `block_capture_note`
+  on `lab.t_template_result`** (the real path GET
+  `/LIS/histopathology/getReport/{templateResId}/{orgId}/{orgUnitId}` — my
+  404 was the wrong endpoint name, getReportDetails vs getReport; the 500's
+  SQLGrammarException: `column ttemplater0_.block_capture_note does not
+  exist` — TTemplateResultDaoImpl:222 selects it, the FROM is
+  lab.t_template_result (line 228), and no template-result table has the
+  column (psql 0). Read-side kill; the histopathology report flow parks
+  until the entity/DDL mismatch is fixed.
+
+No probe-pending candidates remain — every named screen now has a verdict.
+
 ## DQ-2026-08-13-081 — THE 35 REPORTS' SWEEP + T0s: MIS/MLC live, the incident/NABH family drift-killed by a phantom TABLE (the 14th CONFIRMED), the LIS Search family contract-walled
 
 The reports' sweep (the same shape as every subtree: classify, T0 the primary

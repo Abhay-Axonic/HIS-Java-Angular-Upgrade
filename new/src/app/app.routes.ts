@@ -2482,6 +2482,14 @@ export const routes: Routes = [
           import('./features/mis-reports/mis-reports').then((m) => m.MisReports),
       },
       {
+        path: 'incidentCategory',
+        data: { title: 'Incident Categories' },
+        loadComponent: () =>
+          import('./features/incident-category/incident-category').then(
+            (m) => m.IncidentCategoryComponent
+          ),
+      },
+      {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 625, title: 'All Inclusive Package' },
