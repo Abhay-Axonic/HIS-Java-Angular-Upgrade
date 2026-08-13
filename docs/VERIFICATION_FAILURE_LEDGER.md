@@ -144,6 +144,20 @@ always a negative control — a way to prove the check can fail.
     the DTO's complete known-fields list and the controller's literal
     payload have been tried.
 
+14. **THE STATIC TEMPLATE SCAN AS A SHELL VERDICT (added 2026-08-13, the
+    nursing trio — 3 for 3 misclassified).** *Claimed:* "the template has
+    zero data calls, therefore the screen is a shell." *Missed:* the nursing
+    trio (medicationErrorReporting, UtiReporting, PatientFallReporting) are
+    REAL clinical write screens — patient search, risk-factor checklists,
+    signs/symptoms, laboratory criteria, GCS before/after, Draft/Save/
+    Disable — whose fields live in MARKUP, not in a loaded feed, so a scan
+    for data calls finds nothing and concludes there is nothing there.
+    *Caught by:* a person rendering each screen (the owner). Rule: a static
+    template scan cannot distinguish a shell from a form. Only a render
+    can. A "shell" verdict requires a live render of the screen; every
+    screen classified as a shell on a static scan alone must be
+    re-examined by render.
+
 ---
 
 **The antidote, once, plainly:** every check needs a way to fail. If you

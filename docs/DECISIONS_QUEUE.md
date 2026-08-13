@@ -2646,6 +2646,32 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-086 — THE NURSING TRIO'S T0s: real write screens, but NONE of the three writes survives yet — the verdicts are probe-shape/broken, honestly
+
+The trio is 3-for-3 real clinical write screens (the owner's renders; the
+static-scan shell verdict retracted — ledger #14). The primary-write T0s:
+- **PatientFallReporting — the literal saveObj (the controller's own shape:
+  diagnosisName/incidentDateTime/incidentHour/incidentMinute/
+  assessmentScoreNamesList/selectedCheckBox/gcsScoreBefore/gcsScoreAfter/
+  assessmentOtherRemarkBefore/After/factorOtherText/saveAsDraft/createdBy/
+  updatedBy/createdDate/updatedDate → POST /adt/saveAsDraftPatientFallReporting)
+  → 400, NON-JACKSON** (no Unrecognized-field in the log — a service-level
+  validation, the same class as the pharmacy's). Probe-shape, excavation
+  parked with what is known.
+- **medicationErrorReporting — the Save button's ng-click is `saveRack()`**
+  (the template's modal-Save), which is undefined in this controller — the
+  function belongs to the billing rackMastersController. The template's Save
+  is a wrong copy-paste; the screen's save is broken in the legacy markup
+  itself (the click would no-op or error). Not drift, not probe-shape — a
+  legacy template defect, parked with the line named.
+- **UtiReporting — the Save is a form-submit modal with no ng-submit wired in
+  the template and only ONE serviceAction in the controller (the patient
+  search); the save endpoint is not constructible from the controller —
+  the write path is unresolved. Parked as an open excavation.
+The owner's "build what survives" — NONE survives the T0 honestly: one
+service-validation 400, one broken legacy template click, one unwired save.
+The builds wait for the backend/template fixes, not for the frontend.
+
 ## DQ-2026-08-13-085 — THE TWO OWED RENDERS DIAGNOSED + THE PHARMACY EXCAVATION CLOSED AS AN OPEN PARK
 
 - **UtiReporting / PatientFallReporting — DIAGNOSED, not a blocker and not a
