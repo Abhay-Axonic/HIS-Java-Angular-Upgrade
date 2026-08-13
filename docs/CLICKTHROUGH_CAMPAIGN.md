@@ -438,6 +438,12 @@ env-class dev-server wiring issue, not dev-empty tables)`.
 
 ## 3. LEGITIMATELY EMPTY IN DEV (do not report correct behaviour as a defect)
 
+- **ambulanceMaster's three dropdowns** (Ambulance Type / Service Provider /
+  Available Facilities) are CONFIRMED dev-empty: `adt.m_ambulance_type`,
+  `adt.m_service_provider`, `adt.m_ambulance_facilities` all count 0 in
+  psql (checked 2026-08-13, DQ-093). The feeds 200 with empty lists; the
+  placeholder-only dropdowns are CORRECT. Do not log as a defect.
+
 - **Zero-row worklists/reports** are correct empties: the radiology worklists,
   the MPShah encounter list/summary (no encounters in dev), the deposit-side
   reports without seeded patients, the nursing/incident lists.
