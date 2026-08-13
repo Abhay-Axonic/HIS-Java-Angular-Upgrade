@@ -2999,6 +2999,31 @@ flagged columns on t_intake_output_chart_details (drift map band
 PROBABLE/SUSPECT) were NEVER REACHED (the parse dies before SQL) — neither
 confirmed nor disconfirmed by this smoke.
 
+## BR-2026-08-13-041 — CROSS-MATCH LEGACY NPE: CrossMatchRegisterDaoImpl:55 reads issueDate; the legacy JS never sends it (candidate, NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (a behavioral-change candidate; the backend
+owner decides).
+
+The smoke's contract hunt (the full legacy cross-match payload,
+2026-08-13) surfaced a LATENT LEGACY-PATH DEFECT, not a rebuild artifact:
+- The legacy screen's save payload (detailsCrossMatchRegisterController.js,
+  lines 553-571) sends requisitionDate, createdDate, updatedDate — NEVER
+  issueDate.
+- The DAO unconditionally reads it: CrossMatchRegisterDaoImpl:55
+  `mstr.setIssueDate(GlobalCommonDateUtils.getDate(crossMatchRegisterDto.getIssueDate(), "dd-M-yyyy HH:ss:mm"))`.
+- A null issueDate reaches getDate -> "Cannot invoke String.length()
+  because dateString is null" -> the save 500s (observed live in the smoke
+  chain: ERR-e9de6cba preceded by the same NPE at the same line).
+So the legacy cross-match save would NPE on every save unless the issue
+date is populated from a path this JS does not take — the smoke found a
+production defect while hunting a contract. This is the SECOND time
+contract-hunting has surfaced a legacy bug rather than a rebuild one (the
+first: the I/O-chart masked-partial BR-039, IntakeOutputChartServiceImpl:67
+ignoring the details DAO response). Backend-owned: either the screen sends
+issueDate (a business decision — the issue date is meaningful) or the DAO
+null-guards the parse (a defensive fix). The rebuild is unaffected (the
+feature does not exist yet).
+
 ## BR-2026-08-12-040 — CASH-DESK WRITE AUTH: RETRACTED AS A SECURITY FINDING — measured correction (12/12 writes token-validated; read-side session requirement is operational)
 
 STATUS: RETRACTED (security finding) — see the standalone brief

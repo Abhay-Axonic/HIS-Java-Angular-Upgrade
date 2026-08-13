@@ -2363,6 +2363,20 @@ export const routes: Routes = [
           ),
       },
       {
+        // PARITY RECORD — DELIBERATE, NOT AN OMISSION: the legacy states
+        // crossMatchRegister + detailsCrossMatchRegister (app.js:18494/18500)
+        // have NO resolve/module check — ungated in the legacy, like the
+        // phlebotomist. Per the owner's parity precedent an ungated legacy
+        // state gets an ungated route (the menu module id unresolved this
+        // session). Do NOT add a guard silently; see the feature README.
+        path: 'crossMatchRegister',
+        data: { title: 'Cross Match Register' },
+        loadComponent: () =>
+          import('./features/cross-match-register/cross-match-register').then(
+            (m) => m.CrossMatchRegisterComponent,
+          ),
+      },
+      {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],
         data: { moduleId: 625, title: 'All Inclusive Package' },

@@ -18,6 +18,15 @@ Verdict classes (Amendment 7/8):
   READ-ONLY      — no standalone write endpoint exists (by design)
 
 Additive / DEMO-marker / his_local-guarded / cleaned same-run.
+
+TEARDOWN RULE (2026-08-13, after a real orphan found by the harness): any
+teardown for a MULTI-ENTITY write MUST cover EVERY table the write touches,
+and the leftover assertion MUST query them ALL — not just the table the
+verdict keys on. The cross-match candidate deleted the master and orphaned
+t_cross_match_register_details (3 rows); the harness's extra table check
+found it. A teardown that misses a child table lets successful runs quietly
+pollute later ones — the worst kind of fixture failure because it only shows
+up as confusing results much later.
 """
 
 import json
@@ -192,13 +201,18 @@ def main():
             "payload": lambda: {
                 "organizationId": 1, "unitId": 1,
                 "patientId": int(first_patient() or 0),
-                "createdBy": 1, "updatedBy": 1,
-                "status": "A",
+                "createdBy": 1, "updatedBy": 1, "status": "A",
                 "issueDate": "13-08-2026 00:00:00", "requisitionDate": "13-08-2026 00:00:00",
                 "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+                "btoId": 1, "issuerId": 1, "receivedId": 1, "bloodUnitQty": 1,
+                "bloodBagIssueNo": "ISSUE-1", "remarks": "smoke",
                 "bloodBagIssueList": [{
                     "organizationId": 1, "unitId": 1,
                     "issueBloodBagStatusId": 1,
+                    "bagNo": "SMOKE-BAG1", "segmentNo": "S1",
+                    "bloodGroupId": 1, "componentId": 5,
+                    "bloodBankStockId": int(psql("select blood_bank_stock_id from blood_bank.m_blood_bank_stock where blood_bag_no='SMOKE-BAG1';") or 0),
+                    "crossMatchReportResult": "Compatible",
                     "createdBy": 1, "updatedBy": 1, "status": "A",
                     "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
                 }],
@@ -340,13 +354,20 @@ def main():
             "precounts": [("deposit rows", "select count(*) from billing.m_deposit_master;")],
             "payload": lambda: {
                 "depositMasterDto": {
-                    "organizationId": 1, "unitId": 1,
+                    "orgId": 1, "unitId": 1, "counterId": 1,
+                    "depositTypeId": 1,
                     "patientId": int(first_patient() or 0),
-                    "amount": 100,
-                    "createdBy": 1, "updatedBy": 1, "status": "A",
-                    "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+                    "depositAmount": 100,
+                    "depositDate": "13-08-2026 00:00:00",
+                    "createdBy": 1, "status": "A",
+                    "createdDate": "13-08-2026 00:00:00",
                 },
-                "listPaymentDepositDetailsDto": [],
+                "listPaymentDepositDetailsDto": [{
+                    "paymentModeId": 1, "amount": 100,
+                    "createdBy": 1,
+                    "createdDate": "13-08-2026 00:00:00",
+                    "organizationId": 1, "unitId": 1,
+                }],
             },
             "postcounts": [
                 ("deposit", "select count(*) from billing.m_deposit_master where deposit_master_id > {pre_max};"),
@@ -365,8 +386,12 @@ def main():
             "preclean": [],
             "precounts": [("sale rows", "select count(*) from pharmacy.t_sale;")],
             "payload": lambda: {
-                "organizationId": 1, "unitId": 1, "storeId": 1, "tempBillId": 0,
-                "createdBy": 1, "updatedBy": 1,
+                "visitTypeId": 1, "screenId": 1, "statusId": 1,
+                "unitId": 1, "organizationId": 1, "userId": 1,
+                "prefixId": 1, "patientName": "WALKIN SMOKE",
+                "mobileNumber": "9999999999", "patientAge": 30,
+                "patientGenderId": 1,
+                "items": [],
             },
             "postcounts": [
                 ("sale", "select count(*) from pharmacy.t_sale where id > {pre_max};"),
@@ -374,6 +399,85 @@ def main():
             "landed": lambda c: int(c.get("sale", 0)) > 0,
             "teardown": [],
             "leftover": "select count(*) from pharmacy.t_sale where id > {pre_max};",
+        },
+        "blood-request (cross-match register)": {
+            "endpoint": "/api/bloodbank/crossMatch/saveCrossMatchRegister",
+            "precheck": ("t_cross_match_register NOT flagged (clean per drift map) — "
+                         "table EMPTY (0 rows); smoke decides"),
+            "pre_max_sql": "select coalesce(max(cross_match_register_id),0) from blood_bank.t_cross_match_register;",
+            "preclean": [
+                "delete from blood_bank.t_cross_match_register_details where cross_match_register_id > {pre_max};",
+                "delete from blood_bank.t_cross_match_register where cross_match_register_id > {pre_max};",
+                "delete from blood_bank.m_blood_component_order_master where requisition_number = 'SMOKE-CM';",
+                "delete from blood_bank.t_patient_requisition_details where remark = 'SMOKE-CM';",
+                "insert into blood_bank.m_blood_component_order_master "
+                "(blood_component_id, requisition_date, requisition_on_date, priority, created_by, created_date, status, "
+                " updated_by, updated_date, unit_id, organization_id, patient_id, is_required, is_exported, is_requisition_closed, requisition_number) "
+                "values (5, '2026-08-13', '2026-08-13', 1, 1, now(), 'A', 1, now(), 1, 1, (select patient_id from patient.t_patient_details limit 1), 'Y', 'N', 'N', 'SMOKE-CM');",
+                "insert into blood_bank.t_patient_requisition_details "
+                "(blood_component_order_id, doctor_id, requisition_type_id, hospital_id, required_blood_group_id, patient_blood_group_id, component_id, blood_unit, remark, exported_to_cross_match, exported_to_reservation, "
+                " patient_id, admission_id, created_by, created_date, status, updated_by, updated_date) "
+                "values ((select blood_component_order_id from blood_bank.m_blood_component_order_master where requisition_number='SMOKE-CM'), 1, 1, 1, 1, 1, 5, 1, 'SMOKE-CM', 'N', 'N', "
+                " (select patient_id from patient.t_patient_details limit 1), null, 1, now(), 'A', 1, now());",
+            ],
+            "precounts": [("cross-match rows", "select count(*) from blood_bank.t_cross_match_register;")],
+            "payload": lambda: {
+                "organizationId": 1, "unitId": 1,
+                "patientId": int(first_patient() or 0),
+                "patientRequisitionId": int(psql("select patient_requisition_id from blood_bank.t_patient_requisition_details where remark='SMOKE-CM';") or 0),
+                "bloodComponentOrderId": int(psql("select blood_component_order_id from blood_bank.m_blood_component_order_master where requisition_number='SMOKE-CM';") or 0),
+                "requisitionDate": "13-08-2026 00:00:00",
+                "issueDate": "13-08-2026 00:00:00",
+                "requiredBloodGroup": 1, "patientBloodGroup": 1,
+                "requiredQty": 1, "pendingQty": 1,
+                "technicianId": 1, "remark": "smoke", "crossMatchStatus": 1,
+                "createdBy": 1, "updatedBy": 1, "status": "A",
+                "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+                "crossMatchRegisterDetails": [{
+                    "componentId": 5, "bloodGroupId": 1, "segmentNo": "S1",
+                    "bloodBankStockId": int(psql("select blood_bank_stock_id from blood_bank.m_blood_bank_stock where blood_bag_no='SMOKE-BAG1';") or 0),
+                    "salineMajor": 1, "salineMinor": 1, "albuminMajor": 1, "albuminMinor": 1,
+                    "coombsMajor": 1, "coombsMinor": 1, "crossMatchReportResult": "Compatible",
+                    "crossMatchRegisterDetailsStatus": 1, "createdBy": 1,
+                    "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+                }],
+            },
+            "postcounts": [
+                ("cross_match", "select count(*) from blood_bank.t_cross_match_register where cross_match_register_id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("cross_match", 0)) > 0,
+            "teardown": [
+                "delete from blood_bank.t_cross_match_register_details where cross_match_register_id > {pre_max};",
+                "delete from blood_bank.t_cross_match_register where cross_match_register_id > {pre_max};",
+                "delete from blood_bank.m_blood_component_order_master where requisition_number = 'SMOKE-CM';",
+                "delete from blood_bank.t_patient_requisition_details where remark = 'SMOKE-CM';",
+            ],
+            "leftover": "select (select count(*) from blood_bank.t_cross_match_register where cross_match_register_id > {pre_max}) + (select count(*) from blood_bank.t_cross_match_register_details where cross_match_register_id > {pre_max}) + (select count(*) from blood_bank.m_blood_component_order_master where requisition_number='SMOKE-CM') + (select count(*) from blood_bank.t_patient_requisition_details where remark='SMOKE-CM');",
+        },
+        "lis-sample-registration (central receiving accept)": {
+            "endpoint": "/LIS/centralReceiving/acceptOrRejectSample",
+            "precheck": ("the t_lab_sample_dtls writer (the LIS sample-registration hunt's target) — "
+                         "table EMPTY (0 rows); smoke decides"),
+            "pre_max_sql": "select coalesce(max(lab_sample_dtls_id),0) from lab.t_lab_sample_dtls;",
+            "preclean": [
+                "delete from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};",
+            ],
+            "precounts": [("sample-dtls rows", "select count(*) from lab.t_lab_sample_dtls;")],
+            "payload": lambda: [{
+                "orgId": 1, "orgUnitId": 1,
+                "testId": 1, "deptId": 1, "subDeptId": 1,
+                "sampleId": 1, "orderId": 1, "orderDetailsId": 1,
+                "sampleBarcode": "SMOKE-SMP", "orderQty": 1, "serviceId": 1,
+                "sampleVolume": 1.0,
+            }],
+            "postcounts": [
+                ("sample_dtls", "select count(*) from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("sample_dtls", 0)) > 0,
+            "teardown": [
+                "delete from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};",
+            ],
+            "leftover": "select count(*) from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};",
         },
     }
     results = {}
