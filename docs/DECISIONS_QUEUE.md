@@ -2646,6 +2646,38 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-083 — THE FULL-PAYLOAD PASS (the owner's order): the LIS Search family RETRACTED to drift — the 16th CONFIRMED phantom + the result-entry/diag chain + the trio's re-classification
+
+The pass that re-examined the probe-shape verdicts with the full-payload
+standard:
+- **The LIS Search family — the contract-wall verdict RETRACTED: the 16th
+  CONFIRMED phantom — `status` on the LIS worklist's `ltlsc`-aliased table.**
+  The SearchDto's COMPLETE known-fields (85) from the tomcat error showed my
+  minimal probes used the wrong spellings (`organizationId` vs `orgId` +
+  `orgUnitId`). The full controller-shaped payload passes Jackson and the
+  worklist SELECT dies at SQL: `column ltlsc.status does not exist` (the
+  second `status` phantom — #13 is the credit-note's). The ~18-screen family
+  joins the drift list. (The `ltlsc` alias is entity-generated; its DDL
+  table name is the next trace's.)
+- **The LIS result-entry — the probe-shape confirmed: an NPE-chain, one null
+  DTO field at a time** (the details list, createdDate, isCompleted...) — the
+  payload excavation is ongoing; NOT a backend verdict.
+- **diag-proc — probe-shape:** the 400s are the TemplateReqDto's field
+  spellings (orgId); "Collection must be not null!" is a service validation
+  on a payload collection, not drift.
+- **pharmacy issue — the 500's cause is still unresolved** (the PATCH's
+  ERR-259a01d2 — the log's cause not yet isolated; the verdict stays
+  probe-shape, not class).
+- **The nursing report trio — the medicationErrorReporting is a REAL WRITE
+  screen** (full form: patient search, event details, medicines table,
+  Save/Draft — live-rendered); the static "shell" class was wrong for it.
+  Uti/PatientFall renders were blocked by the recurring login collision
+  (env-fault; the setup tool's collision-clear works — it unblocked this
+  session's renders).
+- The ledger gained mechanism #13 (the contract-incomplete verdict as a
+  probe statement — "I could not construct the request" vs "the system
+  rejects the request", conflated six times).
+
 ## DQ-2026-08-13-082 — THE TWO PROBE-PENDING 404s RESOLVED: incident-cat BUILDABLE + built; histo-get DRIFT-KILLED — the 15th CONFIRMED phantom
 
 The last two genuine unknowns, resolved (both 404s were probe-shape, not

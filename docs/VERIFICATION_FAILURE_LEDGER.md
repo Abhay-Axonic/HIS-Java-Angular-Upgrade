@@ -123,6 +123,27 @@ always a negative control — a way to prove the check can fail.
     relationship must heal an existing row, not just skip inserting a
     duplicate.
 
+13. **THE CONTRACT-INCOMPLETE VERDICT AS A PROBE STATEMENT (added 2026-08-13,
+    the pass that moved the boundary twice).** *Claimed:* "the system rejects
+    the request." *Missed:* that the rejection was MY payload's shape — the
+    LIS Search family's 400s were `organizationId` vs the DTO's `orgId`/
+    `orgUnitId` spelling (85 known fields, never read in full); the
+    result-entry's 400/500 chain was one null DTO field at a time
+    (isCompleted, createdDate, the details list); the diag-proc's 400s the
+    TemplateReqDto's fields; the histo-get 404 the endpoint name
+    (getReportDetails vs getReport); the incident-cat 404 the missing path
+    params. SIX verdicts were reported as contract walls that were
+    probe-shape statements — "I could not construct the request" dressed as
+    "the system rejects the request." *Caught by:* the owner's insistence on
+    the full-payload re-probe (the DTO's COMPLETE known-fields from the
+    tomcat error + the controller's literal var data) — which turned two
+    unknowns into one working screen + one 16th CONFIRMED phantom, and
+    RETRACTED the LIS family's contract-wall verdict in favour of confirmed
+    drift. Rule: a contract-incomplete verdict is a statement about the
+    probe's payload, never about the backend; it may only be reported after
+    the DTO's complete known-fields list and the controller's literal
+    payload have been tried.
+
 ---
 
 **The antidote, once, plainly:** every check needs a way to fail. If you
