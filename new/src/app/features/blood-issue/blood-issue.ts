@@ -24,6 +24,13 @@ export class BloodIssue {
   result = signal<string>('');
   ok = signal(false);
 
+  // The cross-match reference is REAL data a user must supply — the golden
+  // trace ran against the sweep's transient cross-match fixture (remark='fixture'),
+  // which a standalone screen does not have (2026-08-13 fixture-dependency
+  // audit). Enter the live cross-match ids or the save fails honestly.
+  crossMatchRegisterId = signal<number | null>(null);
+  crossMatchRegisterDetailsId = signal<number | null>(null);
+
   save(): void {
     const userId = this.session.userId ?? 1;
     this.saving.set(true);
@@ -46,7 +53,7 @@ export class BloodIssue {
       bloodUnitQty: this.bloodUnitQty() || 1,
       bloodBagIssueNo: 'ISSUE-DEMO',
       remarks: this.remarks() || 'demo issue',
-      crossMatchRegisterId: 1,
+      crossMatchRegisterId: this.crossMatchRegisterId() ?? 0,
       bloodBagIssueList: [
         {
           organizationId: 1,
@@ -57,7 +64,7 @@ export class BloodIssue {
           bloodGroupId: 1,
           componentId: 5,
           bloodBankStockId: 1,
-          crossMatchRegisterDetailsId: 1,
+          crossMatchRegisterDetailsId: this.crossMatchRegisterDetailsId() ?? 0,
           crossMatchReportResult: 'Compatible',
           createdBy: userId,
           updatedBy: userId,

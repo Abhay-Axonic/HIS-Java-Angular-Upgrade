@@ -5,11 +5,21 @@
   </header>
 
   <div class="bi-note">
-    Demo context: the seeded stock bag (SMOKE-BAG1), donor and cross-match
-    reference. See README for the seven-layer T0 chain.
+    The cross-match reference is REAL data you must supply — enter the live
+    cross-match register + detail ids or the save fails honestly (the golden
+    trace's fixture rows are not present for a standalone user). The bag is
+    the seeded stock.
   </div>
 
   <form class="bi-form" (ngSubmit)="save()">
+    <label>
+      Cross-match register ID (required)
+      <input type="number" [(ngModel)]="crossMatchRegisterId" name="crossMatchRegisterId" />
+    </label>
+    <label>
+      Cross-match detail ID (required)
+      <input type="number" [(ngModel)]="crossMatchRegisterDetailsId" name="crossMatchRegisterDetailsId" />
+    </label>
     <label>
       Patient ID
       <input type="number" [(ngModel)]="patientId" name="patientId" />
