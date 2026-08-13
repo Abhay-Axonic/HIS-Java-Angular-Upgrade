@@ -2646,6 +2646,35 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-085 — THE TWO OWED RENDERS DIAGNOSED + THE PHARMACY EXCAVATION CLOSED AS AN OPEN PARK
+
+- **UtiReporting / PatientFallReporting — DIAGNOSED, not a blocker and not a
+  guard denial:** the module-id hypothesis is DISPROVEN (all three nursing
+  states carry NO moduleId — medicationErrorReporting renders with the same
+  shape); the state URLs are the lowercase `/utiReporting`/`/patientFallReporting`
+  (my earlier navigations used the wrong case, and the fallback IS the login);
+  the templates exist (webapp/views/Nursing/…); the console is clean; the
+  session cookie lands. The bounce persists with the correct-case URL — the
+  cause is the SPA's auth/session round-trip (env class), not a legitimate
+  guard denial: a dev-role user WOULD reach the screen (there is no module id
+  to lack). Render remains OWED via the legacy navigation tree, not a URL.
+- **Pharmacy issue — the literal-payload attempt is MET and the item is
+  PARKED as an open excavation (per the owner's stop-rule):** the legacy
+  caller IS the assigning-picker-dispenser screen (assigningPickerDispenserDetails
+  Controller:1041 — CONSTANTS.PHARMACY.IP.ASSIGN_PICKER_DISPENSER.SAVE_API)
+  and its literal payload (ActualSaveBill:1043 + the billItem:1063 — master
+  with id/prescriptionId/pickerId/doctorId/visitType/admissionId/statusId/
+  items/unitId/organizationId/userId/storeId; item with statusId/id/itemId/
+  prescriptionDetailId/batchId/uomTypeId/uomUnitId/quanityIssued/isNarcotics)
+  gets the SAME 400. The endpoint rejects the legacy screen's own payload —
+  and the DTO mismatch is visible: PharmacologyUpdateItem's known fields are
+  itemStatusId/prescriptionDetailId/intervention/id/isNarcotic/remark, while
+  the legacy sends statusId/itemId/batchId/uomTypeId/uomUnitId/quanityIssued/
+  isNarcotics. The pharmacy save is BROKEN IN THE LEGACY ITSELF (its own
+  literal payload is rejected), which is not drift and not probe-shape —
+  parked as an open excavation with exactly what is known, per the
+  stop-rule; no fourth-layer peel.
+
 ## DQ-2026-08-13-084 — THE FIVE OPEN ITEMS' VERDICTS (the full-payload standard met on four of five): result-entry DRIFT (#12's second screen), diag-proc DRIFT (#17), pharmacy probe-shape (the excavation continues), the trio's two renders login-blocked
 
 - **result-entry — DRIFT-KILLED (the 12th CONFIRMED's second screen):** the
