@@ -35,9 +35,10 @@ flag (three promotions + one demotion below).
 
 ## 2. WHAT IS BROKEN AND NEEDS YOU — the confirmed phantoms + the code defects
 
-**Confirmed phantoms (12) — a column/table the application code references
-that does not exist in the database.** Each was hit by a live write. The
-fix is one of: drop the entity mapping / add the DDL column.
+**Confirmed phantoms (14) — a column/table the application code references
+that does not exist in the database.** Each was hit by a live call (write or
+read). The fix is one of: drop the entity mapping / add the DDL column /
+create the missing relation.
 
 | # | Table | Missing column | How it was confirmed |
 |---|---|---|---|
@@ -53,6 +54,8 @@ fix is one of: drop the entity mapping / add the DDL column.
 | 10 | billing.m_deposit_master | `cancel_reason_id` | deposit write reached SQL after the seed |
 | 11 | pharmacy.t_prescription | `medication_type` | walk-in write reached SQL after the seed |
 | 12 | lab.t_lab_sample_dtls | `icmr_id` | LIS accept's live SELECT (entity @Column) |
+| 13 | billing.t_credit_note_detail | `status` | workloadDashboard's live SELECT (`column tcnd.status does not exist` — a READ-side kill; DQ-077) |
+| 14 | public (whole schema) | TABLE `user_chat_details` | incident/NABH reporting lists' live SELECT (`relation "public.user_chat_details" does not exist` — a phantom relation like #8, READ-side; DQ-081) |
 
 **Two code defects (not drift — the code evaluates wrongly):**
 1. **Admission bed-occupancy gate** (`BedAllocationController.savePatientAdmission`,
