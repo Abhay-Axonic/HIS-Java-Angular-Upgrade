@@ -2625,6 +2625,31 @@ completion path = the DQ-067 seed's blood-bank stock extension). The
 t_cross_match_register remains CLEAN (zero drift); the master rolls back on
 the error (atomic — nothing lands).
 
+## COMPOUNDING-SEED AUDIT (2026-08-13, applied to the WHOLE park list as directed) — which parks does the rule free?
+
+Per-park check: does an existing BUILDABLE flow manufacture the reference the
+park is missing?
+- patient-reg / appointment / cash-handover / deposit / walk-in / OPD-bill
+  (DRIFT-BLOCKED — the CONFIRMED phantoms): a phantom COLUMN is not a missing
+  reference — no flow can manufacture a column that does not exist in DDL.
+  The rule does not apply; the backend fixes these.
+- I/O charts (MASKED-PARTIAL): the backend's defects (LocalTime NPE + the
+  ignored details-DAO response, BR-039) — not references. N/A.
+- admission (PRECHECK-BLOCKED): the gate's code inversion (isBedBookedOrNot —
+  every bed incl. never-occupied rejects); the 12 beds EXIST — the reference
+  is not missing, the gate evaluates wrongly. N/A.
+- opd-bill (CONTRACT-INCOMPLETE): the mobile-app BillDto excavation. N/A.
+- LIS central-receiving (OPERATIONAL-DATA): PARTIAL. The sampleId reference
+  (lab.m_sample_master — the sample-TYPE) IS produced by the BUILDABLE
+  lab-sample-type flow. The orderId/orderDetailsId reference
+  (lab.t_lab_sample_master — the sample MASTER) has NO buildable producer
+  (its only writer is the LIS's own chain) — a SEED fills it (the dev-env-gap
+  class: an unseeded environment, same as the stock/orders/requisitions).
+VERDICT: the rule frees NO additional flows cleanly; it upgrades the LIS to
+PARTIAL (the sample-type manufactured; the sample-master seeded next). The
+phantoms and the code defects are outside the rule's reach — they are the
+REAL drift the 3:0 ratio's "some of it" refers to.
+
 ## DQ-2026-08-13-072 — OPD-BILL (billing): the real endpoint is /api/billing/saveBillFromMobileApp/saveBill; the mobile-app BillDto 400s the minimal payload (contract-incomplete — the BR-035 phantom stands CONFIRMED)
 
 T0 sweep (park_sweep.py): the /api/billing/saveBill path was WRONG (the real
@@ -2721,6 +2746,19 @@ same referenced-entity class as the cross-match DQ-068). PARK CLASS:
 context-dependent (the referenced lab order + the sample master's row
 needed). t_lab_sample_dtls stays EMPTY; its drift flags (if any) remain
 unreached — the per-table DDL diff is the cheap instrument.
+
+RESOLUTION 2026-08-13 (the compounding audit): the sample context is seeded
+(m_sample_master sample_id=1 + t_lab_sample_master lab_sample_id=1 +
+t_lab_sample_dtls lab_sample_dtls_id=1 — the sample-TYPE, sample MASTER and
+sample DETAILS; the sample-type IS the BUILDABLE lab-sample-type flow's
+output). The accept then advanced past the "id to load" to a live SQL error:
+**CONFIRMED PHANTOM #12 — icmr_id on lab.t_lab_sample_dtls does not exist**
+(the entity's @Column vs the DDL's 60+ columns; the Hibernate SELECT
+labsampled0_.icmr_id, LabCentralReceivingDaoImpl acceptOrRejectSample) —
+the THIRD live-write promotion (PROBABLE 177 -> 176, CONFIRMED 11 -> 12).
+The LIS parks at the phantom: the backend must drop icmr_id from the entity
+(or add the DDL column); the flow is otherwise fully referenced (seeded
+context + the ACCEPT branch's update path).
 
 ## DEV-ENVIRONMENT-GAP CLASS (2026-08-13, four instances in one seed script) — a flow blocked by a missing config row is NOT a park, it is an unseeded environment
 

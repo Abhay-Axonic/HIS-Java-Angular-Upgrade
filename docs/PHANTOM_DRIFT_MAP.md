@@ -27,7 +27,7 @@ seed (tools/seed_number_config.py) has unblocked THREE flows (donor
 registration, walk-in sale, deposit — all blocked by the empty number
 configuration) and code changes have unblocked NONE. Part of what looks like
 a broken system is an environment nobody finished setting up, and the
-seeding is the instrument that tells it apart from the real drift. Then: 11
+seeding is the instrument that tells it apart from the real drift. Then: 12
 CONFIRMED phantoms (live endpoint errors — the real drift), and the bands
 below (the screening set).
 
@@ -46,9 +46,13 @@ Comment-stripped totals and bands (all case-insensitive):
   (pharmacy.t_prescription) promoted PROBABLE->CONFIRMED 2026-08-13 — the
   DQ-067 number-config seed unblocked the deposit + walk-in writes and they
   hit the real columns (live SQLGrammarExceptions).
+  icmr_id (lab.t_lab_sample_dtls) promoted PROBABLE->CONFIRMED 2026-08-13 —
+  the THIRD live-write promotion: the LIS central-receiving accept's live
+  SELECT died on labsampled0_.icmr_id does not exist (the entity's @Column
+  vs the DDL's 60+ columns; LabCentralReceivingDaoImpl acceptOrRejectSample).
 - PROBABLE (entity declares it; ZERO case-insensitive matches anywhere in the
-  DB): 177 (was 179; cash_in_out_id + cancel_reason_id + medication_type
-  promoted out).
+  DB): 176 (was 179; cash_in_out_id + cancel_reason_id + medication_type +
+  icmr_id promoted out).
 - SUSPECT (name exists on ANOTHER table — plausible typo/mapping artifact,
   e.g. orgnisation_id vs organisation_id; unverified): 174 (was 175;
   cross_match_register_id removed — DDL-present artifact: the column EXISTS
@@ -90,9 +94,21 @@ t_issue_blood_bag is the FIRST drift flag KILLED by a live write (SUSPECT
 artifact the precheck predicted). It is the counterpart to the two
 promotions: the method CONFIRMS and DISCONFIRMS when it reaches SQL, which
 is the strongest argument that the bands are real rather than noise.
+
+THE SEEDING INSTRUMENT'S OWN LIMIT (2026-08-13, the compounding audit's
+negative answer, recorded plainly): of the parks, SIX are real drift that
+only a backend fix clears (patient-reg family_id, appointment, cash-handover,
+deposit, walk-in, OPD-bill — the CONFIRMED phantoms), TWO are code defects
+(the inverted admission bed-occupancy gate, the I/O-chart masked-partial),
+ONE was contract excavation (opd-bill's mobile-app BillDto), and exactly ONE
+was an unseeded environment (the LIS's sample context — now seeded). The
+seeding instrument found its own limit: a phantom COLUMN is not a missing
+reference, so no flow can manufacture one. The 3:0 ratio's "some of it" is
+now bounded: the seeding separates the environment from the drift, and the
+drift is the six (plus the two code defects).
 resolves it. Use the sweep to SIZE and PRIORITIZE; use live calls to CONFIRM.
 
-## Confirmed live instances (8) — the class as observed, not inferred
+## Confirmed live instances (12) — the class as observed, not inferred
 
 | # | Kind | Table | Column/Relation | Blocks (live-verified 2026-08-12) |
 |---|------|-------|-----------------|-----------------------------------|

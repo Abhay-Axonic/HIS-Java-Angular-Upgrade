@@ -483,6 +483,9 @@ def main():
                 "sampleId": 1, "orderId": 1, "orderDetailsId": 1,
                 "sampleBarcode": "SMOKE-SMP", "orderQty": 1, "serviceId": 1,
                 "sampleVolume": 1.0,
+                "labSampleDtlsId": int(psql("select lab_sample_dtls_id from lab.t_lab_sample_dtls where lab_sample_dtls_id=1;") or 0),
+                "currStatus": "A", "sampleAcceptBy": 1, "samplePendingCount": 0,
+                "updatedBy": 1,
             }],
             "postcounts": [
                 ("sample_dtls", "select count(*) from lab.t_lab_sample_dtls where lab_sample_dtls_id > {pre_max};"),
