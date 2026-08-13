@@ -2646,6 +2646,32 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-074 — OWNER CLICK-THROUGH: the cross-match fixture-dependency (the merge gate's lesson), the [object Object] handler, the transfer's DQ-050 confirmation, the donor's dev-data gaps
+
+1. **crossMatchRegister FAILED through the browser** — the golden trace ran
+   against the transient SMOKE-CM fixtures (order + requisition at ids 1,
+   torn down by the trace's teardown); the screen defaulted to those ids, so
+   a real user's save failed ("id to load"). **The trace proved the write's
+   mechanics against a state the standalone screen cannot reach — the merge
+   gate did not catch a fixture-dependent screen. FIXED: the screen now
+   requires the live order/requisition ids as inputs (no fixture defaults);
+   LESSON recorded in the README: golden traces must run against seeded
+   state a real user can reach, never transient fixtures.**
+2. **"[object Object]"** — the cross-match's error handler used
+   `String(err)` on the HttpErrorResponse. The audit: every OTHER rebuilt
+   screen uses the `e?.error?.message` pattern (verified — the cross-match
+   was the only offender). FIXED: the handler now surfaces the backend's
+   message.
+3. **transferScreen pending-list "Bad request: Invalid parameters"** — the
+   SAME known failure as DQ-050 (the transfer picker feed, duplicate bedId
+   alias in the backend query — logged, backend-owned). Not a new failure;
+   the transfer screen's feed cannot be fixed on the frontend.
+4. **donorRegistration nationality empty + prefix one option** —
+   `public.m_nationality_master` has ZERO dev rows (a dev-data gap, not a
+   truncated feed); the prefix's one option is the CORRECT filter result
+   for the donor screen (146) against the 4 seeded config rows. Both
+   recorded in the donor README as correct empties.
+
 ## COMPOUNDING-SEED AUDIT (2026-08-13, applied to the WHOLE park list as directed) — which parks does the rule free?
 
 Per-park check: does an existing BUILDABLE flow manufacture the reference the

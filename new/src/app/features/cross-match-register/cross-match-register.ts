@@ -18,12 +18,20 @@ export class CrossMatchRegisterComponent {
   readonly error = signal('');
   readonly saving = signal(false);
 
+  // The order/requisition reference is REAL data a user must supply — the
+  // golden trace ran against transient fixture rows (SMOKE-CM) that are torn
+  // down; a standalone screen must not default to them (2026-08-13, owner
+  // click-through finding). Enter the live order/requisition ids or the save
+  // fails honestly with the backend's message.
+  readonly patientRequisitionId = signal<number | null>(null);
+  readonly bloodComponentOrderId = signal<number | null>(null);
+
   readonly form = signal<CrossMatchSave>({
     organizationId: 1,
     unitId: 1,
     patientId: 1,
-    patientRequisitionId: 1,
-    bloodComponentOrderId: 1,
+    patientRequisitionId: 0,
+    bloodComponentOrderId: 0,
     requisitionDate: '13-08-2026 00:00:00',
     issueDate: '13-08-2026 00:00:00',
     requiredBloodGroup: 1,
@@ -64,6 +72,8 @@ export class CrossMatchRegisterComponent {
     const f = this.form();
     const payload: CrossMatchSave = {
       ...f,
+      patientRequisitionId: this.patientRequisitionId() ?? f.patientRequisitionId,
+      bloodComponentOrderId: this.bloodComponentOrderId() ?? f.bloodComponentOrderId,
       createdBy: userId,
       updatedBy: userId,
     };
@@ -82,9 +92,11 @@ export class CrossMatchRegisterComponent {
           this.error.set(res?.message ?? 'Save failed (no message).');
         }
       },
-      error: (err: unknown) => {
+      error: (err: any) => {
         this.saving.set(false);
-        this.error.set(`Save failed: ${String(err)}`);
+        this.error.set(
+          'Save failed: ' + (err?.error?.message ?? err?.message ?? 'the server rejected the request')
+        );
       },
     });
   }

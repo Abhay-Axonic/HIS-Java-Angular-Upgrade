@@ -9,12 +9,19 @@ let CrossMatchRegisterComponent = class CrossMatchRegisterComponent {
     result = signal('');
     error = signal('');
     saving = signal(false);
+    // The order/requisition reference is REAL data a user must supply — the
+    // golden trace ran against transient fixture rows (SMOKE-CM) that are torn
+    // down; a standalone screen must not default to them (2026-08-13, owner
+    // click-through finding). Enter the live order/requisition ids or the save
+    // fails honestly with the backend's message.
+    patientRequisitionId = signal(null);
+    bloodComponentOrderId = signal(null);
     form = signal({
         organizationId: 1,
         unitId: 1,
         patientId: 1,
-        patientRequisitionId: 1,
-        bloodComponentOrderId: 1,
+        patientRequisitionId: 0,
+        bloodComponentOrderId: 0,
         requisitionDate: '13-08-2026 00:00:00',
         issueDate: '13-08-2026 00:00:00',
         requiredBloodGroup: 1,
@@ -54,6 +61,8 @@ let CrossMatchRegisterComponent = class CrossMatchRegisterComponent {
         const f = this.form();
         const payload = {
             ...f,
+            patientRequisitionId: this.patientRequisitionId() ?? f.patientRequisitionId,
+            bloodComponentOrderId: this.bloodComponentOrderId() ?? f.bloodComponentOrderId,
             createdBy: userId,
             updatedBy: userId,
         };
@@ -73,7 +82,7 @@ let CrossMatchRegisterComponent = class CrossMatchRegisterComponent {
             },
             error: (err) => {
                 this.saving.set(false);
-                this.error.set(`Save failed: ${String(err)}`);
+                this.error.set('Save failed: ' + (err?.error?.message ?? err?.message ?? 'the server rejected the request'));
             },
         });
     }
