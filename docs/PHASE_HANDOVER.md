@@ -41,11 +41,11 @@ fix is one of: drop the entity mapping / add the DDL column.
 
 | # | Table | Missing column | How it was confirmed |
 |---|---|---|---|
-| 1 | (ICD/technique family) | `technique_id` | live SQL error |
-| 2 | (bed/service family) | `is_bed_charges_service` | live SQL error |
-| 3 | (form family) | `form_template_id` | live SQL error |
-| 4 | (ICPC family) | `icpc_id` | live SQL error |
-| 5 | billing.m_billing_master | `package_applicable_date` | live 501 on the OPD bill write |
+| 1 | lab.m_parameter_master | `technique_id` | live SQL error |
+| 2 | public.t_auto_posting_services_cofiguration | `is_bed_charges_service` | live SQL error |
+| 3 | adt.m_consent_master | `form_template_id` | live SQL error |
+| 4 | doctor.m_orderset_master | `icpc_id` | live SQL error |
+| 5 | billing.t_package_consumption_master | `package_applicable_date` | live 501 on the OPD bill write |
 | 6 | patient.t_patient_details | `family_id` | patient-reg 501 (masked) |
 | 7 | opd.m_appointment_master | `appointment_unique_id` | appointment write 501 (masked) |
 | 8 | public (whole schema) | TABLE `t_message_queue` | appointment write 501 (masked) |
@@ -91,11 +91,10 @@ Screening: every entity `@Column` vs the DDL, case-insensitive.
 - **CONFIRMED (12)**: reproduced by a live endpoint error — certain work.
 - **PROBABLE (176)**: the entity declares the column; ZERO matches anywhere
   in the DB. **The honest statement: this band is SAMPLE-TESTED, not
-  proven.** Every PROBABLE flag a live write has reached so far has
-  CONFIRMED (3/3 — deposit, walk-in, LIS), and the one flag a live write
-  disproved was a SUSPECT artifact (demoted). But three of 179 is a sample,
-  not a proof; the cheap instrument remains the per-table DDL-vs-entity
-  diff. Treat PROBABLE as near-certain work, flagged for verification.
+  proven.** Three of three PROBABLE flags reached by a live write confirmed,
+  which establishes the band is REAL rather than regex noise; the remaining
+  173 are unverified, and the per-table DDL diff confirms or kills each in
+  seconds.
 - **SUSPECT (174)**: the name exists on ANOTHER table — plausible
   typo/artifact; lowest priority, verify when touching the table.
 
