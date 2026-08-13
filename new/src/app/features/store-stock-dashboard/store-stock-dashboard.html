@@ -1,0 +1,38 @@
+<div class="ssd-wrap">
+  <header class="ssd-header">
+    <h2>Store Stock Dashboard</h2>
+    <span class="ssd-sub">Pharmacy/Inventory — read-mostly dashboard (render-trace gate, see README)</span>
+  </header>
+
+  <div class="ssd-note">
+    The store selector feed is live-verified (two stores in dev). The stock
+    panels render honest empty states — their feeds were not probed this pass.
+  </div>
+
+  @if (loading()) { <p class="ssd-status">Loading stores…</p> }
+  @if (error()) { <p class="ssd-status ssd-err">{{ error() }}</p> }
+
+  <section class="ssd-panel">
+    <h3>Stores</h3>
+    @if (stores().length === 0) {
+      <p class="ssd-empty">No stores returned.</p>
+    } @else {
+      <ul class="ssd-list">
+        @for (s of stores(); track s.id) {
+          <li>
+            <button type="button" (click)="selectStore(s)">{{ s.store }}</button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="ssd-panel">
+    <h3>Stock (near expiry)</h3>
+    @if (selectedStore()) {
+      <p class="ssd-empty">Stock feed for {{ selectedStore()?.store }} not wired this pass (honest empty — see README).</p>
+    } @else {
+      <p class="ssd-empty">Select a store to view its stock.</p>
+    }
+  </section>
+</div>

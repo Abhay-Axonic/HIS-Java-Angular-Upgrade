@@ -1,0 +1,42 @@
+<div class="fsd-wrap">
+  <header class="fsd-header">
+    <h2>Fund Status Dashboard</h2>
+    <span class="fsd-sub">Billing — read-only dashboard (render-trace gate, see README)</span>
+  </header>
+
+  <div class="fsd-note">
+    Read-only screen: no write path. The trust/fund reads are live-verified;
+    an empty list below is a correct empty (dev has no trusts configured).
+  </div>
+
+  @if (loading()) { <p class="fsd-status">Loading trusts…</p> }
+  @if (error()) { <p class="fsd-status fsd-err">{{ error() }}</p> }
+
+  <section class="fsd-panel">
+    <h3>Active trusts</h3>
+    @if (trusts().length === 0) {
+      <p class="fsd-empty">No trusts configured.</p>
+    } @else {
+      <ul class="fsd-list">
+        @for (t of trusts(); track t.id) {
+          <li>
+            <button type="button" (click)="selectTrust(t.id)">{{ t.name }}</button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="fsd-panel">
+    <h3>Fund collections</h3>
+    @if (fundRows().length === 0) {
+      <p class="fsd-empty">Select a trust to load its fund collections (dev: none).</p>
+    } @else {
+      <ul class="fsd-list">
+        @for (f of fundRows(); track f.id) {
+          <li>{{ f.label }}</li>
+        }
+      </ul>
+    }
+  </section>
+</div>

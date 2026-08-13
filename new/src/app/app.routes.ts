@@ -2397,6 +2397,25 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/lab-sample-type/lab-sample-type').then((m) => m.LabSampleType),
       },
+      // UNGATED parity routes (2026-08-13): the read-only dashboard states
+      // (fundStatusDashboard app.js:20945, storeStockDashboard) have no resolve —
+      // exact parity; render-trace gate per DQ-076.
+      {
+        path: 'fundStatusDashboard',
+        data: { title: 'Fund Status Dashboard' },
+        loadComponent: () =>
+          import('./features/fund-status-dashboard/fund-status-dashboard').then(
+            (m) => m.FundStatusDashboardComponent
+          ),
+      },
+      {
+        path: 'storeStockDashboard',
+        data: { title: 'Store Stock Dashboard' },
+        loadComponent: () =>
+          import('./features/store-stock-dashboard/store-stock-dashboard').then(
+            (m) => m.StoreStockDashboardComponent
+          ),
+      },
       {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],
