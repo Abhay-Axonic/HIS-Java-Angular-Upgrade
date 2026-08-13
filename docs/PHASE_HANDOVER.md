@@ -59,6 +59,7 @@ create the missing relation.
 | 15 | lab.t_template_result | `block_capture_note` | histopathology getReport's live SELECT (`column ttemplater0_.block_capture_note does not exist` — a READ-side kill; DQ-082) |
 | 16 | LIS worklist (SearchDto family, `ltlsc`-aliased) | `status` | the report worklists' live SELECT (`column ltlsc.status does not exist` — the second `status` phantom; DQ-083) |
 | 17 | template_mst | `is_html_print` | diagnosticProcedureReport's live SELECT via `/api/global/templates/byService` (`column template_mst.is_html_print does not exist`; DQ-084) |
+| 18 | emr.m_allergy_master | `cims_code` + `cims_type` | allergyMaster's live save SQL `column allergymas0_.cims_code does not exist` (ERR-d8701a37, catalina 8782261 — DQ-091, live-confirmed by the owner's click-through) |
 
 **THE POSITION, RESTATED (2026-08-13, after the renders + the T0s — the
 boundary moved twice since this document first described it):**
