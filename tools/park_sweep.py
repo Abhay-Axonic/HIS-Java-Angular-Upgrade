@@ -56,13 +56,13 @@ def get_token():
     return json.load(open("tools/.token_cache.json"))["token"]
 
 
-def post(payload, endpoint):
+def post(payload, endpoint, method="POST"):
     token = get_token()
     h = ["-H", f"Authorization: Bearer {token}", "-H", "userId: 1",
          "-H", "unitId: 1", "-H", "organizationId: 1",
          "-H", "Content-Type: application/json"]
     r = subprocess.run(["curl", "-s", "--max-time", "45", "-w", "\nHTTP:%{http_code}",
-                        "-X", "POST", "-d", json.dumps(payload)] + h +
+                        "-X", method, "-d", json.dumps(payload)] + h +
                        [ENDPOINT_BASE + endpoint], capture_output=True, text=True, timeout=60)
     out = r.stdout.strip()
     http = out.rsplit("HTTP:", 1)[-1].strip()
@@ -83,7 +83,7 @@ def run_candidate(name, cfg):
         for q in cfg["preclean"]:
             psql(q.replace("{pre_max}", str(pre_max)))
     payload = cfg["payload"]()
-    http, body = post(payload, cfg["endpoint"])
+    http, body = post(payload, cfg["endpoint"], cfg.get("method", "POST"))
     print(f"POST {cfg['endpoint']}")
     print(f"HTTP {http} | {body[:220]}")
     status = "?"
@@ -208,6 +208,12 @@ def main():
                 " component_id, blood_unit, remark, exported_to_cross_match, exported_to_reservation, patient_id, admission_id, created_by, created_date, status, updated_by, updated_date) "
                 "values (1, 1, 1, 1, 1, 1, 1, 5, 1, 'SMOKE-CM', 'N', 'N', "
                 " (select patient_id from patient.t_patient_details limit 1), null, 1, now(), 'A', 1, now());",
+                "delete from blood_bank.t_cross_match_register_details where cross_match_register_id in (select cross_match_register_id from blood_bank.t_cross_match_register where remark='fixture');",
+                "delete from blood_bank.t_cross_match_register where remark='fixture';",
+                "insert into blood_bank.t_cross_match_register (cross_match_register_id, patient_id, patient_requisition_id, blood_component_order_id, component_id, required_blood_group, patient_blood_group, required_qty, pending_qty, remark, cross_match_status, created_by, created_date, status, updated_by, updated_date, unit_id, organization_id) "
+                "values (1, (select patient_id from patient.t_patient_details limit 1), 1, 1, 5, 1, 1, 1, 1, 'fixture', 1, 1, now(), 'A', 1, now(), 1, 1);",
+                "insert into blood_bank.t_cross_match_register_details (cross_match_register_details_id, cross_match_register_id, component_id, blood_group_id, segment_no, blood_bank_stock_id, cross_match_report_result, cross_match_register_details_status, created_by, created_date, status, updated_by, updated_date) "
+                "values (1, 1, 5, 1, 'S1', (select blood_bank_stock_id from blood_bank.m_blood_bank_stock where blood_bag_no='SMOKE-BAG1'), 'Compatible', 1, 1, now(), 'A', 1, now());",
             ],
             "precounts": [("issue rows", "select count(*) from blood_bank.t_issue_blood_bag;")],
             "payload": lambda: {
@@ -549,6 +555,85 @@ def main():
                 "delete from billing.m_billing_master where billing_master_id > {pre_max};",
             ],
             "leftover": "select count(*) from billing.m_billing_master where billing_master_id > {pre_max};",
+        },
+        "lis-result-entry (LIS, /LIS/Microbiology/biochemical/resultEntry)": {
+            "endpoint": "/LIS/Microbiology/biochemical/resultEntry",
+            "precheck": ("lab.t_lab_test_result flagged 5 (createdDate, manual_release_time, "
+                         "manual_result_enter_time, manual_validation_time, status — drift map); "
+                         "smoke decides"),
+            "pre_max_sql": "select coalesce(max(lab_test_res_id),0) from lab.t_lab_test_result;",
+            "preclean": [
+                "delete from lab.t_lab_test_result where lab_test_res_id > {pre_max};",
+            ],
+            "precounts": [("result rows", "select count(*) from lab.t_lab_test_result;")],
+            "payload": lambda: {
+                "orgId": 1, "orgUnitId": 1,
+                "testId": 1, "deptId": 1, "subDeptId": 1, "patientId": int(first_patient() or 0),
+                "createdBy": 1, "updatedBy": 1, "status": "A",
+                "createdDate": 1750000000000, "updatedDate": 1750000000000,
+            },
+            "postcounts": [
+                ("result", "select count(*) from lab.t_lab_test_result where lab_test_res_id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("result", 0)) > 0,
+            "teardown": [
+                "delete from lab.t_lab_test_result where lab_test_res_id > {pre_max};",
+            ],
+            "leftover": "select count(*) from lab.t_lab_test_result where lab_test_res_id > {pre_max};",
+        },
+        "bill-payee-splits (billing, the parked bill-save wall)": {
+            "endpoint": "/api/billing/saveBillFromMobileApp/saveBill",
+            "precheck": ("billing.t_bill_payee_details flagged 4 (cr_net_amt, paid_amount, "
+                         "payment_entitlement_id, priority_id — drift map). The writer is INSIDE "
+                         "the bill's save (BillingMasterServiceImpl:1116) — the SAME parked wall "
+                         "(DQ-072, contract-incomplete-behind-confirmed-drift); the minimal payload "
+                         "400s at the mobile-app BillDto; the flags stay UNREACHED"),
+            "pre_max_sql": "select coalesce(max(bill_payee_details_id),0) from billing.t_bill_payee_details;",
+            "preclean": [
+                "delete from billing.t_bill_payee_details where bill_payee_details_id > {pre_max};",
+            ],
+            "precounts": [("payee rows", "select count(*) from billing.t_bill_payee_details;")],
+            "payload": lambda: {
+                "organizationId": 1, "unitId": 1,
+                "patientId": int(first_patient() or 0),
+                "createdBy": 1, "updatedBy": 1, "status": "A",
+                "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+            },
+            "postcounts": [
+                ("payee", "select count(*) from billing.t_bill_payee_details where bill_payee_details_id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("payee", 0)) > 0,
+            "teardown": [
+                "delete from billing.t_bill_payee_details where bill_payee_details_id > {pre_max};",
+            ],
+            "leftover": "select count(*) from billing.t_bill_payee_details where bill_payee_details_id > {pre_max};",
+        },
+        "pharmacy-issue (pharmacy, /api/pharmacy/ip/pharmacology/validation/save)": {
+            "endpoint": "/api/pharmacy/ip/pharmacology/validation/save",
+            "method": "PATCH",
+            "precheck": ("pharmacy.t_sale flagged 12 (drift map — the pharmacy sales flow). The "
+                         "IP pharmacology-validation save writes the sale (PATCH); smoke decides"),
+            "pre_max_sql": "select coalesce(max(id),0) from pharmacy.t_sale;",
+            "preclean": [
+                "delete from pharmacy.t_sale_detail where id > {pre_max};",
+                "delete from pharmacy.t_sale where id > {pre_max};",
+            ],
+            "precounts": [("sale rows", "select count(*) from pharmacy.t_sale;")],
+            "payload": lambda: {
+                "organizationId": 1, "unitId": 1,
+                "patientId": int(first_patient() or 0),
+                "createdBy": 1, "updatedBy": 1, "status": "A",
+                "createdDate": "13-08-2026 00:00:00", "updatedDate": "13-08-2026 00:00:00",
+            },
+            "postcounts": [
+                ("sale", "select count(*) from pharmacy.t_sale where id > {pre_max};"),
+            ],
+            "landed": lambda c: int(c.get("sale", 0)) > 0,
+            "teardown": [
+                "delete from pharmacy.t_sale_detail where id > {pre_max};",
+                "delete from pharmacy.t_sale where id > {pre_max};",
+            ],
+            "leftover": "select (select count(*) from pharmacy.t_sale where id > {pre_max}) + (select count(*) from pharmacy.t_sale_detail where id > {pre_max});",
         },
     }
     results = {}

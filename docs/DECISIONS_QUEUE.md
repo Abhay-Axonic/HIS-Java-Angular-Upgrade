@@ -2625,6 +2625,27 @@ completion path = the DQ-067 seed's blood-bank stock extension). The
 t_cross_match_register remains CLEAN (zero drift); the master rolls back on
 the error (atomic — nothing lands).
 
+## DQ-2026-08-13-073 — THE (a) T0 SMOKES (LIS result entry, bill payment splits, pharmacy issue): all three contract-incomplete at the DTO walls — the flags stay UNREACHED
+
+The phase's final smokes (each endpoint located + probed):
+1. LIS result entry — POST /LIS/Microbiology/biochemical/resultEntry
+   (BiochemicalTestResultController:79, TBiochemicalTestMasterDto) — minimal
+   -> HIS-400. lab.t_lab_test_result's 5 flags (createdDate,
+   manual_release_time, manual_result_enter_time, manual_validation_time,
+   status) UNREACHED.
+2. Bill payment splits — the writer is INSIDE the bill's save
+   (BillingMasterServiceImpl:1116 saveBillPayeeDetails) — the SAME parked
+   wall (DQ-072). HIS-400. billing.t_bill_payee_details's 4 flags
+   (cr_net_amt, paid_amount, payment_entitlement_id, priority_id) UNREACHED.
+3. Pharmacy issue — PATCH /api/pharmacy/ip/pharmacology/validation/save
+   (PharmacologyValidationController:93 — the tool gained per-candidate
+   method support for the PATCH). HIS-400. pharmacy.t_sale's 12 flags
+   UNREACHED.
+VERDICT: contract-incomplete, same class as the opd-bill — the full legacy
+payloads are excavations worth resuming only after the confirmed drift in
+those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
+movement this round — the flags stay neither confirmed nor disconfirmed.
+
 ## COMPOUNDING-SEED AUDIT (2026-08-13, applied to the WHOLE park list as directed) — which parks does the rule free?
 
 Per-park check: does an existing BUILDABLE flow manufacture the reference the
