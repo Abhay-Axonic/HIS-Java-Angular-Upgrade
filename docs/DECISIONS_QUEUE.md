@@ -2662,6 +2662,13 @@ stands CONFIRMED from the earlier live 501 evidence; this smoke's minimal
 payload dies at the Jackson before reaching it. PARK CLASS: contract-
 incomplete (the full legacy bill payload needed).
 
+PARKED 2026-08-13 (owner order): the excavation is DROPPED for now — the
+endpoint ends at a CONFIRMED phantom (package_applicable_date — BR-035), so a
+perfect payload lands on a wall already documented. CLASS: contract-
+incomplete-behind-confirmed-drift. The excavation is only worth resuming
+AFTER package_applicable_date is fixed — its cost is certain and its payoff
+is zero until someone else acts.
+
 ## DQ-2026-08-13-071 — NURSING-ORDER (ADT, /api/opd/saveNursingOrderMapper): masked envelope was a TWO-LAYER contract NPE, not drift — RESOLVED BUILDABLE (the 6th BUILDABLE in the sweep)
 
 T0 sweep (park_sweep.py): the minimal payload -> HTTP 200 envelope

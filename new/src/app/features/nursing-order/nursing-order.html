@@ -1,0 +1,42 @@
+<div class="no-wrap">
+  <header class="no-header">
+    <h2>Nursing Order</h2>
+    <span class="no-sub">ADT — write BUILDABLE (DQ-071), ungated parity route</span>
+  </header>
+
+  <div class="no-note">
+    The DAO requires the nursingOrderMapperDtoList + start/stop dates — a null
+    list is a masked NPE in the legacy DAO. See README for the two-layer peel.
+  </div>
+
+  <form class="no-form" (ngSubmit)="save()">
+    <label>
+      Patient ID
+      <input type="number" [(ngModel)]="patientId" name="patientId" />
+    </label>
+    <label>
+      Nursing order ID
+      <input type="number" [(ngModel)]="nursingOrderId" name="nursingOrderId" />
+    </label>
+    <label>
+      Frequency ID
+      <input type="number" [(ngModel)]="frequencyId" name="frequencyId" />
+    </label>
+    <label>
+      Instruction
+      <input [(ngModel)]="instruction" name="instruction" placeholder="smoke" />
+    </label>
+    <label>
+      Start (dd-MM-yyyy HH:mm:ss)
+      <input [(ngModel)]="startDate" name="startDate" placeholder="13-08-2026 00:00:00" />
+    </label>
+    <label>
+      Stop (dd-MM-yyyy HH:mm:ss)
+      <input [(ngModel)]="stopDate" name="stopDate" placeholder="13-08-2026 00:00:00" />
+    </label>
+
+    <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save Order' }}</button>
+  </form>
+
+  <p class="no-result" [class.ok]="ok()" [class.err]="!ok() && result()">{{ result() }}</p>
+</div>
