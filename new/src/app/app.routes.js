@@ -1,0 +1,2525 @@
+import { moduleAccessGuard } from './core/module-access.guard';
+import { Shell } from './shell/shell';
+/**
+ * One route per Phase 2 pilot screen, path matching the legacy ui-router
+ * state's `url` exactly (see docs/PHASE2_PILOT_AUDIT.md) so this is a
+ * drop-in replacement path for whichever ngUpgrade routing strategy Phase 7
+ * ends up using -- not decided in this pilot, kept out of scope here.
+ *
+ * Second pilot batch (controllerAs:'vm' self-registered screens, see
+ * docs/PHASE2_PILOT_BATCH2_AUDIT.md) added below the first 5.
+ *
+ * Each route's `data.moduleId` matches the module id legacy's own live
+ * `.state(...)` resolve block checks for that exact state name (confirmed
+ * by reading each state definition directly, including the 5 batch-2
+ * screens' self-registered `.config($stateProvider)` blocks in their own
+ * controller files, not assumed) -- `moduleAccessGuard` enforces the same
+ * check legacy enforces, since nothing on the backend does (see
+ * docs/ANGULAR_PENDING_FINDINGS.md entry 13). Routes with no `moduleId`
+ * (billingGroupMaster, periodicityService) match legacy states that
+ * likewise have no resolve block at all -- not a gap this fix introduces,
+ * a faithful match to legacy's actual (lack of) restriction.
+ *
+ * `data.title` added on every route below (per
+ * docs/ANGULAR_HYBRID_DEPLOYMENT_PROPOSAL.md Part 3's retrofit plan) --
+ * sourced from each state's own `title` in
+ * `tools/angular-audit/data/states_enriched.json`, not invented, matching
+ * exactly what legacy's own `$state.current.title` binding would have
+ * shown in its top bar. A handful of self-registered detail screens
+ * never set a legacy `title` at all (`fixedAssetType`,
+ * `linenIssueAcceptanceDetails`) -- those get a plain, sensible label
+ * instead, noted inline. `Shell` (./shell/shell.ts) reads this field to
+ * drive its top-bar page title; nothing else about any screen's own
+ * files changed to add this.
+ */
+export const routes = [
+    // Deliberately OUTSIDE the shell -- an access-denied page showing a full
+    // nav shell around it would be confusing (a user without access
+    // shouldn't see a sidebar promising screens they can't reach), matching
+    // legacy's own `ng-if="loginpage"` chrome-gating precedent
+    // (legacy/HIS-WAR/.../index.html:187, top-bar/sidebar only render when
+    // `loginpage` is true -- the login screen itself has none either).
+    {
+        path: 'accessDenied',
+        loadComponent: () => import('./features/access-denied/access-denied').then((m) => m.AccessDenied),
+    },
+    {
+        path: '',
+        component: Shell,
+        children: [
+            {
+                path: 'billingGroupMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Billing Group Master' },
+                loadComponent: () => import('./features/billing-group-master/billing-group-master').then((m) => m.BillingGroupMaster),
+            },
+            {
+                path: 'insuranceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 571, title: 'Insurance Master' },
+                loadComponent: () => import('./features/insurance-master/insurance-master').then((m) => m.InsuranceMaster),
+            },
+            {
+                path: 'inputOutputCharts',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 99, title: 'Intake Fluid Output(ml) Charts' },
+                loadComponent: () => import('./features/input-output-charts/input-output-charts').then((m) => m.InputOutputCharts),
+            },
+            {
+                path: 'organizationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 377, requireSuperUser: true, title: 'Organization Master' },
+                loadComponent: () => import('./features/organization-master/organization-master').then((m) => m.OrganizationMaster),
+            },
+            {
+                path: 'referralMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 396, title: 'Referral Master' },
+                loadComponent: () => import('./features/referral-master/referral-master').then((m) => m.ReferralMaster),
+            },
+            {
+                path: 'MISReports',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 768, title: 'MIS Report' },
+                loadComponent: () => import('./features/mis-reports/mis-reports').then((m) => m.MisReports),
+            },
+            {
+                path: 'GRN',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 181, title: 'Good Receipt Note' },
+                loadComponent: () => import('./features/grn/grn').then((m) => m.Grn),
+            },
+            {
+                path: 'assetCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 642, title: 'Asset Category Master' },
+                loadComponent: () => import('./features/asset-category-master/asset-category-master').then((m) => m.AssetCategoryMaster),
+            },
+            {
+                path: 'periodicityService',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Periodicity Service' },
+                loadComponent: () => import('./features/periodicity-service/periodicity-service').then((m) => m.PeriodicityService),
+            },
+            {
+                path: 'assigningPickerDispenser',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 104, title: 'Pending List for Assigning Picker' },
+                loadComponent: () => import('./features/assigning-picker-dispenser/assigning-picker-dispenser').then((m) => m.AssigningPickerDispenser),
+            },
+            {
+                path: 'implantMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 806, title: 'Implant Master' },
+                loadComponent: () => import('./features/implant-master/implant-master').then((m) => m.ImplantMaster),
+            },
+            // Phase 4, first batch (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md).
+            // display: deliberately NO moduleAccessGuard. Confirmed at app.js:20149 --
+            // legacy's `display` state has no resolve block at all, and its
+            // controller uses GenericServiceForWithoutLogin, not the usual
+            // session-authenticated GenericService -- it's a public, unauthenticated
+            // kiosk display. Adding the guard here would invent a login requirement
+            // legacy never had (see docs/ANGULAR_PENDING_FINDINGS.md entry 33).
+            {
+                path: 'display/:orgId/:unitId/:cookieskioskId/:userId',
+                data: { title: 'QMS Token Display' },
+                loadComponent: () => import('./features/display/display').then((m) => m.Display),
+            },
+            // webAppointmentBookingConfirmation: no moduleAccessGuard. Confirmed at
+            // app.js:21006-21013 -- no resolve block, and the controller (65 lines,
+            // read in full) makes zero backend calls at all, so there's no session
+            // requirement to even discover -- a public, patient-facing appointment
+            // confirmation screen. `webAppConfirmationObj` is an in-memory-only
+            // ui-router param, not part of the URL -- see
+            // WebAppointmentHandoffService for how this is replicated.
+            {
+                path: 'webAppointmentBookingConfirmation',
+                data: { title: 'Web Appointment Confirmation' },
+                loadComponent: () => import('./features/web-appointment-booking-confirmation/web-appointment-booking-confirmation').then((m) => m.WebAppointmentBookingConfirmation),
+            },
+            // pesapalProcessPage: no data.moduleId (no resolve block in legacy's
+            // state), but moduleAccessGuard's baseline "must be logged in" check
+            // still applies -- the controller has a real cookieObject session guard
+            // (pesapalSuccessPageController.js:22-27), same shape as
+            // billingGroupMaster/periodicityService.
+            {
+                path: 'pesapalProcessPage',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Pesapal' },
+                loadComponent: () => import('./features/pesapal-process-page/pesapal-process-page').then((m) => m.PesapalProcessPage),
+            },
+            // Phase 4 batch 13 -- dashboard family, none have a data.moduleId (no
+            // resolve block in legacy for any of the 6). home/doctorDashboard are
+            // primary destinations (shell-nav entries below); the 3 *Info screens
+            // are reached from their parent dashboard's quick-links, not top-level
+            // nav, matching the `home` precedent.
+            {
+                path: 'home',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Home' },
+                loadComponent: () => import('./features/home/home').then((m) => m.Home),
+            },
+            {
+                path: 'doctorDashboard',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Dashboard - Doctor' },
+                loadComponent: () => import('./features/doctor-dashboard/doctor-dashboard').then((m) => m.DoctorDashboard),
+            },
+            {
+                path: 'dashboardInfo',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Dashboard' },
+                loadComponent: () => import('./features/dashboard-info/dashboard-info').then((m) => m.DashboardInfo),
+            },
+            {
+                path: 'doctorDashboardInfo',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Dashboard - Doctor' },
+                loadComponent: () => import('./features/doctor-dashboard-info/doctor-dashboard-info').then((m) => m.DoctorDashboardInfo),
+            },
+            {
+                path: 'nurseDashboardInfo',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Dashboard - Nurse' },
+                loadComponent: () => import('./features/nurse-dashboard-info/nurse-dashboard-info').then((m) => m.NurseDashboardInfo),
+            },
+            // viewAssetScheduler: no data.moduleId (no resolve block), but a real
+            // cookieObject session guard in the controller -- same shape as
+            // pesapalProcessPage.
+            {
+                path: 'viewAssetScheduler',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Asset PMS Scheduler' },
+                loadComponent: () => import('./features/view-asset-scheduler/view-asset-scheduler').then((m) => m.ViewAssetScheduler),
+            },
+            // pharman: no data.moduleId (no resolve block), real cookieObject
+            // session guard in the controller -- same shape as pesapalProcessPage.
+            {
+                path: 'pharman',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Pharman Page' },
+                loadComponent: () => import('./features/pharman/pharman').then((m) => m.Pharman),
+            },
+            // webAppointmentBooking: no moduleAccessGuard. Confirmed at
+            // app.js:20989-20994 -- no resolve block, and the controller has zero
+            // session guard anywhere ($scope.userId hardcoded to 1) -- a genuinely
+            // public, patient-facing doctor-browsing landing page.
+            {
+                path: 'webAppointmentBooking/:orgId/:unitId',
+                data: { title: 'Web Appointment' },
+                loadComponent: () => import('./features/web-appointment-booking/web-appointment-booking').then((m) => m.WebAppointmentBooking),
+            },
+            // scheduleWorklist: no data.moduleId (no resolve block), real
+            // cookieObject + cookieObjectAppConfig guards in the controller --
+            // moduleAccessGuard covers the first, the second is checked in the
+            // component itself (see schedule-worklist.ts doc comment).
+            {
+                path: 'scheduleWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Schedule Worklist' },
+                loadComponent: () => import('./features/schedule-worklist/schedule-worklist').then((m) => m.ScheduleWorklist),
+            },
+            // PMSchedule: no data.moduleId (no resolve block), real cookieObject +
+            // cookieObjectAppConfig guards, same shape as scheduleWorklist. NO
+            // store-selection modal wiring -- legacy's own selectedTopStore check
+            // is entirely commented out for this screen (see pm-schedule.ts doc
+            // comment).
+            {
+                path: 'PMSchedule',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'PM Schedule' },
+                loadComponent: () => import('./features/pm-schedule/pm-schedule').then((m) => m.PmSchedule),
+            },
+            // PMRequest: module 224 ("PM Request") exists in adminPriviledges.json for
+            // sidebar-visibility only in legacy -- no real resolve-block gate. Wiring
+            // data.moduleId here is a disclosed improvement, same precedent as
+            // billingGroupMaster's route (see docs/ANGULAR_PENDING_FINDINGS.md entry 138).
+            {
+                path: 'PMRequest',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 224, title: 'PM Request' },
+                loadComponent: () => import('./features/pm-request/pm-request').then((m) => m.PmRequest),
+            },
+            // assetScheduler: no data.moduleId (no resolve block), real cookieObject
+            // guard only (no cookieObjectAppConfig check, unlike scheduleWorklist/PMSchedule).
+            {
+                path: 'assetScheduler',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Asset PMS Scheduler' },
+                loadComponent: () => import('./features/asset-scheduler/asset-scheduler').then((m) => m.AssetScheduler),
+            },
+            // detailScheduleWorklist: no data.moduleId (no resolve block), real
+            // cookieObject guard, active storePopup wiring (entry 37 recurs here).
+            {
+                path: 'detailScheduleWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Schedule Worklist' },
+                loadComponent: () => import('./features/detail-schedule-worklist/detail-schedule-worklist').then((m) => m.DetailScheduleWorklist),
+            },
+            // bookView: no data.moduleId (no resolve block), real cookieObject +
+            // cookieObjectAppConfig guards in the controller, same shape as
+            // pesapalProcessPage. SCOPED REBUILD -- see book-view.ts's class doc
+            // comment: covers the guards and the corrected patient-context safety
+            // check (entry 28) plus the header it gates, not the full 81-function
+            // tab surface of the 4,027-line legacy controller.
+            {
+                path: 'bookView',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Book View' },
+                loadComponent: () => import('./features/book-view/book-view').then((m) => m.BookView),
+            },
+            // bookAppointment: no session guard in legacy (confirmed by full read) --
+            // reached only via webAppointmentBooking's public flow. Receives
+            // webAppDetailObj via BookAppointmentHandoffService (sending side
+            // already built in webAppointmentBooking, batch 1b).
+            {
+                path: 'bookAppointment',
+                data: { title: 'Book Appointment' },
+                loadComponent: () => import('./features/book-appointment/book-appointment').then((m) => m.BookAppointment),
+            },
+            // outPatientFeedback / inPatientFeedback: no session guard anywhere in
+            // either legacy controller (confirmed by full read) -- genuinely public,
+            // patient-facing feedback forms. Route path drops legacy's literal
+            // `/api` prefix -- see out-patient-feedback.ts's doc comment for why
+            // (this app's Router is path-based, not hash-based like ui-router, so
+            // keeping `/api` in a frontend route would collide with this dev
+            // server's own `/api/**` proxy rule on every direct navigation).
+            {
+                path: 'outPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:encounterId',
+                data: { title: 'OutPatient Feedback' },
+                loadComponent: () => import('./features/out-patient-feedback/out-patient-feedback').then((m) => m.OutPatientFeedback),
+            },
+            {
+                path: 'inPatientFeedback/:organizationId/:unitId/:patientId/:visitType/:visitTypeId/:admissionId',
+                data: { title: 'InPatient Feedback' },
+                loadComponent: () => import('./features/in-patient-feedback/in-patient-feedback').then((m) => m.InPatientFeedback),
+            },
+            // Phase 4 batch 2 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+            // follow-on). All 8 have a real cookieObject session guard in their
+            // legacy controller; 3 also have a real module-access resolve block
+            // (moduleId noted per route below), the rest have none (faithful match
+            // to legacy's own lack of a resolve block, same as several batch 1
+            // screens).
+            {
+                path: 'detailsFixedAssetMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Add Fixed Asset Opening Balance' },
+                loadComponent: () => import('./features/details-fixed-asset-master/details-fixed-asset-master').then((m) => m.DetailsFixedAssetMaster),
+            },
+            {
+                path: 'correctiveMaintenanceWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Worklist' },
+                loadComponent: () => import('./features/corrective-maintenance-worklist/corrective-maintenance-worklist').then((m) => m.CorrectiveMaintenanceWorklist),
+            },
+            {
+                path: 'assetIssueAcceptance',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 215, title: 'Asset Issuance Acceptance' },
+                loadComponent: () => import('./features/asset-issue-acceptance/asset-issue-acceptance').then((m) => m.AssetIssueAcceptance),
+            },
+            {
+                path: 'assetReturnAcceptance',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 217, title: 'Asset Return Acceptance' },
+                loadComponent: () => import('./features/asset-return-acceptance/asset-return-acceptance').then((m) => m.AssetReturnAcceptance),
+            },
+            {
+                path: 'correctiveMaintenanceScheduleWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Schedule Worklist' },
+                loadComponent: () => import('./features/corrective-maintenance-schedule-worklist/corrective-maintenance-schedule-worklist').then((m) => m.CorrectiveMaintenanceScheduleWorklist),
+            },
+            {
+                path: 'linenIssueacceptance',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 96, title: 'Linen Issuance Acceptance' },
+                loadComponent: () => import('./features/linen-issue-acceptance/linen-issue-acceptance').then((m) => m.LinenIssueAcceptance),
+            },
+            {
+                path: 'linenIssueAcceptanceDetails',
+                canActivate: [moduleAccessGuard],
+                // No legacy title (self-registered state, never set one) -- plain,
+                // sensible label instead of leaving the top bar blank.
+                data: { title: 'Linen Issuance Acceptance Details' },
+                loadComponent: () => import('./features/linen-issue-acceptance-details/linen-issue-acceptance-details').then((m) => m.LinenIssueAcceptanceDetails),
+            },
+            {
+                path: 'createTabularDataTemplates',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Tabular Data Template' },
+                loadComponent: () => import('./features/create-tabular-data-templates/create-tabular-data-templates').then((m) => m.CreateTabularDataTemplates),
+            },
+            // Phase 4 batch 3 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+            // follow-on). All 8 are Asset Management screens; only rejectedAssetAcceptance
+            // has a real module-access resolve block in legacy (moduleId 218, confirmed
+            // in rejectedAssetAcceptanceController.js's own self-registered state) --
+            // the rest have none, faithfully matching legacy's own lack of a resolve
+            // block, same convention as several batch 1/2 screens.
+            {
+                path: 'correctiveMaintenance',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Request' },
+                loadComponent: () => import('./features/corrective-maintenance/corrective-maintenance').then((m) => m.CorrectiveMaintenance),
+            },
+            {
+                path: 'detailsCorrectiveMaintenance',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Request' },
+                loadComponent: () => import('./features/details-corrective-maintenance/details-corrective-maintenance').then((m) => m.DetailsCorrectiveMaintenance),
+            },
+            {
+                path: 'addNewCorrectiveMaintenance',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Request' },
+                loadComponent: () => import('./features/add-new-corrective-maintenance/add-new-corrective-maintenance').then((m) => m.AddNewCorrectiveMaintenance),
+            },
+            {
+                path: 'correctiveMaintenanceReturnWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Return Worklist' },
+                loadComponent: () => import('./features/corrective-maintenance-return-worklist/corrective-maintenance-return-worklist').then((m) => m.CorrectiveMaintenanceReturnWorklist),
+            },
+            {
+                path: 'rejectedAssetAcceptance',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 218, title: 'Rejected Asset Acceptance' },
+                loadComponent: () => import('./features/rejected-asset-acceptance/rejected-asset-acceptance').then((m) => m.RejectedAssetAcceptance),
+            },
+            {
+                path: 'assetReturnAcceptanceDetails',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Asset Return Acceptance' },
+                loadComponent: () => import('./features/asset-return-acceptance-details/asset-return-acceptance-details').then((m) => m.AssetReturnAcceptanceDetails),
+            },
+            {
+                path: 'detailsAssetIssueAcceptance',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Asset Issue Acceptance' },
+                loadComponent: () => import('./features/details-asset-issue-acceptance/details-asset-issue-acceptance').then((m) => m.DetailsAssetIssueAcceptance),
+            },
+            {
+                path: 'fixedAssetType',
+                canActivate: [moduleAccessGuard],
+                // No legacy title either (same reason as linenIssueAcceptanceDetails
+                // above) -- matches the screen's own H1 heading instead.
+                data: { title: 'Fixed Asset Type' },
+                loadComponent: () => import('./features/fixed-asset-type/fixed-asset-type').then((m) => m.FixedAssetType),
+            },
+            // Phase 4 batch 4 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+            // follow-on). Diversified across 6 modules (per owner instruction),
+            // all simple master-data CRUD screens. bedBook was pre-screened out
+            // as a mockup (entry 53) and is not built. Shell integration (this
+            // nesting + `data.title`) is now standard practice from this batch
+            // onward -- applied at Step 3, not retrofitted afterward.
+            {
+                path: 'specialityMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 372, title: 'Department Master' },
+                loadComponent: () => import('./features/speciality-master/speciality-master').then((m) => m.SpecialityMaster),
+            },
+            {
+                path: 'nationalityMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 381, title: 'Nationality Master' },
+                loadComponent: () => import('./features/nationality-master/nationality-master').then((m) => m.NationalityMaster),
+            },
+            {
+                path: 'countryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 383, title: 'Country Master' },
+                loadComponent: () => import('./features/country-master/country-master').then((m) => m.CountryMaster),
+            },
+            {
+                path: 'cityMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 386, title: 'City Master' },
+                loadComponent: () => import('./features/city-master/city-master').then((m) => m.CityMaster),
+            },
+            {
+                path: 'wardMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 545, title: 'Ward Master' },
+                loadComponent: () => import('./features/ward-master/ward-master').then((m) => m.WardMaster),
+            },
+            // Phase 4 batch 25.
+            {
+                path: 'icutypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 374, title: 'ICU Type Master' },
+                loadComponent: () => import('./features/icu-type-master/icu-type-master').then((m) => m.IcuTypeMaster),
+            },
+            {
+                path: 'bedCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 543, title: 'Bed Category Master' },
+                loadComponent: () => import('./features/bed-category-master/bed-category-master').then((m) => m.BedCategoryMaster),
+            },
+            // Phase 4 batch 25.
+            {
+                path: 'billingBedCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 544, title: 'Billing Ward Bed Category Master' },
+                loadComponent: () => import('./features/billing-bed-category-master/billing-bed-category-master').then((m) => m.BillingBedCategoryMaster),
+            },
+            {
+                path: 'ambulanceTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 813, title: 'Ambulance Type Master' },
+                loadComponent: () => import('./features/ambulance-type-master/ambulance-type-master').then((m) => m.AmbulanceTypeMaster),
+            },
+            {
+                path: 'ambulanceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 814, title: 'Ambulance Master' },
+                loadComponent: () => import('./features/ambulance-master/ambulance-master').then((m) => m.AmbulanceMaster),
+            },
+            {
+                path: 'doctorCategory',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 453, title: 'Doctor Category' },
+                loadComponent: () => import('./features/doctor-category/doctor-category').then((m) => m.DoctorCategory),
+            },
+            // Phase 4 batch 5 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+            // follow-on). Diversified across 6 modules, 3 new to the rebuild
+            // (Admin - Queue Management, Admin - User Management,
+            // Admin - Configuration). All 10 pre-screened real; entry 55's
+            // standing policy applies to any of these using the shared <modal>
+            // directive (see docs/ANGULAR_PENDING_FINDINGS.md).
+            {
+                path: 'QMSkioskMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 795, title: 'QMS Kiosk Master' },
+                loadComponent: () => import('./features/qms-kiosk-master/qms-kiosk-master').then((m) => m.QmsKioskMaster),
+            },
+            {
+                path: 'QMSdepartmentMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 796, title: 'QMS Department Master' },
+                loadComponent: () => import('./features/qms-department-master/qms-department-master').then((m) => m.QmsDepartmentMaster),
+            },
+            {
+                path: 'bedTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 402, title: 'Ward Bed Type Master' },
+                loadComponent: () => import('./features/bed-type-master/bed-type-master').then((m) => m.BedTypeMaster),
+            },
+            {
+                path: 'shortLeaveReasonMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 406, title: 'Short Leave Reason Master' },
+                loadComponent: () => import('./features/short-leave-reason-master/short-leave-reason-master').then((m) => m.ShortLeaveReasonMaster),
+            },
+            {
+                path: 'ambulanceFacilitiesMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 818, title: 'Ambulance Facilities Master' },
+                loadComponent: () => import('./features/ambulance-facilities-master/ambulance-facilities-master').then((m) => m.AmbulanceFacilitiesMaster),
+            },
+            {
+                path: 'qualificationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 496, title: 'Qualification Master' },
+                loadComponent: () => import('./features/qualification-master/qualification-master').then((m) => m.QualificationMaster),
+            },
+            {
+                path: 'degreeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 497, title: 'Degree Master' },
+                loadComponent: () => import('./features/degree-master/degree-master').then((m) => m.DegreeMaster),
+            },
+            {
+                path: 'userStoreMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 690, title: 'User Store Mapper' },
+                loadComponent: () => import('./features/user-store-mapper/user-store-mapper').then((m) => m.UserStoreMapper),
+            },
+            {
+                path: 'doctorCabinMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 714, title: 'Doctor Cabin Mapper' },
+                loadComponent: () => import('./features/doctor-cabin-mapper/doctor-cabin-mapper').then((m) => m.DoctorCabinMapper),
+            },
+            {
+                path: 'prefixConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 699, title: 'Prefix Configuration' },
+                loadComponent: () => import('./features/prefix-configuration/prefix-configuration').then((m) => m.PrefixConfiguration),
+            },
+            // Phase 4 batch 6 (docs/ANGULAR_PHASE4_SEQUENCING_RECOMMENDATION.md
+            // follow-on). Diversified across Ward/Unit Master, HR/Staff Master,
+            // User Management, and ADT-Ambulance. Entry 55's standing policy
+            // (working closeConfirmModal() instead of legacy's crashing shared
+            // <modal> cancel()) applies to 8 of these 10 screens -- confirmed via
+            // full pre-build audit, a wider blast radius than the 5 originally
+            // assumed going into this batch (see docs/ANGULAR_PENDING_FINDINGS.md
+            // entry 55). userCounterMapper faithfully reproduces entry 59's
+            // dual-list-picker indexOf/splice bug (3rd on-branch instance).
+            {
+                path: 'floorMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 537, title: 'Floor Master' },
+                loadComponent: () => import('./features/floor-master/floor-master').then((m) => m.FloorMaster),
+            },
+            {
+                path: 'amenityMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 539, title: 'Amenity Master' },
+                loadComponent: () => import('./features/amenity-master/amenity-master').then((m) => m.AmenityMaster),
+            },
+            {
+                path: 'wingMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 540, title: 'Wing Master' },
+                loadComponent: () => import('./features/wing-master/wing-master').then((m) => m.WingMaster),
+            },
+            {
+                path: 'counterMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 704, title: 'Counter Master' },
+                loadComponent: () => import('./features/counter-master/counter-master').then((m) => m.CounterMaster),
+            },
+            {
+                path: 'cabinMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 705, title: 'Cabin Master' },
+                loadComponent: () => import('./features/cabin-master/cabin-master').then((m) => m.CabinMaster),
+            },
+            {
+                path: 'employeeCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 498, title: 'Employee Category Master' },
+                loadComponent: () => import('./features/employee-category-master/employee-category-master').then((m) => m.EmployeeCategoryMaster),
+            },
+            {
+                path: 'designationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 500, title: 'Designation Master' },
+                loadComponent: () => import('./features/designation-master/designation-master').then((m) => m.DesignationMaster),
+            },
+            {
+                path: 'userCounterMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 715, title: 'User Counter Mapper' },
+                loadComponent: () => import('./features/user-counter-mapper/user-counter-mapper').then((m) => m.UserCounterMapper),
+            },
+            {
+                path: 'resourceAllocationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 817, title: 'Resource Allocation Master' },
+                loadComponent: () => import('./features/resource-allocation-master/resource-allocation-master').then((m) => m.ResourceAllocationMaster),
+            },
+            {
+                path: 'rowMasters',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 1070, title: 'MRD Row Master' },
+                loadComponent: () => import('./features/row-masters/row-masters').then((m) => m.RowMasters),
+            },
+            {
+                path: 'subSpecialityMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 373, title: 'Sub Speciality Master' },
+                loadComponent: () => import('./features/sub-speciality-master/sub-speciality-master').then((m) => m.SubSpecialityMaster),
+            },
+            {
+                path: 'bankMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 456, title: 'Bank Master' },
+                loadComponent: () => import('./features/bank-master/bank-master').then((m) => m.BankMaster),
+            },
+            {
+                path: 'manufacturerMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 461, title: 'Manufacturer Master' },
+                loadComponent: () => import('./features/manufacturer-master/manufacturer-master').then((m) => m.ManufacturerMaster),
+            },
+            {
+                path: 'mealPreferenceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 549, title: 'Meal Preference Master' },
+                loadComponent: () => import('./features/meal-preference-master/meal-preference-master').then((m) => m.MealPreferenceMaster),
+            },
+            {
+                path: 'boxMasters',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 1069, title: 'MRD Box Master' },
+                loadComponent: () => import('./features/box-masters/box-masters').then((m) => m.BoxMasters),
+            },
+            {
+                path: 'QMScounterMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 797, title: 'QMS Counter Master' },
+                loadComponent: () => import('./features/qms-counter-master/qms-counter-master').then((m) => m.QmsCounterMaster),
+            },
+            {
+                path: 'modalityTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 654, title: 'Modality Type Master' },
+                loadComponent: () => import('./features/modality-type-master/modality-type-master').then((m) => m.ModalityTypeMaster),
+            },
+            {
+                path: 'ambulanceServiceProviderMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 815, title: 'Ambulance Service Provider Master' },
+                loadComponent: () => import('./features/ambulance-service-provider-master/ambulance-service-provider-master').then((m) => m.AmbulanceServiceProviderMaster),
+            },
+            {
+                path: 'ambulanceTarrifMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 816, title: 'Ambulance Tariff Master' },
+                loadComponent: () => import('./features/ambulance-tarrif-master/ambulance-tarrif-master').then((m) => m.AmbulanceTarrifMaster),
+            },
+            {
+                path: 'passTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 821, title: 'Pass Type Master' },
+                loadComponent: () => import('./features/pass-type-master/pass-type-master').then((m) => m.PassTypeMaster),
+            },
+            {
+                // No `data.moduleId` -- legacy's state genuinely has no resolve
+                // block (confirmed reading app.js:20435 directly), same class as
+                // billingGroupMaster/periodicityService above.
+                path: 'departmentStoreMapper',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Department Store Mapper' },
+                loadComponent: () => import('./features/department-store-mapper/department-store-mapper').then((m) => m.DepartmentStoreMapper),
+            },
+            {
+                path: 'raceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 382, title: 'Race Master' },
+                loadComponent: () => import('./features/race-master/race-master').then((m) => m.RaceMaster),
+            },
+            {
+                path: 'stateMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 384, title: 'State Master' },
+                loadComponent: () => import('./features/state-master/state-master').then((m) => m.StateMaster),
+            },
+            {
+                path: 'districtMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 385, title: 'District Master' },
+                loadComponent: () => import('./features/district-master/district-master').then((m) => m.DistrictMaster),
+            },
+            {
+                path: 'relationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 390, title: 'Relation Master' },
+                loadComponent: () => import('./features/relation-master/relation-master').then((m) => m.RelationMaster),
+            },
+            // Phase 4 batch 24.
+            {
+                path: 'vitalQualifierMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Vital Observations Qualifier Master' },
+                loadComponent: () => import('./features/vital-qualifier-master/vital-qualifier-master').then((m) => m.VitalQualifierMaster),
+            },
+            {
+                path: 'checklistEquipmentMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 526, title: 'Checklist Equipment Master' },
+                loadComponent: () => import('./features/checklist-equipment-master/checklist-equipment-master').then((m) => m.ChecklistEquipmentMaster),
+            },
+            {
+                path: 'checklistEquipmentMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 526, title: 'Checklist Equipment Mapper' },
+                loadComponent: () => import('./features/checklist-equipment-mapper/checklist-equipment-mapper').then((m) => m.ChecklistEquipmentMapper),
+            },
+            {
+                path: 'autoclaveMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 553, title: 'Autoclave Master' },
+                loadComponent: () => import('./features/autoclave-master/autoclave-master').then((m) => m.AutoclaveMaster),
+            },
+            {
+                // Legacy state name is 'checklistItem' (not 'checklistItemMaster'),
+                // confirmed via app.js:12511-12535 -- matched here, not guessed.
+                path: 'checklistItem',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 525, title: 'Checklist Item' },
+                loadComponent: () => import('./features/checklist-item-master/checklist-item-master').then((m) => m.ChecklistItemMaster),
+            },
+            {
+                path: 'maritalstatusMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 391, title: 'Marital Status Master' },
+                loadComponent: () => import('./features/marital-status-master/marital-status-master').then((m) => m.MaritalStatusMaster),
+            },
+            {
+                path: 'occupationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 393, title: 'Occupation Master' },
+                loadComponent: () => import('./features/occupation-master/occupation-master').then((m) => m.OccupationMaster),
+            },
+            {
+                path: 'patientSourceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 394, title: 'Patient Source of referral Master' },
+                loadComponent: () => import('./features/patient-source-master/patient-source-master').then((m) => m.PatientSourceMaster),
+            },
+            {
+                path: 'referralTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 395, title: 'Referral Type Master' },
+                loadComponent: () => import('./features/referral-type-master/referral-type-master').then((m) => m.ReferralTypeMaster),
+            },
+            // Phase 4 batch 27 (billing tier 1): taxComponentMaster -- legacy app.js
+            // state is commented out (no active legacy module resolve), so NO moduleId
+            // is registered, matching legacy's effectively-unreachable state (playbook
+            // rule: don't invent a stricter check than legacy actually has).
+            {
+                path: 'taxComponentMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Tax Component Master' },
+                loadComponent: () => import('./features/tax-component-master/tax-component-master').then((m) => m.TaxComponentMaster),
+            },
+            // Phase 4 batch 27 (billing tier 1): couponTemplateMaster -- module 775
+            // (legacy resolve block). The add/edit form is a separate legacy state
+            // (couponTemplate); this rebuild merges both into one routed screen.
+            {
+                path: 'couponTemplateMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 775, title: 'Coupon Template Master' },
+                loadComponent: () => import('./features/coupon-template-master/coupon-template-master').then((m) => m.CouponTemplateMaster),
+            },
+            // Phase 4 batch 27 (billing tier 1): multicounterPackage -- module 627
+            // (legacy resolve block). List/search + status toggle; the add/edit
+            // builder (legacy addNewMultiEncounter, ~70KB controller) is a flagged
+            // follow-up per the batch report's SME points.
+            {
+                path: 'multicounterPackage',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 627, title: 'Multi-Counter Package' },
+                loadComponent: () => import('./features/multicounter-package/multicounter-package').then((m) => m.MulticounterPackage),
+            },
+            {
+                path: 'prefixMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 398, title: 'Prefix Master' },
+                loadComponent: () => import('./features/prefix-master/prefix-master').then((m) => m.PrefixMaster),
+            },
+            {
+                path: 'gradeCreationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 575, title: 'Grade Creation Master' },
+                loadComponent: () => import('./features/grade-creation-master/grade-creation-master').then((m) => m.GradeCreationMaster),
+            },
+            // qmslogo: no data.moduleId (no resolve block), same shape as
+            // billingGroupMaster/periodicityService. Anonymous-write backend gap
+            // tracked separately, see docs/DECISION_NEEDED_QmslogoAnonymousWriteAccess.md.
+            {
+                path: 'qmslogo',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'QMS Logo' },
+                loadComponent: () => import('./features/qmslogo/qmslogo').then((m) => m.Qmslogo),
+            },
+            // qualityParameterMaster: no data.moduleId (no resolve block), same
+            // shape as billingGroupMaster/periodicityService.
+            {
+                path: 'qualityParameterMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Quality Parameter Master' },
+                loadComponent: () => import('./features/quality-parameter-master/quality-parameter-master').then((m) => m.QualityParameterMaster),
+            },
+            {
+                path: 'employeeCategory',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 454, title: 'Employee Category' },
+                loadComponent: () => import('./features/employee-category/employee-category').then((m) => m.EmployeeCategory),
+            },
+            {
+                path: 'bankBranch',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 455, title: 'Bank Branch' },
+                loadComponent: () => import('./features/bank-branch/bank-branch').then((m) => m.BankBranch),
+            },
+            // Phase 4 batch 9
+            {
+                path: 'doctorCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 499, title: 'Doctor Category Master' },
+                loadComponent: () => import('./features/doctor-category-master/doctor-category-master').then((m) => m.DoctorCategoryMaster),
+            },
+            {
+                path: 'roleManagement',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 675, title: 'Role Management' },
+                loadComponent: () => import('./features/role-management/role-management').then((m) => m.RoleManagement),
+            },
+            // resetPwdconfirmPwd: no data.moduleId (no resolve block) -- self-service
+            // "change my own password", reached via the top bar, not the sidebar.
+            {
+                path: 'resetPwdconfirmPwd',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Reset Password' },
+                loadComponent: () => import('./features/reset-pwd-confirm-pwd/reset-pwd-confirm-pwd').then((m) => m.ResetPwdConfirmPwd),
+            },
+            // userAuthentication: moduleId 676, confirmed from the live resolve block.
+            // Password-viewing feature (getUserAuthenticationList/sendPasswordToUser/
+            // resendUserNameAndPassword) deliberately omitted pending owner decision --
+            // see docs/DECISION_NEEDED_UserAuthenticationPlaintextPasswordDisclosure.md.
+            {
+                path: 'userAuthentication',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 676, title: 'User Authentication' },
+                loadComponent: () => import('./features/user-authentication/user-authentication').then((m) => m.UserAuthentication),
+            },
+            {
+                path: 'rackMasters',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 1068, title: 'MRD Rack Master' },
+                loadComponent: () => import('./features/rack-masters/rack-masters').then((m) => m.RackMasters),
+            },
+            {
+                path: 'weekendMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 697, title: 'Weekend Master' },
+                loadComponent: () => import('./features/weekend-master/weekend-master').then((m) => m.WeekendMaster),
+            },
+            {
+                path: 'genericMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 463, title: 'Generic Master' },
+                loadComponent: () => import('./features/generic-master/generic-master').then((m) => m.GenericMaster),
+            },
+            {
+                path: 'createTabularTemplates',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 736, title: 'Tabular Template' },
+                loadComponent: () => import('./features/create-tabular-templates/create-tabular-templates').then((m) => m.CreateTabularTemplates),
+            },
+            {
+                path: 'modalityMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 655, title: 'Modality Master' },
+                loadComponent: () => import('./features/modality-master/modality-master').then((m) => m.ModalityMaster),
+            },
+            {
+                path: 'displayCall',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 794, title: 'QMS Token Display' },
+                loadComponent: () => import('./features/display-call/display-call').then((m) => m.DisplayCall),
+            },
+            // QMSMasterCall: moduleId 794, confirmed from the live resolve block --
+            // reached from the nav; launches QMS (below) in a new tab on confirm.
+            {
+                path: 'QMSMasterCall',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 794, title: 'QMS Token' },
+                loadComponent: () => import('./features/qms-master-call/qms-master-call').then((m) => m.QmsMasterCall),
+            },
+            // QMS: no resolve block, no moduleId -- reached only via QMSMasterCall's
+            // window.open('/QMS') launch action, same treatment as `display` (kiosk,
+            // no nav entry, see docs/ANGULAR_PENDING_FINDINGS.md entry 138).
+            {
+                path: 'QMS',
+                data: { title: 'QMS Token' },
+                loadComponent: () => import('./features/qms/qms').then((m) => m.Qms),
+            },
+            {
+                path: 'linenIssue',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 344, title: 'Linen Issue' },
+                loadComponent: () => import('./features/linen-issue/linen-issue').then((m) => m.LinenIssue),
+            },
+            {
+                path: 'advisedVisits',
+                loadComponent: () => import('./features/advised-visits/advised-visits').then((m) => m.AdvisedVisits),
+                data: { title: 'Advised Visits' },
+            },
+            // Phase 4 batch 10
+            {
+                path: 'hospitalMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 371, requireSuperUser: true, title: 'Hospital Master' },
+                loadComponent: () => import('./features/hospital-master/hospital-master').then((m) => m.HospitalMaster),
+            },
+            {
+                path: 'roomMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 550, title: 'Room Master' },
+                loadComponent: () => import('./features/room-master/room-master').then((m) => m.RoomMaster),
+            },
+            // roomModality: no data.moduleId (no resolve block), same shape as
+            // billingGroupMaster/periodicityService.
+            {
+                path: 'roomModality',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Room Modality' },
+                loadComponent: () => import('./features/room-modality/room-modality').then((m) => m.RoomModality),
+            },
+            {
+                path: 'frequencyMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 478, title: 'Frequency Master' },
+                loadComponent: () => import('./features/frequency-master/frequency-master').then((m) => m.FrequencyMaster),
+            },
+            {
+                path: 'roleCreation',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 672, title: 'Role Creation' },
+                loadComponent: () => import('./features/role-creation/role-creation').then((m) => m.RoleCreation),
+            },
+            {
+                path: 'linenIssuePendingDetails',
+                loadComponent: () => import('./features/linen-issue-pending-details/linen-issue-pending-details').then((m) => m.LinenIssuePendingDetails),
+                data: { title: 'Linen Issue Pending Details' },
+            },
+            {
+                path: 'newAccessControl',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 677, title: 'Access Control' },
+                loadComponent: () => import('./features/new-access-control/new-access-control').then((m) => m.NewAccessControl),
+            },
+            {
+                path: 'ticketSystemMaster',
+                loadComponent: () => import('./features/ticket-system-master/ticket-system-master').then((m) => m.TicketSystemMaster),
+                data: { title: 'Ticket System Master' },
+            },
+            {
+                // Legacy's real state/URL is `aIButtonMaster` (capital "I") -- confirmed
+                // from the live .state() self-registration and the sidebar's own href,
+                // not `aiButtonMaster`. Kept for parity even though it looks like a typo.
+                path: 'aIButtonMaster',
+                loadComponent: () => import('./features/ai-button-master/ai-button-master').then((m) => m.AiButtonMaster),
+                data: { title: 'AI Button Master' },
+            },
+            {
+                // Phase 4 batch 25. Previously deferred out of batch 14 (see
+                // docs/ANGULAR_PENDING_FINDINGS.md entry 143) over the
+                // doctor-identity-binding concern, not any code defect -- built
+                // now per this batch's explicit assignment. Legacy's own `.state()`
+                // has no `resolve` block (states_enriched.json: has_resolve=false),
+                // matching `aIButtonMaster` above -- no moduleId gate here either.
+                path: 'aiButtonConfiguration',
+                loadComponent: () => import('./features/ai-button-configuration/ai-button-configuration').then((m) => m.AiButtonConfiguration),
+                data: { title: 'AI Button Configuration' },
+            },
+            {
+                path: 'employeeSurvey',
+                loadComponent: () => import('./features/employee-survey/employee-survey').then((m) => m.EmployeeSurvey),
+                data: { title: 'Employee Satisfaction Survey' },
+            },
+            {
+                path: 'holidayCalendarMasterUnit',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 536, title: 'Holiday Calendar Master' },
+                loadComponent: () => import('./features/holiday-calendar-master-unit/holiday-calendar-master-unit').then((m) => m.HolidayCalendarMasterUnit),
+            },
+            // Phase 4 batch 11 (size-experiment batch, 15 screens). All confirmed
+            // real, backend-existence-checked per-screen by the parallel audit
+            // agents; moduleId/requireSuperUser values read directly from each
+            // state's own live resolve block in app.js (or, for self-registered
+            // states, the controller's own `.config($stateProvider)` block), not
+            // assumed. `outSideHospitalMaster`, `ICPCMapper`, `icpcCodesConfiguration`
+            // have no `data.moduleId` -- confirmed their legacy states genuinely
+            // have no resolve block at all, same class as billingGroupMaster/
+            // periodicityService above, not a gap this rebuild introduces.
+            {
+                path: 'areaMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 387, title: 'Area Master' },
+                loadComponent: () => import('./features/area-master/area-master').then((m) => m.AreaMaster),
+            },
+            {
+                path: 'holidayCalenderMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 375, title: 'Holiday Calendar Master' },
+                loadComponent: () => import('./features/holiday-calender-master/holiday-calender-master').then((m) => m.HolidayCalenderMaster),
+            },
+            {
+                path: 'clinicMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 504, title: 'Clinic Master' },
+                loadComponent: () => import('./features/clinic-master/clinic-master').then((m) => m.ClinicMaster),
+            },
+            {
+                path: 'outSideHospitalMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Out Side Hospital Master' },
+                loadComponent: () => import('./features/out-side-hospital-master/out-side-hospital-master').then((m) => m.OutSideHospitalMaster),
+            },
+            {
+                path: 'reasonMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 495, title: 'Reason Master' },
+                loadComponent: () => import('./features/reason-master/reason-master').then((m) => m.ReasonMaster),
+            },
+            {
+                path: 'reasonTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 494, title: 'Reason Type Master' },
+                loadComponent: () => import('./features/reason-type-master/reason-type-master').then((m) => m.ReasonTypeMaster),
+            },
+            {
+                path: 'rejectionMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 493, title: 'Rejection Master' },
+                loadComponent: () => import('./features/rejection-master/rejection-master').then((m) => m.RejectionMaster),
+            },
+            {
+                path: 'systemMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 484, title: 'System Master' },
+                loadComponent: () => import('./features/system-master/system-master').then((m) => m.SystemMaster),
+            },
+            {
+                path: 'systemObservationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 485, title: 'System Observations Master' },
+                loadComponent: () => import('./features/system-observation-master/system-observation-master').then((m) => m.SystemObservationMaster),
+            },
+            {
+                // Legacy's real state/URL uses capital "ICPC" throughout (self-registered
+                // in the controller's own file, not central app.js) -- confirmed via
+                // direct source read, kept for parity.
+                path: 'ICPCMapper',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'ICPC Mapper' },
+                loadComponent: () => import('./features/icpc-mapper/icpc-mapper').then((m) => m.IcpcMapper),
+            },
+            {
+                path: 'icpcCodesConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'ICPC Codes Configuration' },
+                loadComponent: () => import('./features/icpc-codes-configuration/icpc-codes-configuration').then((m) => m.IcpcCodesConfiguration),
+            },
+            {
+                path: 'instructionMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 501, title: 'Instruction Master' },
+                loadComponent: () => import('./features/instruction-master/instruction-master').then((m) => m.InstructionMaster),
+            },
+            {
+                path: 'assetTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 641, title: 'Asset Type Master' },
+                loadComponent: () => import('./features/asset-type-master/asset-type-master').then((m) => m.AssetTypeMaster),
+            },
+            {
+                path: 'consumableBarcodeConfig',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 636, title: 'Consumable Barcode Configuration' },
+                loadComponent: () => import('./features/consumable-barcode-config/consumable-barcode-config').then((m) => m.ConsumableBarcodeConfig),
+            },
+            {
+                path: 'fixedAssetMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 644, title: 'Fixed Asset Master' },
+                loadComponent: () => import('./features/fixed-asset-master/fixed-asset-master').then((m) => m.FixedAssetMaster),
+            },
+            // Phase 4 batch 14. wardStoreMapper/aiButtonConfiguration were the only
+            // parked-list screens in the original proposal; wardStoreMapper was
+            // individually verified as a false-positive keyword hit and kept,
+            // aiButtonConfiguration deferred by owner choice (see
+            // docs/ANGULAR_PENDING_FINDINGS.md entry 143/144). Final composition: 9
+            // screens. No moduleId below matches legacy's own lack of a resolve
+            // block on that state, confirmed per-screen during Step 0/1 audit.
+            // (aiButtonConfiguration itself was later built in Phase 4 batch 25 --
+            // see its own route above, near `aIButtonMaster`.)
+            {
+                path: 'wardStoreMapper',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Ward Store Mapper' },
+                loadComponent: () => import('./features/ward-store-mapper/ward-store-mapper').then((m) => m.WardStoreMapper),
+            },
+            {
+                path: 'addfixedAssetMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 220, title: 'Add Fixed Asset Opening Balance' },
+                loadComponent: () => import('./features/add-fixed-asset-master/add-fixed-asset-master').then((m) => m.AddFixedAssetMaster),
+            },
+            {
+                path: 'assetReturn',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 216, title: 'Asset Return' },
+                loadComponent: () => import('./features/asset-return/asset-return').then((m) => m.AssetReturn),
+            },
+            {
+                path: 'detailsAssetReturn',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Asset Return' },
+                loadComponent: () => import('./features/details-asset-return/details-asset-return').then((m) => m.DetailsAssetReturn),
+            },
+            {
+                path: 'detailsCorrectiveMaintenanceWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Worklist' },
+                loadComponent: () => import('./features/details-corrective-maintenance-worklist/details-corrective-maintenance-worklist').then((m) => m.DetailsCorrectiveMaintenanceWorklist),
+            },
+            {
+                path: 'smsConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 774, title: 'SMS Configuration' },
+                loadComponent: () => import('./features/sms-configuration/sms-configuration').then((m) => m.SmsConfiguration),
+            },
+            {
+                path: 'pharmacyformulationTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 459, title: 'Formulation Type' },
+                loadComponent: () => import('./features/pharmacy-formulation-type-master/pharmacy-formulation-type-master').then((m) => m.PharmacyFormulationTypeMaster),
+            },
+            {
+                path: 'dashboard',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Dashboard' },
+                loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+            },
+            {
+                path: 'detailsCorrectiveMaintenanceScheduleWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Corrective Maintenance Schedule Worklist' },
+                loadComponent: () => import('./features/details-corrective-maintenance-schedule-worklist/details-corrective-maintenance-schedule-worklist').then((m) => m.DetailsCorrectiveMaintenanceScheduleWorklist),
+            },
+            // Phase 4 batch 15 -- first batch in the new clinical/billing risk
+            // tier (docs/ANGULAR_REBUILD_PLAYBOOK.md "Clinical/Billing-Tier
+            // Addendum").
+            {
+                path: 'cardTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Card Type Master' },
+                loadComponent: () => import('./features/card-type-master/card-type-master').then((m) => m.CardTypeMaster),
+            },
+            {
+                path: 'deliveryTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 506, title: 'Delivery Type Master' },
+                loadComponent: () => import('./features/delivery-type-master/delivery-type-master').then((m) => m.DeliveryTypeMaster),
+            },
+            {
+                path: 'encounterTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 397, title: 'Encounter Type Master' },
+                loadComponent: () => import('./features/encounter-type-master/encounter-type-master').then((m) => m.EncounterTypeMaster),
+            },
+            {
+                path: 'consentTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 399, title: 'Consent Type Master' },
+                loadComponent: () => import('./features/consent-type-master/consent-type-master').then((m) => m.ConsentTypeMaster),
+            },
+            {
+                path: 'identificationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 388, title: 'Identification Card Master' },
+                loadComponent: () => import('./features/identification-master/identification-master').then((m) => m.IdentificationMaster),
+            },
+            // Phase 4 batch 27.
+            {
+                path: 'patientCategory',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 446, title: 'Patient Category Master' },
+                loadComponent: () => import('./features/patient-category-master/patient-category-master').then((m) => m.PatientCategoryMaster),
+            },
+            {
+                path: 'bedMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 546, title: 'Ward Bed Master' },
+                loadComponent: () => import('./features/bed-master/bed-master').then((m) => m.BedMaster),
+            },
+            {
+                // No moduleId in legacy's own state registration (tallyInterfacingController.js's
+                // config() has no resolve block) -- same class as billingGroupMaster/periodicityService,
+                // no moduleAccessGuard needed, matching legacy exactly (verified during batch 27's own
+                // audit).
+                path: 'tallyInterfacing',
+                data: { title: 'Tally Interfacing' },
+                loadComponent: () => import('./features/tally-interfacing/tally-interfacing').then((m) => m.TallyInterfacing),
+            },
+            // Phase 4 batch 16 -- second batch in the clinical/billing risk tier.
+            {
+                path: 'currencyMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 451, title: 'Currency Master' },
+                loadComponent: () => import('./features/currency-master/currency-master').then((m) => m.CurrencyMaster),
+            },
+            // currencydenomination: state name is all-lowercase/merged in legacy
+            // (app.js:7946-7972), kept as the literal identifier for path/folder
+            // (same precedent as this codebase's qmslogo) -- real resolve block
+            // gates on moduleId 452.
+            {
+                path: 'currencydenomination',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 452, title: 'Currency Denomination Master' },
+                loadComponent: () => import('./features/currencydenomination/currencydenomination').then((m) => m.Currencydenomination),
+            },
+            {
+                path: 'mortuaryBedMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 649, title: 'Mortuary Bed Master' },
+                loadComponent: () => import('./features/mortuary-bed-master/mortuary-bed-master').then((m) => m.MortuaryBedMaster),
+            },
+            // incidentCategoryMaster: no data.moduleId (no resolve block in
+            // legacy's own self-registered state, confirmed absent from app.js
+            // too), real cookieObject + sidebar-gated (id 989) route -- see the
+            // component's class doc comment.
+            {
+                path: 'incidentCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Incident Category Master' },
+                loadComponent: () => import('./features/incident-category-master/incident-category-master').then((m) => m.IncidentCategoryMaster),
+            },
+            // nursingStationMaster: real resolve block gates moduleId 547
+            // (app.js:8575-8601), confirmed directly. Held pending an owner
+            // decision on a server-side updated_by audit-column bug found during
+            // audit (docs/DECISION_NEEDED_NursingStationMasterUpdatedByCorruption.md)
+            // -- decision recorded: proceed wiring to the endpoint as-is, see the
+            // component's class doc comment.
+            {
+                path: 'nursingStationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 547, title: 'Nursing Station Master' },
+                loadComponent: () => import('./features/nursing-station-master/nursing-station-master').then((m) => m.NursingStationMaster),
+            },
+            // Phase 4 batch 17 -- 1st screen, continuing the clinical/billing risk
+            // tier. Real resolve block gates moduleId 973 (app.js:19910-19934,
+            // confirmed directly, no requireSuperUser check).
+            {
+                path: 'discountCategoryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 973, title: 'Discount Category Master' },
+                loadComponent: () => import('./features/discount-category-master/discount-category-master').then((m) => m.DiscountCategoryMaster),
+            },
+            // Phase 4 batch 17 -- 2nd screen, continuing the clinical/billing risk
+            // tier. Real resolve block gates moduleId 618 (app.js:14891-14918,
+            // confirmed directly, no requireSuperUser check).
+            {
+                path: 'GLcode',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 618, title: 'GL Code' },
+                loadComponent: () => import('./features/gl-code-master/gl-code-master').then((m) => m.GlCodeMaster),
+            },
+            // Phase 4 batch 17 -- 3rd screen, continuing the clinical/billing risk
+            // tier. Tagged "billing" in the risk-tag data but is actually
+            // Procurement/Inventory-adjacent (tools/angular-audit's own module
+            // classification: "Procurement - Inventory"; feeds inventory
+            // valuation into billing rather than being a direct billing/accounts
+            // screen). Confirmed PURE-LOOKUP -- no Step 6b required. Real resolve
+            // block gates moduleId 805 (app.js:18820-18847, confirmed directly,
+            // no requireSuperUser check).
+            {
+                path: 'storeTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 805, title: 'Store Type Master' },
+                loadComponent: () => import('./features/store-type-master/store-type-master').then((m) => m.StoreTypeMaster),
+            },
+            // Phase 4 batch 17 -- 4th screen, continuing the clinical/billing risk
+            // tier. Confirmed the blood-TYPE classification lookup itself
+            // (A+/B-/O+ etc.), NOT a transfusion/donor-safety workflow -- no
+            // Step 6b required. State has NO `resolve` block at all in app.js
+            // (app.js:16203-16208, confirmed directly, and independently via
+            // tools/angular-audit's `"has_resolve": false`) -- same shape as
+            // billingGroupMaster/periodicityService, so `data.moduleId` is
+            // correctly omitted, matching legacy exactly. The real sidebar link
+            // (`new-side-bar.html:5006`) gates on `checkAccess(982)`, but that
+            // only hides the menu item -- it does not gate the route itself in
+            // legacy, so this rebuild doesn't invent a stricter check either.
+            {
+                path: 'bloodGroupMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Blood Group Master' },
+                loadComponent: () => import('./features/blood-group-master/blood-group-master').then((m) => m.BloodGroupMaster),
+            },
+            // Phase 4 batch 17 -- 5th and final screen, closing out the
+            // clinical/billing risk tier for this batch. Real resolve block
+            // gates moduleId 552 (app.js:13798-13808, confirmed directly, no
+            // requireSuperUser check). Confirmed the CSSD sterilization-METHOD
+            // classification lookup itself (Steam/ETO/Plasma/etc.), a 2-field
+            // PURE-LOOKUP master -- no Step 6b required. See this screen's `.ts`
+            // class doc comment for a confirmed, live, unconditional 500 on its
+            // count endpoint (missing @Transactional, not a seed-data artifact)
+            // and a confirmed total absence of any duplicate-check anywhere in
+            // the backend chain, both logged per standing policy, not fixed.
+            {
+                path: 'sterilizationTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 552, title: 'Sterilization Type Master' },
+                loadComponent: () => import('./features/sterilization-type-master/sterilization-type-master').then((m) => m.SterilizationTypeMaster),
+            },
+            // Phase 4 batch 18 -- 5 screens, clinical/billing tier, 2 billing-only
+            // / 3 clinical-only. See docs/ANGULAR_PENDING_FINDINGS.md entries
+            // PENDING-batch18-step1-* for each screen's full Step 1 audit
+            // (module ID/superuser confirmed directly from each state's live
+            // resolve block, not guessed) and PENDING-departmentmasterunit-*
+            // for the entry-118 risk-tag correction on departmentMasterUnit.
+            {
+                path: 'hospitalAccountMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 788, title: 'Hospital Account Master' },
+                loadComponent: () => import('./features/hospital-account-master/hospital-account-master').then((m) => m.HospitalAccountMaster),
+            },
+            {
+                path: 'transactionTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Transaction Type Master' },
+                loadComponent: () => import('./features/transaction-type-master/transaction-type-master').then((m) => m.TransactionTypeMaster),
+            },
+            {
+                path: 'surgeryGradeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Surgery Grade Master' },
+                loadComponent: () => import('./features/surgery-grade-master/surgery-grade-master').then((m) => m.SurgeryGradeMaster),
+            },
+            {
+                path: 'operationTableType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 523, title: 'Operation Table Type' },
+                loadComponent: () => import('./features/operation-table-type/operation-table-type').then((m) => m.OperationTableType),
+            },
+            {
+                path: 'departmentMasterUnit',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 533, title: 'Department Master' },
+                loadComponent: () => import('./features/department-master-unit/department-master-unit').then((m) => m.DepartmentMasterUnit),
+            },
+            {
+                path: 'ARmaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 616, title: 'AR Master' },
+                loadComponent: () => import('./features/ar-master/ar-master').then((m) => m.ArMaster),
+            },
+            {
+                path: 'anaesthesiaType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 524, title: 'Anaesthesia Type' },
+                loadComponent: () => import('./features/anaesthesia-type/anaesthesia-type').then((m) => m.AnaesthesiaType),
+            },
+            {
+                path: 'bloodBagCapacity',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 735, title: 'Blood Bag Capacity Master' },
+                loadComponent: () => import('./features/blood-bag-capacity/blood-bag-capacity').then((m) => m.BloodBagCapacity),
+            },
+            {
+                path: 'nutritionalMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 508, title: 'Nutritional Master' },
+                loadComponent: () => import('./features/nutritional-master/nutritional-master').then((m) => m.NutritionalMaster),
+            },
+            {
+                path: 'bloodDonortype',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 732, title: 'Blood Donor Type Master' },
+                loadComponent: () => import('./features/blood-donor-type/blood-donor-type').then((m) => m.BloodDonorType),
+            },
+            // Phase 4 batch 22.
+            {
+                path: 'shiftMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 408, title: 'Shift Master' },
+                loadComponent: () => import('./features/shift-master/shift-master').then((m) => m.ShiftMaster),
+            },
+            {
+                path: 'dietUnitMater',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Diet Unit Master' },
+                loadComponent: () => import('./features/diet-unit-master/diet-unit-master').then((m) => m.DietUnitMaster),
+            },
+            {
+                path: 'APmaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 617, title: 'AP Master' },
+                loadComponent: () => import('./features/ap-master/ap-master').then((m) => m.ApMaster),
+            },
+            // Phase 4 batch 26.
+            {
+                path: 'tariffMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 609, title: 'Tariff Master' },
+                loadComponent: () => import('./features/tariff-master/tariff-master').then((m) => m.TariffMaster),
+            },
+            {
+                path: 'bloodBankMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 742, title: 'Blood Bank Master' },
+                loadComponent: () => import('./features/blood-bank-master/blood-bank-master').then((m) => m.BloodBankMaster),
+            },
+            {
+                path: 'operationTheatreType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 521, title: 'Operation Theatre Type' },
+                loadComponent: () => import('./features/operation-theatre-type/operation-theatre-type').then((m) => m.OperationTheatreType),
+            },
+            {
+                path: 'procedureType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 520, title: 'Procedure Type' },
+                loadComponent: () => import('./features/procedure-type/procedure-type').then((m) => m.ProcedureType),
+            },
+            {
+                path: 'surgicalCalendar',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 710, title: 'Surgical Calendar' },
+                loadComponent: () => import('./features/surgical-calendar/surgical-calendar').then((m) => m.SurgicalCalendar),
+            },
+            {
+                path: 'resourceChargesConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 761, title: 'Resource Charges Configuration' },
+                loadComponent: () => import('./features/resource-charges-configuration/resource-charges-configuration').then((m) => m.ResourceChargesConfiguration),
+            },
+            {
+                path: 'notesMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 529, title: 'Notes Master' },
+                loadComponent: () => import('./features/notes-master/notes-master').then((m) => m.NotesMaster),
+            },
+            {
+                path: 'procedureTemplate',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 515, title: 'Procedure Configuration' },
+                loadComponent: () => import('./features/procedure-template/procedure-template').then((m) => m.ProcedureTemplate),
+            },
+            {
+                path: 'accountPayableMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 579, title: 'Account Payable Master' },
+                loadComponent: () => import('./features/account-payable-master/account-payable-master').then((m) => m.AccountPayableMaster),
+            },
+            {
+                path: 'unitServiceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 583, title: 'Unit Service Master' },
+                loadComponent: () => import('./features/unit-service-master/unit-service-master').then((m) => m.UnitServiceMaster),
+            },
+            {
+                path: 'unitServiceBasePrice',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 585, title: 'Unit Service Base Price' },
+                loadComponent: () => import('./features/unit-service-base-price/unit-service-base-price').then((m) => m.UnitServiceBasePrice),
+            },
+            {
+                path: 'chargeConversion',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 592, title: 'Charge Conversion' },
+                loadComponent: () => import('./features/charge-conversion/charge-conversion').then((m) => m.ChargeConversion),
+            },
+            {
+                path: 'serviceTariffMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 610, title: 'Service Tariff Master' },
+                loadComponent: () => import('./features/service-tariff-master/service-tariff-master').then((m) => m.ServiceTariffMaster),
+            },
+            {
+                path: 'doctorConsultation',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 612, title: 'Doctor Consultation' },
+                loadComponent: () => import('./features/doctor-consultation/doctor-consultation').then((m) => m.DoctorConsultation),
+            },
+            {
+                path: 'globalDoctorShare',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 613, title: 'Global Doctor Share' },
+                loadComponent: () => import('./features/global-doctor-share/global-doctor-share').then((m) => m.GlobalDoctorShare),
+            },
+            {
+                path: 'doctorwiseShare',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 614, title: 'Doctorwise Share' },
+                loadComponent: () => import('./features/doctorwise-share/doctorwise-share').then((m) => m.DoctorwiseShare),
+            },
+            {
+                path: 'doctorReferralShare',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 615, title: 'Doctor Referral Share' },
+                loadComponent: () => import('./features/doctor-referral-share/doctor-referral-share').then((m) => m.DoctorReferralShare),
+            },
+            {
+                path: 'depositMatrixConfig',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 621, title: 'Deposit Matrix Configuration' },
+                loadComponent: () => import('./features/deposit-matrix-configuration/deposit-matrix-configuration').then((m) => m.DepositMatrixConfiguration),
+            },
+            {
+                path: 'unitServiceMapping',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 584, title: 'Unit Service Mapping' },
+                loadComponent: () => import('./features/unit-service-mapping/unit-service-mapping').then((m) => m.UnitServiceMapping),
+            },
+            {
+                path: 'companyContractMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 608, title: 'Company Contract' },
+                loadComponent: () => import('./features/company-contract/company-contract').then((m) => m.CompanyContract),
+            },
+            {
+                path: 'TPAmaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 572, title: 'TPA Master' },
+                loadComponent: () => import('./features/tpa-master/tpa-master').then((m) => m.TpaMaster),
+            },
+            {
+                path: 'corporateMasterGlobal',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 574, title: 'Corporate Master' },
+                loadComponent: () => import('./features/corporate-master/corporate-master').then((m) => m.CorporateMaster),
+            },
+            {
+                path: 'patientRegistration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 3, title: 'Patient Registration' },
+                loadComponent: () => import('./features/patient-registration/patient-registration').then((m) => m.PatientRegistration),
+            },
+            {
+                path: 'appointmentScheduling',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 4, title: 'Appointment Scheduling' },
+                loadComponent: () => import('./features/appointment-scheduling/appointment-scheduling').then((m) => m.AppointmentScheduling),
+            },
+            {
+                path: 'encounterQueueManagement',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 6, title: 'Encounter Queue Management' },
+                loadComponent: () => import('./features/encounter-queue-management/encounter-queue-management').then((m) => m.EncounterQueueManagement),
+            },
+            {
+                path: 'appointmentList',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 7, title: 'Appointment List' },
+                loadComponent: () => import('./features/appointment-list/appointment-list').then((m) => m.AppointmentList),
+            },
+            {
+                path: 'patientList',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 8, title: 'Patient List' },
+                loadComponent: () => import('./features/patient-list/patient-list').then((m) => m.PatientList),
+            },
+            {
+                path: 'OPDCoverSheet',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 9, title: 'OPD Coversheet' },
+                loadComponent: () => import('./features/opd-coversheet/opd-coversheet').then((m) => m.OpdCoversheet),
+            },
+            {
+                path: 'encounter',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 5, title: 'Encounter' },
+                loadComponent: () => import('./features/encounter/encounter').then((m) => m.Encounter),
+            },
+            {
+                path: 'encounterQueueEHC',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 686, title: 'Encounter Queue EHC' },
+                loadComponent: () => import('./features/encounter-queue-ehc/encounter-queue-ehc').then((m) => m.EncounterQueueEhc),
+            },
+            {
+                path: 'selfRegistration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 703, title: 'Self Registration' },
+                loadComponent: () => import('./features/self-registration/self-registration').then((m) => m.SelfRegistration),
+            },
+            {
+                path: 'counterWorklist',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 701, title: 'Counter Worklist' },
+                loadComponent: () => import('./features/counter-worklist/counter-worklist').then((m) => m.CounterWorklist),
+            },
+            {
+                path: 'growthChart',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 744, title: 'Growth Chart' },
+                loadComponent: () => import('./features/growth-chart/growth-chart').then((m) => m.GrowthChart),
+            },
+            {
+                path: 'tokenDisplay',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 747, title: 'Token Display' },
+                loadComponent: () => import('./features/token-display/token-display').then((m) => m.TokenDisplay),
+            },
+            {
+                path: 'cabinDisplay',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 760, title: 'Cabin Display' },
+                loadComponent: () => import('./features/cabin-display/cabin-display').then((m) => m.CabinDisplay),
+            },
+            // commonMaster dispatcher (one state, 43 dispatch branches; slice = the
+            // 4 Unit Master branches + ADT relation for the live-data proof).
+            // Gated by the family's node-id ARRAY (legacy grants when ANY family id
+            // is in the user's permissions) — a single-id gate would deny the other
+            // branches silently. See docs/DECISIONS_QUEUE.md COMMONMASTER records.
+            {
+                path: 'commonMaster/:url',
+                canActivate: [moduleAccessGuard],
+                data: {
+                    moduleIds: [
+                        412, 413, 414, 415, 417, 419, 420, 392, 423, 424, 427, 435, 436,
+                        437, 825, 430, 429, 425, 431, 438, 440, 428, 439, 561, 564, 557,
+                        389, 390, 391, 450, 460, 492, 393, 394, 395, 491, 447, 448, 449,
+                        798, 569, 826, 426, 421, 844,
+                    ],
+                    title: 'Common Master',
+                },
+                loadComponent: () => import('./features/common-master/common-master').then((m) => m.CommonMasterComponent),
+            },
+            // Phase 4 batch 23.
+            {
+                path: 'bloodBagType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 731, title: 'Blood Bag Type Master' },
+                loadComponent: () => import('./features/blood-bag-type-master/blood-bag-type-master').then((m) => m.BloodBagTypeMaster),
+            },
+            // Unit Master 531 — billing/unit family batch 1 (DQ-2026-08-12-008).
+            {
+                path: 'patientType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 764, title: 'Patient Type Master' },
+                loadComponent: () => import('./features/patient-type-master/patient-type-master').then((m) => m.PatientTypeMaster),
+            },
+            {
+                path: 'patientTypeDetails',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 765, title: 'Patient Type Details' },
+                loadComponent: () => import('./features/patient-type-details/patient-type-details').then((m) => m.PatientTypeDetails),
+            },
+            {
+                path: 'pharmacyTariffMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 803, title: 'Pharmacy Tariff Master' },
+                loadComponent: () => import('./features/pharmacy-tariff-master/pharmacy-tariff-master').then((m) => m.PharmacyTariffMaster),
+            },
+            // LIS / Unit batch — 4 list-only masters. Endpoints taken verbatim from
+            // the legacy controllers (see each feature's service doc comment for
+            // line refs; lis.url.config.js LIS_UNIT = "/LIS/unit"). All 4 are
+            // descriptive dev-empty: the backend answers status 'error' + a plain
+            // "… not found." message when the dev DB has no rows, surfaced verbatim
+            // by each component's error state (no masked banner).
+            {
+                path: 'histopathologyTest',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 559, title: 'Histopathology Test' },
+                loadComponent: () => import('./features/histopathology-test/histopathology-test').then((m) => m.HistopathologyTest),
+            },
+            {
+                path: 'parameterFormula',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 566, title: 'Parameter Formula Master' },
+                loadComponent: () => import('./features/parameter-formula/parameter-formula').then((m) => m.ParameterFormula),
+            },
+            {
+                path: 'profilepanelTestMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 567, title: 'Profile Panel Test Master' },
+                loadComponent: () => import('./features/profile-panel-test-master/profile-panel-test-master').then((m) => m.ProfilePanelTestMaster),
+            },
+            {
+                path: 'storageLocationMasterForSlideBlocks',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 568, title: 'Storage Location Master for Slide Blocks' },
+                loadComponent: () => import('./features/storage-location-master-slide-blocks/storage-location-master-slide-blocks').then((m) => m.StorageLocationMasterSlideBlocks),
+            },
+            {
+                path: 'parameterMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 562, title: 'Parameter Master' },
+                loadComponent: () => import('./features/parameter-master/parameter-master').then((m) => m.ParameterMaster),
+            },
+            {
+                path: 'loyaltyCardCreation',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 729, title: 'Loyalty Card Creation' },
+                loadComponent: () => import('./features/loyalty-card-creation/loyalty-card-creation').then((m) => m.LoyaltyCardCreation),
+            },
+            {
+                path: 'passBedCategoryMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 822, title: 'Pass Bed Category Mapper' },
+                loadComponent: () => import('./features/pass-bed-category-mapper/pass-bed-category-mapper').then((m) => m.PassBedCategoryMapper),
+            },
+            {
+                path: 'templateICDCodeMapping',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 688, title: 'Template ICD Code Mapping' },
+                loadComponent: () => import('./features/template-icd-code-mapping/template-icd-code-mapping').then((m) => m.TemplateIcdCodeMapping),
+            },
+            {
+                path: 'doctorRegistration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 651, title: 'Doctor Registration' },
+                loadComponent: () => import('./features/doctor-registration/doctor-registration').then((m) => m.DoctorRegistration),
+            },
+            {
+                path: 'bloodTest',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 734, title: 'Blood Test Master' },
+                loadComponent: () => import('./features/blood-test-master/blood-test-master').then((m) => m.BloodTestMaster),
+            },
+            {
+                path: 'reasonOfDiscard',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 737, title: 'Reason Of Discard Master' },
+                loadComponent: () => import('./features/reason-of-discard-master/reason-of-discard-master').then((m) => m.ReasonOfDiscardMaster),
+            },
+            {
+                path: 'screeningTest',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 738, title: 'Screening Test Master' },
+                loadComponent: () => import('./features/screening-test-master/screening-test-master').then((m) => m.ScreeningTestMaster),
+            },
+            {
+                path: 'donorRejectionMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 740, title: 'Donor Rejection Master' },
+                loadComponent: () => import('./features/donor-rejection-master/donor-rejection-master').then((m) => m.DonorRejectionMaster),
+            },
+            {
+                path: 'bloodGroupMatchingMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 741, title: 'Blood Group Matching Master' },
+                loadComponent: () => import('./features/blood-group-matching-master/blood-group-matching-master').then((m) => m.BloodGroupMatchingMaster),
+            },
+            {
+                path: 'loyaltyCardConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 743, title: 'Loyalty Card Configuration' },
+                loadComponent: () => import('./features/loyalty-card-configuration/loyalty-card-configuration').then((m) => m.LoyaltyCardConfiguration),
+            },
+            {
+                path: 'autoServicePostingConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 775, title: 'Auto Service Posting Configuration' },
+                loadComponent: () => import('./features/auto-service-posting-configuration/auto-service-posting-configuration').then((m) => m.AutoServicePostingConfiguration),
+            },
+            {
+                path: 'IPConsultationConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 684, title: 'IP Consultation Configuration' },
+                loadComponent: () => import('./features/ip-consultation-configuration/ip-consultation-configuration').then((m) => m.IpConsultationConfiguration),
+            },
+            {
+                path: 'fundReconciliation',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 808, title: 'Fund Reconciliation' },
+                loadComponent: () => import('./features/fund-reconciliation/fund-reconciliation').then((m) => m.FundReconciliation),
+            },
+            {
+                path: 'userNursingStationMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 689, title: 'User Nursing Station Mapper' },
+                loadComponent: () => import('./features/user-nursing-station-mapper/user-nursing-station-mapper').then((m) => m.UserNursingStationMapper),
+            },
+            {
+                path: 'nursingStationWardMapping',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 548, title: 'Nursing Station Ward Mapping' },
+                loadComponent: () => import('./features/nursing-station-ward-mapping/nursing-station-ward-mapping').then((m) => m.NursingStationWardMapping),
+            },
+            {
+                path: 'appointmentSchedulingUnitMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 653, title: 'Appointment Scheduling Unit Master' },
+                loadComponent: () => import('./features/appointment-scheduling-unit-master/appointment-scheduling-unit-master').then((m) => m.AppointmentSchedulingUnitMaster),
+            },
+            {
+                path: 'scheduleWise',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 657, title: 'Schedule Wise' },
+                loadComponent: () => import('./features/schedule-wise/schedule-wise').then((m) => m.ScheduleWise),
+            },
+            {
+                path: 'doctorWise',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 658, title: 'Doctor Wise' },
+                loadComponent: () => import('./features/doctor-wise/doctor-wise').then((m) => m.DoctorWise),
+            },
+            {
+                path: 'sampleTypeMediaMappingMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 426, title: 'Sample Type Media Mapping Master' },
+                loadComponent: () => import('./features/sample-type-media-mapping-master/sample-type-media-mapping-master').then((m) => m.SampleTypeMediaMappingMaster),
+            },
+            {
+                path: 'colonyTestWithMediaMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 434, title: 'Colony Test With Media Master' },
+                loadComponent: () => import('./features/colony-test-with-media-master/colony-test-with-media-master').then((m) => m.ColonyTestWithMediaMaster),
+            },
+            {
+                path: 'mappingofMicroorganism',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 443, title: 'Mapping of Micro-organism' },
+                loadComponent: () => import('./features/mapping-of-microorganism/mapping-of-microorganism').then((m) => m.MappingofMicroorganism),
+            },
+            {
+                path: 'dietTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 510, title: 'Diet Type Master' },
+                loadComponent: () => import('./features/diet-type-master/diet-type-master').then((m) => m.DietTypeMaster),
+            },
+            {
+                path: 'siteOfAdministration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 753, title: 'Site Of Administration' },
+                loadComponent: () => import('./features/site-of-administration/site-of-administration').then((m) => m.SiteOfAdministration),
+            },
+            {
+                path: 'genericScheduleMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 827, title: 'Generic Schedule Master' },
+                loadComponent: () => import('./features/generic-schedule-master/generic-schedule-master').then((m) => m.GenericScheduleMaster),
+            },
+            {
+                path: 'doseMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 502, title: 'Dose Master' },
+                loadComponent: () => import('./features/dose-master/dose-master').then((m) => m.DoseMaster),
+            },
+            {
+                path: 'licenseTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 379, title: 'License Type Master' },
+                loadComponent: () => import('./features/license-type-master/license-type-master').then((m) => m.LicenseTypeMaster),
+            },
+            {
+                path: 'procedureConfigurations',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 696, title: 'Procedure Configurations' },
+                loadComponent: () => import('./features/procedure-configurations/procedure-configurations').then((m) => m.ProcedureConfigurations),
+            },
+            {
+                path: 'subsequentSurgeryConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 516, title: 'Subsequent Surgery Configuration' },
+                loadComponent: () => import('./features/subsequent-surgery-configuration/subsequent-surgery-configuration').then((m) => m.SubsequentSurgeryConfiguration),
+            },
+            {
+                path: 'bacteriaClassification',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 428, title: 'Bacteria Classification' },
+                loadComponent: () => import('./features/bacteria-classification/bacteria-classification').then((m) => m.BacteriaClassification),
+            },
+            {
+                path: 'antibiotic',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 429, title: 'Antibiotic' },
+                loadComponent: () => import('./features/antibiotic-master/antibiotic-master').then((m) => m.Antibiotic),
+            },
+            {
+                path: 'antibioticsClass',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 430, title: 'Antibiotics Class' },
+                loadComponent: () => import('./features/antibiotics-class/antibiotics-class').then((m) => m.AntibioticsClass),
+            },
+            {
+                path: 'antibioticsGroup',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 431, title: 'Antibiotics Group' },
+                loadComponent: () => import('./features/antibiotics-group-master/antibiotics-group-master').then((m) => m.AntibioticsGroup),
+            },
+            {
+                path: 'sensitivityTestResult',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 438, title: 'Sensitivity Test Result' },
+                loadComponent: () => import('./features/sensitivity-test-result/sensitivity-test-result').then((m) => m.SensitivityTestResult),
+            },
+            {
+                path: 'dispensingMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 469, title: 'Dispensing Master' },
+                loadComponent: () => import('./features/dispensing-master/dispensing-master').then((m) => m.DispensingMaster),
+            },
+            {
+                path: 'kitMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 471, title: 'Kit Master' },
+                loadComponent: () => import('./features/kit-master-global/kit-master-global').then((m) => m.KitMaster),
+            },
+            {
+                path: 'taxMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 474, title: 'Tax Master' },
+                loadComponent: () => import('./features/tax-master-global/tax-master-global').then((m) => m.TaxMaster),
+            },
+            {
+                path: 'consentType',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 528, title: 'Consent Type' },
+                loadComponent: () => import('./features/consent-type/consent-type').then((m) => m.ConsentType),
+            },
+            {
+                path: 'vaccinationSchedule',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 750, title: 'Vaccination Schedule' },
+                loadComponent: () => import('./features/vaccination-schedule/vaccination-schedule').then((m) => m.VaccinationSchedule),
+            },
+            {
+                path: 'subdepartmentMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 373, title: 'Sub Department Master' },
+                loadComponent: () => import('./features/sub-department-master/sub-department-master').then((m) => m.SubdepartmentMaster),
+            },
+            {
+                path: 'specimanMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 444, title: 'Speciman Master' },
+                loadComponent: () => import('./features/speciman-master/speciman-master').then((m) => m.SpecimanMaster),
+            },
+            {
+                path: 'packageMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 465, title: 'Package Master' },
+                loadComponent: () => import('./features/package-master-global/package-master-global').then((m) => m.PackageMaster),
+            },
+            {
+                path: 'daywiseDietTemplate',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 513, title: 'Day Wise Diet Template' },
+                loadComponent: () => import('./features/day-wise-diet-template/day-wise-diet-template').then((m) => m.DaywiseDietTemplate),
+            },
+            {
+                path: 'consentMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 400, title: 'Consent Master' },
+                loadComponent: () => import('./features/consent-master/consent-master').then((m) => m.ConsentMaster),
+            },
+            {
+                path: 'templateMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 58, title: 'Lab Template Master' },
+                loadComponent: () => import('./features/template-master/template-master').then((m) => m.TemplateMaster),
+            },
+            {
+                path: 'testMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 276, title: 'Test Master' },
+                loadComponent: () => import('./features/test-master/test-master').then((m) => m.TestMaster),
+            },
+            {
+                path: 'multiparameterTestMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 183, title: 'Multiparameter Test Master' },
+                loadComponent: () => import('./features/multiparameter-test-master/multiparameter-test-master').then((m) => m.MultiparameterTestMaster),
+            },
+            {
+                path: 'OPConsulationConfigurationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 611, title: 'OP Consultation Configuration Master' },
+                loadComponent: () => import('./features/op-consultation-configuration-master/op-consultation-configuration-master').then((m) => m.OPConsulationConfigurationMaster),
+            },
+            {
+                path: 'fundApproval',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 809, title: 'Fund Approval' },
+                loadComponent: () => import('./features/fund-approval/fund-approval').then((m) => m.FundApproval),
+            },
+            {
+                path: 'fundRequisition',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 810, title: 'Fund Requisition' },
+                loadComponent: () => import('./features/fund-requisition/fund-requisition').then((m) => m.FundRequisition),
+            },
+            {
+                path: 'fundApprovedList',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 811, title: 'Fund Approved List' },
+                loadComponent: () => import('./features/fund-approved-list/fund-approved-list').then((m) => m.FundApprovedList),
+            },
+            {
+                path: 'schedulePriceUnitService',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 586, title: 'Schedule Price Unit Service' },
+                loadComponent: () => import('./features/schedule-price-unit-service/schedule-price-unit-service').then((m) => m.SchedulePriceUnitService),
+            },
+            {
+                path: 'roundOffConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 599, title: 'Round Off Configuration' },
+                loadComponent: () => import('./features/round-off-configuration/round-off-configuration').then((m) => m.RoundOffConfiguration),
+            },
+            {
+                path: 'IPdefaultServiceConfig',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 620, title: 'IP Default Service Config' },
+                loadComponent: () => import('./features/ip-default-service-config/ip-default-service-config').then((m) => m.IPdefaultServiceConfig),
+            },
+            {
+                path: 'EHCpackage',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 623, title: 'EHC Package' },
+                loadComponent: () => import('./features/ehc-package/ehc-package').then((m) => m.EhcPackage),
+            },
+            {
+                path: 'packageWithCAP',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 624, title: 'Package With CAP' },
+                loadComponent: () => import('./features/package-with-cap/package-with-cap').then((m) => m.PackageWithCap),
+            },
+            {
+                path: 'eitherOrPackage',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 626, title: 'Either Or Package' },
+                loadComponent: () => import('./features/either-or-package/either-or-package').then((m) => m.EitherOrPackage),
+            },
+            {
+                path: 'wrapperExpiryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 554, title: 'Wrapper Expiry Master' },
+                loadComponent: () => import('./features/wrapper-expiry-master/wrapper-expiry-master').then((m) => m.WrapperExpiryMaster),
+            },
+            {
+                path: 'kitCreation',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 555, title: 'Kit Creation' },
+                loadComponent: () => import('./features/kit-creation/kit-creation').then((m) => m.KitCreation),
+            },
+            {
+                path: 'accountPayable',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 580, title: 'Account Payable' },
+                loadComponent: () => import('./features/account-payable/account-payable').then((m) => m.AccountPayable),
+            },
+            {
+                path: 'accountPayableStatus',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 582, title: 'Account Payable Status' },
+                loadComponent: () => import('./features/account-payable-status/account-payable-status').then((m) => m.AccountPayableStatus),
+            },
+            {
+                path: 'orderSet',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 587, title: 'Order Set' },
+                loadComponent: () => import('./features/order-set/order-set').then((m) => m.OrderSet),
+            },
+            {
+                path: 'orderSetList',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 588, title: 'Order Set List' },
+                loadComponent: () => import('./features/order-set-list/order-set-list').then((m) => m.OrderSetList),
+            },
+            {
+                path: 'departmentNursingStationMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 746, title: 'Department Nursing Station Mapper' },
+                loadComponent: () => import('./features/department-nursing-station-mapper/department-nursing-station-mapper').then((m) => m.DepartmentNursingStationMapper),
+            },
+            {
+                path: 'cashOpeningBalance',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 597, title: 'Cash Opening Balance' },
+                loadComponent: () => import('./features/cash-opening-balance/cash-opening-balance').then((m) => m.CashOpeningBalance),
+            },
+            {
+                path: 'interimHandover',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 598, title: 'Interim Handover' },
+                loadComponent: () => import('./features/interim-handover/interim-handover').then((m) => m.InterimHandover),
+            },
+            {
+                path: 'shiftClosing',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 600, title: 'Shift Closing' },
+                loadComponent: () => import('./features/shift-closing/shift-closing').then((m) => m.ShiftClosing),
+            },
+            {
+                // DELIBERATE PARITY, NOT AN OMISSION (phlebotomist home collection,
+                // module 155): the legacy state (app.js:7091 userAllocationForHomecollection)
+                // has NO resolve/module check — its access control is the MENU-level
+                // module presence. The guard with moduleId 155 reproduces that menu
+                // gate exactly. Do NOT remove the guard silently; see the feature
+                // README (parity record).
+                path: 'phlebotomistHomeCollection',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 155, title: 'Home Collection' },
+                loadComponent: () => import('./features/phlebotomist-home-collection/phlebotomist-home-collection').then((m) => m.PhlebotomistHomeCollection),
+            },
+            {
+                // PARITY RECORD — DELIBERATE, NOT AN OMISSION: the legacy states
+                // crossMatchRegister + detailsCrossMatchRegister (app.js:18494/18500)
+                // have NO resolve/module check — ungated in the legacy, like the
+                // phlebotomist. Per the owner's parity precedent an ungated legacy
+                // state gets an ungated route (the menu module id unresolved this
+                // session). Do NOT add a guard silently; see the feature README.
+                path: 'crossMatchRegister',
+                data: { title: 'Cross Match Register' },
+                loadComponent: () => import('./features/cross-match-register/cross-match-register').then((m) => m.CrossMatchRegisterComponent),
+            },
+            {
+                path: 'allInclusivePackage',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 625, title: 'All Inclusive Package' },
+                loadComponent: () => import('./features/all-inclusive-package/all-inclusive-package').then((m) => m.AllInclusivePackage),
+            },
+            {
+                path: 'storewiseGenericMapper',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 635, title: 'Storewise Generic Mapper' },
+                loadComponent: () => import('./features/storewise-generic-mapper/storewise-generic-mapper').then((m) => m.StorewiseGenericMapper),
+            },
+            {
+                path: 'staffRegistration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 650, title: 'Staff Registration' },
+                loadComponent: () => import('./features/staff-registration/staff-registration').then((m) => m.StaffRegistration),
+            },
+            {
+                path: 'applicationConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 660, title: 'Application Configuration' },
+                loadComponent: () => import('./features/application-configuration/application-configuration').then((m) => m.ApplicationConfiguration),
+            },
+            {
+                path: 'donorRegistration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 719, title: 'Donor Registration' },
+                loadComponent: () => import('./features/donor-registration/donor-registration').then((m) => m.DonorRegistration),
+            },
+            {
+                path: 'transfusionTransmittedDiseases',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 722, title: 'Transfusion Transmitted Diseases' },
+                loadComponent: () => import('./features/transfusion-transmitted-diseases/transfusion-transmitted-diseases').then((m) => m.TransfusionTransmittedDiseases),
+            },
+            {
+                path: 'discountRights',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 745, title: 'Discount Rights' },
+                loadComponent: () => import('./features/discount-rights/discount-rights').then((m) => m.DiscountRights),
+            },
+            {
+                path: 'transferScreen',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 65, title: 'Direct Transfer' },
+                loadComponent: () => import('./features/transfer-screen/transfer').then((m) => m.TransferScreen),
+            },
+            {
+                path: 'assignLoyaltyCard',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 752, title: 'Assign Loyalty Card' },
+                loadComponent: () => import('./features/assign-loyalty-card/assign-loyalty-card').then((m) => m.AssignLoyaltyCard),
+            },
+            {
+                path: 'RMOAllocationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 824, title: 'RMO Allocation Master' },
+                loadComponent: () => import('./features/rmo-allocation-master/rmo-allocation-master').then((m) => m.RmoAllocationMaster),
+            },
+            {
+                path: 'growthChartMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 962, title: 'Growth Chart Master' },
+                loadComponent: () => import('./features/growth-chart-master/growth-chart-master').then((m) => m.GrowthChartMaster),
+            },
+            {
+                path: 'accessControl',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 677, title: 'Access Control' },
+                loadComponent: () => import('./features/access-control/access-control').then((m) => m.AccessControl),
+            },
+            {
+                path: 'accessControl1',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 673, title: 'Access Control' },
+                loadComponent: () => import('./features/access-control/access-control').then((m) => m.AccessControl),
+            },
+            {
+                path: 'OTIMSroleCreation',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'OTIMS Role Creation' },
+                loadComponent: () => import('./features/otims-role-creation/otims-role-creation').then((m) => m.OtimsRoleCreation),
+            },
+            {
+                path: 'machineParameterMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 839, title: 'Machine Parameter Master' },
+                loadComponent: () => import('./features/machine-parameter-master/machine-parameter-master').then((m) => m.MachineParameterMaster),
+            },
+            {
+                path: 'storageunitMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 470, title: 'Storage Unit Master' },
+                loadComponent: () => import('./features/storage-unit-master/storage-unit-master').then((m) => m.StorageUnitMaster),
+            },
+            {
+                path: 'mealMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 512, title: 'Meal Master' },
+                loadComponent: () => import('./features/meal-master/meal-master').then((m) => m.MealMaster),
+            },
+            {
+                path: 'operation_Theatre',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 519, title: 'Operation Theatre' },
+                loadComponent: () => import('./features/operation-theatre/operation-theatre').then((m) => m.OperationTheatre),
+            },
+            {
+                path: 'cancellationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 518, title: 'Cancellation Master' },
+                loadComponent: () => import('./features/cancellation-master/cancellation-master').then((m) => m.CancellationMaster),
+            },
+            {
+                path: 'resourceConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 517, title: 'Resource Configuration' },
+                loadComponent: () => import('./features/resource-configuration/resource-configuration').then((m) => m.ResourceConfiguration),
+            },
+            {
+                path: 'procedureConfiguration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 515, title: 'Procedure Configuration' },
+                loadComponent: () => import('./features/procedure-configuration/procedure-configuration').then((m) => m.ProcedureConfiguration),
+            },
+            {
+                path: 'frequencyMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 478, title: 'Frequency Master' },
+                loadComponent: () => import('./features/frequency-master/frequency-master').then((m) => m.FrequencyMaster),
+            },
+            {
+                path: 'routeAdministration',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 477, title: 'Route of Administration' },
+                loadComponent: () => import('./features/route-administration/route-administration').then((m) => m.RouteAdministration),
+            },
+            {
+                path: 'formulationTypeROAMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 479, title: 'Formulation Type & ROA Master' },
+                loadComponent: () => import('./features/formulation-type-roa/formulation-type-roa').then((m) => m.FormulationTypeRoa),
+            },
+            {
+                path: 'nursingOrderMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 480, title: 'Nursing Order Master' },
+                loadComponent: () => import('./features/nursing-order-master/nursing-order-master').then((m) => m.NursingOrderMaster),
+            },
+            {
+                path: 'bloodComponent',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 481, title: 'Blood Component Master' },
+                loadComponent: () => import('./features/blood-component/blood-component').then((m) => m.BloodComponent),
+            },
+            {
+                path: 'vaccinationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 482, title: 'Vaccination Master' },
+                loadComponent: () => import('./features/vaccination-master/vaccination-master').then((m) => m.VaccinationMaster),
+            },
+            {
+                path: 'immunizationSchedule',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 483, title: 'Immunization Schedule' },
+                loadComponent: () => import('./features/immunization-schedule/immunization-schedule').then((m) => m.ImmunizationSchedule),
+            },
+            {
+                path: 'surgeryMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 487, title: 'Surgery Master' },
+                loadComponent: () => import('./features/surgery-master/surgery-master').then((m) => m.SurgeryMaster),
+            },
+            {
+                path: 'allergyTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 488, title: 'Allergy Type Master' },
+                loadComponent: () => import('./features/allergy-type-master/allergy-type-master').then((m) => m.AllergyTypeMaster),
+            },
+            {
+                path: 'allergyMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 489, title: 'Allergy Master' },
+                loadComponent: () => import('./features/allergy-master/allergy-master').then((m) => m.AllergyMaster),
+            },
+            {
+                path: 'uomMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 466, title: 'UOM Master' },
+                loadComponent: () => import('./features/uom-master/uom-master').then((m) => m.UomMaster),
+            },
+            {
+                path: 'combinationMedicationMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 472, title: 'Combination Medication Master' },
+                loadComponent: () => import('./features/combination-medication-master/combination-medication-master').then((m) => m.CombinationMedicationMaster),
+            },
+            {
+                path: 'ageGroupMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 416, title: 'Age Group Master' },
+                loadComponent: () => import('./features/age-group-master/age-group-master').then((m) => m.AgeGroupMaster),
+            },
+            {
+                path: 'serviceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 376, title: 'Service Master' },
+                loadComponent: () => import('./features/service-master/service-master').then((m) => m.ServiceMaster),
+            },
+            {
+                path: 'addNewDrugRecall',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 139, title: 'Add New Drug Recall' },
+                loadComponent: () => import('./features/add-new-drug-recall/add-new-drug-recall').then((m) => m.AddNewDrugRecall),
+            },
+            {
+                path: 'doctorSlabMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 1020, title: 'Doctor Slab Master' },
+                loadComponent: () => import('./features/doctor-slab-master/doctor-slab-master').then((m) => m.DoctorSlabMaster),
+            },
+            {
+                path: 'generalInsuranceMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 646, title: 'General Insurance Master' },
+                loadComponent: () => import('./features/general-insurance-master/general-insurance-master').then((m) => m.GeneralInsuranceMaster),
+            },
+            {
+                path: 'machineMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 840, title: 'Machine Master' },
+                loadComponent: () => import('./features/machine-master/machine-master').then((m) => m.MachineMaster),
+            },
+            {
+                path: 'checklistMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 526, title: 'Checklist Master' },
+                loadComponent: () => import('./features/checklist-master/checklist-master').then((m) => m.ChecklistMaster),
+            },
+            // Phase 4 batch 30. campMaster (Blood Bank module) -- confirmed NO
+            // resolve block at all in legacy's live `.state('campMaster', ...)`
+            // (app.js:19389-19394, title 'Camp Master'), same shape as
+            // billingGroupMaster/periodicityService -- not a gap this rebuild
+            // introduces.
+            {
+                path: 'campMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Camp Master' },
+                loadComponent: () => import('./features/camp-master/camp-master').then((m) => m.CampMaster),
+            },
+            // Phase 4 batch 30. dishMaster (Diet & Nutrition module) -- moduleId
+            // 511 confirmed via Step 0/1 this session, classic `$scope` screen
+            // (no controllerAs). See dish-master.ts's class doc for the full
+            // audit trail, the golden-trace capture (Step 2/4), and the
+            // owner-approved Edit-gating race-condition fix.
+            {
+                path: 'dishMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 511, title: 'Dish Master' },
+                loadComponent: () => import('./features/dish-master/dish-master').then((m) => m.DishMaster),
+            },
+            // Phase 4 batch 31. subDepartmentMasterUnit -- moduleId 534 confirmed
+            // via Step 0/1 + this session's own read of app.js:8524-8544. Path
+            // kept identical to legacy's URL for drop-in continuity; feature
+            // folder/component/nav label deliberately renamed to
+            // `unit-sub-speciality-mapping` / "Unit Sub-Speciality Mapping" --
+            // see unit-sub-speciality-mapping.ts's class doc "NAMING DISCLOSURE"
+            // section for the full reasoning (this screen actually manages
+            // Speciality -> Sub-Speciality mapping at the unit level, not a
+            // "sub-department" entity, and legacy's own "Sub Department Master"
+            // title collides with the already-rebuilt `/subSpecialityMaster`
+            // route's identical nav label).
+            {
+                path: 'subDepartmentMasterUnit',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 534, title: 'Unit Sub-Speciality Mapping' },
+                loadComponent: () => import('./features/unit-sub-speciality-mapping/unit-sub-speciality-mapping').then((m) => m.UnitSubSpecialityMapping),
+            },
+            // Phase 4 batch 32. productCategoryMapping -- moduleId 633 confirmed
+            // identically on BOTH the legacy parent `productRestriction` state's
+            // own resolve block AND this child state's own resolve block (both
+            // read directly from their respective controller files). Path kept
+            // as the full legacy nested-state URL (`/productRestriction` parent +
+            // `/productCategoryMapping` child, ui-router's default url
+            // concatenation since the child url has no `^` override) for drop-in
+            // continuity. `data.title` matches the legacy state's own literal
+            // `title: 'Product Restriction'` (shown in the top bar); the nav
+            // label below is deliberately more specific ("Product Category
+            // Mapping") since only this one tab is built in this batch, not the
+            // sibling `itemRestriction` tab -- see
+            // product-category-mapping.ts's class doc for the tab-shell-parent
+            // analysis.
+            {
+                path: 'productRestriction/productCategoryMapping',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 633, title: 'Product Restriction' },
+                loadComponent: () => import('./features/product-category-mapping/product-category-mapping').then((m) => m.ProductCategoryMapping),
+            },
+            // Phase 4 batch 34. 5 screens, all confirmed real via a genuine,
+            // authenticated live golden-trace browser capture (2026-07-31), not
+            // static analysis alone -- see tools/golden-trace/capture-live-batch34.js.
+            // A 6th candidate, mpesaApplicationConfiguration, was excluded: its
+            // controller script is never referenced by index.html and so never
+            // loads (docs/ANGULAR_PENDING_FINDINGS.md,
+            // PENDING-mpesaapplicationconfiguration-missing-script-include).
+            // moduleId values read directly from each state's own live resolve
+            // block in app.js (InsuranceTPAMapping/operationTable/
+            // bloodBankTypeComponent) or the screen's own self-registered
+            // `.config($stateProvider)` block (pharmacyStrengthUnitMaster).
+            // tubeFeedingProducts has no `data.moduleId` -- confirmed its legacy
+            // state genuinely has no resolve block at all (app.js:19683-19689),
+            // same class as billingGroupMaster/periodicityService above.
+            {
+                // Legacy's real state/URL uses capital "InsuranceTPAMapping"
+                // (confirmed at app.js:8082, not `insuranceTPAMapping`) -- kept for
+                // parity even though it looks inconsistent with this file's other
+                // camelCase routes.
+                path: 'InsuranceTPAMapping',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 573, title: 'Insurance & TPA Mapping' },
+                loadComponent: () => import('./features/insurance-tpa-mapping/insurance-tpa-mapping').then((m) => m.InsuranceTpaMapping),
+            },
+            {
+                path: 'operationTable',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 522, title: 'Operation Table' },
+                loadComponent: () => import('./features/operation-table/operation-table').then((m) => m.OperationTable),
+            },
+            {
+                path: 'bloodBankTypeComponent',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 739, title: 'Blood Bank Type Component Master' },
+                loadComponent: () => import('./features/blood-bank-type-component/blood-bank-type-component').then((m) => m.BloodBankTypeComponent),
+            },
+            {
+                path: 'pharmacyStrengthUnitMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 468, title: 'Strength Clinical Unit Master' },
+                loadComponent: () => import('./features/pharmacy-strength-unit-master/pharmacy-strength-unit-master').then((m) => m.PharmacyStrengthUnitMaster),
+            },
+            {
+                path: 'tubeFeedingProducts',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Tube Feeding Products' },
+                loadComponent: () => import('./features/tube-feeding-products/tube-feeding-products').then((m) => m.TubeFeedingProducts),
+            },
+            // Phase 4 batch 29.
+            {
+                path: 'rackMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 630, title: 'Rack Master' },
+                loadComponent: () => import('./features/rack-master/rack-master').then((m) => m.RackMaster),
+            },
+            {
+                path: 'keyIngredientsMaster',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 509, title: 'Key Ingredients Master' },
+                loadComponent: () => import('./features/key-ingredients-master/key-ingredients-master').then((m) => m.KeyIngredientsMaster),
+            },
+            {
+                path: 'assetIssueIndent',
+                canActivate: [moduleAccessGuard],
+                data: { moduleId: 207, title: 'Asset Issue Indent' },
+                loadComponent: () => import('./features/asset-issue-indent/asset-issue-indent').then((m) => m.AssetIssueIndent),
+            },
+            // Phase 4 batch 29 (billing tier 3).
+            {
+                path: 'visitTypeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Visit Type Master' },
+                loadComponent: () => import('./features/visit-type-master/visit-type-master').then((m) => m.VisitTypeMaster),
+            },
+            {
+                path: 'paymentEntitmentMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Payment Entitlement Master' },
+                loadComponent: () => import('./features/payment-entitlement-master/payment-entitlement-master').then((m) => m.PaymentEntitlementMaster),
+            },
+            {
+                path: 'paymentModeMaster',
+                canActivate: [moduleAccessGuard],
+                data: { title: 'Payment Mode Master' },
+                loadComponent: () => import('./features/payment-mode-master/payment-mode-master').then((m) => m.PaymentModeMaster),
+            },
+            { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
+        ],
+    },
+];

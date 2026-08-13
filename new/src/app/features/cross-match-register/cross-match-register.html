@@ -1,0 +1,63 @@
+<div class="cmr-wrap">
+  <header class="cmr-header">
+    <h2>Cross Match Register</h2>
+    <span class="cmr-sub">Blood Bank — legacy-ungated state (parity route, see README)</span>
+  </header>
+
+  <div class="cmr-note">
+    Live-verified write (DQ-068): the full legacy payload lands the cross-match
+    master <em>and</em> its details rows. The worklist reads are session-gated
+    backend reads and are not wired here.
+  </div>
+
+  <form class="cmr-form" (ngSubmit)="save()">
+    <div class="cmr-grid">
+      <label>
+        Patient ID
+        <input type="number" name="patientId" [(ngModel)]="form().patientId" />
+      </label>
+      <label>
+        Order / Requisition (demo context)
+        <input type="number" name="bloodComponentOrderId" [(ngModel)]="form().bloodComponentOrderId" />
+      </label>
+      <label>
+        Requisition date
+        <input name="requisitionDate" [(ngModel)]="form().requisitionDate" />
+      </label>
+      <label>
+        Required qty
+        <input type="number" name="requiredQty" [(ngModel)]="form().requiredQty" />
+      </label>
+    </div>
+
+    <fieldset class="cmr-details">
+      <legend>Detail — component 5 (Whole Blood) / bag</legend>
+      <div class="cmr-grid">
+        <label>
+          Component
+          <input type="number" name="componentId" [(ngModel)]="form().crossMatchRegisterDetails[0].componentId" />
+        </label>
+        <label>
+          Bag (bloodBankStockId)
+          <input type="number" name="bloodBankStockId" [(ngModel)]="form().crossMatchRegisterDetails[0].bloodBankStockId" />
+        </label>
+        <label>
+          Segment
+          <input name="segmentNo" [(ngModel)]="form().crossMatchRegisterDetails[0].segmentNo" />
+        </label>
+        <label>
+          Result
+          <input name="crossMatchReportResult" [(ngModel)]="form().crossMatchRegisterDetails[0].crossMatchReportResult" />
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="cmr-actions">
+      <button type="submit" [disabled]="saving()">Save cross-match</button>
+      <span class="cmr-status" [class.cmr-ok]="result()" [class.cmr-err]="error()">
+        @if (result()) { {{ result() }} }
+        @if (error()) { {{ error() }} }
+      </span>
+    </div>
+  </form>
+</div>
