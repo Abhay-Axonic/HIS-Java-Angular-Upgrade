@@ -1,0 +1,27 @@
+<div class="ro-wrap">
+  <header class="ro-header">
+    <h2>Radiology Report Validation</h2>
+    <span class="ro-sub">Read-only screen (render-trace gate — see README)</span>
+  </header>
+
+  <div class="ro-note">Read-only: no write path. T0-smoked live; an empty list is a correct empty in dev.</div>
+
+  @if (loading()) { <p class="ro-status">Loading…</p> }
+  @if (error()) { <p class="ro-status ro-err">{{ error() }}</p> }
+
+  <section class="ro-panel">
+    @if (rows().length === 0) {
+      <p class="ro-empty">No records.</p>
+    } @else {
+      <table class="ro-table">
+        <thead><tr><th>subSpecialityName</th><th>subSpecialityId</th></tr></thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr><td>{{ row.subSpecialityName ?? '' }}</td>
+            <td>{{ row.subSpecialityId ?? '' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
