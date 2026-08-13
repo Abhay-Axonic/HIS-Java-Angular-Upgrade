@@ -2951,3 +2951,71 @@ WHERE transferStatusId=<legal-from> to each write (W2: 2/3/4; W3: 6; reject:
 2/3/4) or a status-transition table. Companion finding: W2/W3 empty catch
 blocks swallow exceptions -> generic ERROR (error-swallowing class, Rule 10
 — see BR-2026-08-12-037).
+
+## BR-2026-08-12-038 — DONOR REGISTRATION (719): NATIONALITY VALIDATION RELAXED TO "REQUIRED ONLY WHEN THE FEED HAS ROWS" (candidate, NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (built into the rebuild's UI validation;
+owner sign-off required at review).
+MECHANISM: the legacy donor form REQUIRES nationalityId
+(donorRegistrationController.js:1239-1244, "Please select a nationality").
+The dev master public.m_nationality_master is EMPTY (0 rows) -> the
+GET /adt/getActiveNationalityList feed returns [] -> a parity-required field
+would make the rebuilt form UNSAVEABLE in this environment. The rebuild
+treats the field as required only when the feed has rows and omits it from
+the payload when unset (the backend never required it: DTO field is nullable,
+no server-side check — proven by the T0 smoke passing without it). This is a
+validation-behavior deviation vs legacy (Rule 8) -> logged for approval.
+Same-class note: the backend DTO has NO bloodGroupId/donoTypeId/expiry fields
+— those are UI-validated only and dropped at registration (consumed by the
+screening flow later); no BR needed (no behavioral change — the backend
+behavior is identical).
+
+## BR-2026-08-12-039 — INPUT-OUTPUT CHARTS (I/O charts): MASKED PARTIAL WRITE ON A CLINICAL PATH — master lands, chart LINES silently dropped, response says "Added Successfully." (candidate, NOT applied)
+
+STATUS: CANDIDATE — NOT APPLIED (escalated from DQ-058 per owner directive
+2026-08-13: a chart that looks saved with no lines is a clinical record that
+lies).
+MECHANISM (full, live-verified 2026-08-13 via tools/park_sweep.py):
+POST /api/opd/saveIntakeOutputChart with the exact DTO contract ->
+HTTP 200 "Added Successfully." with adt.t_intake_output_chart = 1 (master
+row lands) and adt.t_intake_output_chart_details = 0 (the chart LINES — the
+fluid-balance data — never written). THREE stacked causes:
+1. IntakeOutputChartDaoImpl:113 — LocalTime.parse(startIntakeTime) NPEs on a
+   null time; with a time sent, the app's IST zone leaks into the timestamp
+   bind ("10:00:00+05:30" -> "invalid input syntax for type timestamp") —
+   the details INSERT cannot complete either way.
+2. IntakeOutputChartServiceImpl:67 — the SERVICE ignores the details DAO
+   response (resPreDtls unused) — the failure is silent. THIS LINE IS THE
+   MASKING LAYER: same shape as BR-189's saveMedicationHistory (ignored
+   child-write response on a clinical path).
+3. The controller's empty catch (logger.error + COMMON_ERROR_CODE) would
+   mask even a thrown failure.
+FLUID-BALANCE CLASS (clinical-state, money-adjacent): intake/output charts
+drive fluid-balance decisions; a false-success chart is a lying clinical
+record. FIX SHAPE (backend-owned, Rule 10): make the service check the
+details response and fail the whole write (atomic) when the lines fail, and
+fix the details DAO's time handling (LocalTime vs timestamp bind). The 2
+flagged columns on t_intake_output_chart_details (drift map band
+PROBABLE/SUSPECT) were NEVER REACHED (the parse dies before SQL) — neither
+confirmed nor disconfirmed by this smoke.
+
+## BR-2026-08-12-040 — CASH-DESK WRITE AUTH: RETRACTED AS A SECURITY FINDING — measured correction (12/12 writes token-validated; read-side session requirement is operational)
+
+STATUS: RETRACTED (security finding) — see the standalone brief
+docs/BR-2026-08-12-040_AUTH_GAP_BRIEF.md for the full measured correction.
+ORIGINAL CLAIM (superseded): "writes accept no auth header" — FALSE.
+MECHANICAL CAUSE OF THE FALSE POSITIVE: tools/park_sweep.py:50-61 post()
+sends the cached bearer token + identity headers on every request, so the
+smokes were never header-less; the author misread the helper.
+MEASURED (2026-08-13, tools/auth_gap_probe.py — 12 write endpoints across
+six families): no header -> 401 on all 12; invalid token -> 401 (3 spot
+checks: shift-close, donor, io-chart); cached dev token -> 200 + rows land.
+The writes validate the bearer token; the filter covers the writes.
+RESIDUAL (operational, not a defect): the same valid token that authenticates
+the writes is rejected by the reads (getShiftClosingBalanceSheet,
+getCashHandoverDetails, getRefundList -> 401 "UNAUTHORIZED ##") — the reads
+validate the full login session, not the header token alone. An API client
+can WRITE with the token but cannot READ the same controller — deliberate
+read-side strictness; nothing forgeable. Backend-owner note only: if headless
+read access is wanted, the read gate would need a token-accepting mode
+(their choice, NOT recommended from a frontend rebuild).

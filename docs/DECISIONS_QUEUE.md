@@ -2231,3 +2231,389 @@ RETRY-COMPLETENESS ANSWER (owner's explicit ask, stated plainly): the
   behind); logged BR candidate (backend: reorder W3 so the from-bed/new-
   transfer-row run BEFORE the failing insert, single transaction, and
   LOG the catch).
+
+## DQ-2026-08-12-052 — TIRITH FAIL-OPEN ON UNRESOLVABLE SCANNER (12th structurally-incapable mechanism; FIRST on the security layer, per the owner's framing: "the first one on the security layer rather than the verification layer")
+
+MECHANISM: Hermes's per-command security scan silently ALLOWS when the
+scanner cannot resolve or run. tirith_security.py check_command_security
+returns {"action": "allow"} on every operational failure while
+tirith_fail_open: true (the config default): path resolves to None
+(:765-772), OSError spawn failure (:783-795), timeout (:796-805), unknown
+exit code (:817-824). Commands run UNSCANNED and look approved — the ACP
+client never prompts because the scan never produced a verdict. The eleven
+prior mechanisms (error-swallowing, masked envelopes, fall-throughs, proxy
+gap, noData, vacuous tsc DQ-2026-08-12-027, etc.) were all on the
+VERIFICATION layer, where a downstream check could still catch the miss;
+this one gates the SECURITY layer itself — nothing downstream can catch a
+scan that never ran.
+
+NOTICED 2026-08-12 (permission pre-grant session): the agent shell's PATH
+lacked ~/.hermes/bin — `tirith` and `ng` returned "command not found" from
+the terminal, while six permission classes (ng build, heredoc write,
+python3 tools/..., psql read, curl localhost:8080, git branch/checkout) all
+ran with zero approval prompts. Follow-up PROVED the gate was NOT silently
+open in this session: the agent resolves tirith via the $HERMES_HOME/bin
+fallback (tirith_security.py:551-556) even when PATH is bare, and the
+positive control (`curl http://evil-example.com/x`) WAS blocked — [HIGH]
+plain_http_to_sink, live approval prompt. The real finding is that the
+gate's health is INVISIBLE without an explicit check: nothing is loud when
+the scanner is unresolvable, and any environment where the $HERMES_HOME
+fallback also fails (HERMES_HOME unset, binary moved, spawn error) becomes
+the silent open gate — commands run unscanned and look approved.
+
+STARTUP CHECK (standing from this finding): tools/verify_tirith_resolvable.py
+runs at session start before the agent relies on the scan — PASS required.
+Exit 3 = scanner NOT resolvable (loud FAIL); exit 1 = scanner present but
+INERT (positive control not blocked); exit 2 = resolved but unusable.
+Negative control demonstrated 2026-08-12: TIRITH_BIN=/nonexistent/tirith →
+FAIL [exit 3], never a silent pass. Positive control demonstrated same
+session: PASS (resolved /Users/axonichealth/.hermes/bin/tirith, plain-http
+control blocked, exit 1).
+
+HARDENING OPTION (owner decision, NOT applied): flip config
+security.tirith_fail_open to false = fail-closed — any scanner hiccup
+BLOCKS instead of silently allowing. Tradeoff: a scanner crash would block
+ALL commands until the next restart, so the choice is the owner's.
+
+## DQ-2026-08-12-053 — PATIENT REGISTRATION (40) T0 SMOKE: BLOCKED — 6th PHANTOM COLUMN family_id ON patient.t_patient_details (flow PARKED, BR-PENDING-family-id-phantom)
+
+THIRD FULL FLOW MAP (admission family) — T0 Amendment-8 gate verdict: the
+primary write POST /api/global/patientRegistration CANNOT complete on ANY
+payload shape. Flow map NOT drafted; flow parked; next flow taken (mandate:
+"a flow that turns out unbuildable — park it, log the BR, take the next").
+
+MECHANISM (catalina.out, 2026-08-12): every save dies at savePatientDetails —
+`ERROR: column "family_id" of relation "t_patient_details" does not exist`
+(SQLGrammarException, Hibernate flush of the pending details insert). The
+PatientDetails entity maps family_id; information_schema shows ZERO family_id
+columns in ANY schema — the 6th phantom-column instance (after technique_id,
+is_bed_charges_service, form_template, icpc_id, package_applicable_date), and
+the first to block the ADMISSION family. The DAO's empty catch
+(PatientRegistrationDaoImpl:174-179) swallows it into the masked envelope:
+HTTP 200 {status:"error", code:"501", message:"Something went wrong!!"},
+state unchanged (0 rows anywhere — the whole @Transactional rolls back).
+
+SMOKE EVIDENCE (tools/smoke_patient_registration_write.py + variant probe):
+4 payload shapes (dob dd-MM-yyyy / ISO datetime / mapping-format / age-only)
+all masked-fail; psql 0/0/0 on registration/details/order_master every time;
+teardown clean. Config gate PASSES (t_unit_application_billing_configuration
+org 1/unit 1 row exists, patient_reg_ser_id=1 — so a working write would also
+auto-create an order master+details row; teardown covers emr... public
+t_order_master/t_order_details).
+
+SECONDARY FINDING (legacy robustness): checkUniquePatient NPEs when dob is
+null — DAO:282 `getDob().substring(...)` — `Caused by: NullPointerException
+... getDob() is null`, propagated to the controller catch (code "Fail").
+dob is therefore a MANDATORY payload field even though the DTO/DDL allow
+null; the legacy JS always validates+ sends it. Not the blocker; logged.
+
+CLASS: OPD-Bill class — broken write (backend DDL defect) behind a masked
+envelope. Amendment 7: masked + state unchanged = rejection with a bad
+message -> log/banner. Amendment 8: park-candidate (write cannot complete).
+
+ACTION: BR-PENDING-family-id-phantom (DDL ADD COLUMN family_id to
+patient.t_patient_details; Expand-Migrate-Contract; backend-owned per Rule
+10 — NOT agent-applied). Flow parked, map undrafted. Next admission-family
+candidate taken for the flow map.
+
+## DQ-2026-08-12-054 — APPOINTMENT SCHEDULING (41) T0 SMOKE: BLOCKED — 7th PHANTOM appointment_unique_id ON opd.m_appointment_master + CLASS-LEVEL EXTENT (371 missing columns / 177 tables)
+
+Second consecutive admission-family T0 smoke blocked by the phantom-column
+class: POST /api/opd/scheduleAppointment (screen 41, module 4) returns the
+masked 501 on every payload shape; catalina.out names the cause —
+`ERROR: column "appointment_unique_id" of relation "m_appointment_master"
+does not exist` (DAO AppointmentSchedulingDaoImpl:114 sets it; entity maps
+it; information_schema ZERO hits in all schemas). Controller catch logs
+"method failed" + returns COMMON_ERROR; 0 rows landed; teardown clean.
+Tool: tools/smoke_appointment_scheduling_write.py (verified READ-only use of
+an existing dev patient for the FK; only the marker appointment is created/
+deleted).
+
+CLASS EXTENT (entity-vs-DDL sweep, 2026-08-12, tools-adjacent script):
+@Column names declared across legacy/Entity vs information_schema ->
+CASE-INSENSITIVE 371 missing columns across 177 existing tables. The drift
+is FAMILY-WIDE: admission/OPD (adt.t_admission.ot_status,
+adt.t_admission_details.{admission_date_time,diet_type,remark_for_diet},
+opd.t_encounter_master.{advised_by_id,advised_by_name,nursing_station_id},
+opd.t_encounter_doc_details 8, patient.t_patient_details.family_id,
+opd.m_appointment_master.appointment_unique_id), pharmacy
+(pharmacy.t_sale 12, t_prescription_detail 8), lab (lab.t_lab_sample_dtls
+7, t_template_result 7), blood bank (t_issue_blood_bag.
+cross_match_register_id), billing (t_bill_payee_details 4, t_doctor_share 2,
+m_deposit_master 4). The two flows that completed (loyalty 752, transfer 65)
+write tables that are CLEAN (t_transfer/t_bed_log_status/m_bed_master/
+loyalty tables); every remaining family's core write surface carries drift.
+
+DECISION QUEUED (class, owner): the phantom-column class blocks the
+flow-map step at the FAMILY level — 2 confirmed live write blockers
+(6th/7th instances: family_id, appointment_unique_id) + the systemic extent.
+Options for the owner: (a) DDL reconciliation batch (ADD COLUMN per drift —
+Expand-Migrate-Contract, backend-owned, then T0 smokes re-run), (b) entity
+reconciliation (map-only columns removed — Behavioral risk), or (c) per-flow
+park-and-skip (each flow parks at T0; only clean-table flows proceed).
+The run's flow-map step is CLASS-BLOCKED until this decision; the run
+continues with read-side verification and clean-surface work meanwhile.
+
+## DQ-2026-08-12-055 — APPOINTMENT SCHEDULING (41) LIST FEED 501 ROOT-CAUSED: PHANTOM TABLE public.t_message_queue (8th phantom instance — first TABLE-shaped; the README's owed finding)
+
+The appointment README (screen 41) owed the root cause of the list path's
+masked 501. RESOLVED 2026-08-12 (live call POST /api/opd/scheduleAppointmentList
+{organizationId:1,unitId:1,appointmentTypeId:1,appointmentDate:2026-08-12} ->
+HTTP 200 {"status":"error","code":"501","message":"Something went wrong!!"});
+catalina.out names it:
+`Caused by: org.postgresql.util.PSQLException: ERROR: relation
+"public.t_message_queue" does not exist` — `MessageQueueDaoImpl
+getMessageFromQueqe failed` (SQLGrammarException, swallowed by the chain into
+the controller catch "method failed" -> 501). Entity MessageQueue.java maps
+the table; information_schema shows ZERO t_message_queue tables in ANY schema.
+
+CLASS: phantom TABLE — the 8th phantom instance (1-7 were phantom COLUMNS:
+technique_id, is_bed_charges_service, form_template, icpc_id,
+package_applicable_date, family_id, appointment_unique_id), the first where
+the whole relation is absent. READ class (list feed) -> transfer precedent:
+broken feed, backend defect, honest-error read class -> banner + log, NOT a
+stop.
+
+APPOINTMENT FLOW NOW FULLY DIAGNOSED: save blocked by phantom COLUMN
+appointment_unique_id (7th, DQ-054); list blocked by phantom TABLE
+t_message_queue (8th, this entry). The rebuild's list surface keeps its
+AMBER banner and adds the named mechanism.
+
+ACTION: BR-PENDING-message-queue-table (DDL CREATE TABLE public.t_message_queue
+per the entity; backend-owned per Rule 10; NOT agent-applied).
+
+## DQ-2026-08-12-056 — DONOR REGISTRATION (blood bank) T0 SMOKE: PASS — BUILDABLE (first clean-surface flow; third flow-map candidate CONFIRMED)
+
+Per the DQ-054 Option-C drift map, donor registration is the first flow whose
+write tables are drift-clean (t_donor_registration, t_donor_details,
+t_donor_screening_details — zero phantom columns). T0 Amendment-8 smoke
+(tools/smoke_donor_registration_write.py, 2026-08-12): POST
+/api/bloodbank/donorRegistration with the exact payload -> HTTP 200 honest
+success envelope, t_donor_registration=1 + t_donor_details=1 landed
+(donor_id=2), teardown clean, SMOKE_EXIT=0 -> BUILDABLE. The third full flow
+map (T1-T6) proceeds on this flow (blood-bank family, untouched by the
+loyalty/transfer maps).
+
+CHAIN HEALTH (the anti-mask pattern, for the record): every catch in the
+donor save chain (service saveDonorRegistration:123-126, DAO saveDonor:83-89,
+saveDonorDetails:103-109) LOGS + THROWS ServiceException — failures surface as
+honest HTTP 500s with the real message, never the masked 501. The phantom
+class did NOT hit this flow (drift map confirms clean tables).
+
+DATE CONTRACT (payload literalism, variant-probed 2026-08-12): dob MUST carry
+the time part — "dd-MM-yyyy HH:mm:ss". The Dozer mapping date-format is
+"dd-M-yyyy HH:mm:ss"; "01-01-1990" / ISO / 1-digit-month / no-dob all fail
+with the honest 500 "Unable to parse source object using specified date
+format"; "01-01-1990 00:00:00" succeeds. The donor DAO has NO post-mapping
+dob override (unlike the patient-registration DAO).
+
+FINDING (non-blocking, config-owned): donorNumber is NULL — the success
+envelope reads "Donor null Saved Successfully". getGeneratedNo(0, unitId,
+DONORNUMBER) returns null because public.t_prefix_running_number (the
+running-number config: org/unit/screen/current_running) has ZERO rows in
+his_local. The write lands; only the number is missing. Honest envelope +
+write landed = NOT a masked write, NOT a stop; the config seed is a
+backend/config-owned item for the owner/backfill queue. The rebuild's donor
+row must not render "Donor null" as truth — the screen shows the honest
+state (number pending config) per the dev-data honesty standard.
+
+## DQ-2026-08-12-060 — BLOOD ISSUE (blood bank): PARK — the write requires existing blood-bag stock (dev-empty); cross_match_register_id flag is a sweep artifact
+
+T0 sweep (park_sweep.py, 2026-08-13): POST /global/bloodBank/saveIssueBloodBag
+-> honest 500 chain through the contract: null date NPE (issueDate) -> null
+bloodBagIssueList NPE -> "id to load is required for loading" (Hibernate load
+of the bag/stock by id). The write CANNOT proceed without an existing blood
+bag (the issue draws from stock; dev stock tables are empty). PARK CLASS:
+stock-dependent — needs a seed fixture (backend/seed-owned) before the flow
+can be exercised; the flow is not drift-blocked (its flagged column
+cross_match_register_id EXISTS in DDL — 3 matches anywhere — sweep artifact,
+removed from the map bands). The chain itself is honest (ServiceException
+rethrows, real messages).
+
+## DQ-2026-08-12-061 — PHLEBOTOMIST HOME COLLECTION (lab): T0 BUILDABLE — the THIRD buildable flow (after donor, shift-closing)
+
+T0 sweep verdict: BUILDABLE. POST /LIS/PhlebotomistHomeCollection/save
+(@RequestBody List<PhlebotomistHomeCollectionDto>) -> HTTP 200 "Added
+Successfully." + lab.t_phlebotomist_home_collection row landed (id-based
+verified, teardown clean). Contract notes: fromTime/toTime REQUIRED as
+"HH:mm:ss" (the DAO's LocalTime.parse NPEs on null — same class as the I/O
+chart details, but HERE the times are consumable); createdDate/updatedDate
+REQUIRED (the DAO's getDate NPEs on null); the write targets its OWN table
+(t_phlebotomist_home_collection — clean per the drift map), NOT the sample
+tables (t_lab_sample_dtls' 7 flags belong to a DIFFERENT lab flow — the
+sample registration/collection from orders). This is the lab family's first
+buildable surface — a flow-map candidate (the phlebotomist home collection
+screen).
+
+## DQ-2026-08-12-062 — CASH HANDOVER (cash desk): PARK — the 9th phantom instance, cash_in_out_id on public.t_denomination_details (CONFIRMED, PROBABLE->CONFIRMED promotion)
+
+T0 sweep verdict: HONEST-500 (park). POST /api/global/saveCashHandoverMaster
+with the exact DTO contract (denominationDetailsMasterList entries with
+qty>0 — qty 0 SKIPS the insert by design at
+CashHandoverMasterDaoImpl:157) -> live SQL error:
+ERROR: column "cash_in_out_id" of relation "t_denomination_details" does not
+exist -> SQLGrammarException -> the DAO rethrows -> honest 500 + FULL
+ROLLBACK (handover master + denomination details both 0, psql-verified) —
+the ATOMIC honest class (the opposite of the io-chart's silent partial).
+The DenominationDetailsMaster DTO's cashInoutId field (seen in Jackson's
+known-properties list) is the drift column's twin. PARK CLASS: drift-blocked
+(honest + atomic); the DDL fix (ADD COLUMN cash_in_out_id) is
+backend-owned (Rule 10). Contract trivia for the future rebuild: the
+denomination field is `qty` (not quantity), and the details DTO has NO
+organizationId/unitId.
+
+## DQ-2026-08-12-063 — ADMISSION (ADT, savePatientAdmission): PARK — the bed-occupancy precheck is an INVERTED patient-reservation gate (backend bug, not a design gate); t_admission drift unconfirmed
+
+T0 sweep (park_sweep.py, 2026-08-13): POST /adt/savePatientAdmission
+(BedAllocationController:168, @RequestBody AdmissionDto) -> every probe
+returns {"status":"error","code":"409","message":"Bed is already
+occupied...!!"} with NOTHING landed. MECHANISM (fully evidenced 2026-08-13):
+1. The "bed" check is NOT a bed query: BedAllocationController:186 calls
+   iBedAllocationService.isBedBookedOrNot(admission) ->
+   BedAllocationServiceImpl:866 -> BedAllocationDaoImpl.getcheckBedAllocation
+   (:1069) — a GET_BED_RESERVATION_LIST_DETAILS lookup filtered by
+   admissionNote.patientId + to_char(mapper.doa,'dd/MM/yyyy')=:createdDate.
+   It returns the PATIENT's bed reservations for the date; NO bed condition
+   exists anywhere in it.
+2. The controller condition is INVERTED: :187-190 blocks when the list is
+   null/EMPTY — but empty = "no reservation" = should PROCEED. A patient with
+   no reservation on the date always hits the block. The condition should
+   fire on the NON-EMPTY result.
+3. STACKED SECOND CAUSE (the first probes): the payload's missing createdDate
+   -> admissionDto.getCreatedDate().substring(0,10) NPE (:1079) -> the DAO's
+   EMPTY catch (:1083-1087) -> null listObject -> the same gate fired. The
+   re-probe WITH createdDate (13-08-2026 00:00:00) still blocks (the query
+   returns empty for the unreserved smoke patient) — the inverted gate is the
+   real blocker.
+ANSWER TO "WOULD ANY BED PASS?": NO — the check never evaluates the bed; it
+evaluates the patient's reservations for the date. ANY unreserved patient on
+ANY date hits the inverted block regardless of bed status. This is the check
+being WRONG (inverted + null-swallowing), NOT the dev bed data being empty.
+PARK CLASS: precheck-blocked (backend bug — fix = invert the condition at
+BedAllocationController:187-190 + the DAO's empty catch; Rule 10). The
+t_admission ot_status + t_admission_details x3 drift flags remain UNREACHED
+(the gate blocks before the INSERT).
+
+## DQ-2026-08-12-064 — LAB SAMPLE-TYPE MASTER (LIS/global addSample): BUILDABLE (master class — confirms the clean-master phase; NOT a transaction flow)
+
+T0 sweep verdict: BUILDABLE. POST /LIS/global/addSample with the exact
+SampleMasterDto shape (orgId — NOT organizationId/unitId; code/desc; epoch-long
+createdDate/updatedDate — a Long field, string dates 400) -> HTTP 200
+"Record added successfully." + lab.m_sample_master row landed (sample_id
+id-based, teardown clean). The write targets lab.m_sample_master (the
+sample-type master), NOT lab.t_lab_sample_master/t_lab_sample_dtls — those
+7+1 flags belong to the lab ORDER/sample-registration flow, whose endpoint
+was not located this batch (the LIS transaction module hunt continues).
+
+## DQ-2026-08-12-065 — CASH-DESK READ/WRITE ASYMMETRY — AMENDED: the unauth-write claim is RETRACTED (mechanical cause: the park_sweep post() always sends the cached token); the measured residual is a read-side session requirement
+
+AMENDED 2026-08-13 after the BR-040 measurement (tools/auth_gap_probe.py):
+the original claim ("writes execute with NO Authorization header") is FALSE —
+tools/park_sweep.py:50-61 sends the cached bearer token + identity headers
+on every request; the smokes were authenticated all along. MEASURED: 12
+write endpoints across six families — no header -> 401 (12/12); invalid
+token -> 401 (3 spot checks); cached token -> 200 + rows land. The writes
+are properly token-validated; nothing is forgeable. RESIDUAL: the same valid
+token the writes accept is rejected by the reads (getShiftClosingBalanceSheet,
+getCashHandoverDetails, getRefundList -> 401 "UNAUTHORIZED ##") — the reads
+validate the full login session (cookieObject), not the header token alone.
+Operational note for the backend owner (their choice, Rule 10 — NOT a
+frontend fix): headless/token-only clients cannot read the cash-desk
+endpoints; a token-accepting read mode would be a backend decision. The
+park-sweep WRITE-path evidence (the drift/park verdicts) is unaffected — it
+ran the normal authenticated path.
+
+## DQ-2026-08-12-066 — DEPOSIT + WALK-IN SALE: CONTRACT-INCOMPLETE parks (the DTOs are nested/complex; the drift flags unreached — neither confirmed nor disconfirmed)
+
+T0 sweep (park_sweep.py, 2026-08-13):
+- DEPOSIT (POST /api/billing/unit/deposit — DepositController:70): the DTO is
+  NESTED — DepositCollectionReqDto has exactly 2 properties
+  (depositMasterDto + listPaymentDepositDetailsDto; Jackson-verified). The
+  minimal flat payload 400s; the nested probe (depositMasterDto{...} +
+  empty list) STILL 400s — the inner DepositMasterDto/PaymentDepositDetailsDto
+  shapes need the full legacy payload. billing.m_deposit_master's 4 drift
+  flags were NEVER REACHED (unconfirmed). PARK CLASS: contract-incomplete
+  (the exact legacy deposit payload needed for the full smoke).
+- WALK-IN SALE (POST /api/pharmacy/sales/walkins/save/prescription): the
+  WalkInPrescriptionReq is a complex multi-part request — the minimal
+  {org, unit, storeId, tempBillId} 400s. pharmacy.t_sale's 12 drift flags
+  NEVER REACHED (unconfirmed). PARK CLASS: contract-incomplete.
+Both flows need the legacy JS payload construction (the exact DTO shapes)
+before the drift can be confirmed or disconfirmed — the next batch's work
+alongside the blood-request + LIS sample-registration endpoint hunts.
+
+FLOW-MAP READ-SIDE FINDINGS (T1, 2026-08-12, live calls):
+1. patientAutofillSearch is a TODO STUB — DonorRegistrationServiceImpl:296-299
+   `return null` — POST /api/bloodbank/patientAutofillSearch returns HTTP 200
+   with an EMPTY BODY. The "existing patient as donor" autofill feed was NEVER
+   implemented server-side. The rebuild must NOT wire the autofill picker to
+   this endpoint (it renders nothing); either omit the control or show the
+   honest "feed unavailable" state.
+2. donorSearch is LIVE: 200 success, empty dev list (honest), message field
+   mislabeled "Updated Successfully." (cosmetic).
+3. getActivePrefixList (GET /adt/getActivePrefixList) is LIVE: 1 real row —
+   the rebuild's only currently-wired feed (the prefix-list shell).
+4. EXTERNAL CALL IN THE SAVE CHAIN: registerDonor -> saveDonorFingerPrint
+   (service:303-339) POSTs the thumbImage to the hardcoded
+   http://mabistest.mantratecapp.com/4/mabis/biometric/enroll whenever
+   thumbImage is present — a test-environment biometric service in the
+   patient-registration-class write path. The rebuild's form must treat
+   thumbImage as optional and the trace must note the external dependency
+   (flagged for the owner: hardcoded external endpoint, consistent with the
+   secret-scan class).
+
+## DQ-2026-08-12-057 — ENCOUNTER (module OPD): READ-ONLY BY DESIGN park class (first instance of the owner's category)
+
+T0 sweep (park_sweep.py, 2026-08-12): the encounter screen has NO standalone
+write endpoint AT ALL — EncounterController exposes only reads
+(getEncounterDetails, getListOfEncounterMaster, getSearchedListEncounterMaster,
+etc.); the encounter WRITE (saveEncounterMaster) is called only
+service-to-service from BillingMasterServiceImpl:2818 (the billing flow creates
+the encounter during bill/payment processing — the Billing module,
+encounterMasterDto with visitTypeId OP). PARK CLASS: read-only BY DESIGN —
+NOT blocked, NOT drift-hit at the screen level; a different fact for whoever
+picks it up (the encounter-create is part of the billing flow's write chain,
+and THAT chain carries the t_encounter_master drift — advised_by_id,
+advised_by_name, nursing_station_id (PROBABLE band) — so the billing flow's
+encounter-create is drift-suspect, same class as OPD Bill). The rebuilt
+encounter feature (reads only, both live) is correct as built.
+
+## DQ-2026-08-12-058 — INPUT-OUTPUT CHARTS (I/O charts): MASKED-PARTIAL — master row lands, chart LINES silently dropped (false-success-partial class)
+
+T0 sweep verdict: UNPROVEN (park). POST /api/opd/saveIntakeOutputChart with
+the exact DTO contract -> HTTP 200 "Added Successfully." with
+adt.t_intake_output_chart = 1 (the master row lands) but
+adt.t_intake_output_chart_details = 0 (the chart LINES — the flow's core —
+never written). MECHANISM (catalina): IntakeOutputChartDaoImpl:113
+LocalTime.parse(startIntakeTime) NPEs on a null time; with a time sent, the
+app's IST zone leaks into the timestamp bind ("10:00:00+05:30" ->
+"invalid input syntax for type timestamp") — the details INSERT cannot
+complete either way. AMPLIFIER (Amendment 11 #4): the SERVICE ignores the
+details DAO response (IntakeOutputChartServiceImpl:67 — resPreDtls unused)
+-> the failure is silent -> "Added Successfully." with the lines dropped:
+the false-success-partial class (BR-193-like). The service is the
+masking layer. The 2 flagged columns on t_intake_output_chart_details
+(drift map, PROBABLE/SUSPECT band) were NEVER REACHED — neither confirmed
+nor disconfirmed (the LocalTime.parse dies before the SQL). Backend-owned:
+fix the details DAO's time handling + the ignored response.
+
+## DQ-2026-08-12-059 — SHIFT-CLOSING (600, cash desk): MASTER WRITE BUILDABLE — entity inversion + date-format contract; cash-handover write still to smoke
+
+T0 sweep verdict: BUILDABLE. POST /api/global/saveShiftCloseBalance ->
+HTTP 200 "Added Successfully." + billing.m_shift_close_balance row landed
+(id-based verified), teardown clean. FINDINGS:
+1. ENTITY INVERSION: the ShiftClosingMaster entity maps
+billing.m_shift_close_balance (NOT m_shift_close_master — which holds the
+real dev row from 2026-08-03 and is written by a different path). Whoever
+rebuilds the screen must read/write the BALANCE table via this endpoint.
+2. DATE-FORMAT CONTRACT: the mapper's dd-M-yyyy date-format MANGLES
+"2099-01-01 00:00:00" into 0006-09-30 (day/month rollover) — a marker-date
+trap for any fixture; the initial by-date post-count falsely read 0. Use
+id-based markers for this flow (the sweep now does).
+3. The t_denomination_details.cash_in_out_id drift flag (1, drift map)
+belongs to the CASH-HANDOVER write (the denomination/cash-in-out save), NOT
+saveShiftCloseBalance — that endpoint is a batch-2 smoke candidate, not yet
+probed.
+4. The listOfIds receipt-update branch (ShiftClosingMasterDaoImpl:392)
+calls size() BEFORE the null check (NPE on null list) — a robustness defect
+on the receipt-update path (backend-owned); the branch is skippable with [].
