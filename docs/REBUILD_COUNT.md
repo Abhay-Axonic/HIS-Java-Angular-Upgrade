@@ -1,38 +1,41 @@
-# Rebuilt Screens — Authoritative Count (single source of truth)
+# Rebuilt Screens — Count (LOG, not the source of truth)
 
-THIS FILE IS THE AUTHORITATIVE REBUILD COUNT. Updated at EVERY merge.
-Do not reconstruct the count from branch docs, skills, or session history —
-read it here. (Owner directive 2026-08-12: the census lives only in docs that
-go stale on a branch; this file on main is the fix.)
+> **THE AUTHORITATIVE FIGURE IS COMPUTED, NOT STORED HERE.**
+> Recompute it at any time with:
+> `ls new/src/app/features | grep -v -E '^(_decoy-groundwork|_recheck-20-bucket|_screen-template|access-denied)$' | wc -l`
+> i.e. every feature directory under `new/src/app/features/` MINUS the
+> exclusion set (`_decoy-groundwork`, `_recheck-20-bucket`,
+> `_screen-template`, `access-denied` — 4 dirs). Each rebuilt screen = ONE
+> feature directory with a live-routed, probed screen.
+> THIS FILE IS A MERGE LOG. It drifts the moment a merge lands without a row;
+> the computed figure never drifts. (2026-08-13: the file was found 21 rows
+> behind — it said 357 against a computed 378. Fixed here; the computed
+> figure is the count, this table is the history.)
 
-## Current count: 357 rebuilt on main
+## Computed count on 2026-08-13: **378 rebuilt** (382 dirs − 4 excluded)
 
-| # | Merge | Screens added | Running total |
-|---|-------|---------------|---------------|
+| # | Merge | Screens added | Running total (log) |
+|---|-------|---------------|---------------------|
 | — | Census baseline (525-dir ledger, exclusions applied) | — | 339 |
-| 1 | consentType real-data rebuild (8c08997d) | 1 (528) | 340 |
+| 1 | consentType real-data rebuild (8c08997d) | 1 | 340 |
 | 2 | Group B (e34bf81c) | 4 | 344 |
-| 3 | Master close-out (60273eba) | 11 (597/598/600/625/635/650/660/719/722/745/746) | 355 |
-| 4 | assignLoyaltyCard (5b1861e8) | 1 (752) | 356 |
-| 5 | transferScreen (65) — pending merge of rebuild/transfer-screen | 1 (65) | **357** |
-| 6 | donorRegistration (719) — RECLASSIFICATION: master-shell (row 3) -> transaction form (T0-T6 signed flow map, DQ-056); count unchanged (one dir counted once) — pending merge of rebuild/transfer-screen | 0 new | 357 |
-| 7 | shiftClosing (600) — RECLASSIFICATION: honest-state shell (row 3) -> transaction write form (T0-T6 signed flow map: balance write BUILDABLE DQ-059, golden trace landed balance id 24, teardown clean; reads session-gated/honest; DQ-065/BR-040 auth measured: 12/12 writes token-validated, reads need the session — brief) — pending merge of rebuild/transfer-screen | 0 new | 357 |
-| 8 | phlebotomistHomeCollection (155) — FIRST LAB-FAMILY TRANSACTION FORM (T0-T6 signed flow map: write BUILDABLE DQ-061, golden trace landed collection id 17, teardown clean; PARITY RECORD: legacy state ungated + menu module 155 gating -> route carries the guard(155) reproducing the menu gate; search feed session-gated/unwired) — pending merge of rebuild/transfer-screen | 1 new (155) | **358** |
+| 3 | Master close-out (60273eba) | 11 | 355 |
+| 4 | assignLoyaltyCard (5b1861e8) | 1 | 356 |
+| 5 | transferScreen (65) | 1 | 357 |
+| 6 | donorRegistration (719) — reclassified master-shell → transaction form | 0 | 357 |
+| 7 | shiftClosing (600) — reclassified → transaction write form | 0 | 357 |
+| 8 | phlebotomistHomeCollection (155) — first lab transaction form | 1 | 358 |
+| 9 | crossMatchRegister — 5th transaction form (deposit-walkin batch) | 1 | 359 |
+| 10 | bloodIssue — 6th signed flow (473fb869) | 1 | 360 |
+| 11 | nursingOrder — 7th signed flow (473fb869) | 1 | 361 |
+| 12 | labSampleType — 8th signed flow (473fb869) | 1 | 362 |
+| 13 | first dashboard batch (af6d9af8) — fundStatusDashboard, storeStockDashboard | 2 | 364 |
+| 14 | the nine-dashboards batch (fb10a05e) — erPatient, nurse, diagnostics, nursingAllocation, nursingShift, otManager (the doctorDashboard dir pre-existed; counted once) | 6 | 370 |
+| 15 | reports batch (04a39885) — mlc-reporting-worklist, incident-category | 2 | 372 |
+| 16 | the seven buildable (c11533a6) — radiology pair, due-deposit-report, consignment detail, MPShah trio | 6 net new after the census reconciliation | **378** |
 
-## How the count is computed
-- Denominator: 1,077 menu nodes; exclusion set = `_decoy-groundwork`,
-  `_recheck-20-bucket`, `_screen-template`, `access-denied` (4 dirs).
-- Each rebuilt screen = ONE feature directory under `new/src/app/features/`
-  with a live-routed, probed screen. Denominator counts ONE dir per rebuild.
-- Class accounting counts separately: noData shells, feeds, write-path
-  screens, and transaction screens each count as rebuilt once live-verified.
-
-## Update rule
-On every merge of a rebuilt screen (or screen group), add one row to the
-table above with the merge hash and the running total. The transaction phase
-targets the remaining ~170 (≈108 transaction + 35 reports + 13 dashboards
-per DQ-025/032/034) — update the count as each merges.
-| 9 | crossMatchRegister (blood bank) — FIFTH TRANSACTION FORM (T0-T6 signed flow map: write BUILDABLE DQ-068 after the SEVEN-LAYER contract peel + the DQ-067 stock extension; golden trace landed master id 22 + 1 detail with the exact form values, teardown clean incl. the DETAILS table — the TEARDOWN RULE; PARITY RECORD: legacy states app.js:18494/18500 ungated -> ungated route; BR-041 legacy issueDate NPE found while contract-hunting) — pending merge of rebuild/deposit-walkin-batch | 1 new (blood bank) | **359** |
-| 10 | bloodIssue (blood bank issue) — the 6th signed flow (T0 DQ-070 BUILDABLE via the compounding seed; golden trace row 87 | patient 1 | created_by 1; teardown covers the master + details + fixtures) |
-| 11 | nursingOrder (ADT) — the 7th signed flow (T0 DQ-071, the two-layer NPE peel; golden trace row 9 | created_by 1) |
-| 12 | labSampleType (LIS) — the 8th signed flow (T0 BUILDABLE; golden trace 'Record added successfully.' + clean teardown; the compounding rule's 2nd instance — its output feeds the LIS) |
+## Update rule (revised 2026-08-13)
+On every merge of a rebuilt screen (or screen group), append one row with the
+merge hash and the running total — AND recompute the authoritative figure from
+the directories. If the two disagree, the directories win and the row notes
+the reconciliation. The count file is a log; it is never the source of truth.
