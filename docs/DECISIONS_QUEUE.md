@@ -2646,6 +2646,29 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-088 — THE ELEVEN's T0s + THE COUNTS RESTATED: seven buildable, the shell class empty, the contract-wall class dissolved
+
+The eleven (the trio's three verdicts stand: medication/Uti unwired saves,
+PatientFall's service validation). The other eight's T0s:
+- **radiologyReportValidation — BUILDABLE** (the subspeciality feed 200 with
+  real rows; the report screen renders; read-verified; its Final-Release
+  write's endpoint is the next trace).
+- **radiologyReportReleaseWorkList — BUILDABLE** (renders; worklist).
+- **dueDepositReport — BUILDABLE** (renders with LIVE rows — the seeded
+  patient; the deposit reads survive).
+- **incidentReportingScreen — DRIFT-BLOCKED** (the write's 500 is the
+  family's CONFIRMED phantom — the user_chat_details table, #14).
+- **detailsConsignmentManagerDashboard — BUILDABLE** (renders).
+- **MPShahEncounterList / EncounterSummary / PatientList — BUILDABLE** (all
+  three render — real read-only screens).
+THE COUNTS: **BUILDABLE 7** (the seven read-heavy, render-trace gated) /
+**DRIFT-BLOCKED ~20** (the 15 phantoms + 2 code defects' screens + the LIS
+family + result-entry + diag-proc + workload + histo + incident) /
+**LEGACY-DEFECT 3** (the trio's writes) / **OPEN EXCAVATION 1** (pharmacy).
+The shell class is EMPTY (11 of 11 rendered "shells" are real); the
+contract-wall class has DISSOLVED (ledger #13's six verdicts became drift,
+defects, or builds). The handover's position is restated to match.
+
 ## DQ-2026-08-13-087 — THE RENDER BACKLOG CLEARED: the mechanism named (a), the legacy path confirmed (b), all eight rendered — 11-for-11 real screens, ZERO shells among the static-scan "shell" class
 
 (a) **THE MECHANISM, NAMED:** the legacy app's `$urlRouterProvider.otherwise("/login")`
