@@ -66,6 +66,9 @@ boundary moved twice since this document first described it):**
   shorter loop):** radiologyReportValidation (feeds live), radiologyReportReleaseWorkList,
   dueDepositReport (live rows), detailsConsignmentManagerDashboard,
   MPShahEncounterList, MPShahEncounterSummary, MPShahPatientList.
+  **ALL SEVEN ARE BUILT (c11533a6) and render through the app's own login
+  flow — the class is CLOSED at 378 rebuilt (computed from the feature dirs
+  with the exclusion set; REBUILD_COUNT.md is the log, not the source).**
 - **DRIFT-BLOCKED (~20 screens — the 15 confirmed phantoms + the 2 code
   defects, each named above and in section 5):** the incident/NABH family
   (the user_chat_details table), the LIS family (the ltlsc status + icmr_id),
@@ -82,6 +85,20 @@ boundary moved twice since this document first described it):**
   screens — ledger #14); **the contract-wall class has dissolved** (six of
   its verdicts were probe-shape and have since become confirmed drift,
   legacy defects, or builds — ledger #13).
+
+**THE FINAL POSITION (2026-08-13, session close — every verdict live-tested):**
+- **378 rebuilt** (computed from the feature dirs with the exclusion set).
+- **Four classes remain, with counts:**
+  1. **DRIFT-BLOCKED ~20** — behind the 15 confirmed phantoms + 2 code
+     defects (each named above with its table/column and resume condition).
+  2. **LEGACY-DEFECT 3** — the nursing trio's writes (medication's
+     saveRack-undefined, Uti's unwired save — both live-click-tested:
+     the Save opens the store-select modal and never reaches a save
+     function; PatientFall's literal payload gets a service-level 400).
+  3. **OPEN EXCAVATION 1** — the pharmacy save (its own literal payload
+     gets a non-Jackson 400; the DTO mismatch named in DQ-085).
+  4. **BACKEND-OWNED 0 open** — everything else has a verdict; the next
+     move belongs to the backend owner (the handover's section 2 + 5).
 
 **Two code defects (not drift — the code evaluates wrongly):**
 1. **Admission bed-occupancy gate** (`BedAllocationController.savePatientAdmission`,
