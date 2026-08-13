@@ -2416,6 +2416,56 @@ export const routes: Routes = [
             (m) => m.StoreStockDashboardComponent
           ),
       },
+      // UNGATED parity routes (2026-08-13): the remaining read-only dashboard
+      // states — render-trace gate (DQ-078).
+      {
+        path: 'erPatientDashboard',
+        data: { title: 'ER Patient Dashboard' },
+        loadComponent: () =>
+          import('./features/er-patient-dashboard/er-patient-dashboard').then(
+            (m) => m.ErPatientDashboardComponent
+          ),
+      },
+      {
+        path: 'nurseDashboard',
+        data: { title: 'Nurse Dashboard' },
+        loadComponent: () =>
+          import('./features/nurse-dashboard/nurse-dashboard').then(
+            (m) => m.NurseDashboardComponent
+          ),
+      },
+      {
+        path: 'diagnosticsDashboard',
+        data: { title: 'Diagnostics Dashboard' },
+        loadComponent: () =>
+          import('./features/diagnostics-dashboard/diagnostics-dashboard').then(
+            (m) => m.DiagnosticsDashboardComponent
+          ),
+      },
+      {
+        path: 'nursingAllocationDashboard',
+        data: { title: 'Nursing Allocation Dashboard' },
+        loadComponent: () =>
+          import('./features/nursing-allocation-dashboard/nursing-allocation-dashboard').then(
+            (m) => m.NursingAllocationDashboardComponent
+          ),
+      },
+      {
+        path: 'nursingShiftDashboard',
+        data: { title: 'Nursing Shift Dashboard' },
+        loadComponent: () =>
+          import('./features/nursing-shift-dashboard/nursing-shift-dashboard').then(
+            (m) => m.NursingShiftDashboardComponent
+          ),
+      },
+      {
+        path: 'otManagerDashboard',
+        data: { title: 'OT Manager Dashboard' },
+        loadComponent: () =>
+          import('./features/ot-manager-dashboard/ot-manager-dashboard').then(
+            (m) => m.OtManagerDashboardComponent
+          ),
+      },
       {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],

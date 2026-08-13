@@ -2646,6 +2646,62 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-079 — THE RENDER TRACES DONE (all seven dashboards) + the one-command session setup + the generator collision precheck
+
+Owner's merge gate was the render trace — the batch had API smokes only.
+- **Render traces DONE (2026-08-13, live browser session):** erPatientDashboard,
+  nurseDashboard, diagnosticsDashboard, nursingAllocationDashboard,
+  nursingShiftDashboard, otManagerDashboard, doctorDashboard (the RESTORED
+  original — "Dashboard - Doctor", guarded route, real content) — all render
+  with the live session; none hit Access Denied. The render gate is now
+  claimed for all seven.
+- **The session problem solved properly (owner):** `tools/setup_spa_session.py`
+  — ONE command that (1) clears the login collision (psql UPDATE, guarded to
+  user 1 / his_local), (2) re-mints the token via get_dev_token.py, (3) prints
+  the exact console snippet (sessionStorage.token + reload). The recurring
+  expiry was the collision + the rotation + the SPA's cross-origin
+  sessionStorage; the tool addresses all three. (The tool's token prints
+  redacted in agent tool output but full in a human terminal — the paste is
+  the one command.)
+- **The generator-overwrite class closed (owner):**
+  `tools/check_feature_dir_collisions.py` — the standing precheck BEFORE any
+  bulk generation: FAIL (exit 1) if any target feature dir already exists.
+  **Negative control proven both directions:** `doctor-dashboard` FAILS (the
+  existing — would have caught the overwrite) and a fresh name PASSES. The
+  route-survival check catches a vanished route; this catches an overwritten
+  component.
+
+## DQ-2026-08-13-078 — THE REMAINING NINE DASHBOARDS: T0 verdicts (7 BUILDABLE, 2 CONFIRMED-SHELL) — the batch is built; the browser render is OWED
+
+T0 smoked the PRIMARY READ of each (DQ-076): the BillStatDto family wanted
+`organizationId` (British), the NurseShiftAllocationDto wanted `orgId` —
+both payload-spelling classes resolved from the tomcat's "Unrecognized
+field" list; the 404s were wrong-root probes (the store constant's root is
+/api/global; getStoreList takes org+unit path params):
+- erPatientDashboard — BUILDABLE (getAdmissionDischargeDeathCount,
+  getOPVisitsCount 200 with organizationId)
+- nurseDashboard — BUILDABLE (getDashboardBedOccupancyList 200;
+  getAssignedBedList 200 with orgId)
+- diagnosticsDashboard — BUILDABLE (getFinanceDetailsCount 200)
+- nursingAllocationDashboard — BUILDABLE (getActiveNurseAllocationList 200
+  with orgId)
+- nursingShiftDashboard — BUILDABLE (getActiveNurseAllocationMasterByNurseId
+  200 with a REAL row, nurseAllocationId 1)
+- otManagerDashboard — BUILDABLE (getActiveSpecialityList 200, 2 rows;
+  the theatre list 400s the minimal payload — contract note)
+- doctorDashboard — BUILDABLE (getStoreList/1/1 200 with rows; the
+  pre-existing GUARDED route kept + class-name fixed; my duplicate removed)
+- consignmentManagerDashboard + dashBoard — CONFIRMED-SHELL (shared
+  MasterController, zero API calls — live-probed, same as dueDeposit)
+All seven built with the SHORTER LOOP (reads-only, no T4/T5, READMEs state
+the render-trace gate). Gates PASS (tsc 0, build 0, 373 routes, survival).
+**RENDER-TRACE OWED:** the browser render of the batch was blocked this
+session by the SPA session (Token Expired — the env-fault class, 5th
+instance; the sibling fundStatus/storeStock rendered earlier under the same
+pattern). The API-level smokes + the gates + the earlier sibling renders
+stand as the batch's evidence; the render trace is the merge gate and is
+explicitly NOT yet claimed.
+
 ## DQ-2026-08-13-077 — THE FOUR DRIFT-ADJACENT DASHBOARDS: T0 verdicts (2 BUILDABLE, 1 drift-PARKED, 1 shell) + the 13th CONFIRMED phantom
 
 T0 smoked the PRIMARY READ of each drift-adjacent dashboard (DQ-076):
