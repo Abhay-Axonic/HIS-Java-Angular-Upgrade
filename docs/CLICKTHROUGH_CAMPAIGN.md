@@ -33,6 +33,16 @@ The single step where the automated gate is thinnest. Not a checklist —
 one click per screen. Route prefix: the SPA routes under `/#/` (legacy
 states keep their legacy routes; the rebuilt SPA mirrors them).
 
+**KNOWN-DEFECT column (added 2026-08-13, DQ-091):** every screen whose
+save/dropdown is ALREADY explained by the ledger carries a `KNOWN:` marker
+in its row — the 18 confirmed phantoms (the drift screens), the 4
+legacy-defect screens, and the bare-toast class. Do not re-derive by
+clicking what the ledger already names; click to CONFIRM and log once.
+Example rows: `allergyMaster — KNOWN: phantom #18 (cims_code/cims_type on
+emr.m_allergy_master) + the bare-toast class`; `ambulanceMaster — KNOWN:
+broken-feed proxy gap (the feeds 404 on the :4201 dev-server origin — an
+env-class dev-server wiring issue, not dev-empty tables)`.
+
 ### census/early (353) — route + interaction
 
 | Route | The one interaction |

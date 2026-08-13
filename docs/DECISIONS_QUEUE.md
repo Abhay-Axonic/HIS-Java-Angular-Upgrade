@@ -2646,6 +2646,43 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-091 — CLICK-THROUGH BATCH 1 DIAGNOSED (allergyMaster + ambulanceMaster), no fixes: the campaign doc gains a KNOWN-DEFECT column
+
+**allergyMaster (the rebuild, allergy-master/):**
+- (a) The save fails **INDEPENDENTLY** of the missing allergy type. Live
+  cause: the save's SQL dies on `column allergymas0_.cims_code does not
+  exist` (catalina 8782261, ERR-d8701a37 + ERR-1024284a, 17:04:34) — the
+  save's payload carries cimsCode/cimsType (allergyMasterController.js
+  :180-181) and the table lacks the columns.
+- (b) YES — the documented cims_code/cims_type drift is the UI-level cause;
+  the form's CIMMS Code/CIMMS Type fields are the payload's phantom columns.
+  **LIVE-CONFIRMED → phantom #18** (the handover's table gets the row).
+  The campaign document's KNOWN-DEFECT column (below) flags every screen
+  whose save hits a known phantom.
+- (c) The bare toast: the rebuild's own handler — "Something went wrong!!"
+  with no ERR- reference — is the census-era default shape: **104 features
+  still carry it with NO err?.error?.message handler** (27 use the newer
+  shape). The allergy-master's own render shows BOTH "Allergy type list
+  failed" and the bare toast — the feed errored (the dropdown's empty
+  because the feed failed, and the older handler swallowed the reference).
+
+**ambulanceMaster:** the dropdowns are empty because the **feeds are BROKEN
+FEEDS — 404s on the :4201 origin** (`http://localhost:4201/adt/getCountAmbulanceTypeList`
+etc. — console ERROR), not dev-empty tables. The endpoints EXIST on the
+backend (direct :8080 calls return 401-auth, not 404). Cause: API_BASE_URL's
+factory returns '' (same-origin relative) + the dev server's proxy wiring —
+the rebuild's relative API calls land on the dev-server origin. The
+downdrop feeds (/adt/getAmbulanceTypeActiveList, /getServiceProviderActiveList,
+/getAmbulanceFacilitiesActiveList) are all affected the same way.
+
+**KNOWN-DEFECT column — ADDED to the campaign doc:** the per-screen rows now
+carry a `KNOWN-DEFECT` marker for every screen whose save/dropdown is already
+explained by the ledger (the 18 phantoms + the 4 legacy-defect screens + the
+bare-toast class), so the owner never re-derives by clicking what the ledger
+already names. allergyMaster: `KNOWN: phantom #18 cims_code/cims_type +
+bare-toast class`. ambulanceMaster: `KNOWN: broken-feed proxy gap (env-class
+dev-server wiring) — the feeds 404 on the :4201 origin`.
+
 ## DQ-2026-08-13-090 — THE HONEST PASS: every verdict live-vs-method + the count confirmed
 
 THE COUNT: REBUILD_COUNT.md's table lags (357 + the appended uncounted rows);
