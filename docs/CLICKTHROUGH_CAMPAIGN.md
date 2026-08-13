@@ -466,6 +466,19 @@ is the evidence. If the screen 500s, add the ERR- reference from the toast.
 
 ## 5. SAMPLING PLAN
 
+**ENVIRONMENT PREREQUISITE (added 2026-08-13, DQ-092 — read before any run):**
+a campaign run against a misconfigured dev server produces noise, not
+findings. Before clicking: (1) the dev server must run WITH the proxy
+(`ng serve` reads angular.json's `proxyConfig: proxy.conf.json` — the file
+maps `/api/**`, `/adt/**`, etc. to :8080; a server started without it makes
+every relative API call 404 on the :4201 origin); (2) the SPA session must
+come from the app's own login flow (the :8080 login + the token in the SPA
+session — the `setup_spa_session.py` flow); (3) auxiliary calls (counts)
+must not toast — the per-service path convention (DQ-092): every service
+call must hit an endpoint the backend actually maps, and aux calls degrade.
+A screen whose ONLY failure is a count-404 under a misconfigured server is
+an environment artifact, not a screen defect.
+
 378 screens at ~1 minute each is ~6 hours. Propose:
 
 1. **FIRST PASS — the census/early batch (353 screens)

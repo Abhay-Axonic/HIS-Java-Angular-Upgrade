@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { API_BASE_URL } from '../../core/api-config';
 import { ApiResponse } from '../../core/api-response';
 import {
@@ -85,7 +86,13 @@ export class AmbulanceMasterService {
   // `initAmbulanceMasterList` -- see the component's class doc comment for
   // why the result is never rendered anywhere on this screen.
   getCount(organizationId: number): Observable<ApiResponse<number>> {
-    return this.http.post<ApiResponse<number>>(`${this.base}/adt/getCountAmbulanceTypeList`, { organizationId });
+    // NOTE: /adt/getCountAmbulanceTypeList is NOT mapped in the backend's
+    // AmbulanceController (checked the whole Global module) — the legacy
+    // calls the same phantom. Degrade instead of toasting: the count is
+    // auxiliary to the list; a missing count endpoint must not break the
+    // screen's feeds (per-service path convention, DQ-092).
+    return this.http.post<ApiResponse<number>>(`${this.base}/adt/getCountAmbulanceTypeList`, { organizationId })
+      .pipe(catchError(() => of({ status: 'success', data: 0, message: '', listObject: null, errors: [] } as unknown as ApiResponse<number>)));
   }
 
   save(payload: AmbulanceMasterSavePayload): Observable<ApiResponse> {
