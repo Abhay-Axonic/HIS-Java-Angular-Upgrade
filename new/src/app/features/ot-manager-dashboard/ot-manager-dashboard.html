@@ -1,0 +1,14 @@
+<div class="d-wrap">
+  <header class="d-header">
+    <h2>OT Manager Dashboard</h2>
+    <span class="d-sub">Read-only dashboard (render-trace gate, see README)</span>
+  </header>
+
+  <div class="d-note">
+    Read-only screen: no write path. The primary reads are T0-smoked live;
+    empty lists below are correct empties in dev.
+  </div>
+
+  @if (loading()) { <p class="d-status">Loading…</p> }
+  @if (error()) { <p class="d-status d-err">{{ error() }}</p> }
+</div>
