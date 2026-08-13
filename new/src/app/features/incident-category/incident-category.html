@@ -1,0 +1,27 @@
+<div class="ic-wrap">
+  <header class="ic-header">
+    <h2>Incident Categories</h2>
+    <span class="ic-sub">Quality — read-only list (render-trace gate, see README)</span>
+  </header>
+
+  <div class="ic-note">Read-only screen: no write path. The category feed is T0-smoked live (real rows in dev).</div>
+
+  @if (loading()) { <p class="ic-status">Loading…</p> }
+  @if (error()) { <p class="ic-status ic-err">{{ error() }}</p> }
+
+  <section class="ic-panel">
+    <h3>Active incident categories</h3>
+    @if (rows().length === 0) {
+      <p class="ic-empty">No incident categories.</p>
+    } @else {
+      <table class="ic-table">
+        <thead><tr><th>Code</th><th>Category</th></tr></thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr><td>{{ row.incidentCategoryCode || '' }}</td><td>{{ row.incidentCategory || row.incidentCategoryName || row.incidentCategoryDesc || '' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
