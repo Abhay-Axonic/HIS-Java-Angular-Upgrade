@@ -43,6 +43,19 @@ never reached SQL; a probe limitation, NOT a verdict) + 1× 405
 (asset-return-acceptance-details — endpoint exists, wrong method — a real
 endpoint-shape finding). ZERO landed, ZERO drift-500 yet — nothing to
 tear down; the psql marker-check is OWED once any envelope lands.
+BATCH-A CLOSE (the iteration loop ran 4 rounds): the DTO-known-props
+rebuilds still 400 — the census DTOs need per-screen excavation (10-57
+props each, collection/enum shapes) that exceeds the run's budget; 44/45
+stay PROBE-400 (Jackson — the payload never reached SQL, NOT a verdict) +
+1 ENDPOINT-SHAPE (asset-return-acceptance-details 405). THE NEGATIVE
+CONTROL: 260 candidate tables scanned — ZERO DEMO-SURVEY rows (nothing
+landed; the teardown rule is satisfied vacuously). THE PIVOT: the
+automated payload-iteration is the wrong tool at this scale — the
+BROWSER-DRIVEN smoke (render the screen in the app's own session, click
+its real save, capture the app's OWN payload + the response envelope) is
+the true full-payload path. Target: the top-20 complexity list (the
+owner's click batch) — the highest-information screens. OWED.
+
 
 ## DQ-2026-08-13-092 — THE PROXY GAP DIAGNOSED PROPERLY (env-class, not the phantom ledger)
 
