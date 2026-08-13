@@ -2646,6 +2646,31 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-075 — THE FIXTURE-DEPENDENCY AUDIT (all eight flows, per-flow verdicts) — ONE additional instance found and fixed
+
+Owner's click found the cross-match; the audit checked all eight the same
+way (does the screen's payload reference any id/row a smoke created and a
+teardown destroyed?):
+- transferScreen — CLEAN (the payload is direct; the pending-list 400 is the
+  known DQ-050 feed, not a fixture dependency).
+- donorRegistration — CLEAN (the number comes from the SEEDED config —
+  persistent; the feeds are live tables, not fixtures).
+- shiftClosing — CLEAN (the direct save; the balance sheet is a real read).
+- phlebotomistHomeCollection — CLEAN (the direct save).
+- crossMatchRegister — FIXED earlier (DQ-074: live order/requisition inputs).
+- **bloodIssue — FIXTURE-DEPENDENT (the audit's second instance): the
+  payload's crossMatchRegisterId: 1 + the detail's crossMatchRegisterDetailsId:
+  1 referenced the sweep's transient fixture (remark='fixture') — absent for a
+  standalone user. FIXED: required live inputs, honest failure. (The detail's
+  bloodBankStockId: 1 + bagNo SMOKE-BAG1 are the SEEDED stock — persistent,
+  legit, kept.)**
+- nursingOrder — CLEAN (the direct save; the list + dates are payload fields,
+  not references).
+- labSampleType — CLEAN (the direct save).
+LESSON (recorded in the cross-match README, now confirmed as a class): a
+golden trace must run against seeded state a real user can reach — never
+transient fixtures; the merge gate does not catch fixture-dependent screens.
+
 ## DQ-2026-08-13-074 — OWNER CLICK-THROUGH: the cross-match fixture-dependency (the merge gate's lesson), the [object Object] handler, the transfer's DQ-050 confirmation, the donor's dev-data gaps
 
 1. **crossMatchRegister FAILED through the browser** — the golden trace ran
