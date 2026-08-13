@@ -2646,6 +2646,56 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-081 — THE 35 REPORTS' SWEEP + T0s: MIS/MLC live, the incident/NABH family drift-killed by a phantom TABLE (the 14th CONFIRMED), the LIS Search family contract-walled
+
+The reports' sweep (the same shape as every subtree: classify, T0 the primary
+read, build what survives, park what dies with the column named):
+- **MISReports — already rebuilt (the pre-existing mis-reports feature, class
+  MisReports, read-only) + its primary read T0-smoked 200** (the
+  getMISReportFormattesMasterforShowReports) — the collision precheck caught
+  the existing dir BEFORE any generation (its first real catch). The existing
+  screen's reads are live; route added.
+- **MLCReportingWorklist — BUILDABLE, built (shorter loop):** the worklist read
+  200 (getPatientListMedicolegalDetailsMLCWorklist) — read-only, render-trace
+  gate stated in the README.
+- **The incident/NABH reporting family — DRIFT-KILLED: the 14th CONFIRMED
+  phantom — the TABLE `public.user_chat_details` does not exist**
+  (the incident/nabh list DAOs' join — a phantom relation, same class as
+  t_message_queue #8; read-side kill). Affected: incidentReporting,
+  ReportedIncident, nabhReporting, reportedNabh + their add/edit siblings
+  (the same DAOs). The family parks until the relation exists.
+- **The LIS report family (reportEntry/reportRelease/reportValidation + the
+  worklist/consolidated/details/microbiology siblings) — CONTRACT-WALLED:**
+  the Search DTO rejects the minimal payloads (400 HIS-400) — the same class
+  as the LIS result-entry's (DQ-077); the exact-payload excavation is parked
+  behind the family's confirmed drift.
+- diagnosticProcedureReport — 400 (the same contract class); incident-cat +
+  histo-get — 404 (endpoint-resolution pending); the nursing report trio
+  (medicationError/Uti/PatientFall) — template-static shells.
+
+## DQ-2026-08-13-080 — THE NINE DANGLE/SHELL CANDIDATES: ALL LIVE-PROBED — confirmed shells, none parked on the static classification
+
+Each of the nine got its own live probe (route render + template call-scan):
+- addendumReport — LIVE RENDER ✓ (the shell renders: Addendum Report +
+  Save/Release buttons + the patient/histopathology/report fields — a
+  WRITE-button shell on the shared MasterController; the template has zero
+  data calls)
+- radiologyReportValidation — route 200; template static (zero calls) — shell
+- radiologyReportReleaseWorkList — route 200; controller unresolvable;
+  template static — shell
+- dueDepositReport — route 200; shared MasterController; template static — shell
+- incidentReportingScreen — route 200; IncidentReporting.Controller; template
+  static — shell
+- detailsConsignmentManagerDashboard — route 200; shared MasterController;
+  template static — shell
+- MPShahEncounterList / MPShahEncounterSummary / MPShahPatientList — route 200
+  each; shared MasterController; templates static (1 stray call) — the MPShah
+  custom-report trio are shells in this dev build (the reports' source is an
+  external app; nothing to rebuild here)
+The static dangle/shell classes were confirmed by the live probes (the
+templates carry zero data calls; the routes render). None was parked on the
+static read alone.
+
 ## DQ-2026-08-13-079 — THE RENDER TRACES DONE (all seven dashboards) + the one-command session setup + the generator collision precheck
 
 Owner's merge gate was the render trace — the batch had API smokes only.

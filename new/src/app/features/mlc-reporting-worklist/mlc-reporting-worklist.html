@@ -1,0 +1,27 @@
+<div class="mlc-wrap">
+  <header class="mlc-header">
+    <h2>MLC Reporting Worklist</h2>
+    <span class="mlc-sub">Billing — read-only worklist (render-trace gate, see README)</span>
+  </header>
+
+  <div class="mlc-note">Read-only screen: no write path. The worklist read is T0-smoked live; an empty list is a correct empty in dev.</div>
+
+  @if (loading()) { <p class="mlc-status">Loading…</p> }
+  @if (error()) { <p class="mlc-status mlc-err">{{ error() }}</p> }
+
+  <section class="mlc-panel">
+    <h3>Medicolegal cases</h3>
+    @if (rows().length === 0) {
+      <p class="mlc-empty">No medicolegal cases in the worklist.</p>
+    } @else {
+      <table class="mlc-table">
+        <thead><tr><th>Patient</th><th>Details</th></tr></thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr><td>{{ row.patientName || row.patientId }}</td><td>{{ row.visitTypeName || '' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
