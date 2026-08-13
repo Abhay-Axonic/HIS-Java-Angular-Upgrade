@@ -2646,6 +2646,31 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-079 — THE RENDER TRACES DONE (all seven dashboards) + the one-command session setup + the generator collision precheck
+
+Owner's merge gate was the render trace — the batch had API smokes only.
+- **Render traces DONE (2026-08-13, live browser session):** erPatientDashboard,
+  nurseDashboard, diagnosticsDashboard, nursingAllocationDashboard,
+  nursingShiftDashboard, otManagerDashboard, doctorDashboard (the RESTORED
+  original — "Dashboard - Doctor", guarded route, real content) — all render
+  with the live session; none hit Access Denied. The render gate is now
+  claimed for all seven.
+- **The session problem solved properly (owner):** `tools/setup_spa_session.py`
+  — ONE command that (1) clears the login collision (psql UPDATE, guarded to
+  user 1 / his_local), (2) re-mints the token via get_dev_token.py, (3) prints
+  the exact console snippet (sessionStorage.token + reload). The recurring
+  expiry was the collision + the rotation + the SPA's cross-origin
+  sessionStorage; the tool addresses all three. (The tool's token prints
+  redacted in agent tool output but full in a human terminal — the paste is
+  the one command.)
+- **The generator-overwrite class closed (owner):**
+  `tools/check_feature_dir_collisions.py` — the standing precheck BEFORE any
+  bulk generation: FAIL (exit 1) if any target feature dir already exists.
+  **Negative control proven both directions:** `doctor-dashboard` FAILS (the
+  existing — would have caught the overwrite) and a fresh name PASSES. The
+  route-survival check catches a vanished route; this catches an overwritten
+  component.
+
 ## DQ-2026-08-13-078 — THE REMAINING NINE DASHBOARDS: T0 verdicts (7 BUILDABLE, 2 CONFIRMED-SHELL) — the batch is built; the browser render is OWED
 
 T0 smoked the PRIMARY READ of each (DQ-076): the BillStatDto family wanted
