@@ -2646,6 +2646,45 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-087 — THE RENDER BACKLOG CLEARED: the mechanism named (a), the legacy path confirmed (b), all eight rendered — 11-for-11 real screens, ZERO shells among the static-scan "shell" class
+
+(a) **THE MECHANISM, NAMED:** the legacy app's `$urlRouterProvider.otherwise("/login")`
+    (config/app.js:3144) fires whenever a URL does not resolve to a state —
+    and MY console-injected logins never completed the app's full session
+    (the login flow establishes the server-side session + the SPA's cookie
+    context; the short-circuited console call left the app half-authenticated
+    and every direct-URL navigation fell to the login default). There is no
+    session guard in the app's own code — the bounce was the router's
+    fallback against an incomplete session, not an auth decision.
+(b) **CONFIRMED:** the owner's renders always worked because the owner uses
+    the app's own flow (real UI login at :8080). A REAL UI login (typed
+    credentials + org/unit selection + the Login click — the owner's exact
+    path) establishes the full session, and EVERY previously-bouncing route
+    renders. The whole render-OWED backlog was blocked on probing the wrong
+    way (an incomplete console login), not on the wrong application.
+(c) **THE EIGHT, RENDERED, ALL REAL (the static-scan "shell" class is now
+    11-for-11 wrong):**
+    1. radiologyReportValidation — a real write screen (patient header,
+       visit-type, full CKEditor report, Final Release/Save).
+    2. radiologyReportReleaseWorkList — a real worklist (date + patient
+       filters, results table).
+    3. dueDepositReport — a real data report (Self/Insurance/Corporate +
+       search + LIVE rows — the seeded patient).
+    4. incidentReportingScreen — a real NABH incident form (~40 sentinel-event
+       checkboxes + Cancel/Save).
+    5. detailsConsignmentManagerDashboard — a real consignment detail view
+       (request header + item table).
+    6. MPShahEncounterList — a real encounter-list report (date/encounter
+       search + results).
+    7. MPShahEncounterSummary — a real clinical summary (11 tabs: Triage/
+       History/Prescriptions/Lab/Diagnosis/Procedures/Radiology/…).
+    8. MPShahPatientList — a real patient-list screen (multi-criteria search
+       + results + fingerprint).
+    Ledger #14's scope is now proven: the static-scan shell verdict is wrong
+    for a whole class — 11 of 11 live-rendered "shells" are real screens.
+    The shell class, after renders: NO confirmed shells remain among the
+    previously-classified candidates.
+
 ## DQ-2026-08-13-086 — THE NURSING TRIO'S T0s: real write screens, but NONE of the three writes survives yet — the verdicts are probe-shape/broken, honestly
 
 The trio is 3-for-3 real clinical write screens (the owner's renders; the
