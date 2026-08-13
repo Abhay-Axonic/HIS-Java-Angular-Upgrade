@@ -1,0 +1,142 @@
+<div class="tr-wrap">
+  <header class="tr-header">
+    <h2>Direct Transfer</h2>
+    <span class="tr-sub">ADT / Transfer — module 65 (transaction chain: request → accept → final; reject path)</span>
+  </header>
+
+  <!-- STEP 1: PICKER -->
+  <section class="tr-step">
+    <h3>1. Find the admitted patient</h3>
+    <div class="tr-row">
+      <input
+        type="text"
+        placeholder="Patient name or UHID (min 3 chars)"
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+      <button (click)="searchPatients()" [disabled]="busy()">Search</button>
+    </div>
+    @if (patients().length) {
+      <table class="tr-table">
+        <thead>
+          <tr><th>Patient</th><th>UHID</th><th></th></tr>
+        </thead>
+        <tbody>
+          @for (p of patients(); track p.patientId) {
+            <tr>
+              <td>{{ p.patientName ?? p.patientId }}</td>
+              <td>{{ p.uhidNumber ?? '—' }}</td>
+              <td><button (click)="selectPatient(p)">Select</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  @if (phase() !== 'pick') {
+    <!-- STEP 2: REQUEST (W1) -->
+    <section class="tr-step">
+      <h3>2. Request transfer (W1)</h3>
+      @if (selectedPatient(); as p) {
+        <p class="tr-patient">Patient: {{ p.patientName ?? p.patientId }} (UHID {{ p.uhidNumber ?? '—' }})</p>
+      }
+      <div class="tr-row">
+        <label>Destination ward
+          <select [value]="selectedWard()" (change)="onWardChange($any($event.target).value)">
+            <option [value]="0">Select ward</option>
+            @for (w of wards(); track w.wardId) {
+              <option [value]="w.wardId">{{ w.wardName ?? w.wardId }}</option>
+            }
+          </select>
+        </label>
+        <label>Destination bed
+          <select [value]="selectedBed()" (change)="onBedChange($any($event.target).value)">
+            <option [value]="0">Select bed</option>
+            @for (b of beds(); track b.bedId) {
+              <option [value]="b.bedId">{{ b.bedCode ?? b.bedId }}</option>
+            }
+          </select>
+        </label>
+        <button (click)="requestTransfer()" [disabled]="busy()">Request transfer</button>
+      </div>
+    </section>
+  }
+
+  @if (phase() === 'pick' || phase() === 'accept' || phase() === 'final') {
+    <!-- STEP 3: PENDING LIST (W2/W3 rows) — visible from the start so an
+         existing transfer request can be acted on without the picker
+         (the picker feed is backend-broken, DQ-050) -->
+    <section class="tr-step">
+      <h3>3. Pending transfers</h3>
+      <button (click)="loadPending()" [disabled]="busy()">Refresh list</button>
+      @if (pending().length) {
+        <table class="tr-table">
+          <thead>
+            <tr><th>Transfer</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (row of pending(); track row.transferId) {
+              <tr [class.tr-sel]="selectedTransfer()?.transferId === row.transferId">
+                <td>{{ row.transferId }}</td>
+                <td>{{ statusLabel(row.transferStatusId) }}</td>
+                <td><button (click)="selectPendingRow(row)">Select</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="tr-muted">No pending transfers.</p>
+      }
+    </section>
+
+    <!-- STEP 4: W2 ACCEPT / REJECT -->
+    <section class="tr-step">
+      <h3>4. Accept or reject (W2)</h3>
+      @if (selectedTransfer(); as row) {
+        <p class="tr-patient">
+          Transfer {{ row.transferId }} — current status: {{ statusLabel(row.transferStatusId) }}
+        </p>
+        <div class="tr-row">
+          @if (can('accept', row)) {
+            <button (click)="acceptTransfer()" [disabled]="busy()">Accept (book bed)</button>
+          }
+          @if ((row.transferStatusId ?? 4) === 2 || (row.transferStatusId ?? 4) === 4) {
+            <button class="tr-danger" (click)="rejectTransfer()" [disabled]="busy()">Reject</button>
+          }
+        </div>
+      } @else {
+        <p class="tr-muted">Select a pending transfer to act on it.</p>
+      }
+    </section>
+
+    <!-- STEP 5: W3 FINAL (executing move) -->
+    @if (phase() === 'final') {
+      <section class="tr-step">
+        <h3>5. Execute final transfer (W3)</h3>
+        @if (selectedTransfer(); as row) {
+          <div class="tr-row">
+            @if (can('final', row)) {
+              <button (click)="finalTransfer()" [disabled]="busy()">Complete transfer (move patient)</button>
+            }
+          </div>
+        }
+      </section>
+    }
+  }
+
+  <!-- STATUS MACHINE (rendered) -->
+  <section class="tr-step">
+    <h3>Transfer status machine</h3>
+    <p class="tr-muted">
+      Pending (1) → Requested (2) → Ready For Transfer (6) → Transferd (9); Rejected (5) from Requested.
+      Server enforces no preconditions (BR-036) — the screen only offers legal transitions.
+    </p>
+  </section>
+
+  @if (writeMsg()) {
+    <div class="tr-write" [class.tr-ok]="writeOk()" [class.tr-err]="!writeOk()">
+      {{ writeMsg() }}
+    </div>
+  }
+</div>

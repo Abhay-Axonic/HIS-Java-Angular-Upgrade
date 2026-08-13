@@ -60,4 +60,38 @@
       </tbody>
     </table>
   }
+
+  <section class="sc-form">
+    <h3>Close this shift</h3>
+    <p class="sc-muted">
+      The write path is live-verified (BUILDABLE, DQ-059): saving posts
+      <code>/api/global/saveShiftCloseBalance</code> and lands a
+      <code>billing.m_shift_close_balance</code> row. The balance-sheet /
+      handover reads are session-gated (401 with the token mechanism) and the
+      refund list carries a backend SQL bug — none are wired; this form
+      exposes only the verified write.
+    </p>
+    <label class="sc-field">
+      <span>Difference (₹)</span>
+      <input type="number" [(ngModel)]="form().difference" name="difference" placeholder="0" />
+    </label>
+    <label class="sc-field">
+      <span>Refund amount (₹)</span>
+      <input type="number" [(ngModel)]="form().refundAmount" name="refundAmount" placeholder="0" />
+    </label>
+    <button class="sc-save" (click)="save()" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : 'Save shift closing' }}
+    </button>
+
+    @if (saveMessage()) {
+      <div class="sc-state sc-probe">
+        <p>{{ saveMessage() }}</p>
+      </div>
+    }
+    @if (saveError()) {
+      <div class="sc-state sc-error">
+        <p>{{ saveError() }}</p>
+      </div>
+    }
+  </section>
 </div>

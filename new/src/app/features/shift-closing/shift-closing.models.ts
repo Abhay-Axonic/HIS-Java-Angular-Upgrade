@@ -47,3 +47,40 @@ export interface ShiftClosingRefundRow {
   paymentRefundId?: number;
   amount?: number;
 }
+
+/**
+ * Save payload of POST /api/global/saveShiftCloseBalance (live-verified
+ * 2026-08-13: HTTP 200 "Added Successfully." + billing.m_shift_close_balance
+ * row landed, id-based verified; teardown clean — BUILDABLE, DQ-059).
+ *
+ * CONTRACT (park_sweep.py probes): the entity ShiftClosingMaster maps
+ * billing.m_shift_close_balance (NOT m_shift_close_master). The Dozer
+ * date-format is dd-M-yyyy: send dates as 'dd-M-yyyy' (no time) — the
+ * smoke's '2099-01-01 00:00:00' was mangled into year 0006 (a fixture
+ * trap). listOfIds is the receipt-update branch: an empty [] is safe
+ * (the DAO calls size() BEFORE the null check — a null list NPEs,
+ * ShiftClosingMasterDaoImpl:392).
+ */
+export interface ShiftCloseSave {
+  organizationId: number;
+  unitId: number;
+  createdBy: number;
+  updatedBy: number;
+  /** 'dd-M-yyyy' — the mapper's format; a time suffix mangles the date. */
+  createdDate: string;
+  updatedDate: string;
+  status: string;
+  difference?: number;
+  refundAmount?: number;
+  /** Receipt ids to flag as exported; [] skips the branch. */
+  listOfIds: number[];
+}
+
+/** The saved row shape (the response object = the ShiftClosingMaster). */
+export interface ShiftCloseBalanceRow {
+  id?: number;
+  closingNumber?: string;
+  difference?: number;
+  refundAmount?: number;
+  createdDate?: string;
+}

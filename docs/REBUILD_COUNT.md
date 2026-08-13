@@ -15,6 +15,9 @@ go stale on a branch; this file on main is the fix.)
 | 3 | Master close-out (60273eba) | 11 (597/598/600/625/635/650/660/719/722/745/746) | 355 |
 | 4 | assignLoyaltyCard (5b1861e8) | 1 (752) | 356 |
 | 5 | transferScreen (65) — pending merge of rebuild/transfer-screen | 1 (65) | **357** |
+| 6 | donorRegistration (719) — RECLASSIFICATION: master-shell (row 3) -> transaction form (T0-T6 signed flow map, DQ-056); count unchanged (one dir counted once) — pending merge of rebuild/transfer-screen | 0 new | 357 |
+| 7 | shiftClosing (600) — RECLASSIFICATION: honest-state shell (row 3) -> transaction write form (T0-T6 signed flow map: balance write BUILDABLE DQ-059, golden trace landed balance id 24, teardown clean; reads session-gated/honest; DQ-065/BR-040 auth measured: 12/12 writes token-validated, reads need the session — brief) — pending merge of rebuild/transfer-screen | 0 new | 357 |
+| 8 | phlebotomistHomeCollection (155) — FIRST LAB-FAMILY TRANSACTION FORM (T0-T6 signed flow map: write BUILDABLE DQ-061, golden trace landed collection id 17, teardown clean; PARITY RECORD: legacy state ungated + menu module 155 gating -> route carries the guard(155) reproducing the menu gate; search feed session-gated/unwired) — pending merge of rebuild/transfer-screen | 1 new (155) | **358** |
 
 ## How the count is computed
 - Denominator: 1,077 menu nodes; exclusion set = `_decoy-groundwork`,
