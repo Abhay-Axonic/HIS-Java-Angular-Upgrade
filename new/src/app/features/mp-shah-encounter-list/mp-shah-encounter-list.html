@@ -1,0 +1,30 @@
+<div class="ro-wrap">
+  <header class="ro-header">
+    <h2>Encounter List (MPShah)</h2>
+    <span class="ro-sub">Read-only screen (render-trace gate — see README)</span>
+  </header>
+
+  <div class="ro-note">Read-only: no write path. T0-smoked live; an empty list is a correct empty in dev.</div>
+
+  @if (loading()) { <p class="ro-status">Loading…</p> }
+  @if (error()) { <p class="ro-status ro-err">{{ error() }}</p> }
+
+  <section class="ro-panel">
+    @if (rows().length === 0) {
+      <p class="ro-empty">No records.</p>
+    } @else {
+      <table class="ro-table">
+        <thead><tr><th>encounterNo</th><th>encounterDate</th><th>primaryDoctor</th><th>paymentType</th><th>patientType</th></tr></thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr><td>{{ row.encounterNo ?? '' }}</td>
+            <td>{{ row.encounterDate ?? '' }}</td>
+            <td>{{ row.primaryDoctor ?? '' }}</td>
+            <td>{{ row.paymentType ?? '' }}</td>
+            <td>{{ row.patientType ?? '' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>

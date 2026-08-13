@@ -2646,6 +2646,26 @@ payloads are excavations worth resuming only after the confirmed drift in
 those tables is fixed (recorded in PHASE_HANDOVER.md section 5). No band
 movement this round — the flags stay neither confirmed nor disconfirmed.
 
+## DQ-2026-08-13-089 — THE SEVEN BUILDABLE BUILT (shorter loop): all seven render-trace gated and PASSED through the app's own login flow
+
+The seven from DQ-088, built as read-only screens (no T4/T5; the render
+trace is the gate; the app's own login flow established the session):
+1. radiology-report-validation (Radiology Report Validation)
+2. radiology-report-release-worklist (Radiology Report Release Worklist)
+3. due-deposit-report (Due Deposit Report)
+4. details-consignment-manager-dashboard (Consignment Manager Dashboard)
+5. mp-shah-encounter-list (Encounter List)
+6. mp-shah-encounter-summary (Encounter Summary)
+7. mp-shah-patient-list (Patient List)
+
+Each: 6 files (component/service/html/scss/models/README stating the
+render-trace gate), the house API_BASE_URL injection, honest error handlers,
+Array.isArray raw-feed guards. The collision precheck passed (all 7 fresh).
+Gates: tsc 0 · ng build 0 · 382 routes · route-survival PASS. RENDER
+TRACES: all seven render through the app's login session (DEMO / Dr. Demo)
+with their headings + tables — the merge gate is met. The render method on
+record: the app's own login flow (DQ-087).
+
 ## DQ-2026-08-13-088 — THE ELEVEN's T0s + THE COUNTS RESTATED: seven buildable, the shell class empty, the contract-wall class dissolved
 
 The eleven (the trio's three verdicts stand: medication/Uti unwired saves,

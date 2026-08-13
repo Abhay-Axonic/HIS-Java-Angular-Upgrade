@@ -2489,6 +2489,63 @@ export const routes: Routes = [
             (m) => m.IncidentCategoryComponent
           ),
       },
+      // The eleven's seven buildable (2026-08-13, DQ-088) — read-only, render-trace gated.
+      {
+        path: 'radiologyReportValidation',
+        data: { title: 'Radiology Report Validation' },
+        loadComponent: () =>
+          import('./features/radiology-report-validation/radiology-report-validation').then(
+            (m) => m.RadiologyReportValidationComponent
+          ),
+      },
+      {
+        path: 'radiologyReportReleaseWorkList',
+        data: { title: 'Radiology Report Release Worklist' },
+        loadComponent: () =>
+          import('./features/radiology-report-release-worklist/radiology-report-release-worklist').then(
+            (m) => m.RadiologyReportReleaseWorklistComponent
+          ),
+      },
+      {
+        path: 'dueDepositReport',
+        data: { title: 'Due Deposit Report' },
+        loadComponent: () =>
+          import('./features/due-deposit-report/due-deposit-report').then(
+            (m) => m.DueDepositReportComponent
+          ),
+      },
+      {
+        path: 'detailsConsignmentManagerDashboard',
+        data: { title: 'Consignment Manager Dashboard' },
+        loadComponent: () =>
+          import('./features/details-consignment-manager-dashboard/details-consignment-manager-dashboard').then(
+            (m) => m.DetailsConsignmentManagerDashboardComponent
+          ),
+      },
+      {
+        path: 'mpShahEncounterList',
+        data: { title: 'Encounter List (MPShah)' },
+        loadComponent: () =>
+          import('./features/mp-shah-encounter-list/mp-shah-encounter-list').then(
+            (m) => m.MpShahEncounterListComponent
+          ),
+      },
+      {
+        path: 'mpShahEncounterSummary',
+        data: { title: 'Encounter Summary (MPShah)' },
+        loadComponent: () =>
+          import('./features/mp-shah-encounter-summary/mp-shah-encounter-summary').then(
+            (m) => m.MpShahEncounterSummaryComponent
+          ),
+      },
+      {
+        path: 'mpShahPatientList',
+        data: { title: 'Patient List (MPShah)' },
+        loadComponent: () =>
+          import('./features/mp-shah-patient-list/mp-shah-patient-list').then(
+            (m) => m.MpShahPatientListComponent
+          ),
+      },
       {
         path: 'allInclusivePackage',
         canActivate: [moduleAccessGuard],
