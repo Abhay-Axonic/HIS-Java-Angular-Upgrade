@@ -1,3 +1,41 @@
+## DQ-2026-08-13-101 — THE UNDERSCORE-@RequestHeader CLASS: 29 controllers, 242 usages, 126 endpoints; 7 rebuilt screens call them; LIVE-CONFIRMED (the owner's class question)
+
+**The count (every controller grepped):** 29 controllers use the underscore
+@RequestHeader form — **242 usages** (unit_id 107, organization_id 121,
+patient_id 8, type_id 2, gender_id 1, doctor_id/encounter_id/admission_id 1
+each) across **126 endpoints** (the patient-history/EHR family + the global
+masters: /getListOfSystemMaster, /getListOfSystemObservationProperty,
+/getListOfNursingStation, /getListOfAppointmentStatusMaster,
+/getAllergyTypeMaster, ...).
+
+**The cross-reference (rebuilt services' calls vs the 126):** **7 rebuilt
+screens call them — 12 calls**: system-master (3), system-observation-master
+(3), encounter-queue-ehc (2), encounter (1), advised-visits (1),
+counter-worklist (1), allergy-master (1). The system-master's and the
+system-observation-master's MAIN LIST FEEDS are in the set.
+
+**The live confirmation (4-of-4 sampled, the app's own auth shape — camelCase
+headers + cookie):** /api/global/getListOfSystemMaster → 500,
+/getListOfNursingStation → 500, /getListOfSystemObservationProperty → 500,
+/getAllergyTypeMaster → 500; the negative control (/adt/getActiveCountryList/1,
+path-var binding) → 200 under the same probe; the catalina's cause for the
+probes' ERR- (ERR-3599987f): RequestHeaderMethodArgumentResolver.handleMissingValue
+— the same "Missing header 'unit_id'" class as DQ-100.
+
+**THE ANSWER TO THE OWNER'S QUESTION:** dozens of handlers, but only SEVEN
+rebuilt screens touch them — and those seven's feeds 500 live. The click
+campaign WOULD have mis-read those screens' empty dropdowns as dev-empty
+(system-master's list, the nursing-station dropdowns, the encounter feeds).
+**The class is real and the screens are named.**
+
+**The fix shape (a Maker decision):** the rebuild's shared interceptor could
+send the underscore pair (unit_id/organization_id) ALONGSIDE the camelCase —
+one line in auth.interceptor.ts covers all seven (the camelCase handlers
+ignore the extras; the underscore handlers bind). Per-service fixes would be
+seven edits instead of one. The backend-widening alternative (the handlers
+accept the camelCase) touches 29 controllers — the interceptor fix is the
+smaller diff.
+
 ## DQ-2026-08-13-100 — THE ALLERGY-TYPE FEED'S 500 RESOLVED: a HEADER-CONTRACT MISMATCH, not a phantom (the owner's priority)
 
 The one live-confirmed unexplained failure in the report — RESOLVED with the
