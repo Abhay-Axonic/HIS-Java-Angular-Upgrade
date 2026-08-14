@@ -1,3 +1,38 @@
+## DQ-2026-08-13-100 — THE ALLERGY-TYPE FEED'S 500 RESOLVED: a HEADER-CONTRACT MISMATCH, not a phantom (the owner's priority)
+
+The one live-confirmed unexplained failure in the report — RESOLVED with the
+full chain: fresh session → the app's own call (via the Angular debug API,
+`ng.getComponent` → the AllergyMaster component's `loadAllergyTypes()`, with
+a fetch response hook) → the response body:
+`{"status":"error","code":"500","message":"Something went wrong. Reference:
+ERR-7409e013",...}` → the catalina cause (ERR-7409e013):
+**"Missing header 'unit_id' for method parameter type [int]"** →
+the handler's declaration
+(`legacy/Global/.../AllergyTypeMasterController.java`):
+`@RequestMapping("/getAllergyTypeMaster", method = GET)`
+`listOfAllergyTypeMaster(@RequestHeader("unit_id") int unitId,
+@RequestHeader("organization_id") int organizationId)`.
+
+THE MISMATCH, both halves:
+1. **The header names**: the backend's handler wants `unit_id`/`organization_id`
+   (the underscore — the legacy's own front-end sends those); the rebuild's
+   shared interceptor sends `unitId`/`organizationId` (camelCase —
+   `new/src/app/core/auth.interceptor.ts:49-50`). The binding fails → 500.
+2. **The method**: the endpoint declares GET; the rebuild's service POSTs.
+
+WHY THE OTHER 70-OF-70 WORK: their handlers bind via path-vars
+(`{orgId}/{unitId}`) or the camelCase names — only this handler uses the
+underscore @RequestHeader pair.
+
+CLASSIFICATION: a REBUILD-side contract mismatch on the allergy-type feed's
+call (the service's method + the interceptor's headers vs the endpoint's
+declared contract). NOT phantom #19 (the table's fine — 3 rows); NOT dev-empty.
+The fix is per-service: the type feed should call the endpoint's declared
+contract (GET + the underscore headers) or the backend's handler should accept
+the camelCase — a Maker decision, diff-reviewed. The dropdown's empty is this
+500's visible face; the cims_code phantom (#18) remains a separate save-path
+problem.
+
 ## DQ-2026-08-13-099 — OVERNIGHT SURVEY, TURN 11: the top-20 SAVE CLICKS (the owner's priority) — the app's own payloads through real saves
 
 The owner's directive: prioritise the top-20 save clicks over the capture
