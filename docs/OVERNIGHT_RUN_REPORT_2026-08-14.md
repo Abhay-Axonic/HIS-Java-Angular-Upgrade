@@ -25,7 +25,7 @@ is wired (validation-first; it will NOT fire on an empty form).**
 | 7 | add-new-corrective-maintenance (`addNewCorrectiveMaintenance`) | asset + request type + criticality + resolution expected date + time + serial number |
 | 8 | ai-button-configuration (`aiButtonConfiguration`) | doctor-or-speciality + button ("Please select doctor or speciality" / "Please select button") |
 | 9 | bank-master (`bankMaster`) | branch ("Please Select Branch") |
-| 10 | bed-master (`bedMaster`) | **CORRECTED 08-14 (the mechanical pass):** ward → floor → room cascade (the room list loads only after the ward+floor) + bed code + bed description + bed category — the "Please Select Room" guard hides the cascade |
+| 10 | bed-master (`bedMaster`) | **CORRECTED 08-14 (the mechanical pass, again):** ward → room directly (NO floor step — the floorId's internal to the ward; the earlier "ward → floor → room" was my inference error) + bed code/desc/category. **The working ward: TESTWARD (ward 1) → Room 101** (or ward 99 → ROOM-999-X); the other wards have no rooms (unseeded data, DQ-117) |
 | 11 | checklist-equipment-mapper (`checklistEquipmentMapper`) | **CORRECTED 08-14 (the mechanical pass):** checklist name + asset category → (its product-category list loads after) → product category + item code + item name |
 | 12 | corrective-maintenance-return-worklist (`correctiveMaintenanceReturnWorklist`) | reject reason + reason note (the row's accept/reject action) |
 | 13 | currency-master (`currencyMaster`) | country + country code + currency code + currency name (the `requiredFieldsValid` gate) — **NOTE: the typed countryCode has NO destination column (ORPHANED INPUT, DQ-104) — fill it only because the gate requires it** |
