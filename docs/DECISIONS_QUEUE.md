@@ -1,3 +1,32 @@
+## DQ-2026-08-13-124 — RETRACTION: the hospital-master class-instance was a DIFF-MATCHING ERROR (the wrong legacy file)
+
+**The mechanical cause:** my port-diff's legacy-template matcher used a
+substring-match on the file name — "hospital-master" matched
+OUT-SIDE-hospital-master.html FIRST, and the outsideHospitalCode/Desc +
+OutsideHospitalMasterDaoImpl evidence came from THAT screen. The rebuild's
+hospital-master's own doc-comment cites its legacy as the plain
+`views/master/GlobalMaster/hospital-master.html` + hospitalMasterController.js
+(moduleId 371, requireSuperUser) — a DIFFERENT screen whose save is
+`/unit/save` + the subscription-save, not the outside-hospital's.
+
+**The corrected diff (the rebuild's hospital-master vs the CORRECT legacy):**
+the legacy-only fields are expiryDate, paymentType, subscriptionStartDate,
+subscriptionEndDate (+ the noise) — **NO outsideHospitalCode/outsideHospitalDesc
+— those belong to the out-side-hospital screen entirely.** The owner's
+approval's second instance was premised on the wrong diff.
+
+**The REVISED class-count: ONE CONFIRMED instance (insurance-master's
+startDate/endDate, DQ-122) + the hospital's corrected candidates
+(subscriptionStartDate/EndDate, paymentType, expiryDate) at method-grade —
+their DAO-consumption confirmation is OWED (the subscription-save's DAO).**
+The insurance fix's scope stands; the hospital's fix-shape changes to the
+corrected candidates pending the confirmation.
+
+**The lesson re-recorded (ledger #15's pattern again):** a template diff is a
+matching exercise — the file-identity must be pinned by the rebuild's own
+parity-doc, not by a name-substring. The class-question's "two instances"
+is now "one confirmed + candidates".
+
 ## DQ-2026-08-13-123 — THE PORT-DIFF CLASS QUESTION: TWO CONFIRMED INSTANCES (the port dropped fields systematically)
 
 **The method (per the owner, ledger #15-grade):** rebuilt-form fields vs the
