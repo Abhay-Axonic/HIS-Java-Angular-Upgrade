@@ -1,3 +1,41 @@
+## DQ-2026-08-13-116 — the owner's genericMaster save: NOT phantom 8 — a NEW backend-side finding (the GenericService.create NPE)
+
+**The owner's click:** the code generated (GEN-2, the seed's live proof), the
+validation passed, the save fired, "Something went wrong".
+
+**The catalina (the owner's save's window — 14:58:29 + 14:59:10):**
+`GenericService - Cannot invoke "com.param.entity.model.master.User.getUserId()"
+because the return value of "com.param.entity.model.master.Generic.getAddedBy()"
+is null` at `GenericService.create(GenericService.java:157)` —
+`GenericController.create(GenericController.java:116)` — wrapped as the
+ServiceException "Something went wrong".
+
+**The t_message_queue lines (14:51 + 14:56) are the EARLIER saves** (my drive
++ the earlier attempt) — phantom 8's the OLD cause, NOT the owner's save's.
+
+**THE MECHANISM (the backend's own inconsistency):** the create flow's
+line 151 calls `generic.setCreateDefaults(orgId, unitId, userId)` — which sets
+the entity's `addedByUser` (an Integer) + `updatedByUser`; line 157 then
+builds the (commented-out publish's) Rabbit DTO with
+`generic.getAddedBy().getUserId()` — the **addedBy User RELATION — never set
+by any create path**. The NPE's guaranteed for ANY request whose JSON doesn't
+explicitly carry the addedBy User object.
+
+**THE REBUILD'S PAYLOAD IS NOT THE CAUSE:** the rebuild's save sends
+productCategoryId/code/name/status/isCombination/items/unitId/organizationId/
+userId/storeId; the LEGACY's payload sends only
+productCategoryId/code/name/status/isCombination/items (GenericService.
+serviceAction POST) — NEITHER carries the addedBy User relation — the legacy
+would NPE identically. **A backend-side defect: the create's rabbit-DTO
+construction dereferences an unset relation.** The legacy's save never
+exercised this path in this env (the pre-seed code-block stopped it earlier).
+
+**The owner's question answered:** NOT phantom 8 — the t_message_queue's the
+old saves' cause; the owner's save hit a NEW finding on a screen we thought
+was closed. The generic-master's full diagnosis: usable up to the save, the
+save blocked by the backend's own create-NPE (the addedBy relation), with the
+phantom-8 shadow on the earlier attempts.
+
 ## DQ-2026-08-13-115 — THE 178 SEED LANDED + the other under-seeded prefix screens NAMED
 
 **THE SEED (tools/seed_number_config.py):** module/screen 178 added — the
