@@ -1,3 +1,39 @@
+## DQ-2026-08-13-123 — THE PORT-DIFF CLASS QUESTION: TWO CONFIRMED INSTANCES (the port dropped fields systematically)
+
+**The method (per the owner, ledger #15-grade):** rebuilt-form fields vs the
+legacy template's vs the backend's save-DAO consumption. The known case
+(insurance's startDate/endDate) was the CONTROL — the diff caught it.
+
+**THE CONFIRMED CLASS (the DAO-sample reads, not the diff):**
+1. **insurance-master: startDate + endDate** (DQ-122 — the known) —
+   InsuranceMasterDaoImpl.saveInsuranceMaster parses both via getDate; the
+   rebuild's form has neither.
+2. **hospital-master: outsideHospitalCode + outsideHospitalDesc** —
+   OutsideHospitalMasterDaoImpl's save consumes BOTH (the
+   getOutsideHospitalCode/getOutsideHospitalDesc in the save method); the
+   rebuild's hospital-master.html has NEITHER (grep'd). The screen's
+   module-gated for the demo role, so the click campaign never reached it —
+   but structurally it's the same class: the legacy renders the fields, the
+   backend's save demands them, the rebuild's form can't produce them. The
+   save would fire and hit the parse/constraint error exactly like the
+   insurance's.
+
+**The method's noise (checked + excluded):** the generic getter-scan across
+the whole legacy flags hundreds (getRemark 57x, getStartDate 6x, etc.) — the
+consumption must be read from the SCREEN'S OWN save-DAO. The org-master's
+DAO-consumed fields (IsDuoAuthenticationRequired, IsSyncScheduling,
+UnitTimeZone) ARE in the rebuild — NOT the class. The book-appointment's
+diff-candidates (emailId, appointmentReason, isTeleconsultationAppointment)
+are consumed by OTHER backend paths, not the booking's save — unconfirmed,
+excluded. The PM/scheduler's DAO-consumed set (PmsFrequency, PmsType,
+ProcessStatus, SerialNo) is covered by the rebuild's MVF — excluded.
+
+**THE ANSWER:** the class is NOT one-screen — **TWO confirmed instances** (the
+insurance's dates + the hospital's code/desc) — the port dropped fields
+systematically on at least these two, and the click campaign has been finding
+them one save at a time. The fix is not DQ-122 alone: the hospital-master's
+code/desc restoration belongs in the same class-fix.
+
 ## DQ-2026-08-13-122 — insuranceMaster's save failure: a REBUILD-SIDE PORT OMISSION (the start/end date fields)
 
 **The owner's click:** the full chain + code/desc/zip/email/contact → the error
