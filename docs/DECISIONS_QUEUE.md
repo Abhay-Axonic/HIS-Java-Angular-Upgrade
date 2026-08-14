@@ -1,3 +1,239 @@
+## DQ-2026-08-13-099 — OVERNIGHT SURVEY, TURN 11: the top-20 SAVE CLICKS (the owner's priority) — the app's own payloads through real saves
+
+The owner's directive: prioritise the top-20 save clicks over the capture
+sweep (the captures are proving a negative with a known shape; the save
+clicks are the app's own payloads — nothing equivalent has ever run). The
+results so far:
+
+1. **book-appointment**: the Book-and-Pay click — the slotId=0 guard (the
+   retest already recorded; no escape).
+2. **PMRequest**: renders as a FILTER-FIRST WORKLIST (Month/Year/Store/
+   Status + the worklist table; getAssetDetailsByCriteria → 200) — the
+   write is a row-level action needing a filtered row — the save-click
+   OWED with a seeded row.
+3. **detailScheduleWorklist + PMSchedule**: `accessDenied?reason=appConfigMissing`
+   — the unseeded app-config gate (the store/counter config rows missing
+   for the DEMO org/unit — the unseeded-ENV class, NOT a defect). The
+   save-clicks OWED with the app-config seed.
+4. **aiButtonConfiguration**: the toggle click fired NO write (the on/off
+   switches are UI state; the config's save is elsewhere) — no captured
+   payload.
+5. **correctiveMaintenanceReturnWorklist**: no-save (a worklist with the
+   empty state).
+6. **genericMaster — the earlier ROUTE-MISLABEL RETRACTED (mechanical
+   cause: my route-map regex's lazy path match; DQ-096 carries the full
+   retraction). The positive control: `genericMaster` renders the GENERIC
+   MASTER screen — reachable at its own route (moduleId 463).**
+
+7. **genericMaster — the save clicked (the icon button, title="Save"): the
+   empty form's Save fired NO network call — the validation blocked before
+   any API (the "Select Asset Type/Category" placeholders) — the app's own
+   save-flow is validation-first; the save with real data is OWED (the
+   owner's click or a seeded-form test).
+
+The top-20 save-click shape so far: validation-gated (genericMaster),
+filter-first worklists (PMRequest, correctiveMaintenanceReturnWorklist),
+app-config-gated (detailScheduleWorklist, PMSchedule), toggle-only
+(aiButtonConfiguration), slot-guard (book-appointment). The genuine
+"save with real data" tests need seeded forms — the owner's clicks remain
+decisive.
+
+8. **misReports**: the empty-state configurator ("Select a report from the
+   left") — no-save; the report-selection + run is OWED.
+9. **organizationMaster**: `accessDenied?reason=denied` — module-gated for
+   the demo role (like hospital-master).
+10. **checklistEquipmentMapper**: the Save clicked → "Please select checklist
+    name" — validation-first (no network).
+11. **addNewCorrectiveMaintenance**: the Save clicked → no network, no toast
+    (the form's required fields empty — validation-first; the silent block
+    is the app's own flow).
+
+THE TOP-20 SAVE-CLICK CONCLUSION (11 of 20 attempted): every save on the
+complex screens is VALIDATION-FIRST — the app's own flow blocks before any
+network on empty/incomplete forms (genericMaster, checklistEquipmentMapper,
+addNewCorrectiveMaintenance); the rest are filter-first worklists
+(PMRequest, correctiveMaintenanceReturnWorklist, misReports), app-config-
+gated (detailScheduleWorklist, PMSchedule), toggle-only (aiButtonConfiguration),
+slot-guard (book-appointment), module-gated (organizationMaster). The saves
+ARE wired (the clicks produce the validation responses, not dead buttons);
+the app's own PAYLOADS only fire with real data — the owner's clicks with
+real data remain the decisive test. Remaining OWED: assetScheduler,
+detailsCorrectiveMaintenanceScheduleWorklist, the app-config-gated pair.
+
+## DQ-2026-08-13-098 — OVERNIGHT SURVEY, TURN 7: the capture tally crosses 26 live-confirmed resolutions
+
+New this turn (fresh-login batch): allergyTypeMaster 2/2 (getAllergyTypeMasterList,
+getAllergyTypeMasterListCount → 200 — the 500 is SPECIFIC to the bare
+getAllergyTypeMaster endpoint, NOT the List), ambulanceMaster (3 feeds +
+getAmbulanceMasterDataList → 200; **getCountAmbulanceTypeList → 404 — the
+KNOWN class example live** — already catchError-degraded), ambulanceServiceProviderMaster
+6/6 (getActiveCountryList/1, getAmbulanceTarrifActiveList, getStateMasterList,
+getDistrictMasterList, getCityMasterList, getServiceProviderList → 200),
+amenityMaster 2/2, anaesthesiaType 2/2.
+
+CUMULATIVE: **26 resolved paths → 200; 1 live 500 (the allergy-type feed);
+1 known 404 (the ambulance count)** — the 293's real shape is nearly all
+index misses. The allergy-type feed's ERR- correlation is OWED (the raw
+fetch 401'd — the token rotated mid-batch; the correlation needs the fresh
+session's fetch or the catalina's ERR- window).
+
+## DQ-2026-08-13-097 — OVERNIGHT SURVEY, TURN 5: the endpoint captures proceed + the allergy-type feed's LIVE 500 (the dropdown's empty is NOT dev-empty)
+
+The fresh-login capture batches work (the session held through 3 screens):
+- insurance-master: 5/5 unresolved → 200 (already recorded)
+- ageGroupMaster: /LIS/global/listAgeGroupMaster/1/0/10 → 200, /LIS/global/getToTalAgeGroupMasterRecord/1 → 200 (the param spellings — the index misses CONFIRMED as the 293's main shape)
+- allergyMaster: /api/global/getAllergyMasterList → 200, /api/global/getAllergyMasterListCount → 200, BUT **/api/global/getAllergyTypeMaster → 500 (live, the SPA's own call)**
+
+THE ALLERGY-TYPE FEED FINDING: emr.m_allergy_type_master has **3 rows** — the dropdown's empty is NOT dev-empty; the type feed 500s live. The batch-1 note ("the feed failed") upgrades from hypothesis to live-confirmed. The exact SQL cause needs the ERR- correlation (the entries capture gives statuses only) — OWED: re-capture with the response body. Possible: a phantom RELATION (the entity maps to `m_allergy_type` vs the real `m_allergy_type_master`) — would be phantom #19 if the SQL names it.
+
+CAPTURE TALLY (this batch): insurance-master 5/5 (getInsuranceMasterList,
+getInsuranceMasterCount, getActiveCountryList/1, ...), ageGroupMaster 2/2
+(listAgeGroupMaster/1/0/10, getToTalAgeGroupMasterRecord/1), currencyMaster
+2/2 (/adt/getActiveCountryList/1, /billing/getAllCurrencyMasterList,
+/billing/getCurrencyCount), generalInsuranceMaster 2/2
+(/api/unit/vendors/dropdown/1/1, /api/unit/generalinsurance) — 13
+unresolved paths resolved to 200 (the param/dropdown spelling misses); the
+ONE live failure: the allergy-type feed's 500 (recorded above). The 293's live-confirmed
+resolution rate so far: 13-of-13 resolved paths are index misses, 1 real
+failure — consistent with the ledger #15 pattern (the count was a probe
+artifact; the real missing-endpoint count is small). Captures remaining:
+~185 screens OWED (fresh-login batches).
+
+## DQ-2026-08-13-096 — OVERNIGHT SURVEY, TURN 4: ledger #15 recorded + the book-appointment finding DOWNGRADED + the route-mislabel finding + the capture discipline
+
+**LEDGER #15 (owner-named):** THE BIGGEST NUMBER IS THE PROBE ARTIFACT —
+a large count from a matching method (regex/path-index/template-scan) is a
+hypothesis about the METHOD until a live call or a render confirms a sample.
+The 293 unresolved paths dissolved (the index's param-miss spellings); the
+shell class, the contract walls, the proxy gap were the same shape; the
+drift map's PROBABLE band survives because 3-of-3 live-write confirmations
+held. A number without a live-confirmed sample is not yet a finding.
+
+**book-appointment — the finding DOWNGRADED after the retest:** the escape
+did NOT reproduce in two clean attempts (submit/open interceptors + the URL
+watch: stayed on :4201/bookAppointment, no submit, no open; the slotId=0
+guard is the visible behavior). The earlier about:blank was a state
+artifact of the flapping session. The residual question (the booking-POST
+path with a real slot) stays open.
+
+**ROUTE-MISLABEL FINDING — RETRACTED (2026-08-14, mechanical cause):** the
+route-map extraction regex (`path: '([^']+)'[\s\S]{0,400}?features/<dir>/`)
+lazily matched the NEAREST path within 400 chars — it bridged to
+`weekendMaster` for the generic-master. The routes file has `genericMaster`
+(moduleId 463) loading the generic-master feature, and the LIVE nav to
+`genericMaster` renders the GENERIC MASTER screen. The finding was the
+regex's artifact, not the app's. Ledger #15 again: the matching method was
+the thing being tested.
+
+**THE CAPTURE DISCIPLINE (session flapping):** the SPA session rotates the
+token within minutes of a login (the multi-session collision), so the
+endpoint captures must run in a tight batch right after a fresh login.
+Captured so far: insurance-master 5/5 unresolved → 200 (the method PROVEN);
+book-appointment rendered (its calls OWED the entries read). The remaining
+~90 screens' captures are OWED in fresh-login batches.
+
+## DQ-2026-08-13-095 — OVERNIGHT SURVEY, TURN 3: book-appointment FINDING + the 293-endpoint resolution method proven + hospital-master render finding
+
+**FINDING 1 — book-appointment (the highest-complexity screen, score 87):
+the primary action's click navigated the SPA to about:blank (live-
+observed).** CORRECTED MECHANISM (the first read was WRONG — retracted with
+its cause): `openPaymentPage()` IS ported (`openPaymentPage(): void` in
+book-appointment.ts — the earlier grep missed it because of the
+`(): void {` return-type annotation); the click runs the faithful legacy
+flow (isRequestForPay=true → bookNormalAppointment() when nothing is
+booked). The about:blank's exact vector is NOT yet pinned — the retest is
+OWED (with the slotId=0 guard expecting only the "Select slot" warning, the
+blank page implies a different path — either a slot WAS selected or the
+booking POST escapes; the console watch during the retest decides). THE
+RETEST (2026-08-14, done): the escape did NOT reproduce in two clean
+attempts — the click with submit/open interceptors + the URL watch on a
+fresh page stayed on :4201/bookAppointment, no submit, no window.open; the
+slotId=0 guard is the visible behavior (no slot selected). The earlier
+about:blank was a state artifact of the flapping session, not a
+deterministic click behavior. FINDING DOWNGRADED: the click does not
+deterministically escape; the residual question (the booking-POST path
+with a real slot selected) stays open — a seeded-slot test or the owner's
+click decides it.
+
+**FINDING 2 — hospital-master renders `accessDenied?reason=denied` for the
+DEMO/admin user** — a module-gate denial (the moduleAccessGuard's module for
+hospital-master is not in the demo role's set). The session was valid (the
+guard's login check passed; the denied is an authorization answer, not a
+session failure).
+
+**THE 293-ENDPOINT RESOLUTION — the method decided and PROVEN:** the
+terminal probes CANNOT resolve them (the known-working store feed 404s under
+every probe shape I tried — GET/POST/param variants — the ledger #13 lesson
+again: the probe's shape, not the endpoint, was being tested). The correct
+live call is the SPA's OWN call, captured from the browser's resource
+entries during a render. PROVEN on insurance-master: all 5 of its
+"unresolved" paths returned 200 through the app's own calls
+(/api/unit/billing/getInsuranceMasterList, getInsuranceMasterCount,
+/adt/getActiveCountryList/1, ...) — my backend-index misses were
+path-param/trailing-slash spelling differences, NOT missing endpoints. The
+293 are therefore mostly INDEX MISSES; the real missing-endpoint count
+(amubulance-count class) comes out of the per-screen captures. The captures
+for the ~90 screens are OWED.
+
+## DQ-2026-08-13-094 — OVERNIGHT SURVEY, TURN 1: the top-20 complexity batch + the automated classes + the write-smoke auth mechanism FIXED (probe-shape at scale)
+
+THE AUTH MECHANISM (a tool-level lesson, recorded): the backend 401s a
+token-only call AND a cookie-only call — the full shape is Authorization
+Bearer + userId/unitId/organizationId headers + the `cookieObject` cookie
+(the SessionHandlerInterceptor URL-decodes it into the session DTO).
+capture_survey_session.py (new tool, /usr/bin/python3 — the env with
+playwright) does one real UI login and caches (token, cookie, unit) to
+tools/.survey_cookie.json (GITIGNORED — a live credential). The FIRST
+harness bug: get_dev_token's cookie value carries a `cookieObject=` prefix —
+sent raw, the server's Gson saw `cookieObject={...` and 500'd BEGIN_OBJECT-
+at-column-13; stripping + URL-decoding fixed it. The control (allergy save)
+then returns the real 200-error envelope instead of the 500.
+
+THE 400-PROBE CLASS AT SCALE (ledger #13's discipline, automated): with the
+correct auth, census-era writes 400 at Jackson on the generic seeds —
+`orgId` → `organizationId` → `orgUnitId` → per-DTO names, each 400 naming
+the next unknown field AND printing the DTO's complete known-properties
+list. The known-props payload round still 400s (the next unknown /
+collection-shape fields) — the full-payload loop is ~2-4 iterations per
+screen, OWED per screen across the ~200 write screens.
+
+THE AUTOMATED HALF (static hypotheses, Rule 10 — render/call before verdict):
+- bare-toast old-shape: 105 features (no err?.error?.message)
+- C9 dead-filter hypotheses: 8 screens (searchKeyword/issueNo/tab*IndentNo
+  bound but never read: asset-issue-acceptance, asset-scheduler,
+  corrective-maintenance-schedule-worklist, corrective-maintenance-worklist,
+  rejected-asset-acceptance, linen-issue)
+- fixture-default (hardcoded id 10): 10 screens
+- endpoint-vs-backend: 293 unresolved service paths across ~90 screens
+  (hypotheses — the ambulance-count class; the live smokes verify them)
+- route-target PASS (382) + route-survival PASS
+- the top-20 complexity list (the owner's next click batch): book-appointment,
+  detail-schedule-worklist, details-corrective-maintenance-schedule-worklist,
+  pm-request, pm-schedule, asset-scheduler, add-new-corrective-maintenance,
+  ai-button-configuration, bank-master, bed-master, checklist-equipment-mapper,
+  corrective-maintenance-return-worklist, currency-master,
+  general-insurance-master, generic-master, hospital-master, insurance-master,
+  mis-reports, organization-master, assigning-picker-dispenser
+
+BATCH A (45 census-era writes): 44× HIS-400 probe-shape (Jackson — payload
+never reached SQL; a probe limitation, NOT a verdict) + 1× 405
+(asset-return-acceptance-details — endpoint exists, wrong method — a real
+endpoint-shape finding). ZERO landed, ZERO drift-500 yet — nothing to
+tear down; the psql marker-check is OWED once any envelope lands.
+BATCH-A CLOSE (the iteration loop ran 4 rounds): the DTO-known-props
+rebuilds still 400 — the census DTOs need per-screen excavation (10-57
+props each, collection/enum shapes) that exceeds the run's budget; 44/45
+stay PROBE-400 (Jackson — the payload never reached SQL, NOT a verdict) +
+1 ENDPOINT-SHAPE (asset-return-acceptance-details 405). THE NEGATIVE
+CONTROL: 260 candidate tables scanned — ZERO DEMO-SURVEY rows (nothing
+landed; the teardown rule is satisfied vacuously). THE PIVOT: the
+automated payload-iteration is the wrong tool at this scale — the
+BROWSER-DRIVEN smoke (render the screen in the app's own session, click
+its real save, capture the app's OWN payload + the response envelope) is
+the true full-payload path. Target: the top-20 complexity list (the
+owner's click batch) — the highest-information screens. OWED.
+
+
 ## DQ-2026-08-13-092 — THE PROXY GAP DIAGNOSED PROPERLY (env-class, not the phantom ledger)
 
 (a) The proxy is NOT the gap: angular.json:75 wires proxyConfig; the file
@@ -3410,3 +3646,5 @@ probed.
 4. The listOfIds receipt-update branch (ShiftClosingMasterDaoImpl:392)
 calls size() BEFORE the null check (NPE on null list) — a robustness defect
 on the receipt-update path (backend-owned); the branch is skippable with [].
+
+**RUNNING TALLY (turn 10):** 68 resolved paths → 200 (new: bankBranch 2, bankMaster 3, bedMaster 7, billingBedCategoryMaster 3, bloodBagCapacity 2, bloodBagType 2, bloodBankMaster 2, bloodBankTypeComponent 4, bacteriaClassification 0-calls); 1 live 500 (the allergy-type feed); 1 known 404 (the ambulance count). One fresh login held through 25 screens — the cadence is ~10 screens per login now.
