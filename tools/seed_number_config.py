@@ -316,12 +316,52 @@ def main():
     )
     print("SEEDED lab.t_lab_sample_dtls lab_sample_dtls_id=1 (the sample DETAILS — the acceptOrReject load)")
 
+    # --- DEMO ward + room (DQ-119 extension 2026-08-14) ---
+    # bedMaster's ONLY room-carrying ward (1, TESTWARD) is INACTIVE (status I)
+    # and the ward-list query filters status='A' — the cascade's data blocker.
+    # Per the owner: do NOT flip ward 1 (that mutates data someone deliberately
+    # set) — seed a NEW active ward with a room under it instead, DEMO-scoped
+    # (org 1 / unit 1), idempotent by fixed ids 900, PERSISTENT (never torn
+    # down — same class as every other seed here). The room mirrors R101's
+    # shape (bed_category_id 2 = General Ward Bed, is_modality N, 4 max beds).
+    psql(
+        "insert into adt.m_ward_master "
+        "(ward_id, organization_id, unit_id, floor_id, ward_code, ward_name, status, "
+        " no_of_rooms, is_er, is_icu, is_day_care, is_labor_ward, is_hemodialysis_ward, is_ip_ward, "
+        " created_by, created_date, updated_by, updated_date) "
+        "select 900, 1, 1, 1, 'DEMO-WARD', 'Demo Ward (Seeded)', 'A', 1, "
+        " 'N', 'N', 'N', 'N', 'N', 'N', 1, now(), 1, now() "
+        "where not exists (select 1 from adt.m_ward_master where ward_id = 900);"
+    )
+    print("SEEDED adt.m_ward_master 900 'Demo Ward (Seeded)' (an ACTIVE ward with a room — bedMaster testable without touching ward 1)")
+    psql(
+        "insert into adt.m_room_master "
+        "(room_id, ward_id, bed_category_id, room_code, room_desc, no_of_max_beds, is_isolation, status, "
+        " organization_id, unit_id, is_modality, created_by, created_date, updated_by, updated_date) "
+        "select 900, 900, 2, 'DEMO-RM1', 'Demo Room 1 (Seeded)', 4, 'N', 'A', 1, 1, 'N', 1, now(), 1, now() "
+        "where not exists (select 1 from adt.m_room_master where room_id = 900);"
+    )
+    print("SEEDED adt.m_room_master 900 'Demo Room 1 (Seeded)' under the Demo Ward")
+    # Idempotent heal: a room seeded before the ward must get the wiring on
+    # re-runs (the SKIP-VS-HEAL rule — a skipped insert leaves a half-wired row
+    # that looks identical to success).
+    psql(
+        "update adt.m_room_master set ward_id = 900, bed_category_id = 2, "
+        " is_modality = 'N', status = 'A', organization_id = 1, unit_id = 1 "
+        "where room_id = 900 and (ward_id is distinct from 900 or is_modality is distinct from 'N');"
+    )
+    print("HEALED room 900's ward wiring (idempotent)")
+
     # --- verification ---
     counts = psql(
         "select (select count(*) from public.m_prefix_configuration where unit_id=1 and screen_id in (123,146,164,149) and is_deleted=false) "
         "|| ' prefix rows, ' || "
         "(select count(*) from public.t_prefix_running_number where unit_id=1 and store_id is null and screen_id in (123,146,164,149)) "
-        "|| ' running rows';"
+        "|| ' running rows, ' || "
+        "(select count(*) from adt.m_ward_master where ward_id = 900 and status = 'A') "
+        "|| ' demo ward, ' || "
+        "(select count(*) from adt.m_room_master where room_id = 900 and ward_id = 900) "
+        "|| ' demo room';"
     )
     print("VERIFY:", counts)
     print("DONE — rows are PERSISTENT (never torn down). Re-smoke the donor / walk-in / deposit flows now.")

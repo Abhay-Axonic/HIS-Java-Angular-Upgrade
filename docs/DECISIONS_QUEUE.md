@@ -1,3 +1,23 @@
+## DQ-2026-08-13-120 — the DEMO WARD + ROOM SEED LANDED (the owner's additive path; ward 1 untouched)
+
+**THE SEED (tools/seed_number_config.py, the DQ-119 extension):** adt.m_ward_master
+900 'Demo Ward (Seeded)' (status A, org 1, unit 1, floor 1) + adt.m_room_master
+900 'Demo Room 1 (Seeded)' (ward 900, bed_category 2 General Ward Bed,
+is_modality N, 4 max beds, org 1, unit 1). Idempotent by fixed ids 900 (re-run
+exit 0, no duplicates) + the room's ward-wiring heal (the SKIP-VS-HEAL rule).
+**ward 1 (TESTWARD) untouched** — its status stays I; nothing existing mutated.
+
+**THE CACHE WALL (the second finding):** the bed-master's dropdown kept serving
+the pre-seed list even after "brew services restart tomcat@9" — the restart
+was LABEL-ONLY (the catalina PID was 3 days old; the brew claim was false).
+The backend's activeWardMasterCache (Guava, no expiry, invalidated only by a
+ward-master save) held the stale 7. The fix: kill the old JVM + the fresh
+start → **the endpoint's message flipped "List Size Cache: 7" → "List Size DB:
+8" — ward 900 IS in the list now** (the fresh cache's loaded from the DB).
+
+**THE OWNER'S PICK: Ward "Demo Ward (Seeded)" → Room "Demo Room 1 (Seeded)"**
+→ the bed category General Ward Bed loads → the bed code/desc fields → save.
+
 ## DQ-2026-08-13-119 — bedMaster's cascade + edit DIAGNOSED: the cascade WORKS; ward 1 is INACTIVE (the data's shape, not a code defect)
 
 **1. THE CASCADE — it fires and returns correctly (live):** onWardChange(1) →
