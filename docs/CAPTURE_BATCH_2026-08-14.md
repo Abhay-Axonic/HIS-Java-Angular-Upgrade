@@ -42,3 +42,13 @@ count-404, DQ-092 — catchError-degraded).
   endpoints), 
 - The 400/404/405 shapes need the per-screen trace (probe-shape vs defect) before
   any verdict — the capture is the HYPOTHESIS list, not the finding.
+
+## TRIAGE RUN 2 (2026-08-14, per-candidate fetch + source/jar verification)
+
+| verdict class | screens | evidence |
+|---|---|---|
+| REBUILD-SIDE PHANTOM ENDPOINT (the path exists ONLY in the rebuild's service — zero matches in the legacy SOURCE and the DEPLOYED jars, -a binary grep) | dueDepositReport (/api/billing/dueDepositReport), modalityTypeMaster (getModalityTypeMasterList), correctiveMaintenanceReturnWorklist (getReplaceDetailOnReturnByMultipleCriteria), mpShahEncounterList/Summary/PatientList (getEncounterListByDateRange etc. — the encounter list exists under a different path in AdmissionRequestController) | 404 non-json on every fetch; grep -rla on the deployed {Billing,Global,ADT,AssetManagement,Pharmacy,OPD} jars = 0 hits |
+| TRAILING-SLASH / PARAM 404s (the endpoint EXISTS) | bookAppointment (getActivePrefixList/ — WebAppointmentController has the mapping; the trailing slash 404s), detailsConsignmentManagerDashboard (getStoreListById/ — GetStoreListUsingSession exists), detailsCorrectiveMaintenance (getSerialNoByItemId//1/1 — the EMPTY item id on load; with a real id it returns 200 'Added Successfully.' — a mislabeled message on an empty READ, all CM tables 0, NO write landed) | the fetch with the real param returns 200 |
+| 500s — BACKEND class (SQL/DAO check OWED) | assetTypeMaster, fixedAssetMaster, autoServicePostingConfiguration, detailsAssetIssueAcceptance, detailsAssetReturn, detailsFixedAssetMaster, linenIssueAcceptanceDetails, linenIssuePendingDetails, parameterMaster | ERR- refs captured (e29fc6d1, 32f3254f, 0a00d2f5, f431aacb, 8d34ab13, 1a7fc25f, 8d0456cb, 44442e8d, 9d99b88c); SQL errors went to the lost log4j stream — the DAO-side check is the next step |
+| PROBE-SHAPE (400/405 on the minimal payload — NOT a verdict) | QMScounterMaster, correctiveMaintenanceScheduleWorklist, notesMaster, shiftClosing | 400 'Invalid parameters' / 405 — the app's own call shapes differ |
+| TRIAGED EARLIER | implantMaster (0 rows for the filter — the 500 is query-level, entity-vs-DDL drift candidate), ambulanceMaster (KNOWN, DQ-092), the 4 route-template 405s (artifacts) | — |

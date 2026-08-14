@@ -62,6 +62,28 @@ create the missing relation.
 | 18 | emr.m_allergy_master | `cims_code` + `cims_type` | allergyMaster's live save SQL `column allergymas0_.cims_code does not exist` (ERR-d8701a37, catalina 8782261 — DQ-091, live-confirmed by the owner's click-through) |
 | 19 | patient.t_patient_registration | `area_id`, `city_id`, `zip_code`, `phone_code`, `phone_number` | book-appointment's UHID search SELECT (`getPatientDetailsByUhid`, PatientRegistrationDaoImpl.java:2066) — `SQLGrammarException: could not extract ResultSet`, the DAO's catch swallows the cause (NO ERR- ref — the error-swallowing class, DQ-111, live-confirmed 2026-08-14) |
 
+**DDL DEFECT (NOT a phantom — a wrong constraint, the backend owner's queue; DQ-126,
+2026-08-14):** on `public.m_general_insurance_company`, the foreign key
+`fkey_area` is declared
+`FOREIGN KEY (id) REFERENCES public.m_area_master(area_id)` — it constrains the
+table's OWN PRIMARY KEY `id` against being a valid area_id, instead of the
+`area_id` column. The correct form (matching the siblings, which are correct):
+`FOREIGN KEY (area_id) REFERENCES public.m_area_master(area_id)`. This defect is
+**unique in the source DDL** (HIS-SME-DDL_20210430_150255584.sql:136246 —
+grep for `FOREIGN KEY (id) REFERENCES` returns exactly one line, while m_vendor
+:136228 and m_insurance_company :136237 use the correct `(area_id)` form).
+Every insert into m_general_insurance_company fails once the identity sequence
+passes the seeded areas' ids (the demo DB's sequence sits at 3; areas are 1 and
+5). Screen blocked: **general-insurance-master's save** (driven live 2026-08-14
+— HTTP 500 HIS-1001 ERR-115c0aa4; psql insert control reproduces the FK
+violation exactly; the rebuild's payload is faithful and the legacy save fails
+identically). **General-insurance stays PARKED behind this constraint until the
+backend owner changes it** — the fix is the two-line ALTER
+(`DROP CONSTRAINT fkey_area` / `ADD CONSTRAINT fkey_area FOREIGN KEY (area_id)
+REFERENCES public.m_area_master(area_id)`) plus the same correction in the
+source DDL line 136246, and it belongs in the backend owner's queue with the
+phantoms, not in a frontend session.
+
 **THE POSITION, RESTATED (2026-08-13, after the renders + the T0s — the
 boundary moved twice since this document first described it):**
 - **BUILDABLE (7 screens — read-verified, render-trace gated, read-only,
