@@ -1,3 +1,41 @@
+## DQ-2026-08-13-122 — insuranceMaster's save failure: a REBUILD-SIDE PORT OMISSION (the start/end date fields)
+
+**The owner's click:** the full chain + code/desc/zip/email/contact → the error
+toast. The request DID go out (all client gates pass — my drive with the same
+shape reproduced the save's firing; manualValidate null + the email/fax/
+contact-length/extension gates all pass).
+
+**The catalina: SILENT for the save** — the only t_message_queue lines near the
+time are the RevertAllocatedQuantity batch scheduler's own noise, not the
+insurance save. The backend's save's catch SWALLOWS the error (the
+error-swallowing class the constitution names as problem #1 — the envelope's
+the only trace).
+
+**THE CAUSE: the rebuild's form is MISSING the startDate/endDate fields the
+backend's save REQUIRES.** InsuranceMasterDaoImpl.saveInsuranceMaster does
+`insuranceMaster.setStartDate(GlobalCommonDateUtils.getDate(dto.getStartDate(),
+"dd-M-yyyy HH:mm:ss"))` (+ the same for the endDate) — the rebuild's record
+carries `startDate: ""`/`endDate: ""` (the form has NO date fields — the
+template's grep for startDate/endDate is EMPTY) → the parse fails → the error
+envelope → the toast. The owner CANNOT fill the dates (the fields don't
+exist) — the genericMaster-class shape (a required field the user cannot fill
+by any means) — but THIS time it's a rebuild-side omission: **the legacy's
+insurance-master.html HAS both date pickers (uib-datepicker, dd/MM/yyyy,
+startDate + endDate)** — the rebuild's port dropped them. The client's
+manualValidate doesn't check the dates either (only code/desc/geography/zip/
+email) — so no client gate flags what the backend demands.
+
+**The owner's two hypotheses, answered:** (a) the mobileDigit — NOT the
+blocker: the config table's EMPTY (the DQ-067 class) but the service's DEFAULT
+{mobileDigit:10} is the effective value (live-verified), so a 10-digit contact
+passes; (b) the generated code — NOT applicable (the code's typed, no
+generator).
+
+**THE FIX SHAPE (the owner decides): restore the start/end date fields to the
+rebuild's form (the legacy's parity — the record's fields exist, only the UI's
+missing) — a genuine rebuild-side defect, distinct from the genericMaster's
+seed class.**
+
 ## DQ-2026-08-13-121 — bedMaster's SAVE LANDED (the seed's proof) + the insurance pair's gates
 
 **THE SEED'S PROOF (the owner's save, DQ-120's follow-through):** Demo Ward
