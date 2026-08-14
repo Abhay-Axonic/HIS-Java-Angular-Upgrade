@@ -20,12 +20,10 @@ results so far:
    payload.
 5. **correctiveMaintenanceReturnWorklist**: no-save (a worklist with the
    empty state).
-6. **genericMaster — ROUTE-MISLABEL CONFIRMED LIVE**: the `weekendMaster`
-   route renders the WEEKEND MASTER screen (the title + the form) — the
-   generic-master's feature dir exists but its component is wired to NO
-   route; the weekendMaster route belongs to the weekend-master feature.
-   The generic-master screen is UNREACHABLE. The earlier static finding
-   (DQ-096) is now live-confirmed.
+6. **genericMaster — the earlier ROUTE-MISLABEL RETRACTED (mechanical
+   cause: my route-map regex's lazy path match; DQ-096 carries the full
+   retraction). The positive control: `genericMaster` renders the GENERIC
+   MASTER screen — reachable at its own route (moduleId 463).**
 
 Remaining top-20 save-clicks OWED: organizationMaster, misReports,
 checklistEquipmentMapper, addNewCorrectiveMaintenance, assetScheduler,
@@ -87,11 +85,14 @@ guard is the visible behavior). The earlier about:blank was a state
 artifact of the flapping session. The residual question (the booking-POST
 path with a real slot) stays open.
 
-**ROUTE-MISLABEL FINDING:** generic-master's route path is `weekendMaster`
-(app.routes.ts) — the generic-master screen is unreachable under its own
-name (the route-target tool passes because the target file exists — the
-ledger #2 positive-only-route-targets class; a nav-click test or the owner
-decides).
+**ROUTE-MISLABEL FINDING — RETRACTED (2026-08-14, mechanical cause):** the
+route-map extraction regex (`path: '([^']+)'[\s\S]{0,400}?features/<dir>/`)
+lazily matched the NEAREST path within 400 chars — it bridged to
+`weekendMaster` for the generic-master. The routes file has `genericMaster`
+(moduleId 463) loading the generic-master feature, and the LIVE nav to
+`genericMaster` renders the GENERIC MASTER screen. The finding was the
+regex's artifact, not the app's. Ledger #15 again: the matching method was
+the thing being tested.
 
 **THE CAPTURE DISCIPLINE (session flapping):** the SPA session rotates the
 token within minutes of a login (the multi-session collision), so the
