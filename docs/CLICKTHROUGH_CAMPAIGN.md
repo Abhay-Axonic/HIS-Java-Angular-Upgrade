@@ -201,7 +201,7 @@ env-class dev-server wiring issue, not dev-empty tables)`.
 | `fundApprovedList` | the data: REAL or EMPTY (a live feed vs a zero-row table) |
 | `fundReconciliation` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
 | `fundRequisition` | the data: REAL or EMPTY (a live feed vs a zero-row table) |
-| `generalInsuranceMaster` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
+| `generalInsuranceMaster` | the PRIMARY WRITE (save) — **KNOWN: DQ-126 — the save 500s on the source-DDL fkey_area defect (FOREIGN KEY (id) instead of (area_id)); the ALTER fix is queued, unbuilt — do not re-derive the failure** |
 | `genericMaster` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
 | `genericScheduleMaster` | the data: REAL or EMPTY (a live feed vs a zero-row table) |
 | `GLcode` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
@@ -226,7 +226,7 @@ env-class dev-server wiring issue, not dev-empty tables)`.
 | `incidentCategoryMaster` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
 | `inputOutputCharts` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
 | `instructionMaster` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
-| `insuranceMaster` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
+| `insuranceMaster` | the PRIMARY WRITE (save) — **KNOWN: save FIXED + owner-confirmed (DQ-125); EDIT broken (DQ-127 — edit() reads res.object while getById returns listObject — the form loads empty), fix queued, unbuilt** |
 | `InsuranceTPAMapping` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
 | `interimHandover` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
 | `IPConsultationConfiguration` | the PRIMARY WRITE (save) — the gate is thinnest where the write lands |
