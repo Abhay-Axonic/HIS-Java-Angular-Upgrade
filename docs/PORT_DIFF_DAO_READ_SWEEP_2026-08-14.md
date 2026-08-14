@@ -12,6 +12,28 @@ Sample-verified by the parent on 5 rows (insurance-master full chain, delivery-t
 L107, patient-type-details L131, user-store-mapper L48/50, store-type NEITHER
 control L56-57).
 
+## PARENT RE-VERIFICATION (2026-08-14, the 62-row class confirmation)
+
+The parent re-read the DAO lines itself (not the agents' quotes), adding the
+UTIL-NULL-SAFETY dimension — the shape that produced the delivery-type false
+positive (three parallel agents pattern-matching is the shape that has produced
+wrong counts seven times). Sample verified: all 6 in-class rows + 5 NEITHER
+rows across all three agents (dish-master, store-type, organization-master,
+machine-parameter, surgical-calendar). The confirmed counts:
+
+| bucket | count | exclusion reason |
+|---|---|---|
+| **47 of 62** | TimeZoneComponent server-computed | created/updated dates set from `getDateByzone(unitId)` — directly (dish, autoclave, box, coupon, dept-store-mapper, key-ingredients, ...), or as the argument to the null-safe `getDate(Date,String)` overload (store-type, organization-master, qms family, pass-type, room-modality), or via BaseEntity `setCreateDefaults`/`setUpdateDefaults`. `getDateByzone(null)` defaults to Asia/Calcutta — a rebuild omitting dates cannot NPE |
+| **1 of 62** | guarded payload-date parse | surgical-calendar — the DAO parses the payload date ONLY if non-null AND non-empty, else falls back to `getDateByzone` (SurgicalCalendarMasterDaoImpl:262/264) — null-safe BY GUARD, and the ServiceImpl sets the dates server-side first (:120-121) |
+| **1 of 62** | null-safe util on a payload date | delivery-type-master — ADTCommonDateUtils String overload: `format.parse(null)` → ParseException into an EMPTY catch → null, no NPE (unlike GlobalCommonDateUtils:305's `dateString.length()`); the legacy sends no updatedDate either — faithful port, live-proven 200 both directions (earlier "DEMANDS" verdict RETRACTED) |
+| **2 of 62** | no date consumption at all | ai-button-configuration, ai-button-master — the save/update DAO methods never touch dates |
+| **6 of 62** | NO-WRITE | no write path in the rebuild: blood-group-matching (its legacy DAO WOULD NPE if ever wired — GlobalCommonDateUtils String overload on dto dates), cancellation-master, mis-reports, multicounter-package, pharman, vaccination-master |
+| **5 of 62** | IN-CLASS — the DAO parses a payload date via the NPE-prone String overload | 2 GENUINELY demand a date the rebuild omits: insurance-master (createdDate/updatedDate — FIXED, owner-confirmed click) + patient-type-details (updatedDate + the id wire-name — FIXED, contract-verified). 3 demand it and the rebuild SUPPLIES it (no live NPE): user-store-mapper, discount-category-master, details-corrective-maintenance (their payloads carry non-null date strings — parse may fail to null, but no NPE) |
+
+57 of 62 excluded; 5 in-class; 2 genuine omissions, both fixed. The exclusion
+reasons are stated beside the numbers: server-computed 47, guarded 1, null-safe
+util 1, no-date 2, NO-WRITE 6.
+
 ## The count
 
 | bucket | rows | meaning |
