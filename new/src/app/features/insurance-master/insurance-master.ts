@@ -310,7 +310,23 @@ export class InsuranceMaster {
     }
     if (!this.validateFileExtension()) return;
 
-    const payload: InsuranceMasterRecord = { ...r, generalLedgerName: this.ledgerSearchTerm() };
+    // The legacy controller always sends the audit + identity set before the
+    // save (insuranceMasterController.js:584-592); InsuranceMasterDaoImpl
+    // parses createdDate/updatedDate via GlobalCommonDateUtils.getDate, which
+    // NPEs on null (DQ-122 retracted as DQ-125). Send them formatted as the
+    // legacy formats them (moment DD-MM-YYYY HH:mm:ss).
+    const now = formatLegacyNow();
+    const payload: InsuranceMasterRecord = {
+      ...r,
+      orgId: this.organizationId,
+      unitId: this.unitId,
+      createdBy: this.userId,
+      updatedBy: this.userId,
+      createdDate: now,
+      updatedDate: now,
+      status: r.status || 'A',
+      generalLedgerName: this.ledgerSearchTerm(),
+    };
 
     // save() and update() return differently-shaped responses on the real
     // backend (save's insuranceId is nested under `object.insuranceId`,
@@ -377,7 +393,7 @@ export class InsuranceMaster {
 
   toggleStatus(row: InsuranceMasterRecord): void {
     const next: 'A' | 'I' = row.status === 'A' ? 'I' : 'A';
-    this.api.updateStatus(row.insuranceId as number, next, this.userId, new Date().toISOString()).subscribe({
+    this.api.updateStatus(row.insuranceId as number, next, this.userId, formatLegacyNow()).subscribe({
       next: (res) => {
         if (res.status === 'success') {
           // Update via the list signal, not a direct mutation of `row` --
@@ -399,4 +415,11 @@ export class InsuranceMaster {
   closeAddressModal(): void {
     this.showAddressModal.set(false);
   }
+}
+
+/** Legacy: `moment(new Date()).format('DD-MM-YYYY HH:mm:ss')` (ctrl:582). */
+function formatLegacyNow(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }

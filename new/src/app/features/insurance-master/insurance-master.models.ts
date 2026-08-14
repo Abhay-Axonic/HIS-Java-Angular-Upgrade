@@ -34,6 +34,12 @@ export interface InsuranceMasterRecord {
   generalLedgerName?: string;
   reportPath?: string;
   status?: 'A' | 'I';
+  orgId?: number;
+  unitId?: number;
+  createdBy?: number;
+  updatedBy?: number;
+  createdDate?: string;
+  updatedDate?: string;
 }
 
 export function emptyInsuranceMaster(): InsuranceMasterRecord {
