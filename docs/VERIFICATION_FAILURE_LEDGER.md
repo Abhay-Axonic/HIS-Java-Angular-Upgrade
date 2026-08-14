@@ -182,3 +182,14 @@ always a negative control — a way to prove the check can fail.
 cannot construct the failure, the check's PASS is not evidence. The fifteen
 above are the project's permanent list of checks that were once believed
 and are now distrusted by default.
+
+## 16. DISABLED-INPUT INVISIBILITY (owner-named, 2026-08-14, genericMaster)
+
+A component-state drive sets the form's signal directly and NEVER touches an
+input's disabled state — so a disabled field is invisible to the drive, and a
+screen can be UNUSABLE (a required field the user cannot fill by any means)
+while every endpoint it calls returns 200. The drive's "all endpoints
+healthy" says nothing about the screen's usability when the UI state (disabled
+fields, auto-generated values) carries the logic. The antidote: the drive's
+verdict covers the endpoint, not the screen — a human render+click is the
+only screen-level verdict (the same boundary as the fixture-dependent trace).
