@@ -20,7 +20,7 @@ export interface PatientTypeRow {
  * (ctrl:1157). The legacy view binds this to the service-mapper grid.
  */
 export interface PatientTypeServiceDetail {
-  patientTypeDetailsId: number;
+  patientTypeServiceId: number;
   serviceId: number;
   serviceName: string;
   status: PatientTypeStatus;
@@ -39,9 +39,14 @@ export interface PatientTypeDetailsSavePayload {
   }>;
 }
 
-/** POST body for /api/billing/updatePatientTypeServiceStatus (ctrl:1364). */
+/** POST body for /api/billing/updatePatientTypeServiceStatus (ctrl:1364).
+ * Wire field is patientTypeServiceId (PatientTypeServiceWiseDetailsDto.java:5),
+ * NOT patientTypeDetailsId; the legacy also sends updatedDate formatted
+ * DD-MM-YYYY HH:mm:ss (ctrl:1353-1361) -- the DAO parses it via
+ * GlobalCommonDateUtils.getDate, which NPEs on null (DQ-125 class). */
 export interface PatientTypeServiceStatusPayload {
-  patientTypeDetailsId: number;
+  patientTypeServiceId: number;
   status: PatientTypeStatus;
   updatedBy: number;
+  updatedDate: string;
 }
