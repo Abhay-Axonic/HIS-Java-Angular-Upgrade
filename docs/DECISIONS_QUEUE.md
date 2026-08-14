@@ -7,7 +7,14 @@ The fresh-login capture batches work (the session held through 3 screens):
 
 THE ALLERGY-TYPE FEED FINDING: emr.m_allergy_type_master has **3 rows** — the dropdown's empty is NOT dev-empty; the type feed 500s live. The batch-1 note ("the feed failed") upgrades from hypothesis to live-confirmed. The exact SQL cause needs the ERR- correlation (the entries capture gives statuses only) — OWED: re-capture with the response body. Possible: a phantom RELATION (the entity maps to `m_allergy_type` vs the real `m_allergy_type_master`) — would be phantom #19 if the SQL names it.
 
-Captures remaining: ~187 screens OWED (fresh-login batches).
+CAPTURE TALLY (this batch): insurance-master 5/5, ageGroupMaster 2/2,
+currencyMaster 2/2, generalInsuranceMaster 2/2 — 13 unresolved paths
+resolved to 200 (the param/dropdown spelling misses); the ONE live failure:
+the allergy-type feed's 500 (recorded above). The 293's live-confirmed
+resolution rate so far: 13-of-13 resolved paths are index misses, 1 real
+failure — consistent with the ledger #15 pattern (the count was a probe
+artifact; the real missing-endpoint count is small). Captures remaining:
+~185 screens OWED (fresh-login batches).
 
 ## DQ-2026-08-13-096 — OVERNIGHT SURVEY, TURN 4: ledger #15 recorded + the book-appointment finding DOWNGRADED + the route-mislabel finding + the capture discipline
 
