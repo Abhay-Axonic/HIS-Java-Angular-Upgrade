@@ -1,3 +1,30 @@
+## DQ-2026-08-13-102 — THE INTERCEPTOR FIX LANDED + THE SEVEN-SCREEN PROOF (the first rebuild-side fix of the survey)
+
+**The diff (owner-approved, landed in auth.interceptor.ts):** two headers added
+to the shared setHeaders — `unit_id` + `organization_id` (the session's values),
+with the explanatory comment (the legacy's own front-end sends these; KEEP BOTH
+FORMS — a future service calling an underscore-bound endpoint works by default).
+tsc gate: clean.
+
+**THE PROOF — all seven screens through the app's own login flow (the new
+interceptor's calls), the feeds' statuses + the visible data:**
+
+| Screen | Feed | Status | Visible data |
+|---|---|---|---|
+| allergy-master (THE CONTROL) | /api/global/getAllergyTypeMaster | **200** (was 500) | the dropdown with REAL options: allergyfdsdfx, ControlOrg1 AllergyType (the 3-row table's data; the owner saw this empty yesterday) |
+| system-master | /api/global/getListOfSystemMaster | **200** (was 500) | the list with real rows: SYS1 Test System, SYS1 Duplicate Attempt System, SYSVERIFY2 Verify Happy Path |
+| system-observation-master | /api/global/getListOfSystemObservationProperty | **200** (was 500) | the form + the list headers render |
+| encounter-queue-ehc | /api/global/getListOfNursingStation + /api/opd/getListOfAppointmentStatusMaster | **200 / 200** (both were 500) | the dropdowns with real options (General Medicine, Orthopedics) |
+| encounter | (its flagged feed is params-bound per its AMBER note) | renders with the documented note | the AMBER banner + the workscreen |
+| advised-visits | its load feeds 200 (getAdvisedDateAppointmentList) | 200 | renders (the doctor-search fires on the search interaction) |
+| counter-worklist | /api/global/getListOfNursingStation | **200** (was 500) | renders (its search feed carries its own AMBER phantom note) |
+
+**THE REGRESSION NOTE (the owner's ask):** any future service calling an
+underscore-bound endpoint now works by default — the interceptor sends both
+forms. The comment in auth.interceptor.ts ("KEEP BOTH FORMS — removing the
+pair silently breaks those feeds (DQ-100/101)") is the guard against someone
+tidying up the duplication later.
+
 ## DQ-2026-08-13-101 — THE UNDERSCORE-@RequestHeader CLASS: 29 controllers, 242 usages, 126 endpoints; 7 rebuilt screens call them; LIVE-CONFIRMED (the owner's class question)
 
 **The count (every controller grepped):** 29 controllers use the underscore

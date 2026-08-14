@@ -48,6 +48,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           Authorization: `Bearer ${authToken}`,
           userId: String(session.userId ?? ''),
           unitId: String(session.unitId ?? ''),
+          // The underscore pair: 29 backend controllers declare
+          // @RequestHeader("unit_id") / ("organization_id") — the legacy's
+          // own front-end sends these (22 legacy JS files), so this matches
+          // traffic the backend already handles today rather than
+          // introducing a new header shape. The camelCase handlers ignore
+          // the extras; no handler binds both forms (grepped); no filter
+          // reads the underscores. KEEP BOTH FORMS — a future service
+          // calling an underscore-bound endpoint works by default, and
+          // removing the pair silently breaks those feeds (DQ-100/101).
+          unit_id: String(session.unitId ?? ''),
+          organization_id: String(session.organizationId ?? ''),
         },
       })
     : req;
