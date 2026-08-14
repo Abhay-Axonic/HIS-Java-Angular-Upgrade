@@ -1,3 +1,35 @@
+## DQ-2026-08-13-095 — OVERNIGHT SURVEY, TURN 3: book-appointment FINDING + the 293-endpoint resolution method proven + hospital-master render finding
+
+**FINDING 1 — book-appointment (the highest-complexity screen, score 87)
+broke on the first click.** The "Book and Pay" input binds
+`(click)="openPaymentPage()"` (book-appointment.html) — the method is ABSENT
+from the rebuilt component (the legacy defines it at
+bookAppointmentController.js:777 — a book-then-RazorPay flow). Clicking it
+navigated the SPA to about:blank — the click leaves the app entirely. This
+is the saveRack class (a legacy method never ported) PLUS a navigation
+escape. Live-observed; the exact escape vector (a stray global or the
+modal) is residual.
+
+**FINDING 2 — hospital-master renders `accessDenied?reason=denied` for the
+DEMO/admin user** — a module-gate denial (the moduleAccessGuard's module for
+hospital-master is not in the demo role's set). The session was valid (the
+guard's login check passed; the denied is an authorization answer, not a
+session failure).
+
+**THE 293-ENDPOINT RESOLUTION — the method decided and PROVEN:** the
+terminal probes CANNOT resolve them (the known-working store feed 404s under
+every probe shape I tried — GET/POST/param variants — the ledger #13 lesson
+again: the probe's shape, not the endpoint, was being tested). The correct
+live call is the SPA's OWN call, captured from the browser's resource
+entries during a render. PROVEN on insurance-master: all 5 of its
+"unresolved" paths returned 200 through the app's own calls
+(/api/unit/billing/getInsuranceMasterList, getInsuranceMasterCount,
+/adt/getActiveCountryList/1, ...) — my backend-index misses were
+path-param/trailing-slash spelling differences, NOT missing endpoints. The
+293 are therefore mostly INDEX MISSES; the real missing-endpoint count
+(amubulance-count class) comes out of the per-screen captures. The captures
+for the ~90 screens are OWED.
+
 ## DQ-2026-08-13-094 — OVERNIGHT SURVEY, TURN 1: the top-20 complexity batch + the automated classes + the write-smoke auth mechanism FIXED (probe-shape at scale)
 
 THE AUTH MECHANISM (a tool-level lesson, recorded): the backend 401s a
