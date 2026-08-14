@@ -1,3 +1,62 @@
+## DQ-2026-08-14-126 — general-insurance-master's save BLOCKED by a source-DDL FK defect (fkey_area on the wrong column) — fix SPECIFIED, UNBUILT
+
+**The drive (autonomous run, 2026-08-14):** general-insurance-master, cascade
+feeds live (states [1 Maharashtra, 6 Karnataka], cities [1 Pune], areas [1
+Shivaji Nagar, 5 Abcwser] via the app's own calls), the corrected MVF filled
+(insuranceCompany 'Probe GINS 2026-08-14', contactNo 9876543210, valid email,
+contact person + no, address, zip 411009, country 1 → state 1 → city 1 → area
+1), Save clicked through the confirm modal → **HTTP 500 HIS-1001,
+ERR-115c0aa4**. psql after the error envelope: **0 rows** (per the standing
+rule: failures are psql-verified too).
+
+**The cause (DB-verified, not assumed):** the insert violates `fkey_area` —
+`Key (id)=(3) is not present in table "m_area_master"`. The constraint is
+defined WRONG in the SOURCE DDL (HIS-SME-DDL_20210430_150255584.sql:136246):
+`ALTER TABLE ONLY public.m_general_insurance_company ADD CONSTRAINT fkey_area
+FOREIGN KEY (id) REFERENCES public.m_area_master(area_id);` — it constrains
+the table's OWN PRIMARY KEY `id` against being a valid area_id, instead of
+the `area_id` column. The siblings are correct (m_vendor:136228 and
+m_insurance_company:136237 both use `(area_id)`) — a copy-paste defect. The
+identity sequence (last_value=3) exceeds the seeded areas (area_id 1, 5) so
+every insert fails; even id=1 would have passed only by coincidence. psql
+control: a direct INSERT reproduces the FK violation exactly.
+
+The rebuild is NOT at fault: the payload matches the legacy contract and the
+legacy save fails identically (same table, same constraint).
+
+**THE FIX SPEC (UNBUILT — queued per the run's rule, the owner decides):**
+```sql
+ALTER TABLE public.m_general_insurance_company DROP CONSTRAINT fkey_area;
+ALTER TABLE public.m_general_insurance_company ADD CONSTRAINT fkey_area
+  FOREIGN KEY (area_id) REFERENCES public.m_area_master(area_id);
+```
+plus the same correction in the source DDL line 136246 (so any future build
+of the production-shaped DDL is fixed). Caveats before applying: confirm no
+view/procedure references the constraint name; this is a DDL change — the
+Expand-Migrate-Contract + owner-sign-off path applies (it repairs a defect,
+not a business rule, so no manifest entry unless the owner wants one).
+
+**THE TOP-20 REMAINDER — the owner's click queue (each screen + what blocks it):**
+- general-insurance-master — BLOCKED by DQ-126 (backend DDL; the click reaches the write and the DB rejects it).
+- checklist-equipment-mapper — BLOCKED: equipment.m_checklist = 0 rows (the checklist dropdown is empty).
+- asset-scheduler — BLOCKED: m_checklist = 0 ("Please add atleast one checkList" can never pass).
+- add-new-corrective-maintenance — BLOCKED: public.m_fixed_asset_master = 0 (the Get-Asset modal has nothing to pick).
+- pm-request — BLOCKED: fixed assets = 0 (the store/asset filter has no rows).
+- corrective-maintenance-return-worklist — BLOCKED: assets.t_corrective_maintenance_worklist = 0.
+- details-corrective-maintenance-schedule-worklist — BLOCKED: CM master/schedule = 0.
+- assigning-picker-dispenser — BLOCKED: pharmacy.t_assign_picker = 0.
+- mis-reports — BLOCKED: report rows = 0 (m_mis_report_format 0; the left panel is empty).
+- detail-schedule-worklist + pm-schedule — BLOCKED: appConfigMissing (the store/counter config rows unseeded).
+- book-appointment — BLOCKED: phantom #19 (the UHID search's getPatientDetailsByUhid references 5 missing t_patient_registration columns — backend defect, DQ-111).
+- generic-master — BLOCKED: the backend save NPE (DQ-116 — generic.getAddedBy().getUserId() on null).
+- ai-button-configuration — BLOCKED: the add-flow's config modal does not open via the component-state drive; the existing toggles fire no write (toggle-only).
+- hospital-master + organization-master — BLOCKED: module gate (reason=denied) for the demo role.
+- bank-master / bed-master / currency-master / insurance-master — LANDED (bank/currency by drive; bed/insurance by the owner's clicks).
+
+Every block is either an unseeded-env table (additive seeds unblock — the
+owner's call per the seed rule) or a queued backend defect. No screen in the
+remainder is blocked by the rebuild itself.
+
 ## DQ-2026-08-14-125 — RETRACTION: DQ-122's startDate/endDate cause — the blocker is the AUDIT + identity fields the legacy controller sends (getDate(null) NPE)
 **STATUS — CONFIRMED BY THE OWNER'S CLICK (2026-08-14, the person who reported the
 symptom):** "insuranceMaster CONFIRMED: 'Added Successfully' and the row landed,
