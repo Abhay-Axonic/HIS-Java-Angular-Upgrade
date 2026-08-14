@@ -121,7 +121,13 @@ export class PatientTypeMaster {
   }
 
   toggle(row: PatientTypeRow, status: 'A' | 'I'): void {
-    this.service.changeStatus({ patientTypeId: row.patientTypeId, status, updatedBy: this.userId() })
+    // DQ-128: PatientTypeDaoImpl.updatePatientTypeStatus parses
+    // updatedDate via GlobalCommonDateUtils.getDate (the NPE-prone String
+    // overload) -- the payload must carry it legacy-formatted, exactly as
+    // patientTypeController.js:473-478 sends it. The screen's other two
+    // writes (save/update) are unaffected: their DAO dates are
+    // server-computed via TimeZoneComponent.getDateByzone (verified).
+    this.service.changeStatus({ patientTypeId: row.patientTypeId, status, updatedBy: this.userId(), updatedDate: formatLegacyNow() })
       .subscribe({
         next: (res) => {
           if (res.status === 'success') {
@@ -138,4 +144,11 @@ export class PatientTypeMaster {
   rowCells(row: PatientTypeRow): string[] {
     return [String(row.patientTypeCode ?? '—'), String(row.patientType ?? '—')];
   }
+}
+
+/** Legacy: `moment(new Date()).format('DD-MM-YYYY HH:mm:ss')` (patientTypeController.js:473-478). */
+function formatLegacyNow(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
