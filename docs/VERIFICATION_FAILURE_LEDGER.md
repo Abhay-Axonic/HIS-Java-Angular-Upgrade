@@ -193,3 +193,29 @@ healthy" says nothing about the screen's usability when the UI state (disabled
 fields, auto-generated values) carries the logic. The antidote: the drive's
 verdict covers the endpoint, not the screen — a human render+click is the
 only screen-level verdict (the same boundary as the fixture-dependent trace).
+
+
+---
+
+## 17. SERVED-TREE INVISIBILITY (owner-named, 2026-08-14, insuranceMaster)
+
+The dev server compiles whatever tree the repo root is checked out on. "The
+fix is merged to main" says NOTHING about what the browser just executed: the
+root can be parked on a branch that predates the merge, and a restart +
+hard-refresh then serves pre-fix code while every claim says "the fix is
+served". The 2026-08-14 insuranceMaster incident: both fixes were merged to
+main and pushed; the root was still checked out on a branch cut before the
+merge; the owner's click ran the pre-fix component (wire: no audit fields →
+500 ERR-1caa7b0d). Proven absent from the served bundle (formatLegacyNow
+absent, toISOString present) and present only after the root was switched to
+the fix branch. Cost: most of an hour and a false "the fix did not work".
+Sibling of #16 (UI state invisible to a drive): this is the SOURCE TREE
+invisible to a restart — and invisible to tools/bundle_freshness.py too, whose
+"current source" is whatever tree the repo path resolves to.
+
+*Rule (owner-directed, 2026-08-14):* any claim about what a click exercised
+must state the SERVED BRANCH alongside it — the repo root's
+`git branch --show-current` at the time of the click, plus the code-under-test
+commit's ancestry against it. A served tree is not main, and switching
+branches mid-investigation silently changes what the owner is testing — pin
+the served branch before and after every branch switch.

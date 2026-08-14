@@ -1,4 +1,14 @@
 ## DQ-2026-08-14-125 — RETRACTION: DQ-122's startDate/endDate cause — the blocker is the AUDIT + identity fields the legacy controller sends (getDate(null) NPE)
+**STATUS — CONFIRMED BY THE OWNER'S CLICK (2026-08-14, the person who reported the
+symptom):** "insuranceMaster CONFIRMED: 'Added Successfully' and the row landed,
+clicked by me on the served tree now carrying both fixes" (owner, verbatim). The
+fix is proven by the reporter of the symptom, not by a drive. DQ-122's date
+theory was retracted in full; the audit-fields cause was proven BOTH directions:
+the pre-fix wire (no audit fields) → HTTP 500 ERR-1caa7b0d with the DAO's getDate
+chain in the catalina; the fixed wire (orgId/unitId/createdBy/updatedBy/
+createdDate/updatedDate/status) → HTTP 200 and the row lands. The incident's
+false "the fix did not work" was the served-tree class — ledger #17.
+
 
 **What's retracted:** DQ-122's claim that the rebuild's save fails because the port
 dropped the startDate/endDate date pickers and the DAO's parse of the empty strings

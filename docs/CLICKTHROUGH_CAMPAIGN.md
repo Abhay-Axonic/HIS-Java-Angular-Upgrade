@@ -474,16 +474,24 @@ is the evidence. If the screen 500s, add the ERR- reference from the toast.
 
 **ENVIRONMENT PREREQUISITE (added 2026-08-13, DQ-092 — read before any run):**
 a campaign run against a misconfigured dev server produces noise, not
-findings. Before clicking: (1) the dev server must run WITH the proxy
-(`ng serve` reads angular.json's `proxyConfig: proxy.conf.json` — the file
-maps `/api/**`, `/adt/**`, etc. to :8080; a server started without it makes
-every relative API call 404 on the :4201 origin); (2) the SPA session must
-come from the app's own login flow (the :8080 login + the token in the SPA
-session — the `setup_spa_session.py` flow); (3) auxiliary calls (counts)
-must not toast — the per-service path convention (DQ-092): every service
-call must hit an endpoint the backend actually maps, and aux calls degrade.
-A screen whose ONLY failure is a count-404 under a misconfigured server is
-an environment artifact, not a screen defect.
+findings. Before clicking: (1) THE SERVED BRANCH must be stated and pinned —
+the dev server compiles whatever tree the repo root is checked out on, and
+"the fix is merged" says nothing about what the browser executes. Record
+`git branch --show-current` at the repo root before the run and confirm the
+code under test is an ancestor of it; re-record after every branch switch
+(switching mid-investigation silently changes what the owner tests — the
+2026-08-14 served-tree lesson, ledger #17, cost an hour and a false "the fix
+did not work"). A claim about what a click exercised names the served
+branch; (2) the dev server must run WITH the proxy (`ng serve` reads
+angular.json's `proxyConfig: proxy.conf.json` — the file maps `/api/**`,
+`/adt/**`, etc. to :8080; a server started without it makes every relative
+API call 404 on the :4201 origin); (3) the SPA session must come from the
+app's own login flow (the :8080 login + the token in the SPA session — the
+`setup_spa_session.py` flow); (4) auxiliary calls (counts) must not toast —
+the per-service path convention (DQ-092): every service call must hit an
+endpoint the backend actually maps, and aux calls degrade. A screen whose
+ONLY failure is a count-404 under a misconfigured server is an environment
+artifact, not a screen defect.
 
 378 screens at ~1 minute each is ~6 hours. Propose:
 
