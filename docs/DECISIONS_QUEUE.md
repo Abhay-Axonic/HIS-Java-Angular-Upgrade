@@ -1,3 +1,43 @@
+## DQ-2026-08-13-106 — THE MECHANICAL PASS BATCH 3: the checklist-equipment-mapper's MVF also hides a cascade; the run's screen tally
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| checklist-equipment-mapper | — (the save never fired — the product-category list stays EMPTY in the drivable path) | — | — | — | — | OWED — **the MVF hides a cascade: the productCategoryOptions only populate after the asset-category's selection, and the onAssetCategoryChange does not load them in the component-state drive (the same wall as bed-master's room list)** |
+
+**THE RUN'S TALLY (the 20):** currency-master ✓ LANDED (ORPHANED countryCode found), bank-master ✓ LANDED, generic-master (save fired → phantom #8's t_message_queue → no row), bed-master OWED (ward→floor→room cascade; the drive died in about:blank on the second attempt), checklist-equipment-mapper OWED (product-category cascade), + the 15 remaining.
+
+**The cascade pattern is now a class of its own:** TWO of the first five driven screens hide a dependent-list cascade behind a validation message ("Please Select Room", "Please select product category") — the MVF's "fill these and save" needs the cascade's parent-selection first. The corrected MVFs are in the report as they surface.
+
+**ORPHANED-INPUT checks so far:** currency-master — FOUND (countryCode); bank-master — none (all typed values landed); generic-master — provisional none (the write never reached the INSERT).
+
+## DQ-2026-08-13-105 — THE MECHANICAL PASS BATCH 2: generic-master's save hits the KNOWN phantom's WRITE path; the ORPHANED-INPUT class checks continue
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| generic-master | the save 500'd — catalina: `relation "public.t_message_queue" does not exist` (the KNOWN phantom #8, its WRITE-path instance) | NO (public.m_generic 0 rows) | — | none captured | no | n/a (0 landed, asserted) |
+| bed-master (retry) | the drive's second attempt ended in about:blank (the page navigated away mid-cascade) | — | — | — | — | OWED — the cascade's floor step + the flapping session |
+
+**generic-master's failure is a KNOWN-phantom instance, not a rebuild defect:** the save's transaction inserts into public.t_message_queue (the missing table, phantom #8 from the handover) — the error envelope's the generic "Something went wrong". The MVF itself was CORRECT (asset type/category + product category + code + name all set via the component state; the save fired — it hit the phantom, not a validation wall).
+
+**ORPHANED-INPUT check (batch 2):** generic-master's form fields (assetTypeId/assetCategoryId/productCategoryId/code/name/isCombination) all have destinations in public.m_generic (product_category_id/code/name/is_combination) or are join-keys — no orphaned field observed (though the save never reached the INSERT, so the field-by-field is provisional on the failed write).
+
+## DQ-2026-08-13-104 — THE ORPHANED-INPUT CLASS (owner-named, first instance: currency-master's countryCode)
+
+**ORPHANED INPUT — a form field a user fills whose value has no destination:
+not in the save payload, not in any table column. No error, no warning — the
+value just evaporates.**
+
+First confirmed instance (mechanical-pass batch 1): currency-master's
+"Country Code" input — the `doSave()` payload builds currencyName/countryId/
+currencySymbol/currencyCode/status/... and NOTHING reads the typed countryCode;
+the table (public.m_currency_master) has country_id only. The field passes the
+form's `requiredFieldsValid` gate (the user must fill it) and the value lands
+nowhere.
+
+**The check:** every screen's drive includes the field-by-field payload-vs-
+table comparison — the ONLY thing that finds the class. The remaining
+seventeen are being checked for it as they go.
+
 ## DQ-2026-08-13-103 — THE MECHANICAL PASS BATCH 1 (the MVF drive): 2 of 20 landed + matched, teardown clean; the METHOD + the first flags
 
 **The method (proven):** the app's own login flow; the MVF filled via the
