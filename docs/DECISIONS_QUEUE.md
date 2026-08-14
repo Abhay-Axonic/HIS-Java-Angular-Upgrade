@@ -1,3 +1,48 @@
+## DQ-2026-08-13-115 — THE 178 SEED LANDED + the other under-seeded prefix screens NAMED
+
+**THE SEED (tools/seed_number_config.py):** module/screen 178 added — the
+generic-master's auto-generated code (the rebuild's loadPrefix + the legacy's
+genericMasterController Prefix() both call /manufacturers/prefix/{org}/178).
+m_screen 178 'Generic Master Code' (is_global=TRUE — the consumer is
+getGeneratedGlobalNo, whose join demands is_global=true — the first seed
+attempt used the unit-scoped false and returned code:null; the heal flips it),
+m_prefix_configuration GEN/GEN-[SF], t_prefix_running_number 1. Idempotent
+(second run: skipped + healed) + the pre-check now has the global-aware branch.
+
+**THE LIVE PROOF:** the generic-master's loadPrefix now returns
+`code: "GEN-2"` — the form's code filled, the previousGenericCode cached, the
+save's validation gate satisfied. Unblocked for BOTH the rebuild and the
+legacy (same endpoint + same config). The owner's click (Fixed →
+Pharmaceutical → product category → a generic name → save) will now be the
+first real human save with a generated code.
+
+**THE OTHER UNDER-SEEDED PREFIX SCREENS (the owner's ask — named now):**
+the IBillingCommonConstants' screen ids — NONE of these have config rows (the
+5 configured are 123/146/149/164/178):
+- 140 ORDER_NUMBER (OrderMasterServiceImpl)
+- 141 BILL_NUMBER (BillingMasterServiceImpl)
+- 142 DEBIT_NOTE_NUMBER
+- 143 RECIEPT_NUMBER (PaymentRecieptMasterServiceImpl)
+- 144 DEPOSIT_CONSUMPTION_NUMBER (PaymentDepositConsumptionServiceImpl + BillListService)
+- 153 INTRIM_BILL_NUMBER (ItrimBillServiceImpl)
+- 154 DEATH_REGESTRATION_UHID (MortuaryServiceImpl)
+- 166 OT_SHEET_NO (ProcedureOrderServiceImpl)
+- 172 RECIEPT_NUMBER (the second constant — CompanyInvoiceCreationServiceImpl)
+- 181/182/183 OP_CASH/INSURANCE/CORPORATE_BILL_SEQUENCE
+- 184/185/186 IP_CASH/INSURANCE/CORPORATE_BILL_SEQUENCE
+PLUS the DTO-driven family (the ids come from the DTOs' config — encounter,
+appointment, bed-allocation, coversheet templates ×4, medication, lab,
+infusion, specimen receipt, MRD file allocation, incident-reporting, NABH,
+fund-sanction, new-work-order, corrective-maintenance, blood-component
+collection/loan/order, credit/refund notes, company invoice/receipts, bill-list,
+miscellaneous expense, OT reservation, post-op care, TDoc-share vouchers) —
+each would hit the same "no generated code" wall when its flow runs.
+
+**THE PATTERN (the owner's note):** three of the four dev-environment gaps
+found this project were missing rows in the SAME table —
+m_prefix_configuration is the single most under-seeded table in this
+environment; any screen whose code auto-generates is a candidate.
+
 ## DQ-2026-08-13-114 — genericMaster's "UNUSABLE" DIAGNOSED: the DQ-067 number-config SEED class, not a defect (the owner's a/b/c chain, answered live)
 
 **The owner's measured finding:** Asset Type + Category + Product Category +
