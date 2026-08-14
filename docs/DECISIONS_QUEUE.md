@@ -1,9 +1,9 @@
 ## DQ-2026-08-13-101 — THE UNDERSCORE-@RequestHeader CLASS: 29 controllers, 242 usages, 126 endpoints; 7 rebuilt screens call them; LIVE-CONFIRMED (the owner's class question)
 
 **The count (every controller grepped):** 29 controllers use the underscore
-@RequestHeader form — **242 usages** (unit_id 107, organization_id 121,
+@RequestHeader form — **244 usages** (unit_id 107, organization_id 121,
 patient_id 8, type_id 2, gender_id 1, doctor_id/encounter_id/admission_id 1
-each) across **126 endpoints** (the patient-history/EHR family + the global
+each) across **126 endpoints** (re-verified: 29 controllers / 244 usages) (the patient-history/EHR family + the global
 masters: /getListOfSystemMaster, /getListOfSystemObservationProperty,
 /getListOfNursingStation, /getListOfAppointmentStatusMaster,
 /getAllergyTypeMaster, ...).
