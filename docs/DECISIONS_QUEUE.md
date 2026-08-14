@@ -25,6 +25,19 @@ results so far:
    retraction). The positive control: `genericMaster` renders the GENERIC
    MASTER screen — reachable at its own route (moduleId 463).**
 
+7. **genericMaster — the save clicked (the icon button, title="Save"): the
+   empty form's Save fired NO network call — the validation blocked before
+   any API (the "Select Asset Type/Category" placeholders) — the app's own
+   save-flow is validation-first; the save with real data is OWED (the
+   owner's click or a seeded-form test).
+
+The top-20 save-click shape so far: validation-gated (genericMaster),
+filter-first worklists (PMRequest, correctiveMaintenanceReturnWorklist),
+app-config-gated (detailScheduleWorklist, PMSchedule), toggle-only
+(aiButtonConfiguration), slot-guard (book-appointment). The genuine
+"save with real data" tests need seeded forms — the owner's clicks remain
+decisive.
+
 Remaining top-20 save-clicks OWED: organizationMaster, misReports,
 checklistEquipmentMapper, addNewCorrectiveMaintenance, assetScheduler,
 detailsCorrectiveMaintenanceScheduleWorklist, the app-config-gated pair.
