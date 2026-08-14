@@ -3581,3 +3581,5 @@ probed.
 4. The listOfIds receipt-update branch (ShiftClosingMasterDaoImpl:392)
 calls size() BEFORE the null check (NPE on null list) — a robustness defect
 on the receipt-update path (backend-owned); the branch is skippable with [].
+
+**RUNNING TALLY (turn 8):** 33 resolved paths → 200 (new: APmaster 2, applicationConfiguration 1, ARmaster 2, areaMaster 3, assetCategoryMaster 2); 1 live 500 (the allergy-type feed); 1 known 404 (the ambulance count).
