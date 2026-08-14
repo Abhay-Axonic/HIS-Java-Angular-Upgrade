@@ -124,9 +124,40 @@ def main():
         "where not exists (select 1 from public.m_screen where id = 149);"
     )
     print("SEEDED m_screen id=149 'Blood Bag Issue Number' (the 4th config screen)")
+    # 178 — the generic-master's code screen (DQ-114, 2026-08-14). The rebuild's
+    # loadPrefix AND the legacy's genericMasterController Prefix() both call
+    # /manufacturers/prefix/{org}/178 — the 5th config screen. Without the row
+    # the prefix call returns code:null, the auto-generated Generic Code stays
+    # empty, and the save's validation blocks (a required field the user cannot
+    # fill by any means). NOTE: (1) the manufacturer master's OWN prefix screen
+    # is 177 — 178 is the generic master's, per the legacy's own call; (2) this
+    # screen is GLOBAL (is_global=true) — its consumer is
+    # ManufacturerService.GetPrefixById -> GlobalUnitMasterDaoImpl.
+    # getGeneratedGlobalNo, whose query joins m_screen with is_global = true
+    # (line 495) — unlike the other four screens (the unit-scoped
+    # getGeneratedNo, is_global=false).
+    psql(
+        "insert into public.m_screen "
+        "(id, name, is_active, updated_by, updated_date, added_by, added_date, is_deleted, "
+        " code, is_prefix_required, organization_id, is_global, doctypenumber) "
+        "select 178, 'Generic Master Code', true, 1, now(), 1, now(), false, "
+        " 'GM', true, 1, true, null "
+        "where not exists (select 1 from public.m_screen where id = 178);"
+    )
+    print("SEEDED m_screen id=178 'Generic Master Code' (the generic-master's auto-generated-code screen — DQ-114; is_global=true for the getGeneratedGlobalNo join)")
+    # Idempotent heal: a 178 m_screen row seeded with the wrong is_global (the
+    # first attempt used false, the unit-scoped shape) must become true on
+    # re-runs — the generator's join never matches a non-global screen.
+    psql(
+        "update public.m_screen set is_global = true, name = 'Generic Master Code', "
+        " code = 'GM', is_prefix_required = true "
+        "where id = 178 and (is_global is distinct from true or is_prefix_required is distinct from true);"
+    )
+    print("HEALED m_screen id=178 is_global=true (idempotent)")
 
     # Pre-check: the screens must exist in m_screen (the getGeneratedNo query
-    # joins m_screen with is_global = false).
+    # joins m_screen with is_global = false; the 178's getGeneratedGlobalNo
+    # joins with is_global = true).
     missing = psql(
         "select string_agg(s::text, ',') from unnest(array[123,146,164,149]) s "
         "where not exists (select 1 from public.m_screen scr where scr.id = s and scr.is_global = false);"
@@ -135,7 +166,14 @@ def main():
         print(f"PRE-CHECK: missing m_screen rows (is_global=false): {missing.strip()} — "
               f"the config rows would never be read; aborting")
         return 1
-    print("PRE-CHECK: screens 123/146/164/149 present in m_screen (is_global=false)")
+    missing_global = psql(
+        "select count(*) from public.m_screen where id = 178 and is_global = true;"
+    )
+    if missing_global.strip() != "1":
+        print(f"PRE-CHECK: m_screen 178 missing or not global (is_global=true count={missing_global.strip()}) — "
+              f"the getGeneratedGlobalNo join would never match; aborting")
+        return 1
+    print("PRE-CHECK: screens 123/146/164/149 present (is_global=false) + 178 present (is_global=true)")
 
     # --- m_prefix_configuration rows (idempotent) ---
     # generated_code carries the legacy tokens: [SF] = the sequential running
@@ -147,6 +185,7 @@ def main():
         (164, "PRE", "PRE-[SF]", 8, 1, "walk-in prescription number (WalkInSalesService:1485)"),
         (123, "DEP", "DEP-[SF]", 8, 1, "deposit number (DepositMasterServiceImpl:124)"),
         (149, "BBI", "BB-[SF]", 8, 1, "blood-bag-issue number (IssueBloodBagServiceImpl:56, BLOOD_BAG_ISSUE_NUMBER=149)"),
+        (178, "GEN", "GEN-[SF]", 8, 1, "generic-master's auto-generated Generic Code (the rebuild's loadPrefix + the legacy's genericMasterController Prefix() both call /manufacturers/prefix/{org}/178 — DQ-114)"),
     ]
     for screen_id, code, generated_code, length, running_number, doc in rows:
         sql = (
