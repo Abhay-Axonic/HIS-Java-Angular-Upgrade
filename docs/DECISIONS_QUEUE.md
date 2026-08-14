@@ -1,3 +1,33 @@
+## DQ-2026-08-13-103 — THE MECHANICAL PASS BATCH 1 (the MVF drive): 2 of 20 landed + matched, teardown clean; the METHOD + the first flags
+
+**The method (proven):** the app's own login flow; the MVF filled via the
+Angular debug API (ng.getComponent → the component's signal-form
+`comp.form.set({...})` — the DOM value-setting does NOT reach the Angular
+model on these screens, the console-freeze lesson); the REAL Save button's
+click; the confirm-modal's Ok; the network capture (fetch-hook — catches the
+count/list reloads; the save's own call rides the HttpClient's XHR which the
+hook misses — the psql is the landing proof); psql after EVERY response;
+teardown + the zero-leftover assert.
+
+**BATCH 1 (the table):**
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| currency-master | count/list 200 success envelopes; the save's own response not hookable (XHR) — psql decides | YES — public.m_currency_master QACUR | currencyName + currencyCode + countryId match; **the typed countryCode has NO destination column (the payload lacks it)** | none captured | YES without reload | clean (DELETE 1, leftovers 0) |
+| bank-master | count 200 success (object 3) + list 200 after the confirm | YES — billing.m_bank_master QA-bank | bankCode + bankName + bankAddress + branch_id all match | none captured | YES without reload | clean (DELETE 1, leftovers 0) |
+| bed-master | — | — | — | — | — | OWED — **the MVF is INCOMPLETE: the room needs the ward→floor→room cascade; the room list stays empty until the floor's selected, and the floor's not exposed as a component signal in the DOM-drivable path** |
+
+**FLAGS (not verdicts):**
+1. **currency-master's countryCode field's value does NOT reach the DB** — the
+   payload built by doSave() lacks countryCode (the column doesn't exist on
+   the table either: country_id only) — a UI field with no destination.
+2. **bed-master's MVF is incomplete** — "room" alone is not selectable; the
+   ward→floor→room cascade is the real requirement; the floor step's mechanics
+   need the component's floor-list source (its signal's not exposed).
+
+**The method's value:** the currency + bank saves are PROVEN to reach SQL with
+matching values through the app's own flow — the first two write-verdicts of
+the survey that are neither constructed-payload nor minimal-probe.
+
 ## DQ-2026-08-13-102 — THE INTERCEPTOR FIX LANDED + THE SEVEN-SCREEN PROOF (the first rebuild-side fix of the survey)
 
 **The diff (owner-approved, landed in auth.interceptor.ts):** two headers added
