@@ -1,3 +1,40 @@
+## DQ-2026-08-13-113 — genericMaster's TWO click-findings RESOLVED + the drive-vs-screen admission (the owner's questions)
+
+**FINDING 1 — the PRODUCT CATEGORY cascade (Q1): NOT a rebuild defect — the
+UNSEEDED-DATA class.**
+- The call GOES OUT (live-captured): onAssetCategoryChange → loadProductCategories
+  → GET /api/global/products/categories/{assetCategoryId}/{orgId} — fires every
+  time.
+- What it RETURNS (live): `/products/categories/3/1` → 200 `[]` (parent 3 has
+  none); the feed for parent 1 would return the ONE row.
+- The TABLE: public.m_product_category has exactly ONE row (asset_category_id=1,
+  "Test PMS Product Category", org 1 unit 1). Every other parent → none.
+- The same thin-data shape at the FIRST cascade step: `/assets/categories/1/1/1`
+  → 200 `[]` (m_asset_category's 2 rows are BOTH for asset_type_id=2).
+- The dropdown's emptiness depends on WHICH parent the user picked — the
+  cascade's data-dependence, the DQ-093 dev-empty class again. The owner's
+  click with the "Pharmaceutical" category (id 1) SHOULD show the one product
+  category; the other parents are data-empty.
+
+**FINDING 2 — the GENERIC CODE input (Q2): NOT a rebuild defect — the faithful
+port of the legacy's code-lock.**
+- The rebuild: `[disabled]="codeDisabled()"` with `codeDisabled = signal(true)`
+  in the add-mode; `editGeneric(row)` → `set(false)` (the edit unlocks).
+- The legacy: `<input ... ng-disabled="codeDisableFlag">` — the controller sets
+  codeDisableFlag=true in the add-mode, false in the edit — IDENTICAL.
+- The code is AUTO-GENERATED (the prefix + the sequence — loadPrefix's
+  previousGenericCode) — the field's not meant for typing in the add-mode.
+
+**Q3 — THE DRIVE-VS-SCREEN ADMISSION: YES, my generic-master drive was a
+fixture-dependent trace (ledger #6's shape).** My drive set the form via
+comp.form.set() — which BYPASSED the code input's disabled state (a human
+cannot type there; the human's save goes out with the AUTO-GENERATED code).
+My driven save (with the typed QA-generic code) proved the endpoint's path +
+phantom #8 — NOT the screen's usable flow. The screen's real save (the human's,
+with the auto-generated code) is untested — the owner's click is the real test.
+**The lesson: a driven save proves the endpoint, not the screen, whenever the
+drive can set fields the UI will not accept.**
+
 ## DQ-2026-08-13-112 — THE STATIC ORPHANED-INPUT PASS (a hypothesis per ledger #15) + the follow-ups' closure
 
 **THE PASS (template-bound fields vs the save-payload keys, per rebuilt
