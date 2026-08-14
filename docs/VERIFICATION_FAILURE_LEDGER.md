@@ -158,9 +158,27 @@ always a negative control — a way to prove the check can fail.
     screen classified as a shell on a static scan alone must be
     re-examined by render.
 
+15. **THE BIGGEST NUMBER IS THE PROBE ARTIFACT (added 2026-08-14,
+    owner-named — the fourth time a large finding evaporated under a
+    corrected probe).** *Claimed:* the 293 "unresolved service paths"
+    across ~90 screens (the ambulance-count class at scale). *Missed:* the
+    matching method — a path index built from @RequestMapping greps — was
+    what failed, not the backend. The SPA's OWN calls, captured during a
+    render, returned 200 for insurance-master's 5 "unresolved" paths (the
+    index missed path-param/trailing-slash spellings). The same shape
+    before it: the shell class (11-for-11 wrong), the contract walls
+    (6-for-6), the systemic proxy gap (wrongly diagnosed). *Rule:* a large
+    count produced by a matching method — a regex, a path index, a
+    template scan — is a hypothesis about the METHOD until a live call or
+    a render confirms a sample of it. Every time a static method produced
+    a number above ~50, most of it was wrong. The drift map's PROBABLE
+    band is the one surviving static count, and it survives because 3-of-3
+    live-write confirmations held. A number without a live-confirmed
+    sample is not yet a finding.
+
 ---
 
 **The antidote, once, plainly:** every check needs a way to fail. If you
-cannot construct the failure, the check's PASS is not evidence. The twelve
+cannot construct the failure, the check's PASS is not evidence. The fifteen
 above are the project's permanent list of checks that were once believed
 and are now distrusted by default.

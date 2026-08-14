@@ -1,3 +1,33 @@
+## DQ-2026-08-13-096 — OVERNIGHT SURVEY, TURN 4: ledger #15 recorded + the book-appointment finding DOWNGRADED + the route-mislabel finding + the capture discipline
+
+**LEDGER #15 (owner-named):** THE BIGGEST NUMBER IS THE PROBE ARTIFACT —
+a large count from a matching method (regex/path-index/template-scan) is a
+hypothesis about the METHOD until a live call or a render confirms a sample.
+The 293 unresolved paths dissolved (the index's param-miss spellings); the
+shell class, the contract walls, the proxy gap were the same shape; the
+drift map's PROBABLE band survives because 3-of-3 live-write confirmations
+held. A number without a live-confirmed sample is not yet a finding.
+
+**book-appointment — the finding DOWNGRADED after the retest:** the escape
+did NOT reproduce in two clean attempts (submit/open interceptors + the URL
+watch: stayed on :4201/bookAppointment, no submit, no open; the slotId=0
+guard is the visible behavior). The earlier about:blank was a state
+artifact of the flapping session. The residual question (the booking-POST
+path with a real slot) stays open.
+
+**ROUTE-MISLABEL FINDING:** generic-master's route path is `weekendMaster`
+(app.routes.ts) — the generic-master screen is unreachable under its own
+name (the route-target tool passes because the target file exists — the
+ledger #2 positive-only-route-targets class; a nav-click test or the owner
+decides).
+
+**THE CAPTURE DISCIPLINE (session flapping):** the SPA session rotates the
+token within minutes of a login (the multi-session collision), so the
+endpoint captures must run in a tight batch right after a fresh login.
+Captured so far: insurance-master 5/5 unresolved → 200 (the method PROVEN);
+book-appointment rendered (its calls OWED the entries read). The remaining
+~90 screens' captures are OWED in fresh-login batches.
+
 ## DQ-2026-08-13-095 — OVERNIGHT SURVEY, TURN 3: book-appointment FINDING + the 293-endpoint resolution method proven + hospital-master render finding
 
 **FINDING 1 — book-appointment (the highest-complexity screen, score 87):
@@ -10,9 +40,16 @@ flow (isRequestForPay=true → bookNormalAppointment() when nothing is
 booked). The about:blank's exact vector is NOT yet pinned — the retest is
 OWED (with the slotId=0 guard expecting only the "Select slot" warning, the
 blank page implies a different path — either a slot WAS selected or the
-booking POST escapes; the console watch during the retest decides). The
-finding (the click escapes the SPA) STANDS; the mechanism is under
-correction.
+booking POST escapes; the console watch during the retest decides). THE
+RETEST (2026-08-14, done): the escape did NOT reproduce in two clean
+attempts — the click with submit/open interceptors + the URL watch on a
+fresh page stayed on :4201/bookAppointment, no submit, no window.open; the
+slotId=0 guard is the visible behavior (no slot selected). The earlier
+about:blank was a state artifact of the flapping session, not a
+deterministic click behavior. FINDING DOWNGRADED: the click does not
+deterministically escape; the residual question (the booking-POST path
+with a real slot selected) stays open — a seeded-slot test or the owner's
+click decides it.
 
 **FINDING 2 — hospital-master renders `accessDenied?reason=denied` for the
 DEMO/admin user** — a module-gate denial (the moduleAccessGuard's module for
