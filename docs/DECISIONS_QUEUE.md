@@ -1,3 +1,39 @@
+## DQ-2026-08-13-114 — genericMaster's "UNUSABLE" DIAGNOSED: the DQ-067 number-config SEED class, not a defect (the owner's a/b/c chain, answered live)
+
+**The owner's measured finding:** Asset Type + Category + Product Category +
+Generic Name filled; the save's validation toast demands the Generic Code; the
+field's disabled by design (auto-generate) and the auto-generation never fills
+it — a required field the user cannot fill by any means.
+
+**The diagnosis, the a/b/c chain answered LIVE:**
+- **(a) loadPrefix FIRES** (live-captured: GET /api/globals/manufacturers/prefix/1/178
+  → 200) **and returns `code: null`** — the response is the vendor record with
+  the null code field. The prefix-config for the module/screen **178 has NO row
+  in public.m_prefix_configuration** (the 4 existing rows are screen_ids
+  146/164/123/149 — DON/PRE/DEP/BB). **THE DQ-067 NUMBER-CONFIG CLASS — a
+  SEED, not a defect**, exactly the owner's (a) framing. The rebuild's
+  `if (res?.code != null)` correctly leaves the form's code empty on the null.
+- **(b) N/A** — the prefix never loads a code; there is no ordering bug (the
+  code IS set into the form when the prefix returns one — the faithful path).
+- **(c) The LEGACY fails identically** — the legacy's Prefix() hits the same
+  endpoint → the same null code → the legacy's `ValidateGenericMaster` ALSO
+  demands `!self.model.genericCode` → the legacy's save ALSO blocks in this
+  env. **NOT a port defect — the port is faithful; the environment's the
+  same.** The screen's unusable in THIS dev env because the config's missing.
+
+**THE FIX (a seed):** the m_prefix_configuration row for screen 178 (the
+manufacturer/generic prefix — same shape as the 4 existing rows). The
+seed_number_config tool covers this class.
+
+**THE LEDGER NOTE (the owner's ask, alongside the DQ-113 admission):** a
+disabled input is INVISIBLE to a component-state drive — the drive sets the
+form signal, never touching the input's disabled state — and a screen can be
+UNUSABLE while every endpoint it calls works perfectly (all the generic-
+master's feeds 200; the save's blocked client-side by the empty auto-generated
+code). The drive's "all endpoints healthy" says nothing about the screen's
+usability when the UI state (disabled fields, auto-generation) carries the
+logic.
+
 ## DQ-2026-08-13-113 — genericMaster's TWO click-findings RESOLVED + the drive-vs-screen admission (the owner's questions)
 
 **FINDING 1 — the PRODUCT CATEGORY cascade (Q1): NOT a rebuild defect — the
