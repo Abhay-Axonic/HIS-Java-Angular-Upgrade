@@ -1,3 +1,42 @@
+## DQ-2026-08-13-119 — bedMaster's cascade + edit DIAGNOSED: the cascade WORKS; ward 1 is INACTIVE (the data's shape, not a code defect)
+
+**1. THE CASCADE — it fires and returns correctly (live):** onWardChange(1) →
+POST /api/adt/getRoomByWardId → **200 `{status:"success", listObject:[{roomId:2,
+roomDesc:"Room 101",...}]}` → the roomList populates** (Room 101). The query's
+WHERE (RoomMaster's GET_ROOM_BY_WARD_ID): wardId + orgId + unitId +
+status='A' + isModality='N' — R101 (org 1/unit 1/A/N) matches. **The empty
+room list is NOT the feed's fault: the dropdown's wards (2,4-9 — all active,
+all with NO rooms) can't produce a room; the ONE ward with a room (1 —
+TESTWARD) is EXCLUDED from the dropdown because its status is 'I' (inactive)
+and the ward-list query filters status='A'.** The grid's "Test Ward (B5
+verified)" labels come from the bed list's rows (the beds' ward names — the
+bed-list query has no status filter), which is why the rooms LOOK reachable
+while the form can't select the ward.
+
+**2. THE EDIT — the state's loaded; the display's the gap.** The backend's
+GET_BED_BY_ID carries `bm.wardId as wardId`; the component's edit() does
+`updateFormField('wardId', d.wardId)` + `onWardChange(d.wardId)` (which also
+fires the room feed — Room 101 loads in the edit too). The form's wardId IS
+set → requiredFieldsValid passes → **the edit-then-save writes the CORRECT
+ward — NOT a null write.** The user sees "Ward blank and required" because the
+SELECT can't render ward 1: the wardList's options (7,8,4,6,5,9,2 — the
+status='A' set) don't include the inactive 1, so the select's display is empty
+while the state holds the value. (My drive's edit() calls passed the bedId
+NUMBER where the method expects the ROW — the drive's all-blank edit was my
+arg-shape error; the owner's real click populated the fields.)
+
+**3. THE RECONCILIATION (which id is which):**
+- **ward 1 = TESTWARD "Test Ward (B5 verified)" — status I (INACTIVE) — the
+  rooms' ward (R101) — invisible in the dropdown.**
+- ward 2 = TESTWARD2 "Test Ward Two" (active, no rooms); ward 3 = VICTIM-WARD
+  (org 999 — invisible to the demo); wards 4-8 = the B5 family (active, no
+  rooms); ward 9 = B5 OK Ward (active, no rooms); wards 99/999 = the org-999's.
+
+**THE FIX SHAPE (the owner decides): one row — ward 1's status 'I' → 'A' —
+the dropdown then shows TESTWARD, Room 101 becomes selectable, and the edit's
+ward displays. The environment-data class (like the 178 seed), not a code
+defect. R101's the ONLY room in the demo org's unit 1.**
+
 ## DQ-2026-08-13-118 — THE ALL-TWENTY MECHANICAL DIGEST (the owner's a/b/c/d pass, no fixes applied)
 
 **The psql ground-truth (the source tables' row counts):** states 6 (country 1:
