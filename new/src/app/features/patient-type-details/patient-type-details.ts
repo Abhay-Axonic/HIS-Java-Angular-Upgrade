@@ -94,9 +94,10 @@ export class PatientTypeDetails {
 
   toggle(row: PatientTypeServiceDetail): void {
     this.service.changeStatus({
-      patientTypeDetailsId: row.patientTypeDetailsId,
+      patientTypeServiceId: row.patientTypeServiceId,
       status: row.status === 'A' ? 'I' : 'A',
       updatedBy: this.userId(),
+      updatedDate: formatLegacyNow(),
     }).subscribe({
       next: (res) => {
         if (res.status === 'success') {
@@ -109,4 +110,11 @@ export class PatientTypeDetails {
       error: () => this.notify.error('Status update request failed.'),
     });
   }
+}
+
+/** Legacy: `moment(new Date()).format('DD-MM-YYYY HH:mm:ss')` (ctrl:1353). */
+function formatLegacyNow(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
