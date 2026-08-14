@@ -43,9 +43,12 @@ export interface PatientTypeUpdatePayload {
   organizationId: number;
 }
 
-/** POST body for /api/billing/updatePatientTypeStatus (ctrl:483). */
+/** POST body for /api/billing/updatePatientTypeStatus (ctrl:483) -- the DAO
+ * parses updatedDate via the NPE-prone String overload (DQ-128), the legacy
+ * always sends it (patientTypeController.js:473-478). */
 export interface PatientTypeStatusPayload {
   patientTypeId: number;
   status: PatientTypeStatus;
   updatedBy: number;
+  updatedDate: string;
 }
