@@ -1,14 +1,18 @@
 ## DQ-2026-08-13-095 — OVERNIGHT SURVEY, TURN 3: book-appointment FINDING + the 293-endpoint resolution method proven + hospital-master render finding
 
-**FINDING 1 — book-appointment (the highest-complexity screen, score 87)
-broke on the first click.** The "Book and Pay" input binds
-`(click)="openPaymentPage()"` (book-appointment.html) — the method is ABSENT
-from the rebuilt component (the legacy defines it at
-bookAppointmentController.js:777 — a book-then-RazorPay flow). Clicking it
-navigated the SPA to about:blank — the click leaves the app entirely. This
-is the saveRack class (a legacy method never ported) PLUS a navigation
-escape. Live-observed; the exact escape vector (a stray global or the
-modal) is residual.
+**FINDING 1 — book-appointment (the highest-complexity screen, score 87):
+the primary action's click navigated the SPA to about:blank (live-
+observed).** CORRECTED MECHANISM (the first read was WRONG — retracted with
+its cause): `openPaymentPage()` IS ported (`openPaymentPage(): void` in
+book-appointment.ts — the earlier grep missed it because of the
+`(): void {` return-type annotation); the click runs the faithful legacy
+flow (isRequestForPay=true → bookNormalAppointment() when nothing is
+booked). The about:blank's exact vector is NOT yet pinned — the retest is
+OWED (with the slotId=0 guard expecting only the "Select slot" warning, the
+blank page implies a different path — either a slot WAS selected or the
+booking POST escapes; the console watch during the retest decides). The
+finding (the click escapes the SPA) STANDS; the mechanism is under
+correction.
 
 **FINDING 2 — hospital-master renders `accessDenied?reason=denied` for the
 DEMO/admin user** — a module-gate denial (the moduleAccessGuard's module for
