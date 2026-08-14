@@ -43,7 +43,7 @@ not a business rule, so no manifest entry unless the owner wants one).
 - add-new-corrective-maintenance — BLOCKED: public.m_fixed_asset_master = 0 (the Get-Asset modal has nothing to pick).
 - pm-request — BLOCKED: fixed assets = 0 (the store/asset filter has no rows).
 - corrective-maintenance-return-worklist — BLOCKED: assets.t_corrective_maintenance_worklist = 0.
-- details-corrective-maintenance-schedule-worklist — BLOCKED: CM master/schedule = 0.
+- details-corrective-maintenance-schedule-worklist — BLOCKED: CM master/schedule = 0. **MVF (read from the component, OWED #4 closed):** the row-level add = Assign To + scheduleDate + scheduleTime ('Please Select Assign To'/'scheduleDate'/'scheduleTime'); the spare modal = item + item qty (stock-gated: 'Spare stock should be greater than enter Qty'); saveReplace = serial number; saveDetails = asset-up date + asset-up time + from date (+ the two allocation-type validations, ctrl:789-798).
 - assigning-picker-dispenser — BLOCKED: pharmacy.t_assign_picker = 0.
 - mis-reports — BLOCKED: report rows = 0 (m_mis_report_format 0; the left panel is empty).
 - detail-schedule-worklist + pm-schedule — BLOCKED: appConfigMissing (the store/counter config rows unseeded).
