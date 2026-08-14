@@ -1,3 +1,68 @@
+## DQ-2026-08-13-118 — THE ALL-TWENTY MECHANICAL DIGEST (the owner's a/b/c/d pass, no fixes applied)
+
+**The psql ground-truth (the source tables' row counts):** states 6 (country 1:
+Maharashtra + Karnataka; states 2-5 parentless), districts 1 (state 1: Pune),
+cities 1 (district 1: Pune), areas 2 (city 1), countries 2, branches 1 (bank_id
+NULL), bed-categories 2, checklists (otims.m_checklist_master) **0**, frequencies
+(inventory.m_pms_frequency + opd.m_frequency_master) **0**, fixed-assets **0**,
+gender 4, prefix 1, gl-ledger 4, licence-types **0**, m_prefix_configuration 5
+(123/146/149/164/178).
+
+**The parent values WITH children (the owner's picks):** country 1 (India) →
+states 1+6; state 1 (Maharashtra) → district 1 (Pune); district 1 → city 1;
+city 1 → areas 1+5; ward 1 (TESTWARD) → room R101 + ward 99 → ROOM-999-X;
+asset-category 1 → product-category 1; asset-type 2 → asset-categories 1+3.
+
+**THE 20-SCREEN TABLE (the digest, per the owner's a/b/c/d):**
+
+| # | screen | (a) dependent feeds | (b) disabled/readonly | (c) generator/config | (d) validation gate |
+|---|---|---|---|---|---|
+| 1 | book-appointment | gender 4, prefix 1, specialities-by-doctor; UHID search = ERROR envelope (phantom #19) | none | none | UHID + a slot ("Select slot" guard) |
+| 2 | detail-schedule-worklist | stores; checklists **0**; the app-config gate | none | none | the row-add: store/ticket/item/dates |
+| 3 | details-corrective-schedule-worklist | serials (fixed-assets **0**), vendors | AllocationRadioBtn (tab-state) | none | the allocation/saveResolution rows |
+| 4 | pm-request | stores, manufacturers, vendors; the app-config gate | none | none | the worklist filter → row → dates |
+| 5 | pm-schedule | same family; the app-config gate | none | none | assign-to + assign date |
+| 6 | asset-scheduler | frequencies **0**, checklists **0**, assets **0**; the assetInfoMissing gate | none | none | frequency + type + from/end dates + ≥1 checklist |
+| 7 | add-new-corrective-maintenance | serials (fixed **0**), stores, asset-cats 2, product-cats 1 | asset code/cat/name (the Get-Asset modal fills) | none | asset + request type + criticality + resolution date + serial |
+| 8 | ai-button-configuration | doctors 1, specialities 2, buttons 2 | aiInfoUrl (the config modal) | none | doctor-or-speciality + button |
+| 9 | bank-master | branches 1 (bank_id NULL) | none | none | branchId + bankCode + bankName + bankAddress |
+| 10 | bed-master | wards 8; rooms: ward 1 + 99 only; bed-cats 2 | bedCategoryId + billingBedDesc (the legacy's identical disabled) | none | wardId + roomId + bedCode + bedDesc (+ bedCat unless hideBed) |
+| 11 | checklist-equipment-mapper | checklists **0**, asset-cats 2, product-cats 1 (parent 1) | none | none | the 5 selects |
+| 12 | corrective-maintenance-return-worklist | stores; the worklist's data | none | none | reject reason + the row action |
+| 13 | currency-master | countries 2, getCountryCode | none | none | countryId + countryCode + currencyCode + currencyName |
+| 14 | general-insurance-master | states 6 (country 1), districts 1, cities 1, areas 2 | none | none | insuranceCompany + contactNo + email + contactPerson + contactPersonNo |
+| 15 | generic-master | asset-types 6, asset-cats 2 (type 2), product-cats 1 (cat 1) | genericCode (auto-generated; the legacy identical) — FIXED by the 178 seed | **the code's config EXISTS (178, the seed)** | assetType + assetCat + productCat + code + name; the save = the backend NPE (DQ-116) |
+| 16 | hospital-master | countries 2, the state/district/city chain, licence-types **0**, subscription-config | amountPaidStatus + remark (payment-driven) | the subscription-config (required) | the contact validity + the subscription config |
+| 17 | insurance-master | countries 2, the state→district→city→area chain (country 1 works), ledger 4 | none | none | state/district/area + contact + email |
+| 18 | mis-reports | reports-by-group, parameters, patient search | none | none | a report selection → run |
+| 19 | organization-master | the geography chain, licence-types **0**, module-tree, timezones | none | none | requiredOk (the contact validity) |
+| 20 | assigning-picker-dispenser | currency, dropdowns, doctor/patient/uhid searches | none | none | the filter → the assign action |
+
+**THE ENV-vs-DEFECT SPLIT (the owner decides what gets fixed):**
+
+**BLOCKED BY THE ENVIRONMENT (unseeded/sparse + gates):**
+- the app-config gates: detail-schedule-worklist, pm-request, pm-schedule
+  (appConfigMissing), asset-scheduler (assetInfoMissing).
+- the ZERO-row tables: otims.m_checklist_master (the mapper + the schedulers),
+  the frequencies (asset-scheduler), public.m_fixed_asset_master (the add-CM's
+  serials + the asset picker), m_licence_type_master (hospital + org masters).
+- the sparse worklists: mis-reports, assigning-picker-dispenser,
+  corrective-maintenance-return-worklist, pm-request (the filter-first rows).
+- the module gates: hospital-master, organization-master (the demo role).
+
+**GENUINE DEFECTS (three):**
+1. generic-master's save — the backend NPE at GenericService.create:157 (the
+   addedBy relation; DQ-116) — a real backend defect on a screen whose
+   feeds + validation are otherwise fine.
+2. book-appointment's UHID search — phantom #19 (the five missing columns on
+   patient.t_patient_registration; DQ-111).
+3. currency-master's ORPHANED countryCode (a field with no destination; DQ-104).
+
+**TESTABLE NOW (the owner's picks):** currency-master (save lands), bank-master
+(save lands), generic-master (save fires → the known NPE), bed-master (TESTWARD
+→ Room 101), insurance + general-insurance (country 1 → Maharashtra → Pune →
+Shivaji Nagar).
+
 ## DQ-2026-08-13-117 — bedMaster's empty room list RESOLVED: NO floor step (the MVF's inference error) + TWO wards have rooms (the unseeded-data class)
 
 **(a) — the form's actual contents: NO FLOOR STEP.** The bed-master template
