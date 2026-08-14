@@ -1,3 +1,28 @@
+## DQ-2026-08-13-117 — bedMaster's empty room list RESOLVED: NO floor step (the MVF's inference error) + TWO wards have rooms (the unseeded-data class)
+
+**(a) — the form's actual contents: NO FLOOR STEP.** The bed-master template
+has wardId → roomId → bedCategoryId → billingBedDesc → bedCode → bedDesc —
+a FLOOR select does NOT exist. The form state's floorId is DERIVED from the
+ward (`this.updateFormField('floorId', ward?.floorId ?? null)` in onWardChange)
+— the ward object carries its floor. **The MVF's "ward → floor → room" was my
+inference error** — corrected: ward → room directly. (The component's earlier
+formKeys listing showed floorId, which is where the wrong inference came from —
+the field exists in the state, not in the UI.)
+
+**(b) — the room feed + the psql:**
+- The feed FIRES on the ward selection (onWardChange → POST
+  /api/adt/getRoomByWardId { unitId, organizationId, wardId } — the app's own
+  call, the response's status + listObject).
+- **The psql: adt.m_room_master has 4 rows — TWO with rooms for the wards:**
+  ward 1 → R101 "Room 101" (4 max beds); ward 99 → ROOM-999-X "Victim Room 999".
+  The other two rows have NULL ward_id (AUTOTEST-RM, B5RM1 — unassigned). The
+  wards 2-8 (TESTWARD2, VICTIM-WARD, B5NEW1-3, B5FINAL, B5FINAL2) have NO rooms.
+
+**THE OWNER'S PICK: ward 1 (TESTWARD — "Test Ward (B5 verified)") → Room 101**
+— or ward 99 (VICTIM-WARD → ROOM-999-X). Any other ward is genuinely empty —
+the unseeded-data class, NOT a defect (the same shape as the generic-master's
+product category).
+
 ## DQ-2026-08-13-116 — the owner's genericMaster save: NOT phantom 8 — a NEW backend-side finding (the GenericService.create NPE)
 
 **The owner's click:** the code generated (GEN-2, the seed's live proof), the
