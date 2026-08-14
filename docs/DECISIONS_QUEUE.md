@@ -1,3 +1,42 @@
+## DQ-2026-08-14-127 — insurance-master's EDIT is broken — the getById response-key mismatch (fix SPECIFIED, UNBUILT)
+
+**The drive (the CRUD-sibling check of the owner-confirmed save):** create a
+probe row (landed, body success, insuranceId 9), then edit(insuranceId) → the
+record STAYS EMPTY (saveMode true, all fields blank — captured) → the update
+POST never fires. The owner-confirmed save works; its sibling EDIT is
+unreachable.
+
+**The cause (live-verified):** getInsuranceMasterById returns the row under
+`listObject` with `object: null` — captured live:
+`{"status":"success","listObject":[{insuranceId:7,insuranceCode:"IC01",...}],"object":null}`.
+The rebuild's edit() reads `res.object` and silently no-ops
+(`if (res.status !== 'success' || !res.object) return;`) — even though the
+feature's OWN models.ts doc-comment states the shape:
+"Response shape of getInsuranceMasterById (ctrl:127-155,
+response.data.listObject[0])".
+
+**The class:** the RESPONSE-KEY class — a rebuild reading the wrong response
+key. Second confirmed instance (patient-type-details' details list reads
+listObject while the endpoint returns object.patientTypeGroupWiseDetails; this
+one reads object while the endpoint returns listObject). The full-breadth
+sweep is OWED (only the live response decides — a grep cannot).
+
+**THE FIX SPEC (UNBUILT — queued per the run's rule):** insurance-master.ts
+edit() must read the row from `res.listObject?.[0]` (falling back to
+res.object):
+```ts
+next: (res) => {
+  if (res.status !== 'success') return;
+  const rec = (res.listObject?.[0] ?? res.object) as unknown as InsuranceMasterRecord;
+  if (!rec) return;
+  // ... the existing record.set / cascade wiring
+}
+```
+The update POST itself is statically covered (the shared payload builder sends
+the audit set; InsuranceMasterDaoImpl.update reads exactly orgId/unitId/
+updatedBy/updatedDate — the DQ-125 chain); the final live update click is OWED
+until the mapping fix lands.
+
 ## DQ-2026-08-14-126 — general-insurance-master's save BLOCKED by a source-DDL FK defect (fkey_area on the wrong column) — fix SPECIFIED, UNBUILT
 
 **The drive (autonomous run, 2026-08-14):** general-insurance-master, cascade
