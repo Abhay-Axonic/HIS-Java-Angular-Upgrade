@@ -1,3 +1,14 @@
+## DQ-2026-08-13-097 — OVERNIGHT SURVEY, TURN 5: the endpoint captures proceed + the allergy-type feed's LIVE 500 (the dropdown's empty is NOT dev-empty)
+
+The fresh-login capture batches work (the session held through 3 screens):
+- insurance-master: 5/5 unresolved → 200 (already recorded)
+- ageGroupMaster: /LIS/global/listAgeGroupMaster/1/0/10 → 200, /LIS/global/getToTalAgeGroupMasterRecord/1 → 200 (the param spellings — the index misses CONFIRMED as the 293's main shape)
+- allergyMaster: /api/global/getAllergyMasterList → 200, /api/global/getAllergyMasterListCount → 200, BUT **/api/global/getAllergyTypeMaster → 500 (live, the SPA's own call)**
+
+THE ALLERGY-TYPE FEED FINDING: emr.m_allergy_type_master has **3 rows** — the dropdown's empty is NOT dev-empty; the type feed 500s live. The batch-1 note ("the feed failed") upgrades from hypothesis to live-confirmed. The exact SQL cause needs the ERR- correlation (the entries capture gives statuses only) — OWED: re-capture with the response body. Possible: a phantom RELATION (the entity maps to `m_allergy_type` vs the real `m_allergy_type_master`) — would be phantom #19 if the SQL names it.
+
+Captures remaining: ~187 screens OWED (fresh-login batches).
+
 ## DQ-2026-08-13-096 — OVERNIGHT SURVEY, TURN 4: ledger #15 recorded + the book-appointment finding DOWNGRADED + the route-mislabel finding + the capture discipline
 
 **LEDGER #15 (owner-named):** THE BIGGEST NUMBER IS THE PROBE ARTIFACT —
