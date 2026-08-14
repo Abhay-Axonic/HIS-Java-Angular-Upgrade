@@ -1,3 +1,46 @@
+## DQ-2026-08-13-109 — THE MECHANICAL PASS BATCH 5: the cascade class recorded (DQ-108); ai-button-configuration's add-flow OWED
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| ai-button-configuration | the add's click did NOT open the config modal (the component's configModalOpen stayed false — the Doctor/Button selection state's not reachable via the component-state drive; the selects are Angular-form-bound and the native value-set doesn't reach the model) | — | — | — | — | OWED — the selection → AI Configuration → config-modal → saveConfig chain |
+
+**Also noted:** the screen's savedConfigs (4 rows) cover EVERY doctor/button combo
+of the two button options — a NEW row needs a new button option, so even a
+successful add would hit the duplicate path unless the owner adds via a fresh
+button. The status toggles (the checkboxes) are the other write path — their
+click produced no network earlier (the UI-state class).
+
+**The cascade class is recorded as DQ-108** (the pass's main finding — the
+three instances + the MVF-method limit: a validation message names what is
+MISSING, not what is REQUIRED).
+
+**ORPHANED-INPUT:** currency FOUND; bank none; generic/insurance/ai-button
+provisional none (no write landed).
+
+## DQ-2026-08-13-108 — THE CASCADE CLASS (the mechanical pass's MAIN FINDING, owner-confirmed)
+
+**THE CLASS:** a validation message that names only the LAST field of a
+dependent-list cascade — "Please Select Room" means ward → floor → room. The
+message names what is MISSING, not what is REQUIRED, and those differ whenever
+a field's list depends on another field.
+
+**THE THREE INSTANCES:**
+1. bed-master — "Please Select Room..!!" → ward → floor → room.
+2. checklist-equipment-mapper — "Please select …" × 5 → asset-category →
+   product-category (the product list loads only after the asset category).
+3. insurance-master — "Select State* / District* / Area*" → country → state →
+   district → area.
+
+**THE IMPLICATION FOR THE MVF METHOD (owner-named):** an MVF inferred from
+validation text is systematically UNDER-specified wherever a field's list
+depends on another field — the message tells you the last step, not the chain.
+The MVF must therefore be read as "fill these AND any cascade that feeds them",
+and the report's MVF table now carries the corrected chains as they surface.
+
+**THE DIVISION OF LABOUR (owner-set):** the cascade screens become the owner's
+clicks — a human filling a cascade is trivial where an agent's is not. The
+agent takes the drivable screens; the owner takes the person-needed ones.
+
 ## DQ-2026-08-13-107 — THE MECHANICAL PASS BATCH 4: insurance-master's MVF hides the THIRD cascade; the cascade class is now the pass's dominant wall
 
 | screen | response | row landed | values match | toast | in grid | teardown |

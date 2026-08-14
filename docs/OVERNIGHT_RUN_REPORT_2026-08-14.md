@@ -26,13 +26,13 @@ is wired (validation-first; it will NOT fire on an empty form).**
 | 8 | ai-button-configuration (`aiButtonConfiguration`) | doctor-or-speciality + button ("Please select doctor or speciality" / "Please select button") |
 | 9 | bank-master (`bankMaster`) | branch ("Please Select Branch") |
 | 10 | bed-master (`bedMaster`) | **CORRECTED 08-14 (the mechanical pass):** ward → floor → room cascade (the room list loads only after the ward+floor) + bed code + bed description + bed category — the "Please Select Room" guard hides the cascade |
-| 11 | checklist-equipment-mapper (`checklistEquipmentMapper`) | checklist name + asset category + product category + item code + item name ("Please select …" × 5) |
+| 11 | checklist-equipment-mapper (`checklistEquipmentMapper`) | **CORRECTED 08-14 (the mechanical pass):** checklist name + asset category → (its product-category list loads after) → product category + item code + item name |
 | 12 | corrective-maintenance-return-worklist (`correctiveMaintenanceReturnWorklist`) | reject reason + reason note (the row's accept/reject action) |
 | 13 | currency-master (`currencyMaster`) | country + country code + currency code + currency name (the `requiredFieldsValid` gate) — **NOTE: the typed countryCode has NO destination column (ORPHANED INPUT, DQ-104) — fill it only because the gate requires it** |
 | 14 | general-insurance-master (`generalInsuranceMaster`) | the contact block: email (valid), contact no ≥10 digits, zip ≥6, contact person no ≥10 |
 | 15 | generic-master (`genericMaster`) | asset type + asset category + product category + generic code + generic name (the form's required placeholders) |
 | 16 | hospital-master (`hospitalMaster`) | unit contact (10 digits) + valid email — **needs the subscription-config row** ("Please create subscription configuration") + the module gate |
-| 17 | insurance-master (`insuranceMaster`) | contact no (valid) + valid email (+ the file upload for the logo, if used) |
+| 17 | insurance-master (`insuranceMaster`) | **CORRECTED 08-14 (the mechanical pass):** country → state → district → area cascade (State/District/Area are REQUIRED and their lists load only after the parent) + insurance code/desc + contact no (10 digits) + valid email |
 | 18 | mis-reports (`misReports`) | select a report from the left panel → run (the empty-state configurator) |
 | 19 | organization-master (`organizationMaster`) | organization contact (valid) — **behind the module gate** |
 | 20 | assigning-picker-dispenser (`assigningPickerDispenser`) | the worklist filter (from ≤ to dates) → a row → the assign action |
