@@ -1,3 +1,21 @@
+## DQ-2026-08-13-107 — THE MECHANICAL PASS BATCH 4: insurance-master's MVF hides the THIRD cascade; the cascade class is now the pass's dominant wall
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| insurance-master | the save's click fired NOTHING (the manualValidate gate) | — | — | — | — | OWED — **the MVF (contact + email) was INCOMPLETE: the form marks State* / District* / Area* REQUIRED, and their lists stay EMPTY in the drivable path — the country→state→district→area cascade (the third instance of the class)** |
+
+**THE CASCADE CLASS (three instances):** bed-master (ward→floor→room),
+checklist-equipment-mapper (asset-category→product-category),
+insurance-master (country→state→district→area). The validation messages
+("Please Select Room", "Select State*", "Select Area*") hide dependent-list
+cascades whose child lists only populate after the parent selection — and in
+the component-state drive the parent-change handlers do not load them (the
+lists stay empty). The corrected MVFs: each needs the FULL cascade's parent
+selection first.
+
+**ORPHANED-INPUT checks:** currency FOUND; bank none; generic provisional
+none; insurance provisional none (the write never fired — the cascade wall).
+
 ## DQ-2026-08-13-106 — THE MECHANICAL PASS BATCH 3: the checklist-equipment-mapper's MVF also hides a cascade; the run's screen tally
 
 | screen | response | row landed | values match | toast | in grid | teardown |
