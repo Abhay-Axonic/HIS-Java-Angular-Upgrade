@@ -1,3 +1,31 @@
+## DQ-2026-08-13-110 — THE MECHANICAL PASS BATCH 6 (the last non-cascade set) + THE TALLY (the owner's stop-point)
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| add-new-corrective-maintenance | the drive died in about:blank after the component-state touch; the form's asset is a Get-Asset MODAL + item-SEARCH gate (openItemModal + searchNewItemList — the agent-hostile class) | — | — | — | — | OWED (yours — the Get Asset modal + the search + the select) |
+| asset-scheduler | accessDenied?reason=**assetInfoMissing** — the env-gate class (the demo org lacks the asset-info config row; same class as the PMSchedule's appConfigMissing) | — | — | — | — | OWED (needs the config seed) |
+| book-appointment | the UHID search returns the app's own ERROR envelope (getPatientDetailsByUhid → status:"error", "Something went wrong!!") — the patient-search gate blocks the slot + Book-and-Pay chain | — | — | — | — | OWED (the search's orgId param + the error envelope) |
+
+**THE TALLY (six screens driven, the owner's requested shape):**
+
+**1. WRITES THAT LANDED (2):**
+- currency-master — landed QACUR; currencyName/currencyCode/countryId match; in grid without reload; teardown clean. **ORPHANED INPUT found: the typed countryCode has no destination (payload + table both lack it).**
+- bank-master — landed QA-bank; bankCode/bankName/bankAddress/branch_id all match; in grid without reload; teardown clean. No orphaned fields.
+
+**2. ROUTED TO THE OWNER (4 + the pending 14):**
+- generic-master — the save FIRED with the full MVF and hit the KNOWN phantom #8 (t_message_queue) — the write-path instance of a handover phantom, not a rebuild defect. MVF: asset type/category + product category + code + name (correct as-is).
+- bed-master — MVF corrected: ward → floor → room cascade + bed code/desc/category. The drive stalled on the cascade's floor step (room list stays empty).
+- checklist-equipment-mapper — MVF corrected: checklist name + asset-category → product-category + item code/name. The drive stalled on the product-category list (empty until the asset-category's real selection).
+- insurance-master — MVF corrected: country → state → district → area cascade + code/desc + contact + email. The drive stalled on the state/district/area lists.
+- ai-button-configuration — the add's config modal didn't open in the drive; note: every doctor/button combo is already saved — a new row needs a new button.
+- add-new-corrective-maintenance — the Get-Asset modal + item-search gate.
+- asset-scheduler — env-gated (assetInfoMissing — needs the config seed, not a click).
+- book-appointment — the UHID search's error envelope blocks the chain.
+
+**3. ORPHANED-INPUT COUNT: 1 of 2 landed writes** (currency's countryCode; bank clean).
+
+**4. THE SCALABILITY READ (the owner's question):** the six attempted split 2 landed / 4 blocked, and the four blocks are THREE classes (cascades ×3, modal+search ×1, env-gate ×1 — generic's phantom is a landed-write-with-error). Of the 353 census screens, the estimate: **roughly a third to a half would be drivable** by the component-state method — the simple single-form masters (the currency/bank shape: a form with direct fields + a save) are common in the census, and the method's proven on exactly that shape. The rest divide between cascades (dependent-list chains — common in masters with geography/ward structures), modal-gated pickers, and env-gated screens (which are seedable, then drivable). The method scales to the simple majority but the full pass still needs the owner's clicks for the cascade + modal set — the division you set.
+
 ## DQ-2026-08-13-109 — THE MECHANICAL PASS BATCH 5: the cascade class recorded (DQ-108); ai-button-configuration's add-flow OWED
 
 | screen | response | row landed | values match | toast | in grid | teardown |
