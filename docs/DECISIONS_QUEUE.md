@@ -1,3 +1,36 @@
+## DQ-2026-08-13-099 — OVERNIGHT SURVEY, TURN 11: the top-20 SAVE CLICKS (the owner's priority) — the app's own payloads through real saves
+
+The owner's directive: prioritise the top-20 save clicks over the capture
+sweep (the captures are proving a negative with a known shape; the save
+clicks are the app's own payloads — nothing equivalent has ever run). The
+results so far:
+
+1. **book-appointment**: the Book-and-Pay click — the slotId=0 guard (the
+   retest already recorded; no escape).
+2. **PMRequest**: renders as a FILTER-FIRST WORKLIST (Month/Year/Store/
+   Status + the worklist table; getAssetDetailsByCriteria → 200) — the
+   write is a row-level action needing a filtered row — the save-click
+   OWED with a seeded row.
+3. **detailScheduleWorklist + PMSchedule**: `accessDenied?reason=appConfigMissing`
+   — the unseeded app-config gate (the store/counter config rows missing
+   for the DEMO org/unit — the unseeded-ENV class, NOT a defect). The
+   save-clicks OWED with the app-config seed.
+4. **aiButtonConfiguration**: the toggle click fired NO write (the on/off
+   switches are UI state; the config's save is elsewhere) — no captured
+   payload.
+5. **correctiveMaintenanceReturnWorklist**: no-save (a worklist with the
+   empty state).
+6. **genericMaster — ROUTE-MISLABEL CONFIRMED LIVE**: the `weekendMaster`
+   route renders the WEEKEND MASTER screen (the title + the form) — the
+   generic-master's feature dir exists but its component is wired to NO
+   route; the weekendMaster route belongs to the weekend-master feature.
+   The generic-master screen is UNREACHABLE. The earlier static finding
+   (DQ-096) is now live-confirmed.
+
+Remaining top-20 save-clicks OWED: organizationMaster, misReports,
+checklistEquipmentMapper, addNewCorrectiveMaintenance, assetScheduler,
+detailsCorrectiveMaintenanceScheduleWorklist, the app-config-gated pair.
+
 ## DQ-2026-08-13-098 — OVERNIGHT SURVEY, TURN 7: the capture tally crosses 26 live-confirmed resolutions
 
 New this turn (fresh-login batch): allergyTypeMaster 2/2 (getAllergyTypeMasterList,
