@@ -1,3 +1,51 @@
+## DQ-2026-08-14-125 — RETRACTION: DQ-122's startDate/endDate cause — the blocker is the AUDIT + identity fields the legacy controller sends (getDate(null) NPE)
+
+**What's retracted:** DQ-122's claim that the rebuild's save fails because the port
+dropped the startDate/endDate date pickers and the DAO's parse of the empty strings
+fails. The fix-shape approved 2026-08-14 12:19 ("restore the two date fields",
+merge 878c0740) is SUPERSEDED by the verification below — the dates are NOT the
+blocker, and restoring pickers would not have fixed the save.
+
+**The verified chain (this session, files read directly):**
+1. **Legacy controller payload** (insuranceMasterController.js): the startDate/endDate
+   client validation is COMMENTED OUT (:394-419) — the dates are OPTIONAL in the
+   legacy UI, and the save never gates on them. The save payload's audit set is set
+   unconditionally (:584-592): createdDate + updatedDate =
+   moment('DD-MM-YYYY HH:mm:ss'), status 'A', createdBy/updatedBy = userId, orgId,
+   unitId. The status update sends the same shape (:703-710).
+2. **Parse-util null behavior** (GlobalCommonDateUtils.getDate(String,String)
+   :297-320): `dateString.length()` at :305 — null → **NPE, uncaught** (only
+   ParseException is caught); "" → padded to " 00:00:00" → ParseException caught →
+   null (graceful).
+3. **DDL** (t_insurance via information_schema): every column except insurance_id is
+   nullable — start_date/end_date included → null dates would persist fine.
+4. **DAO order** (InsuranceMasterDaoImpl.saveInsuranceMaster :35-72): startDate/endDate
+   parse "" → null (graceful, :42-43); createdDate parses at :55 against the rebuild's
+   absent field → getDate(null) → **NPE → rethrown → the 500 envelope**. The NPE fires
+   BEFORE any persistence — the null dates never reach the DB.
+
+**The corrected class-instance:** insurance-master's omission = the AUDIT + identity
+fields the LEGACY CONTROLLER sends and the rebuild's payload omits: createdDate,
+updatedDate, createdBy, updatedBy, orgId, unitId, status. The rebuild has
+unitId/organizationId/userId in scope (insurance-master.ts:49-51) but never puts them
+in the payload (the model carries only the business fields).
+
+**The TimeZoneComponent finding (the 62-row DAO-read pass, 3 agents, 21+21+20):** the
+class discriminator is whether the screen's save-DAO parses PAYLOAD dates
+(`GlobalCommonDateUtils.getDate(dto.getXxxDate(), ...)` — NPE-able when the rebuild
+omits them) or SERVER-COMPUTED dates (`getDate(TimeZoneComponent.getDateByzone(...))`
+— null-safe, outside the class). The agents found the discriminator independently;
+sample-verified by the parent on 5 rows (insurance-master full chain; delivery-type
+L107; patient-type-details L131; user-store-mapper L48/50; store-type NEITHER-control
+L56-57). Of the 62: **48 excluded for the server-computed-date reason**, 2 more for
+no-date-at-all (the ai-button pair), 6 NO-WRITE, 6 in-class — see
+docs/PORT_DIFF_DAO_READ_SWEEP_2026-08-14.md.
+
+**The fix shape (applied this session):** the rebuild's save/update payload gains the
+audit set, formatted as the legacy formats (DD-MM-YYYY HH:mm:ss) — NOT date pickers.
+The status toggle's updatedDate also switches from ISO to the legacy format (the same
+getDate parse class on updateInsuranceMasterStatus).
+
 ## DQ-2026-08-13-124 — RETRACTION: the hospital-master class-instance was a DIFF-MATCHING ERROR (the wrong legacy file)
 
 **The mechanical cause:** my port-diff's legacy-template matcher used a
