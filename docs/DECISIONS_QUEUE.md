@@ -38,8 +38,26 @@ app-config-gated (detailScheduleWorklist, PMSchedule), toggle-only
 "save with real data" tests need seeded forms — the owner's clicks remain
 decisive.
 
-Remaining top-20 save-clicks OWED: organizationMaster, misReports,
-checklistEquipmentMapper, addNewCorrectiveMaintenance, assetScheduler,
+8. **misReports**: the empty-state configurator ("Select a report from the
+   left") — no-save; the report-selection + run is OWED.
+9. **organizationMaster**: `accessDenied?reason=denied` — module-gated for
+   the demo role (like hospital-master).
+10. **checklistEquipmentMapper**: the Save clicked → "Please select checklist
+    name" — validation-first (no network).
+11. **addNewCorrectiveMaintenance**: the Save clicked → no network, no toast
+    (the form's required fields empty — validation-first; the silent block
+    is the app's own flow).
+
+THE TOP-20 SAVE-CLICK CONCLUSION (11 of 20 attempted): every save on the
+complex screens is VALIDATION-FIRST — the app's own flow blocks before any
+network on empty/incomplete forms (genericMaster, checklistEquipmentMapper,
+addNewCorrectiveMaintenance); the rest are filter-first worklists
+(PMRequest, correctiveMaintenanceReturnWorklist, misReports), app-config-
+gated (detailScheduleWorklist, PMSchedule), toggle-only (aiButtonConfiguration),
+slot-guard (book-appointment), module-gated (organizationMaster). The saves
+ARE wired (the clicks produce the validation responses, not dead buttons);
+the app's own PAYLOADS only fire with real data — the owner's clicks with
+real data remain the decisive test. Remaining OWED: assetScheduler,
 detailsCorrectiveMaintenanceScheduleWorklist, the app-config-gated pair.
 
 ## DQ-2026-08-13-098 — OVERNIGHT SURVEY, TURN 7: the capture tally crosses 26 live-confirmed resolutions
