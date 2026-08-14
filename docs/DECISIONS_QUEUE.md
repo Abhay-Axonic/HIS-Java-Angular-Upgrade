@@ -1,3 +1,42 @@
+## DQ-2026-08-13-121 — bedMaster's SAVE LANDED (the seed's proof) + the insurance pair's gates
+
+**THE SEED'S PROOF (the owner's save, DQ-120's follow-through):** Demo Ward
+(Seeded) → Demo Room 1 (Seeded) → General Ward Bed → bed number C901 → bed
+code WD1 → the save LANDED, the row appeared in the grid WITHOUT a reload with
+every typed value present. The FIRST real human save on a cascade screen,
+clean. The additive ward+room made an untestable screen testable without
+mutating ward 1 (still I, untouched) — the environment-data class resolving
+properly rather than being worked around.
+
+**THE INSURANCE PAIR'S GATES (what the owner asked — the required fields
+beyond the geography, read from the components):**
+
+**insurance-master (manualValidate + the save):**
+1. insuranceCode + insuranceDesc (required).
+2. The FULL geography: country → state → district → city → area (all five,
+   each with its own "Please Select X" guard).
+3. **zipCode (required)** + email (required, EMAIL_PATTERN).
+4. contactNo: length must equal the registrationConfig's configured mobileDigit.
+5. faxNo optional (FAX_PATTERN if filled); the document upload (validateFileExtension).
+6. generalLedgerName in the payload but NOT required.
+
+**general-insurance-master (validatePresence + the save):**
+1. insuranceCompany, contactNo, emailAddress, contactPersonName,
+   contactPersonNo, **address**, **zipCode** (all required).
+2. The geography: country → state → **city** → area — **NO district step on
+   this screen** (the owner's chain India → Maharashtra → Pune → Shivaji Nagar
+   maps directly; Pune's the city).
+3. The patterns: email EMAIL_PATTERN; contactNo + contactPersonNo PHONE_PATTERN
+   (the update's length gates: zip >= 6, phones >= 10).
+4. The payload: insuranceCompanyName/contactNo/email/contactPersonName/
+   contactPersonNumber/address/areaId/zipCode/status — the country/state/city
+   are the cascade's drivers (the areaId's the destination) — **NO orphaned
+   inputs on this screen** (field-by-field compared).
+
+**The psql chain both screens need: country 1 (India) → state 1 (Maharashtra)
+→ district 1 (Pune — the insurance's only) → city 1 (Pune) → areas 1+5
+(Shivaji Nagar/Abcwser). The chain's fully populated.**
+
 ## DQ-2026-08-13-120 — the DEMO WARD + ROOM SEED LANDED (the owner's additive path; ward 1 untouched)
 
 **THE SEED (tools/seed_number_config.py, the DQ-119 extension):** adt.m_ward_master
