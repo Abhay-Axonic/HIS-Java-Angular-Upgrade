@@ -1,3 +1,66 @@
+## DQ-2026-08-13-112 — THE STATIC ORPHANED-INPUT PASS (a hypothesis per ledger #15) + the follow-ups' closure
+
+**THE PASS (template-bound fields vs the save-payload keys, per rebuilt
+screen):** 50 screens carry form-field orphan candidates after the list-state
+controls (pageSize/searchKeyword/…) are excluded. The candidates' shape: 35
+screens with ≤3 candidates (patient-type-master's code/desc, frequency-master's
+code/description, blood-component's code/name, corrective-maintenance-
+worklist's requestCriticalityId/statusId, …).
+
+**THE METHOD'S TWO LIMITATIONS (both demonstrated):**
+1. **UNDER-inclusive — it MISSES the confirmed case:** currency-master's
+   countryCode is NOT flagged (the payload-object regex only catches object
+   literals containing the trigger words save/payload/… — the currency's
+   doSave's literal lacks them in the block). A pass that misses its own
+   confirmed positive cannot certify absence.
+2. **OVER-inclusive — it flags nested-model destinations:** ai-button-
+   configuration's configUrl is flagged, but its value goes INSIDE the
+   saveConfig's `jsonObject` (the JSON blob) — a real destination, not
+   orphaned. The nested-model shapes produce false candidates.
+
+**THE ANSWER TO THE OWNER'S QUESTION:** the class is NOT provably one-of-one —
+the static pass finds ~50 screens' worth of candidates — but the count is a
+hypothesis (ledger #15): the method both misses the confirmed instance and
+flags nested-model absorptions. The confirmation requires the drive, and the
+drive only lands on the simple-form screens (the currency/bank shape). The
+candidates worth the owner's or the drive's look: the code/desc/name fields on
+the patient-type/frequency/blood-component masters — the same shape as
+currency's countryCode.
+
+**FOLLOW-UP 1 (book-appointment's UHID search) — CLOSED as DQ-111:** phantom
+#19 (patient.t_patient_registration lacks area_id/city_id/zip_code/phone_code/
+phone_number) + the NO-ERR- finding (the DAO's catch swallows the cause — the
+error-swallowing class). NOT the underscore-header class (ruled out).
+
+## DQ-2026-08-13-111 — book-appointment's UHID-search failure RESOLVED: PHANTOM #19 (a drift, not the underscore class)
+
+**The chain (the owner's follow-up):** the app's own search call
+(/i/webappointment/getPatientDetailsByUhid?uhidNumber=A) → the response
+envelope `{"status":"error","message":"Something went wrong!!"}` → the
+catalina: `PatientRegistrationDaoImpl - getPatientDetailsByUhid failed` →
+`SQLGrammarException: could not extract ResultSet` at
+PatientRegistrationDaoImpl.java:2066 → the query's SELECT references
+`patReg.area_id / city_id / zip_code / phone_code / phone_number` → **psql
+CONFIRMS: patient.t_patient_registration HAS NONE of the five columns** (the
+information_schema count = 0).
+
+**NOT the underscore-header class** (checked and ruled out: the request passed
+the controller + service + DAO and died in the SQL).
+
+**THE NO-ERR- FINDING:** there is NO ERR- reference for this failure — the
+DAO's local try/catch (lines 2069-2074) logs "getPatientDetailsByUhid failed"
+with the stack and returns the generic COMMON_ERROR_MESSAGE. The error-
+swallowing class the mission names as problem #1, live at the exact spot: the
+envelope gives the screen no reference to trace, and the catalina's log omits
+the Caused-by (the actual SQL error) — the cause was recoverable only by
+reading the query + the DDL.
+
+**PHANTOM #19 CONFIRMED** (the handover's table: 18 → 19):
+patient.t_patient_registration lacks area_id/city_id/zip_code/phone_code/
+phone_number — the getPatientDetailsByUhid SELECT references all five.
+Same class as #18 (a named-query vs DDL drift) — this one on the book-
+appointment screen's search, the most complex screen in the codebase.
+
 ## DQ-2026-08-13-110 — THE MECHANICAL PASS BATCH 6 (the last non-cascade set) + THE TALLY (the owner's stop-point)
 
 | screen | response | row landed | values match | toast | in grid | teardown |
