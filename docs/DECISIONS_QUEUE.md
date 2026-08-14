@@ -1,3 +1,25 @@
+## DQ-2026-08-14-128 — patient-type-master's status toggle omits updatedDate — the 3rd confirmed instance of the DQ-125 class (fix SPECIFIED, UNBUILT)
+
+**The chain (all lines parent-verified):** the rebuild's toggle sends
+`{patientTypeId, status, updatedBy}` (patient-type-master.ts:124); the DAO's
+updatePatientTypeStatus parses `GlobalCommonDateUtils.getDate(dto.getUpdatedDate(),
+"dd-M-yyyy HH:mm:ss")` (PatientTypeDaoImpl:103 — the NPE-prone String overload);
+the legacy sends `updatedDate: moment('DD-MM-YYYY HH:mm:ss')` (patientTypeController.js:
+473-478). The rebuild's omission is the same class as insurance-master (DQ-125)
+and patient-type-details — now THREE confirmed instances (2 fixed, this one queued).
+
+**Live-proven both directions (probe type 7001, psql-verified, teardown clean):**
+- Negative (the current rebuild payload): HTTP 200 with body status **error**
+  "Something went wrong!!" — the masked-200 envelope (the DAO's catch swallows
+  the NPE); the row stayed I.
+- Positive (payload + `updatedDate: '14-08-2026 23:15:00'`): HTTP 200 body
+  status success "Updated Successfully." — row flipped to A, updated_by=1,
+  updated_date exactly as sent.
+
+**THE FIX SPEC (UNBUILT):** patient-type-master.ts toggle() gains
+`updatedDate: formatLegacyNow()` (the DD-MM-YYYY HH:mm:ss helper, same as the
+patient-type-details fix) + the helper function.
+
 ## DQ-2026-08-14-127 — insurance-master's EDIT is broken — the getById response-key mismatch (fix SPECIFIED, UNBUILT)
 
 **The drive (the CRUD-sibling check of the owner-confirmed save):** create a
