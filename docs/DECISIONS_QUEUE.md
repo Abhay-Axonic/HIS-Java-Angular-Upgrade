@@ -1,3 +1,162 @@
+## DQ-2026-08-13-110 — THE MECHANICAL PASS BATCH 6 (the last non-cascade set) + THE TALLY (the owner's stop-point)
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| add-new-corrective-maintenance | the drive died in about:blank after the component-state touch; the form's asset is a Get-Asset MODAL + item-SEARCH gate (openItemModal + searchNewItemList — the agent-hostile class) | — | — | — | — | OWED (yours — the Get Asset modal + the search + the select) |
+| asset-scheduler | accessDenied?reason=**assetInfoMissing** — the env-gate class (the demo org lacks the asset-info config row; same class as the PMSchedule's appConfigMissing) | — | — | — | — | OWED (needs the config seed) |
+| book-appointment | the UHID search returns the app's own ERROR envelope (getPatientDetailsByUhid → status:"error", "Something went wrong!!") — the patient-search gate blocks the slot + Book-and-Pay chain | — | — | — | — | OWED (the search's orgId param + the error envelope) |
+
+**THE TALLY (six screens driven, the owner's requested shape):**
+
+**1. WRITES THAT LANDED (2):**
+- currency-master — landed QACUR; currencyName/currencyCode/countryId match; in grid without reload; teardown clean. **ORPHANED INPUT found: the typed countryCode has no destination (payload + table both lack it).**
+- bank-master — landed QA-bank; bankCode/bankName/bankAddress/branch_id all match; in grid without reload; teardown clean. No orphaned fields.
+
+**2. ROUTED TO THE OWNER (4 + the pending 14):**
+- generic-master — the save FIRED with the full MVF and hit the KNOWN phantom #8 (t_message_queue) — the write-path instance of a handover phantom, not a rebuild defect. MVF: asset type/category + product category + code + name (correct as-is).
+- bed-master — MVF corrected: ward → floor → room cascade + bed code/desc/category. The drive stalled on the cascade's floor step (room list stays empty).
+- checklist-equipment-mapper — MVF corrected: checklist name + asset-category → product-category + item code/name. The drive stalled on the product-category list (empty until the asset-category's real selection).
+- insurance-master — MVF corrected: country → state → district → area cascade + code/desc + contact + email. The drive stalled on the state/district/area lists.
+- ai-button-configuration — the add's config modal didn't open in the drive; note: every doctor/button combo is already saved — a new row needs a new button.
+- add-new-corrective-maintenance — the Get-Asset modal + item-search gate.
+- asset-scheduler — env-gated (assetInfoMissing — needs the config seed, not a click).
+- book-appointment — the UHID search's error envelope blocks the chain.
+
+**3. ORPHANED-INPUT COUNT: 1 of 2 landed writes** (currency's countryCode; bank clean).
+
+**4. THE SCALABILITY READ (the owner's question):** the six attempted split 2 landed / 4 blocked, and the four blocks are THREE classes (cascades ×3, modal+search ×1, env-gate ×1 — generic's phantom is a landed-write-with-error). Of the 353 census screens, the estimate: **roughly a third to a half would be drivable** by the component-state method — the simple single-form masters (the currency/bank shape: a form with direct fields + a save) are common in the census, and the method's proven on exactly that shape. The rest divide between cascades (dependent-list chains — common in masters with geography/ward structures), modal-gated pickers, and env-gated screens (which are seedable, then drivable). The method scales to the simple majority but the full pass still needs the owner's clicks for the cascade + modal set — the division you set.
+
+## DQ-2026-08-13-109 — THE MECHANICAL PASS BATCH 5: the cascade class recorded (DQ-108); ai-button-configuration's add-flow OWED
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| ai-button-configuration | the add's click did NOT open the config modal (the component's configModalOpen stayed false — the Doctor/Button selection state's not reachable via the component-state drive; the selects are Angular-form-bound and the native value-set doesn't reach the model) | — | — | — | — | OWED — the selection → AI Configuration → config-modal → saveConfig chain |
+
+**Also noted:** the screen's savedConfigs (4 rows) cover EVERY doctor/button combo
+of the two button options — a NEW row needs a new button option, so even a
+successful add would hit the duplicate path unless the owner adds via a fresh
+button. The status toggles (the checkboxes) are the other write path — their
+click produced no network earlier (the UI-state class).
+
+**The cascade class is recorded as DQ-108** (the pass's main finding — the
+three instances + the MVF-method limit: a validation message names what is
+MISSING, not what is REQUIRED).
+
+**ORPHANED-INPUT:** currency FOUND; bank none; generic/insurance/ai-button
+provisional none (no write landed).
+
+## DQ-2026-08-13-108 — THE CASCADE CLASS (the mechanical pass's MAIN FINDING, owner-confirmed)
+
+**THE CLASS:** a validation message that names only the LAST field of a
+dependent-list cascade — "Please Select Room" means ward → floor → room. The
+message names what is MISSING, not what is REQUIRED, and those differ whenever
+a field's list depends on another field.
+
+**THE THREE INSTANCES:**
+1. bed-master — "Please Select Room..!!" → ward → floor → room.
+2. checklist-equipment-mapper — "Please select …" × 5 → asset-category →
+   product-category (the product list loads only after the asset category).
+3. insurance-master — "Select State* / District* / Area*" → country → state →
+   district → area.
+
+**THE IMPLICATION FOR THE MVF METHOD (owner-named):** an MVF inferred from
+validation text is systematically UNDER-specified wherever a field's list
+depends on another field — the message tells you the last step, not the chain.
+The MVF must therefore be read as "fill these AND any cascade that feeds them",
+and the report's MVF table now carries the corrected chains as they surface.
+
+**THE DIVISION OF LABOUR (owner-set):** the cascade screens become the owner's
+clicks — a human filling a cascade is trivial where an agent's is not. The
+agent takes the drivable screens; the owner takes the person-needed ones.
+
+## DQ-2026-08-13-107 — THE MECHANICAL PASS BATCH 4: insurance-master's MVF hides the THIRD cascade; the cascade class is now the pass's dominant wall
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| insurance-master | the save's click fired NOTHING (the manualValidate gate) | — | — | — | — | OWED — **the MVF (contact + email) was INCOMPLETE: the form marks State* / District* / Area* REQUIRED, and their lists stay EMPTY in the drivable path — the country→state→district→area cascade (the third instance of the class)** |
+
+**THE CASCADE CLASS (three instances):** bed-master (ward→floor→room),
+checklist-equipment-mapper (asset-category→product-category),
+insurance-master (country→state→district→area). The validation messages
+("Please Select Room", "Select State*", "Select Area*") hide dependent-list
+cascades whose child lists only populate after the parent selection — and in
+the component-state drive the parent-change handlers do not load them (the
+lists stay empty). The corrected MVFs: each needs the FULL cascade's parent
+selection first.
+
+**ORPHANED-INPUT checks:** currency FOUND; bank none; generic provisional
+none; insurance provisional none (the write never fired — the cascade wall).
+
+## DQ-2026-08-13-106 — THE MECHANICAL PASS BATCH 3: the checklist-equipment-mapper's MVF also hides a cascade; the run's screen tally
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| checklist-equipment-mapper | — (the save never fired — the product-category list stays EMPTY in the drivable path) | — | — | — | — | OWED — **the MVF hides a cascade: the productCategoryOptions only populate after the asset-category's selection, and the onAssetCategoryChange does not load them in the component-state drive (the same wall as bed-master's room list)** |
+
+**THE RUN'S TALLY (the 20):** currency-master ✓ LANDED (ORPHANED countryCode found), bank-master ✓ LANDED, generic-master (save fired → phantom #8's t_message_queue → no row), bed-master OWED (ward→floor→room cascade; the drive died in about:blank on the second attempt), checklist-equipment-mapper OWED (product-category cascade), + the 15 remaining.
+
+**The cascade pattern is now a class of its own:** TWO of the first five driven screens hide a dependent-list cascade behind a validation message ("Please Select Room", "Please select product category") — the MVF's "fill these and save" needs the cascade's parent-selection first. The corrected MVFs are in the report as they surface.
+
+**ORPHANED-INPUT checks so far:** currency-master — FOUND (countryCode); bank-master — none (all typed values landed); generic-master — provisional none (the write never reached the INSERT).
+
+## DQ-2026-08-13-105 — THE MECHANICAL PASS BATCH 2: generic-master's save hits the KNOWN phantom's WRITE path; the ORPHANED-INPUT class checks continue
+
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| generic-master | the save 500'd — catalina: `relation "public.t_message_queue" does not exist` (the KNOWN phantom #8, its WRITE-path instance) | NO (public.m_generic 0 rows) | — | none captured | no | n/a (0 landed, asserted) |
+| bed-master (retry) | the drive's second attempt ended in about:blank (the page navigated away mid-cascade) | — | — | — | — | OWED — the cascade's floor step + the flapping session |
+
+**generic-master's failure is a KNOWN-phantom instance, not a rebuild defect:** the save's transaction inserts into public.t_message_queue (the missing table, phantom #8 from the handover) — the error envelope's the generic "Something went wrong". The MVF itself was CORRECT (asset type/category + product category + code + name all set via the component state; the save fired — it hit the phantom, not a validation wall).
+
+**ORPHANED-INPUT check (batch 2):** generic-master's form fields (assetTypeId/assetCategoryId/productCategoryId/code/name/isCombination) all have destinations in public.m_generic (product_category_id/code/name/is_combination) or are join-keys — no orphaned field observed (though the save never reached the INSERT, so the field-by-field is provisional on the failed write).
+
+## DQ-2026-08-13-104 — THE ORPHANED-INPUT CLASS (owner-named, first instance: currency-master's countryCode)
+
+**ORPHANED INPUT — a form field a user fills whose value has no destination:
+not in the save payload, not in any table column. No error, no warning — the
+value just evaporates.**
+
+First confirmed instance (mechanical-pass batch 1): currency-master's
+"Country Code" input — the `doSave()` payload builds currencyName/countryId/
+currencySymbol/currencyCode/status/... and NOTHING reads the typed countryCode;
+the table (public.m_currency_master) has country_id only. The field passes the
+form's `requiredFieldsValid` gate (the user must fill it) and the value lands
+nowhere.
+
+**The check:** every screen's drive includes the field-by-field payload-vs-
+table comparison — the ONLY thing that finds the class. The remaining
+seventeen are being checked for it as they go.
+
+## DQ-2026-08-13-103 — THE MECHANICAL PASS BATCH 1 (the MVF drive): 2 of 20 landed + matched, teardown clean; the METHOD + the first flags
+
+**The method (proven):** the app's own login flow; the MVF filled via the
+Angular debug API (ng.getComponent → the component's signal-form
+`comp.form.set({...})` — the DOM value-setting does NOT reach the Angular
+model on these screens, the console-freeze lesson); the REAL Save button's
+click; the confirm-modal's Ok; the network capture (fetch-hook — catches the
+count/list reloads; the save's own call rides the HttpClient's XHR which the
+hook misses — the psql is the landing proof); psql after EVERY response;
+teardown + the zero-leftover assert.
+
+**BATCH 1 (the table):**
+| screen | response | row landed | values match | toast | in grid | teardown |
+|---|---|---|---|---|---|---|
+| currency-master | count/list 200 success envelopes; the save's own response not hookable (XHR) — psql decides | YES — public.m_currency_master QACUR | currencyName + currencyCode + countryId match; **the typed countryCode has NO destination column (the payload lacks it)** | none captured | YES without reload | clean (DELETE 1, leftovers 0) |
+| bank-master | count 200 success (object 3) + list 200 after the confirm | YES — billing.m_bank_master QA-bank | bankCode + bankName + bankAddress + branch_id all match | none captured | YES without reload | clean (DELETE 1, leftovers 0) |
+| bed-master | — | — | — | — | — | OWED — **the MVF is INCOMPLETE: the room needs the ward→floor→room cascade; the room list stays empty until the floor's selected, and the floor's not exposed as a component signal in the DOM-drivable path** |
+
+**FLAGS (not verdicts):**
+1. **currency-master's countryCode field's value does NOT reach the DB** — the
+   payload built by doSave() lacks countryCode (the column doesn't exist on
+   the table either: country_id only) — a UI field with no destination.
+2. **bed-master's MVF is incomplete** — "room" alone is not selectable; the
+   ward→floor→room cascade is the real requirement; the floor step's mechanics
+   need the component's floor-list source (its signal's not exposed).
+
+**The method's value:** the currency + bank saves are PROVEN to reach SQL with
+matching values through the app's own flow — the first two write-verdicts of
+the survey that are neither constructed-payload nor minimal-probe.
+
 ## DQ-2026-08-13-102 — THE INTERCEPTOR FIX LANDED + THE SEVEN-SCREEN PROOF (the first rebuild-side fix of the survey)
 
 **The diff (owner-approved, landed in auth.interceptor.ts):** two headers added
