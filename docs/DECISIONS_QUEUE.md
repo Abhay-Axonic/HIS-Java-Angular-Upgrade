@@ -1,3 +1,20 @@
+## DQ-2026-08-13-098 — OVERNIGHT SURVEY, TURN 7: the capture tally crosses 26 live-confirmed resolutions
+
+New this turn (fresh-login batch): allergyTypeMaster 2/2 (getAllergyTypeMasterList,
+getAllergyTypeMasterListCount → 200 — the 500 is SPECIFIC to the bare
+getAllergyTypeMaster endpoint, NOT the List), ambulanceMaster (3 feeds +
+getAmbulanceMasterDataList → 200; **getCountAmbulanceTypeList → 404 — the
+KNOWN class example live** — already catchError-degraded), ambulanceServiceProviderMaster
+6/6 (getActiveCountryList/1, getAmbulanceTarrifActiveList, getStateMasterList,
+getDistrictMasterList, getCityMasterList, getServiceProviderList → 200),
+amenityMaster 2/2, anaesthesiaType 2/2.
+
+CUMULATIVE: **26 resolved paths → 200; 1 live 500 (the allergy-type feed);
+1 known 404 (the ambulance count)** — the 293's real shape is nearly all
+index misses. The allergy-type feed's ERR- correlation is OWED (the raw
+fetch 401'd — the token rotated mid-batch; the correlation needs the fresh
+session's fetch or the catalina's ERR- window).
+
 ## DQ-2026-08-13-097 — OVERNIGHT SURVEY, TURN 5: the endpoint captures proceed + the allergy-type feed's LIVE 500 (the dropdown's empty is NOT dev-empty)
 
 The fresh-login capture batches work (the session held through 3 screens):
