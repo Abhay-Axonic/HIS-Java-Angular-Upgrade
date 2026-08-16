@@ -144,7 +144,11 @@ def login(page, username, password):
         "() => document.querySelectorAll('#organizationId option').length > 1",
         timeout=10000,
     )
-    page.select_option('#organizationId', '1')
+    # Some backends pre-select the org (ng-disabled disableOrgList) — select_option
+    # on a disabled select never becomes actionable. Skip it when disabled; the
+    # pre-selected value stands.
+    if not page.evaluate("() => document.querySelector('#organizationId').disabled"):
+        page.select_option('#organizationId', '1')
     try:
         page.wait_for_function(
             "() => document.querySelectorAll('#unitId option').length > 1",
