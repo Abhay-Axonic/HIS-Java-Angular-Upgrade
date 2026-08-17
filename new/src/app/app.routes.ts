@@ -1700,7 +1700,7 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 3, title: 'Patient Registration' },
         loadComponent: () =>
-          import('./features/patient-registration/patient-registration').then((m) => m.PatientRegistration),
+          import('./features/registration/registration').then((m) => m.RegistrationComponent),
       },
       {
         path: 'appointmentScheduling',
