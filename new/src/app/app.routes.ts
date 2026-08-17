@@ -1740,9 +1740,9 @@ export const routes: Routes = [
       {
         path: 'encounter',
         canActivate: [moduleAccessGuard],
-        data: { moduleId: 5, title: 'Encounter' },
+        data: { moduleId: 5, title: 'Patient Visit' },
         loadComponent: () =>
-          import('./features/encounter/encounter').then((m) => m.Encounter),
+          import('./features/encounter-visit/encounter-visit').then((m) => m.EncounterVisitComponent),
       },
       {
         path: 'encounterQueueEHC',

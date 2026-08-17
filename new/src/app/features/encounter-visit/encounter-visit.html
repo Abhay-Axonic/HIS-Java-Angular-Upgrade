@@ -1,0 +1,74 @@
+<div class="encounter-visit">
+  <h2>Patient Visit / Encounter Details</h2>
+
+  <section class="ev-section">
+    <h3>Patient</h3>
+    <div class="ev-header">
+      <span>UHID: <strong>{{ header().uhid ?? '—' }}</strong></span>
+      <span>Name: <strong>{{ header().name ?? '—' }}</strong></span>
+      <span>Age: <strong>{{ header().age ?? '—' }}</strong></span>
+      <span>Gender: <strong>{{ header().gender ?? '—' }}</strong></span>
+      <span>Encounter: <strong>{{ header().encounterNumber ?? '—' }}</strong></span>
+    </div>
+  </section>
+
+  <section class="ev-section">
+    <h3>Vitals</h3>
+    <div class="ev-grid">
+      @for (m of vitalMasters(); track m.id) {
+        <label>{{ m.name ?? m.desc }}
+          <input type="text" [ngModel]="vitals()[m.id]" (ngModelChange)="updateVital(String(m.id), $event)" />
+        </label>
+      }
+    </div>
+  </section>
+
+  <section class="ev-section">
+    <h3>Chief Complaints</h3>
+    <div class="ev-complaints">
+      @for (c of complaints(); track $index) {
+        <div class="ev-row">
+          <input type="text" [ngModel]="c.complaint" (ngModelChange)="updateComplaint($index, $event)" />
+          <button type="button" (click)="removeComplaint($index)">Remove</button>
+        </div>
+      }
+      <button type="button" (click)="addComplaint()">+ Add complaint</button>
+    </div>
+  </section>
+
+  <section class="ev-section">
+    <h3>Diagnosis (ICD-10)</h3>
+    <div class="ev-icd">
+      <input type="text" placeholder="Search ICD-10 code or description" [ngModel]="icdKeyword()"
+        (ngModelChange)="icdKeyword.set($event)" />
+      <button type="button" (click)="searchIcd()">Search</button>
+      @if (icdOpen()) {
+        <div class="ev-icd-results">
+          @for (r of icdResults(); track r.id) {
+            <button type="button" (click)="addDiagnosis(r)">{{ r.name ?? r.desc }} ({{ r.id }})</button>
+          }
+          @if (!icdResults().length) {
+            <span>No matches</span>
+          }
+        </div>
+      }
+    </div>
+    <div class="ev-diagnosis-list">
+      @for (d of diagnosisRows(); track $index) {
+        <div class="ev-row">
+          <span>{{ d.name ?? d.desc }}</span>
+          <button type="button" (click)="removeDiagnosis($index)">Remove</button>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="ev-section">
+    <h3>Clinical Notes</h3>
+    <textarea rows="4" [ngModel]="clinicalNote()" (ngModelChange)="updateNote($event)"></textarea>
+  </section>
+
+  <div class="ev-actions">
+    <button class="btn-primary" (click)="save()" [disabled]="saving()">Save</button>
+  </div>
+</div>
