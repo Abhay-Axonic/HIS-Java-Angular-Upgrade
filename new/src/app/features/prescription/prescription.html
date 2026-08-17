@@ -1,0 +1,68 @@
+<div class="prescription">
+  <h2>Prescription Details</h2>
+
+  <section class="px-section">
+    <h3>Patient / Encounter</h3>
+    <div class="px-header">
+      <span>Encounter: <strong>{{ encounterId() ?? '—' }}</strong></span>
+      <span>Patient ID: <strong>{{ patientId() ?? '—' }}</strong></span>
+      <span>Patient: <strong>{{ patientName() || '—' }}</strong></span>
+    </div>
+  </section>
+
+  <section class="px-section">
+    <h3>Medication Search</h3>
+    <div class="px-search">
+      <input type="text" placeholder="Search item / generic / brand" [ngModel]="searchKeyword()"
+        (ngModelChange)="searchKeyword.set($event)" (keyup.enter)="search()" />
+      <button type="button" (click)="search()">Search</button>
+      @if (searchOpen()) {
+        <div class="px-results">
+          @for (r of searchResults(); track $index) {
+            <button type="button" (click)="pickItem(r)">{{ r.itemName ?? r.description ?? r.itemCode }} ({{ r.itemId ?? r.id }})</button>
+          }
+          @if (!searchResults().length) {
+            <span>No items found</span>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="px-section">
+    <h3>Prescription Lines</h3>
+    <div class="px-lines">
+      @for (line of lines(); track $index) {
+        <div class="px-line">
+          <span class="px-medicine">{{ line.itemName || '—' }}</span>
+          <input type="text" placeholder="Dose" [ngModel]="line.dose" (ngModelChange)="updateLine($index, 'dose', $event)" />
+          <select [ngModel]="line.doseUnitId" (ngModelChange)="updateLine($index, 'doseUnitId', $event)">
+            <option [ngValue]="null">Unit</option>
+            <option [ngValue]="1">mg</option>
+            <option [ngValue]="2">ml</option>
+            <option [ngValue]="3">tab</option>
+          </select>
+          <select [ngModel]="line.frequencyId" (ngModelChange)="updateLine($index, 'frequencyId', $event)">
+            <option [ngValue]="null">Frequency</option>
+            @for (f of frequencyOptions; track f.id) {
+              <option [ngValue]="f.id">{{ f.name }}</option>
+            }
+          </select>
+          <input type="text" placeholder="Route" [ngModel]="line.routeId" (ngModelChange)="updateLine($index, 'routeId', $event)" />
+          <input type="text" placeholder="Qty" [ngModel]="line.quantity" (ngModelChange)="updateLine($index, 'quantity', $event)" />
+          <input type="text" placeholder="Days" [ngModel]="line.durationDays" (ngModelChange)="updateLine($index, 'durationDays', $event)" />
+          <input type="text" placeholder="Instruction" [ngModel]="line.instruction"
+            (ngModelChange)="updateLine($index, 'instruction', $event)" />
+          <button type="button" (click)="removeLine($index)">Remove</button>
+        </div>
+      }
+      @if (!lines().length) {
+        <span class="px-empty">Search a medicine above to add the first line.</span>
+      }
+    </div>
+  </section>
+
+  <div class="px-actions">
+    <button class="btn-primary" (click)="save()" [disabled]="saving()">Save Prescription</button>
+  </div>
+</div>

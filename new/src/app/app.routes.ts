@@ -2985,6 +2985,13 @@ export const routes: Routes = [
         data: { title: 'Payment Mode Master' },
         loadComponent: () => import('./features/payment-mode-master/payment-mode-master').then((m) => m.PaymentModeMaster),
       },
+      {
+        path: 'prescriptionDetails',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 2, title: 'Prescription Details' },
+        loadComponent: () =>
+          import('./features/prescription/prescription').then((m) => m.PrescriptionComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
