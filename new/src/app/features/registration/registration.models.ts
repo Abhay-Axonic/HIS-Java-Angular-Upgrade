@@ -63,6 +63,10 @@ export interface IdNameRow {
   /** the prefix master's own description — the named query also joins the
    * gender's desc into `desc`, so the prefix text lives here (see the service) */
   prefixDesc?: string;
+  /** The corrected masters' rows carry module-specific fields (countryName,
+   * identificationName, paymentEntitlementDesc, prefixDesc...) — the mappers
+   * read them through this index signature. */
+  [key: string]: unknown;
 }
 
 export interface GeoRow {
