@@ -1,0 +1,42 @@
+<div class="pharmacy">
+  <h2>Homecare Medication Entry</h2>
+
+  <section class="ph-section">
+    <h3>Worklist</h3>
+    <table class="ph-table">
+      <thead>
+        <tr><th>Patient</th><th>Item</th><th>Dose</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track $index) {
+          <tr>
+            <td>{{ r.patientName ?? r.patientId }}</td>
+            <td>{{ r.itemName ?? r.itemId ?? '—' }}</td>
+            <td>{{ r.dose ?? '—' }}</td>
+            <td>{{ r.status ?? '—' }}</td>
+            <td><button type="button" (click)="pick(r)">Select</button></td>
+          </tr>
+        }
+        @if (!rows().length && loaded()) {
+          <tr><td colspan="5" class="ph-empty">No rows.</td></tr>
+        }
+        @if (!rows().length && !loaded()) {
+          <tr><td colspan="5" class="ph-empty">Loading…</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section class="ph-section">
+    <h3>Action</h3>
+    <div class="ph-form">
+      <label>Dose
+        <input type="text" [ngModel]="dose()" (ngModelChange)="dose.set($event)" />
+      </label>
+      <label>Reason
+        <input type="text" [ngModel]="reason()" (ngModelChange)="reason.set($event)" />
+      </label>
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
+  </section>
+</div>
