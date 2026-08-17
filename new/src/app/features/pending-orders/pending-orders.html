@@ -1,0 +1,83 @@
+<div class="pending-orders">
+  <h2>Pending Orders</h2>
+
+  <section class="po-section">
+    <h3>Filters</h3>
+    <div class="po-filters">
+      <label>From Date (DD/MM/YYYY)
+        <input type="text" placeholder="DD/MM/YYYY" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+      </label>
+      <label>To Date (DD/MM/YYYY)
+        <input type="text" placeholder="DD/MM/YYYY" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+      </label>
+      <label>Department
+        <select [ngModel]="specialityId()" (ngModelChange)="specialityId.set($event)">
+          <option [ngValue]="null">-- All --</option>
+          @for (s of specialityList(); track s.id) {
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
+          }
+        </select>
+      </label>
+      <div class="po-actions">
+        <button type="button" (click)="load()" [disabled]="loading()">{{ loading() ? 'Loading…' : 'Search' }}</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="po-section">
+    <h3>Orders</h3>
+    <table class="po-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Patient</th>
+          <th>Order Date</th>
+          <th>Service</th>
+          <th>Department</th>
+          <th>Doctor</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (o of orders(); track o.nursingOrderMapperId ?? $index) {
+          <tr>
+            <td>
+              <input type="checkbox" [checked]="!!o.checkStatus" (change)="toggleCheck(o)" />
+            </td>
+            <td>{{ o.patientName ?? o.patientId }}</td>
+            <td>{{ o.startDate ?? '—' }}</td>
+            <td>{{ o.serviceStandardName ?? '—' }}</td>
+            <td>{{ o.specialityName ?? o.subSpecialityName ?? '—' }}</td>
+            <td>{{ o.doctorId ?? '—' }}</td>
+            <td>{{ o.status ?? '—' }}</td>
+            <td><button type="button" (click)="viewDetails(o)">View</button></td>
+          </tr>
+        }
+        @if (!orders().length && loaded()) {
+          <tr><td colspan="8" class="po-empty">No pending orders for the filters.</td></tr>
+        }
+        @if (!orders().length && !loaded()) {
+          <tr><td colspan="8" class="po-empty">Set the filters and press Search.</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  @if (selectedOrder()) {
+    <section class="po-section">
+      <h3>Order Details</h3>
+      <div class="po-details">
+        <span>Patient: <strong>{{ selectedOrder()?.patientName }}</strong></span>
+        <span>Service: <strong>{{ selectedOrder()?.serviceStandardName }}</strong></span>
+        <span>Department: <strong>{{ selectedOrder()?.specialityName }} / {{ selectedOrder()?.subSpecialityName }}</strong></span>
+        <span>Frequency: <strong>{{ selectedOrder()?.frequency }}</strong></span>
+        <span>Instruction: <strong>{{ selectedOrder()?.instruction }}</strong></span>
+        <span>Start: <strong>{{ selectedOrder()?.startDate }}</strong></span>
+        <span>Stop: <strong>{{ selectedOrder()?.stopDate }}</strong></span>
+        <span>Order #: <strong>{{ selectedOrder()?.nursingOrderId }}</strong></span>
+      </div>
+      <button type="button" (click)="closeDetails()">Close</button>
+    </section>
+  }
+</div>
