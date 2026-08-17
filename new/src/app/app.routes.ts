@@ -2992,6 +2992,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/prescription/prescription').then((m) => m.PrescriptionComponent),
       },
+      {
+        path: 'opdBilling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'OPD Billing' },
+        loadComponent: () =>
+          import('./features/opd-billing/opd-billing').then((m) => m.OpdBillingComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],

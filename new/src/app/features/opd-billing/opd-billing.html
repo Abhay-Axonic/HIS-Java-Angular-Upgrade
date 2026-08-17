@@ -1,0 +1,60 @@
+<div class="opd-billing">
+  <h2>OPD Billing</h2>
+
+  <section class="ob-section">
+    <h3>Patient / Encounter</h3>
+    <div class="ob-header">
+      <span>Encounter: <strong>{{ encounterId() ?? '—' }}</strong></span>
+      <span>Patient ID: <strong>{{ patientId() ?? '—' }}</strong></span>
+      <span>Doctor: <strong>{{ doctorName() || '—' }}</strong></span>
+      <span>Bill No: <strong>{{ billNumber() || '—' }}</strong></span>
+    </div>
+  </section>
+
+  <section class="ob-section">
+    <h3>Billed Services</h3>
+    <div class="ob-addline">
+      <input type="text" placeholder="Service name" [ngModel]="serviceName()" (ngModelChange)="serviceName.set($event)" />
+      <input type="text" placeholder="Rate" [ngModel]="serviceRate()" (ngModelChange)="serviceRate.set($event)" />
+      <input type="text" placeholder="Qty" [ngModel]="serviceQty()" (ngModelChange)="serviceQty.set($event)" />
+      <button type="button" (click)="addLine()">Add</button>
+    </div>
+    <table class="ob-lines">
+      <thead>
+        <tr><th>Service</th><th>Qty</th><th>Rate</th><th>Amount</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (line of lines(); track $index) {
+          <tr>
+            <td>{{ line.serviceName }}</td>
+            <td><input type="text" [ngModel]="line.quantity" (ngModelChange)="updateLine($index, 'quantity', $event)" /></td>
+            <td><input type="text" [ngModel]="line.rate" (ngModelChange)="updateLine($index, 'rate', $event)" /></td>
+            <td>{{ (line.quantity || 0) * (line.rate || 0) }}</td>
+            <td><button type="button" (click)="removeLine($index)">Remove</button></td>
+          </tr>
+        }
+        @if (!lines().length) {
+          <tr><td colspan="5" class="ob-empty">No services added yet.</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section class="ob-section">
+    <h3>Totals — dual display (frontend port vs backend)</h3>
+    <div class="ob-dual">
+      <div class="ob-frontend">
+        <span class="ob-label">Frontend-port total</span>
+        <span class="ob-value">{{ frontendTotal() }}</span>
+      </div>
+      <div class="ob-backend">
+        <span class="ob-label">Backend total (after save)</span>
+        <span class="ob-value">{{ backendResult()?.totalBillAmount ?? '—' }}</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="ob-actions">
+    <button class="btn-primary" (click)="save()" [disabled]="saving()">Save Bill</button>
+  </div>
+</div>
