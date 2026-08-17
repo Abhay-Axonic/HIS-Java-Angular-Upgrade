@@ -3090,6 +3090,48 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/er-ready-for-billing/er-ready-for-billing').then((m) => m.ErWorklistComponent),
       },
+      {
+        path: 'pharmacologyValidaionWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 12, title: 'Pharmacology Validation Worklist' },
+        loadComponent: () =>
+          import('./features/pharmacology-validaion-worklist/pharmacology-validaion-worklist').then((m) => m.PharmacyComponent),
+      },
+      {
+        path: 'drugAdministrator',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 12, title: 'Drug Administration' },
+        loadComponent: () =>
+          import('./features/drug-administration/drug-administration').then((m) => m.PharmacyComponent),
+      },
+      {
+        path: 'patientIssueReturn',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 12, title: 'Patient Issuance Return' },
+        loadComponent: () =>
+          import('./features/patient-issue-return/patient-issue-return').then((m) => m.PharmacyComponent),
+      },
+      {
+        path: 'homecareMedicationEntry',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 12, title: 'Homecare Medication Entry' },
+        loadComponent: () =>
+          import('./features/homecare-medication-entry/homecare-medication-entry').then((m) => m.PharmacyComponent),
+      },
+      {
+        path: 'walkinSales',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 12, title: 'Walk-in Sales' },
+        loadComponent: () =>
+          import('./features/walk-in-sales/walk-in-sales').then((m) => m.PharmacyComponent),
+      },
+      {
+        path: 'pendingIssues',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 12, title: 'Pending Issues' },
+        loadComponent: () =>
+          import('./features/pending-issues/pending-issues').then((m) => m.PharmacyComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
