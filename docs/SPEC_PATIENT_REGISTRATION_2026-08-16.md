@@ -101,3 +101,33 @@ mandatory) · `/autoMail/sendOTP` + `/autoMail/sendOTPonMobile` (mobile OTP) ·
   verification of a save needs the masters seeded).
 - This spec is the contract: fields, types, endpoints, cascades, validations.
   The build starts only after your review.
+
+## 6. OWNER REVIEW — three binding changes (2026-08-16)
+
+1. **The field config DRIVES requirements.** The build MUST read
+   `/api/unit/applicationConfiguration/getUnitApplicationRegistrationFieldConfig/`
+   via the rebuild's existing `RegistrationConfigService` (the same mechanism
+   insurance-master uses) and derive the required set from it — the template's
+   static requireds are the fallback baseline, the config overrides per unit.
+   If the corrected backend says mobile is optional, the rebuild marks it
+   optional.
+2. **The save payload uses the DTO field names** (PatientRegistrationDto —
+   the @RequestBody of POST /api/global/patientRegistration): patientId,
+   organizationId, unitId, uhidNumber, prefixId, firstName, middleName,
+   lastName, genderId, dob (String, dd/MM/yyyy), mobileNumber,
+   countryCallingCode, email, identificationTypeId, identificationNumber,
+   identificationExpiryDate (String), patientCategoryId, address, countryId,
+   stateId, districtId, cityId, areaId, zipCode, status (char), createdBy,
+   updatedBy, createdDate (String), updatedDate (String); the kin is the NESTED
+   KinDetailsDto (kinDetailsDto): kinDetailsId, organizationId, unitId,
+   prefixId, kinName, relationId, mobileNo, phoneNo, identificationId,
+   identificationNo, expiry, isGuarantor, countryId..areaId, address, postCode.
+   NOT the $scope names. The payment entitlement is NOT in this DTO (the
+   sponsor/payment is a separate mechanism — the form carries the selector;
+   the sponsor write is deferred).
+3. **Scope cut — FIRST BUILD (core only):** Personal (prefix, name, gender,
+   DOB/age, mobile, email) + Identification (type, number, expiry) + Kin
+   (name, relation, mobile) + Address geography cascade (country->state->
+   district->city->area, zip) + Payment Entitlement selector + Save + audit
+   fields. DEFERRED to pass 2: ABDM, OTP, photo, company, permanent address,
+   add-new-area, employee/dependent search, VIP/alias, barcode.
