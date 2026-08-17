@@ -88,7 +88,7 @@
       <tbody>
         @for (a of appointments(); track $index) {
           <tr>
-            <td>{{ a.fromTimeString ?? a.fromTime }} – {{ a.toTimeString ?? a.toTime }}</td>
+            <td>{{ a['fromTimeString'] ?? a['fromTime'] }} – {{ a['toTimeString'] ?? a['toTime'] }}</td>
             <td>{{ a.patientName ?? a.patientId }}</td>
             <td>{{ a.doctorName ?? '—' }}</td>
           </tr>
