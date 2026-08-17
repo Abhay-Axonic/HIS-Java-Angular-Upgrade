@@ -1,0 +1,55 @@
+<div class="er-registration">
+  <h2>ER-Encounter</h2>
+
+  <section class="er-section">
+    <h3>Patient Search</h3>
+    <div class="er-search">
+      <input type="text" placeholder="Search patient (UHID / name / mobile)" [ngModel]="searchKeyword()"
+        (ngModelChange)="searchKeyword.set($event)" (keyup.enter)="searchPatient()" />
+      <button type="button" (click)="searchPatient()">Search</button>
+      @if (searchOpen()) {
+        <div class="er-results">
+          @for (p of patientResults(); track $index) {
+            <button type="button" (click)="pickPatient(p)">
+              { p.firstName } { p.lastName } — { p.uhidNumber }
+            </button>
+          }
+          @if (!patientResults().length) { <span>No patients found</span> }
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="er-section">
+    <h3>Registration Details</h3>
+    <div class="er-grid">
+      <label>Patient Name
+        <input type="text" [ngModel]="patientName()" (ngModelChange)="patientName.set($event)" />
+      </label>
+      <label>Priority
+        <select [ngModel]="priorityId()" (ngModelChange)="priorityId.set($event)">
+          <option [ngValue]="null">-- Select --</option>
+          @for (p of priorityList(); track p.id) {
+            <option [ngValue]="p.id">{ p.name ?? p.desc }</option>
+          }
+        </select>
+      </label>
+      <label>Age
+        <input type="number" [ngModel]="age()" (ngModelChange)="age.set($event)" />
+      </label>
+      <label>Age Format
+        <select [ngModel]="ageFormat()" (ngModelChange)="ageFormat.set($event)">
+          <option value="Y">Years</option><option value="M">Months</option><option value="D">Days</option>
+        </select>
+      </label>
+      <label>Mode of Arrival
+        <input type="text" placeholder="Accompanied by" [ngModel]="accompaniedBy()" (ngModelChange)="accompaniedBy.set($event)" />
+      </label>
+      <label class="er-mlc">
+        <input type="checkbox" [checked]="isMedicoLegal()" (change)="isMedicoLegal.set(!isMedicoLegal())" />
+        Medico-Legal Case (MLC)
+      </label>
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">Save ER Registration</button>
+  </section>
+</div>
