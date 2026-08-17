@@ -58,8 +58,8 @@ export interface RegistrationPayload {
 export interface IdNameRow {
   id: number;
   name?: string;
-  code?: string;
   desc?: string;
+  code?: string;
   /** the prefix master's own description — the named query also joins the
    * gender's desc into `desc`, so the prefix text lives here (see the service) */
   prefixDesc?: string;
@@ -68,6 +68,7 @@ export interface IdNameRow {
 export interface GeoRow {
   id: number;
   name?: string;
+  desc?: string;
 }
 
 export interface FieldConfig {
