@@ -17,7 +17,7 @@
     <div class="ev-grid">
       @for (m of vitalMasters(); track m.id) {
         <label>{{ m.name ?? m.desc }}
-          <input type="text" [ngModel]="vitals()[m.id]" (ngModelChange)="updateVital(String(m.id), $event)" />
+          <input type="text" [ngModel]="vitals()[m.id]" (ngModelChange)="updateVital(m.id.toString(), $event)" />
         </label>
       }
     </div>
