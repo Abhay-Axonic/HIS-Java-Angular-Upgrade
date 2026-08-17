@@ -11,7 +11,7 @@
         <div class="er-results">
           @for (p of patientResults(); track $index) {
             <button type="button" (click)="pickPatient(p)">
-              { p.firstName } { p.lastName } — { p.uhidNumber }
+              {{ p.firstName }} {{ p.lastName }} — {{ p.uhidNumber }}
             </button>
           }
           @if (!patientResults().length) { <span>No patients found</span> }
@@ -30,7 +30,7 @@
         <select [ngModel]="priorityId()" (ngModelChange)="priorityId.set($event)">
           <option [ngValue]="null">-- Select --</option>
           @for (p of priorityList(); track p.id) {
-            <option [ngValue]="p.id">{ p.name ?? p.desc }</option>
+            <option [ngValue]="p.id">{{ p.name ?? p.desc }}</option>
           }
         </select>
       </label>
