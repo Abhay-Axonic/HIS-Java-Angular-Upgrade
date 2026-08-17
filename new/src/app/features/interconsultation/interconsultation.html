@@ -1,0 +1,71 @@
+<div class="interconsultation">
+  <h2>Interconsultation</h2>
+
+  <section class="ic-section">
+    <h3>Patient / Encounter</h3>
+    <div class="ic-header">
+      <span>Encounter: <strong>{{ encounterId() ?? '—' }}</strong></span>
+      <span>Patient ID: <strong>{{ patientId() ?? '—' }}</strong></span>
+      <span>Patient: <strong>{{ patientName() || '—' }}</strong></span>
+      <span>From Doctor: <strong>{{ refByDoctorId() ?? '—' }}</strong></span>
+    </div>
+  </section>
+
+  <section class="ic-section">
+    <h3>Refer To</h3>
+    <div class="ic-grid">
+      <label>Department
+        <select [ngModel]="refToSpecialityId()" (ngModelChange)="onSpecialityChange($event)">
+          <option [ngValue]="null">-- Select --</option>
+          @for (s of specialityList(); track s.id) {
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Doctor
+        <select [ngModel]="refToDoctorId()" (ngModelChange)="refToDoctorId.set($event)" [disabled]="!doctorList().length">
+          <option [ngValue]="null">-- Select --</option>
+          @for (d of doctorList(); track d.id) {
+            <option [ngValue]="d.id">{{ d.name ?? d.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Urgency
+        <select [ngModel]="priority()" (ngModelChange)="priority.set($event)">
+          <option [ngValue]="''">-- Select --</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </label>
+      <label class="ic-full">Reason for referral
+        <textarea rows="3" [ngModel]="notes()" (ngModelChange)="notes.set($event)"></textarea>
+      </label>
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">Save Referral</button>
+  </section>
+
+  <section class="ic-section">
+    <h3>Referrals</h3>
+    <table class="ic-table">
+      <thead>
+        <tr><th>From Doctor</th><th>To Doctor</th><th>Department</th><th>Reason</th><th>Urgency</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        @for (r of referrals(); track r.consultDoctorId ?? $index) {
+          <tr>
+            <td>{{ r.refByDoctor ?? '—' }}</td>
+            <td>{{ r.refToDoctor ?? '—' }}</td>
+            <td>{{ r.specialityName ?? '—' }}</td>
+            <td>{{ r.notes ?? '—' }}</td>
+            <td>{{ r.priority ?? '—' }}</td>
+            <td>{{ r.referredStatus ?? r.status ?? '—' }}</td>
+          </tr>
+        }
+        @if (!referrals().length && loaded()) {
+          <tr><td colspan="6" class="ic-empty">No referrals for this encounter.</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>

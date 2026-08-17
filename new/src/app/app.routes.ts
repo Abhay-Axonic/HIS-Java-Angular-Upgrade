@@ -3006,6 +3006,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/pending-orders/pending-orders').then((m) => m.PendingOrdersComponent),
       },
+      {
+        path: 'interconsultation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 2, title: 'Interconsultation' },
+        loadComponent: () =>
+          import('./features/interconsultation/interconsultation').then((m) => m.InterconsultationComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
