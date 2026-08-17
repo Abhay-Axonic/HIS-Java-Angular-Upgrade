@@ -4046,6 +4046,231 @@ export const routes: Routes = [
           import('./features/entitlement-conversion/entitlement-conversion').then((m) => m.IpdComponent),
       },
 
+      {
+        path: 'donorScreeningWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Donor Screening Worklist' },
+        loadComponent: () =>
+          import('./features/donor-screening-worklist/donor-screening-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'donorScreening',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Donor Screening' },
+        loadComponent: () =>
+          import('./features/donor-screening/donor-screening').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodBagCollectionWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Bag Collection Worklist' },
+        loadComponent: () =>
+          import('./features/blood-bag-collection-worklist/blood-bag-collection-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodBagCollection',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Bag Collection' },
+        loadComponent: () =>
+          import('./features/blood-bag-collection/blood-bag-collection').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodBankComponentSeparationWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Bank Component Separation Worklist' },
+        loadComponent: () =>
+          import('./features/blood-bank-component-separation-worklist/blood-bank-component-separation-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsBloodBankComponentSeparationWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Component Separation Worklist' },
+        loadComponent: () =>
+          import('./features/details-blood-bank-component-separation-worklist/details-blood-bank-component-separation-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsTransfusionTransmittedDiseases',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Transfusion Transmitted Diseases' },
+        loadComponent: () =>
+          import('./features/details-transfusion-transmitted-diseases/details-transfusion-transmitted-diseases').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsCrossMatchRegister',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Cross Match Register' },
+        loadComponent: () =>
+          import('./features/details-cross-match-register/details-cross-match-register').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodBagReservation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Bag Reservation' },
+        loadComponent: () =>
+          import('./features/blood-bag-reservation/blood-bag-reservation').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'issueBloodBag',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Issue Blood Bag' },
+        loadComponent: () =>
+          import('./features/issue-blood-bag/issue-blood-bag').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsIssueBloodBag',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Issue Blood Bag' },
+        loadComponent: () =>
+          import('./features/details-issue-blood-bag/details-issue-blood-bag').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodGroupConfirmation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Group Confirmation' },
+        loadComponent: () =>
+          import('./features/blood-group-confirmation/blood-group-confirmation').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsBloodGroupConfirmation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Blood Group Confirmation' },
+        loadComponent: () =>
+          import('./features/details-blood-group-confirmation/details-blood-group-confirmation').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodIssueAcceptanceWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Issue Acceptance Worklist' },
+        loadComponent: () =>
+          import('./features/blood-issue-acceptance-worklist/blood-issue-acceptance-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'patientRequisitionWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Patient Requisition Worklist' },
+        loadComponent: () =>
+          import('./features/patient-requisition-worklist/patient-requisition-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsPatientRequisition',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Patient Requisition' },
+        loadComponent: () =>
+          import('./features/details-patient-requisition/details-patient-requisition').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'bloodBagStockUpdation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Blood Bag Stock Updation' },
+        loadComponent: () =>
+          import('./features/blood-bag-stock-updation/blood-bag-stock-updation').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'loanInBloodBank',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Loan In Blood Bank' },
+        loadComponent: () =>
+          import('./features/loan-in-blood-bank/loan-in-blood-bank').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'addNewLoanInBloodBank',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Add New Loan In Blood Bank' },
+        loadComponent: () =>
+          import('./features/add-new-loan-in-blood-bank/add-new-loan-in-blood-bank').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsLoanInBloodBank',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Loan In Blood Bank' },
+        loadComponent: () =>
+          import('./features/details-loan-in-blood-bank/details-loan-in-blood-bank').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'loanInBloodBankApproval',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Loan In Blood Bank Approval' },
+        loadComponent: () =>
+          import('./features/loan-in-blood-bank-approval/loan-in-blood-bank-approval').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'loanOutBloodBank',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Loan Out Blood Bank' },
+        loadComponent: () =>
+          import('./features/loan-out-blood-bank/loan-out-blood-bank').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'addNewLoanOutBloodBank',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Add New Loan Out Blood Bank' },
+        loadComponent: () =>
+          import('./features/add-new-loan-out-blood-bank/add-new-loan-out-blood-bank').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsLoanOutBloodBank',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Loan Out Blood Bank' },
+        loadComponent: () =>
+          import('./features/details-loan-out-blood-bank/details-loan-out-blood-bank').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'loanOutBloodBankApproval',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Loan Out Blood Bank Approval' },
+        loadComponent: () =>
+          import('./features/loan-out-blood-bank-approval/loan-out-blood-bank-approval').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'redCellGroupingWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Red Cell Grouping Worklist' },
+        loadComponent: () =>
+          import('./features/red-cell-grouping-worklist/red-cell-grouping-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsRedCellGroupingWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Red Cell Grouping Worklist' },
+        loadComponent: () =>
+          import('./features/details-red-cell-grouping-worklist/details-red-cell-grouping-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'redCellSerumWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Red Cell Serum Worklist' },
+        loadComponent: () =>
+          import('./features/red-cell-serum-worklist/red-cell-serum-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'detailsRedCellSerumWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Details — Red Cell Serum Worklist' },
+        loadComponent: () =>
+          import('./features/details-red-cell-serum-worklist/details-red-cell-serum-worklist').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'patientConsumption',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Patient Consumption' },
+        loadComponent: () =>
+          import('./features/patient-consumption/patient-consumption').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'patientConsumptionDetails',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Patient Consumption Details' },
+        loadComponent: () =>
+          import('./features/patient-consumption-details/patient-consumption-details').then((m) => m.BloodBankComponent),
+      },
+      {
+        path: 'pendingTransfusionList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 11, title: 'Pending Transfusion List' },
+        loadComponent: () =>
+          import('./features/pending-transfusion-list/pending-transfusion-list').then((m) => m.BloodBankComponent),
+      },
+
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
   },
