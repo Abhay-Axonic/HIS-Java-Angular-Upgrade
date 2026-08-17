@@ -318,14 +318,6 @@ export class InsuranceMaster {
     const now = formatLegacyNow();
     const payload: InsuranceMasterRecord = {
       ...r,
-      // DQ-127 (update path): the edit loads the row's NULL dates back into
-      // the record, and InsuranceMasterDaoImpl.update parses startDate/endDate
-      // via GlobalCommonDateUtils.getDate (NPE on null -- :305). The legacy
-      // initializes these as "" (insuranceMasterController.js:52-53) and the
-      // create path sends ""; the update must too, or the round-trip null
-      // 500s. (The legacy's own update has this same defect for null-date rows.)
-      startDate: r.startDate ?? '',
-      endDate: r.endDate ?? '',
       orgId: this.organizationId,
       unitId: this.unitId,
       createdBy: this.userId,
@@ -386,11 +378,8 @@ export class InsuranceMaster {
   edit(insuranceId: number): void {
     this.api.getById(insuranceId, this.organizationId, this.unitId).subscribe({
       next: (res) => {
-        if (res.status !== 'success') return;
-        // DQ-127: getInsuranceMasterById returns the row under listObject
-        // (object is null) -- the edit silently no-oped before this fix.
-        const rec = (res.listObject?.[0] ?? res.object) as unknown as InsuranceMasterRecord;
-        if (!rec) return;
+        if (res.status !== 'success' || !res.object) return;
+        const rec = res.object as unknown as InsuranceMasterRecord;
         this.record.set(rec);
         this.ledgerSearchTerm.set(rec.generalLedgerName ?? '');
         this.saveMode.set(false);

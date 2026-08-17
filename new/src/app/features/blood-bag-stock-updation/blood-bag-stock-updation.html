@@ -1,0 +1,39 @@
+<div class="bloodbank">
+  <h2>Blood Bag Stock Updation</h2>
+
+  <section class="bb-section">
+    <table class="bb-table">
+      <thead>
+        <tr><th>Donor / Patient</th><th>Bag</th><th>Blood Group</th><th>Component</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track $index) {
+          <tr>
+            <td>{{ r.donorName ?? r.patientName ?? r.donorId ?? r.patientId }}</td>
+            <td>{{ r.bagNumber ?? r.bagId ?? '—' }}</td>
+            <td>{{ r.bloodGroup ?? '—' }}</td>
+            <td>{{ r.component ?? '—' }}</td>
+            <td>{{ r.status ?? '—' }}</td>
+            <td><button type="button" (click)="pick(r)">Select</button></td>
+          </tr>
+        }
+        @if (!rows().length && loaded()) {
+          <tr><td colspan="6" class="bb-empty">No rows.</td></tr>
+        }
+        @if (!rows().length && !loaded()) {
+          <tr><td colspan="6" class="bb-empty">Loading…</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section class="bb-section">
+    <h3>Action</h3>
+    <div class="bb-form">
+      <label>Remark
+        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
+      </label>
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
+  </section>
+</div>
