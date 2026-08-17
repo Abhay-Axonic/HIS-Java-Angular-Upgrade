@@ -1,0 +1,137 @@
+.prescription {
+  padding: 1rem;
+  max-width: 1100px;
+}
+
+.px-section {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
+
+  h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    color: #00003b;
+  }
+}
+
+.px-header {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.px-search {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+
+  input {
+    flex: 1;
+    padding: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  button {
+    padding: 0.4rem 1.2rem;
+    border: 1px solid #2a83f2;
+    border-radius: 3px;
+    background: #2a83f2;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
+.px-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  max-height: 220px;
+  overflow: auto;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+
+  button {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      background: #eef4ff;
+    }
+  }
+
+  span {
+    padding: 0.5rem;
+    color: #888;
+  }
+}
+
+.px-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.px-line {
+  display: grid;
+  grid-template-columns: 160px 70px 80px 120px 70px 60px 60px 1fr 70px;
+  gap: 0.4rem;
+  align-items: center;
+
+  input,
+  select {
+    padding: 0.35rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    min-width: 0;
+  }
+
+  .px-medicine {
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  button {
+    padding: 0.3rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #f5f5f5;
+    cursor: pointer;
+  }
+}
+
+.px-empty {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.px-actions {
+  margin-top: 1rem;
+
+  .btn-primary {
+    background: #2a83f2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
