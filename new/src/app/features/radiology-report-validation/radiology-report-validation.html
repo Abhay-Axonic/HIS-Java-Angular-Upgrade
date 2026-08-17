@@ -1,27 +1,40 @@
-<div class="ro-wrap">
-  <header class="ro-header">
-    <h2>Radiology Report Validation</h2>
-    <span class="ro-sub">Read-only screen (render-trace gate — see README)</span>
-  </header>
+<div class="lab">
+  <h2>Radiology Report Validation</h2>
 
-  <div class="ro-note">Read-only: no write path. T0-smoked live; an empty list is a correct empty in dev.</div>
+  <section class="lb-section">
+    <table class="lb-table">
+      <thead>
+        <tr><th>Patient</th><th>Test / Sample</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track $index) {
+          <tr>
+            <td>{{ r.patientName ?? r.patientId }}</td>
+            <td>{{ r.testName ?? r.sampleType ?? r.testId ?? '—' }}</td>
+            <td>{{ r.status ?? '—' }}</td>
+            <td><button type="button" (click)="pick(r)">Select</button></td>
+          </tr>
+        }
+        @if (!rows().length && loaded()) {
+          <tr><td colspan="4" class="lb-empty">No rows.</td></tr>
+        }
+        @if (!rows().length && !loaded()) {
+          <tr><td colspan="4" class="lb-empty">Loading…</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
 
-  @if (loading()) { <p class="ro-status">Loading…</p> }
-  @if (error()) { <p class="ro-status ro-err">{{ error() }}</p> }
-
-  <section class="ro-panel">
-    @if (rows().length === 0) {
-      <p class="ro-empty">No records.</p>
-    } @else {
-      <table class="ro-table">
-        <thead><tr><th>subSpecialityName</th><th>subSpecialityId</th></tr></thead>
-        <tbody>
-          @for (row of rows(); track $index) {
-            <tr><td>{{ row.subSpecialityName ?? '' }}</td>
-            <td>{{ row.subSpecialityId ?? '' }}</td></tr>
-          }
-        </tbody>
-      </table>
-    }
+  <section class="lb-section">
+    <h3>Result Entry</h3>
+    <div class="lb-form">
+      <label>Result
+        <input type="text" [ngModel]="result()" (ngModelChange)="result.set($event)" />
+      </label>
+      <label>Remark
+        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
+      </label>
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
   </section>
 </div>
