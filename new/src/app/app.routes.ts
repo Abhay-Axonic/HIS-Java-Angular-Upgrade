@@ -2607,7 +2607,7 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 752, title: 'Assign Loyalty Card' },
         loadComponent: () =>
-          import('./features/assign-loyalty-card/assign-loyalty-card').then((m) => m.AssignLoyaltyCard),
+          import('./features/assign-loyalty-card/assign-loyalty-card').then((m) => m.IpdComponent),
       },
       {
         path: 'RMOAllocationMaster',
@@ -3504,6 +3504,546 @@ export const routes: Routes = [
         data: { moduleId: 16, title: 'Operation Table Type' },
         loadComponent: () =>
           import('./features/operation-table-type/operation-table-type').then((m) => m.OperationTableType),
+      },
+
+      {
+        path: 'admissionRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Admission Request' },
+        loadComponent: () =>
+          import('./features/admission-request/admission-request').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'pendingAdmissionDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pending Admission Discharge' },
+        loadComponent: () =>
+          import('./features/pending-admission-discharge/pending-admission-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'bedBook',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Bed Book' },
+        loadComponent: () =>
+          import('./features/bed-book/bed-book').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'bedReservationList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Ward Bed Reservation List' },
+        loadComponent: () =>
+          import('./features/bed-reservation-list/bed-reservation-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'bedAvailability',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Ward Bed Reservation Wait List' },
+        loadComponent: () =>
+          import('./features/bed-availability/bed-availability').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'bedAllocation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Bed Allocation' },
+        loadComponent: () =>
+          import('./features/bed-allocation/bed-allocation').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'admittedPatientList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Admitted Patient List' },
+        loadComponent: () =>
+          import('./features/admitted-patient-list/admitted-patient-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'passIssued',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Issued Pass' },
+        loadComponent: () =>
+          import('./features/pass-issued/pass-issued').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'intiateTransferCare',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Initiate Transfer of Care' },
+        loadComponent: () =>
+          import('./features/intiate-transfer-care/intiate-transfer-care').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'bloodRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Blood Request' },
+        loadComponent: () =>
+          import('./features/blood-request/blood-request').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'requestInterConsult',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Request Inter-Consult' },
+        loadComponent: () =>
+          import('./features/request-inter-consult/request-inter-consult').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'pendingInterConsult',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pending Inter-Consult' },
+        loadComponent: () =>
+          import('./features/pending-inter-consult/pending-inter-consult').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dueForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Due for Discharge' },
+        loadComponent: () =>
+          import('./features/due-for-discharge/due-for-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dayCareDueForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Day Care Due for Discharge' },
+        loadComponent: () =>
+          import('./features/day-care-due-for-discharge/day-care-due-for-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'abscondingPatient',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Absconding Patient' },
+        loadComponent: () =>
+          import('./features/absconding-patient/absconding-patient').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'medicationAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Medication Acceptance' },
+        loadComponent: () =>
+          import('./features/medication-acceptance/medication-acceptance').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'nursingOrderView',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Nursing Order View' },
+        loadComponent: () =>
+          import('./features/nursing-order-view/nursing-order-view').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'pendingNursingOrder',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pending Nursing Order' },
+        loadComponent: () =>
+          import('./features/pending-nursing-order/pending-nursing-order').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'houseKeeping',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'House Keeping' },
+        loadComponent: () =>
+          import('./features/house-keeping/house-keeping').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'cleanedBedAccept',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Cleaned Bed Accept' },
+        loadComponent: () =>
+          import('./features/cleaned-bed-accept/cleaned-bed-accept').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'transferToICU',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Transfer to ICU' },
+        loadComponent: () =>
+          import('./features/transfer-to-icu/transfer-to-icu').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'pendingTransferRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pending Transfer Request' },
+        loadComponent: () =>
+          import('./features/pending-transfer-request/pending-transfer-request').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'acceptanceOfTransferOfCare',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Acceptance of Transfer of Care' },
+        loadComponent: () =>
+          import('./features/acceptance-of-transfer-of-care/acceptance-of-transfer-of-care').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'pendingConsultOrderRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pending Consult Order Request' },
+        loadComponent: () =>
+          import('./features/pending-consult-order-request/pending-consult-order-request').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'deathRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Death Registration' },
+        loadComponent: () =>
+          import('./features/death-registration/death-registration').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'cancelForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Cancel for Discharge' },
+        loadComponent: () =>
+          import('./features/cancel-for-discharge/cancel-for-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'cancelDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Cancel Discharge' },
+        loadComponent: () =>
+          import('./features/cancel-discharge/cancel-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'costEstimation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Cost Estimation' },
+        loadComponent: () =>
+          import('./features/cost-estimation/cost-estimation').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dayCarePatientForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Day Care Patient for Discharge' },
+        loadComponent: () =>
+          import('./features/day-care-patient-for-discharge/day-care-patient-for-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dischargedPatients',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Hospital Discharged Patients List' },
+        loadComponent: () =>
+          import('./features/discharged-patients/discharged-patients').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'updateDischargeSummary',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Update Discharge Summary' },
+        loadComponent: () =>
+          import('./features/update-discharge-summary/update-discharge-summary').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'erInitiateBedTransfer',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'ER Initiate Bed Transfer' },
+        loadComponent: () =>
+          import('./features/er-initiate-bed-transfer/er-initiate-bed-transfer').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'erTransferRequestAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'ER Transfer Request Acceptance' },
+        loadComponent: () =>
+          import('./features/er-transfer-request-acceptance/er-transfer-request-acceptance').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dayCareWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Day Care Worklist' },
+        loadComponent: () =>
+          import('./features/day-care-worklist/day-care-worklist').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dayCareFinalDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Day Care Final Discharge' },
+        loadComponent: () =>
+          import('./features/day-care-final-discharge/day-care-final-discharge').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'bedUnderMaintenance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Bed Under Maintenance' },
+        loadComponent: () =>
+          import('./features/bed-under-maintenance/bed-under-maintenance').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'pendingShortLeave',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pending Short Leave' },
+        loadComponent: () =>
+          import('./features/pending-short-leave/pending-short-leave').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dischargeSummary',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Discharge Summary' },
+        loadComponent: () =>
+          import('./features/discharge-summary/discharge-summary').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'dayCareDischargeSummary',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Day Care Discharge Summary' },
+        loadComponent: () =>
+          import('./features/day-care-discharge-summary/day-care-discharge-summary').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'shortLeaveStatus',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Short Leave Status' },
+        loadComponent: () =>
+          import('./features/short-leave-status/short-leave-status').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'icuBedBookingStatus',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'ICU Bed Booking Status' },
+        loadComponent: () =>
+          import('./features/icu-bed-booking-status/icu-bed-booking-status').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'newBornRegistration',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'New Born Registration' },
+        loadComponent: () =>
+          import('./features/new-born-registration/new-born-registration').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'admissionRejectionList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Admission Rejection List' },
+        loadComponent: () =>
+          import('./features/admission-rejection-list/admission-rejection-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'refund',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Refund' },
+        loadComponent: () =>
+          import('./features/refund/refund').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'deposit',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Deposit' },
+        loadComponent: () =>
+          import('./features/deposit/deposit').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'franchiseDeposit',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Franchise Deposit' },
+        loadComponent: () =>
+          import('./features/franchise-deposit/franchise-deposit').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'findBillList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Find Bill List' },
+        loadComponent: () =>
+          import('./features/find-bill-list/find-bill-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'updatePayeeInformation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Update Payee Information' },
+        loadComponent: () =>
+          import('./features/update-payee-information/update-payee-information').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'autoChargeReview',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Auto Charge Review' },
+        loadComponent: () =>
+          import('./features/auto-charge-review/auto-charge-review').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'writeOff',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Write Off' },
+        loadComponent: () =>
+          import('./features/write-off/write-off').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'writeOffDetails',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Write Off Details' },
+        loadComponent: () =>
+          import('./features/write-off-details/write-off-details').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'reminderForNOK',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Reminder for NOK' },
+        loadComponent: () =>
+          import('./features/reminder-for-nok/reminder-for-nok').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'companyInvoiceCreation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Company Invoice Creation' },
+        loadComponent: () =>
+          import('./features/company-invoice-creation/company-invoice-creation').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'paymentCollection',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Payment Collection' },
+        loadComponent: () =>
+          import('./features/payment-collection/payment-collection').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'billList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Bill List' },
+        loadComponent: () =>
+          import('./features/bill-list/bill-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'cancelledBillList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Cancelled Bill List' },
+        loadComponent: () =>
+          import('./features/cancelled-bill-list/cancelled-bill-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'debitNote',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Debit Note' },
+        loadComponent: () =>
+          import('./features/debit-note/debit-note').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'debitNoteList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Debit Note List' },
+        loadComponent: () =>
+          import('./features/debit-note-list/debit-note-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'creditNote',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Credit Note' },
+        loadComponent: () =>
+          import('./features/credit-note/credit-note').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'creditNoteList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Credit Note List' },
+        loadComponent: () =>
+          import('./features/credit-note-list/credit-note-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'preAuthorizationRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Pre Authorization Request' },
+        loadComponent: () =>
+          import('./features/pre-authorization-request/pre-authorization-request').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'addNewPreAuthorizationRequest',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Add New Pre Authorization Request' },
+        loadComponent: () =>
+          import('./features/add-new-pre-authorization-request/add-new-pre-authorization-request').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'refundAgainstDeposit',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Refund Against Deposit' },
+        loadComponent: () =>
+          import('./features/refund-against-deposit/refund-against-deposit').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'refundList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Refund List' },
+        loadComponent: () =>
+          import('./features/refund-list/refund-list').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'refundAgainstCR',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Refund Against CR' },
+        loadComponent: () =>
+          import('./features/refund-against-cr/refund-against-cr').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'splitBill',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Split Bill' },
+        loadComponent: () =>
+          import('./features/split-bill/split-bill').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'discountRequestWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Discount Request Worklist' },
+        loadComponent: () =>
+          import('./features/discount-request-worklist/discount-request-worklist').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'financialRequestApproval',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Financial Request Approval' },
+        loadComponent: () =>
+          import('./features/financial-request-approval/financial-request-approval').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'assignloyaltyCard',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Assign Loyalty Card' },
+        loadComponent: () =>
+          import('./features/assign-loyalty-card/assign-loyalty-card').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'IPDCoverSheet',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'IPD Cover Sheet' },
+        loadComponent: () =>
+          import('./features/ipd-coversheet/ipd-coversheet').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'vitals',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Vitals' },
+        loadComponent: () =>
+          import('./features/vitals/vitals').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'addNewVitals',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Add New Vitals' },
+        loadComponent: () =>
+          import('./features/add-new-vitals/add-new-vitals').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'nursingProgressNote',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Nursing Progress Note' },
+        loadComponent: () =>
+          import('./features/nursing-progress-note/nursing-progress-note').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'doctorDesk',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Doctor Desk' },
+        loadComponent: () =>
+          import('./features/doctor-desk/doctor-desk').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'nursingWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Nursing Worklist' },
+        loadComponent: () =>
+          import('./features/nursing-worklist/nursing-worklist').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'encounterData',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Encounter Data' },
+        loadComponent: () =>
+          import('./features/encounter-data/encounter-data').then((m) => m.IpdComponent),
+      },
+      {
+        path: 'entitlementCoversion',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 69, title: 'Entitlement Conversion' },
+        loadComponent: () =>
+          import('./features/entitlement-conversion/entitlement-conversion').then((m) => m.IpdComponent),
       },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
