@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../core/api-config';
 import type { ApiResponse } from '../../core/api-response';
 import type { FieldConfig, GeoRow, IdNameRow, RegistrationPayload } from './registration.models';
@@ -17,10 +17,23 @@ export class RegistrationService {
   }
 
   getPrefixList(orgId: number, unitId: number): Observable<ApiResponse<never, IdNameRow>> {
-    // the legacy endpoint is a GET with the orgId in the path (WebAppointmentController)
-    return this.http.get<ApiResponse<never, IdNameRow>>(`${this.base}/api/webappointment/getActivePrefixList/${orgId}`, {
-      params: { unitId },
-    });
+    // the legacy endpoint is a GET with the orgId in the path (WebAppointmentController).
+    // The named query GET_ACTIVE_PREFIX_LIST joins the gender master and puts the
+    // GENDER's desc in `desc` (that's why 'Male' showed); the real prefix text is
+    // in `prefixDesc` — map it into `name` so the dropdown shows Mr./Mrs./Ms./Dr.
+    return this.http
+      .get<ApiResponse<never, IdNameRow>>(`${this.base}/api/webappointment/getActivePrefixList/${orgId}`, {
+        params: { unitId },
+      })
+      .pipe(
+        map((r) => ({
+          ...r,
+          listObject: (r.listObject ?? []).map((row) => ({
+            id: row.id,
+            name: row.prefixDesc ?? row.desc ?? row.name,
+          })),
+        })),
+      );
   }
 
   getGenderList(orgId: number, unitId: number): Observable<ApiResponse<never, IdNameRow>> {

@@ -60,6 +60,9 @@ export interface IdNameRow {
   name?: string;
   code?: string;
   desc?: string;
+  /** the prefix master's own description — the named query also joins the
+   * gender's desc into `desc`, so the prefix text lives here (see the service) */
+  prefixDesc?: string;
 }
 
 export interface GeoRow {

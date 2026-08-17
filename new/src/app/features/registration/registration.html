@@ -29,7 +29,7 @@
           [class.invalid]="isRequiredMissing('genderId')">
           <option [ngValue]="null">-- Select --</option>
           @for (g of genderList(); track g.id) {
-            <option [ngValue]="g.id">{{ g.name ?? g.code }}</option>
+            <option [ngValue]="g.id">{{ g.name ?? g.code ?? g.desc }}</option>
           }
         </select>
       </label>
@@ -55,7 +55,7 @@
           [class.invalid]="isRequiredMissing('identificationTypeId')">
           <option [ngValue]="null">-- Select --</option>
           @for (i of identificationList(); track i.id) {
-            <option [ngValue]="i.id">{{ i.name }}</option>
+            <option [ngValue]="i.id">{{ i.name ?? i.desc }}</option>
           }
         </select>
       </label>
@@ -83,7 +83,7 @@
           [class.invalid]="isRequiredMissing('relationId')">
           <option [ngValue]="null">-- Select --</option>
           @for (r of relationList(); track r.id) {
-            <option [ngValue]="r.id">{{ r.name }}</option>
+            <option [ngValue]="r.id">{{ r.name ?? r.desc }}</option>
           }
         </select>
       </label>
@@ -101,7 +101,7 @@
         <select [ngModel]="form().countryId" (ngModelChange)="onCountryChange($event)">
           <option [ngValue]="null">-- Select --</option>
           @for (c of countryList(); track c.id) {
-            <option [ngValue]="c.id">{{ c.name }}</option>
+            <option [ngValue]="c.id">{{ c.name ?? c.desc }}</option>
           }
         </select>
       </label>
@@ -109,7 +109,7 @@
         <select [ngModel]="form().stateId" (ngModelChange)="onStateChange($event)" [disabled]="!stateList().length">
           <option [ngValue]="null">-- Select --</option>
           @for (s of stateList(); track s.id) {
-            <option [ngValue]="s.id">{{ s.name }}</option>
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
           }
         </select>
       </label>
@@ -117,7 +117,7 @@
         <select [ngModel]="form().districtId" (ngModelChange)="onDistrictChange($event)" [disabled]="!districtList().length">
           <option [ngValue]="null">-- Select --</option>
           @for (d of districtList(); track d.id) {
-            <option [ngValue]="d.id">{{ d.name }}</option>
+            <option [ngValue]="d.id">{{ d.name ?? d.desc }}</option>
           }
         </select>
       </label>
@@ -125,7 +125,7 @@
         <select [ngModel]="form().cityId" (ngModelChange)="onCityChange($event)" [disabled]="!cityList().length">
           <option [ngValue]="null">-- Select --</option>
           @for (c of cityList(); track c.id) {
-            <option [ngValue]="c.id">{{ c.name }}</option>
+            <option [ngValue]="c.id">{{ c.name ?? c.desc }}</option>
           }
         </select>
       </label>
@@ -133,7 +133,7 @@
         <select [ngModel]="form().areaId" (ngModelChange)="updateField('areaId', $event)" [disabled]="!areaList().length">
           <option [ngValue]="null">-- Select --</option>
           @for (a of areaList(); track a.id) {
-            <option [ngValue]="a.id">{{ a.name }}</option>
+            <option [ngValue]="a.id">{{ a.name ?? a.desc }}</option>
           }
         </select>
       </label>
@@ -153,7 +153,7 @@
         <select [ngModel]="form().paymentEntitlementId" (ngModelChange)="updateField('paymentEntitlementId', $event)">
           <option [ngValue]="null">-- Select --</option>
           @for (e of paymentEntitlementList(); track e.id) {
-            <option [ngValue]="e.id">{{ e.name }}</option>
+            <option [ngValue]="e.id">{{ e.name ?? e.desc }}</option>
           }
         </select>
       </label>
