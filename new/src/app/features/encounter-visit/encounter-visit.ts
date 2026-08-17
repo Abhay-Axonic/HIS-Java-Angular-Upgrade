@@ -93,6 +93,12 @@ export class EncounterVisitComponent {
    * backend converts via getStringDateFromLongDate); vitals = String
    * (dd-M-yyyy HH:mm:ss — the AppointmentVitalMapperDto's own format). */
   save(): void {
+    // validation guard — the encounter cannot be saved without its patient
+    // anchor (the legacy's manualValidate pattern; the owner's polish pass).
+    if (this.patientId() == null) {
+      this.notify.warning('Patient is required — open the encounter from a patient/visit context first');
+      return;
+    }
     this.saving.set(true);
     const nowLong = Date.now();
     const nowStr = formatLegacyNow();
