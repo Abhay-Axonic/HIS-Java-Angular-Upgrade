@@ -126,3 +126,26 @@ as the registration build); the owner decides keep/delete of the old files.
 - The DTO's Long dates (createdDate/updatedDate/encounterDate) differ from the
   String dates the registration used — the payload must send the Long-epoch
   form the backend parses.
+
+## 7. OWNER REVIEW — two binding changes (2026-08-16)
+
+1. **The date format is Long epoch-millis.** The encounter save's createdDate/
+   updatedDate/encounterDate are Longs — the save sends `Date.now()`-equivalents,
+   NOT the formatLegacyNow() String. CONFIRMED in the corrected backend:
+   EncounterMasterServiceImpl converts the DTO's Long itself via
+   `GlobalCommonDateUtils.getStringDateFromLongDate(createdDate, "dd-MM-yyyy HH:mm:ss")`
+   (:679-681, :737-739) — the backend parses the Long; the frontend never
+   formats it. NOTE the vitals DTO is the OPPOSITE: AppointmentVitalMapperDto
+   carries createdDate/updatedDate as **String** (dd-M-yyyy HH:mm:ss).
+2. **The vitals save is a separate call, sequenced after the encounter.**
+   - Encounter save: **POST /api/opd/encounter** + EncounterMasterDto
+     (EncounterController.java:115, class /api/opd) — the nested
+     complaints/diagnosis ride this payload.
+   - Vitals save: **POST /api/opd/saveAppointmentVitalMapper/{unitId}/{organizationId}**
+     + **AppointmentVitalMapperDto** (AppointmentVitalMapperController.java:56-58):
+     appointmentVitalMapperId, vitalId, appointmentId, patientId, value (String),
+     status (char), isSelfTriage, createdBy, createdDate (String), updatedBy,
+     updatedDate (String), unitId, organizationId, vitalName, **encounterId**,
+     admissionId, roleId, isReviewedFlag, isAdmissionFlag, vitalOrderOpd.
+   - Sequence: save the encounter first, take the returned encounterId, then
+     save each vitals row with vitalId + value + patientId + encounterId.
