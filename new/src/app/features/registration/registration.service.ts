@@ -41,23 +41,26 @@ export class RegistrationService {
   }
 
   getCountry(orgId: number, unitId: number): Observable<ApiResponse<never, IdNameRow>> {
-    return this.post('/adt/getCountryById', { organizationId: orgId, unitId });
+    // the CountryMasterDto has NO unitId field — a unitId in the body is an
+    // unknown property and 400s (verified against the corrected backend)
+    return this.post('/adt/getCountryById', { organizationId: orgId });
   }
 
   getStatesByCountry(countryId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getActiveStateListByCountryId', { countryId, organizationId: orgId, unitId });
+    // the StateMasterDto has no org/unit fields — parent id only (the corrected DTO)
+    return this.post('/adt/getActiveStateListByCountryId', { countryId });
   }
 
   getDistrictsByState(stateId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getActiveDistrictListByStateId', { stateId, organizationId: orgId, unitId });
+    return this.post('/adt/getActiveDistrictListByStateId', { stateId });
   }
 
   getCitiesByDistrict(districtId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getActiveCityListByDistrictId', { districtId, organizationId: orgId, unitId });
+    return this.post('/adt/getActiveCityListByDistrictId', { districtId });
   }
 
   getAreasByCity(cityId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getAreaByCityId', { cityId, organizationId: orgId, unitId });
+    return this.post('/adt/getAreaByCityId', { cityId });
   }
 
   getFieldConfig(orgId: number, unitId: number): Observable<ApiResponse<never, FieldConfig>> {
