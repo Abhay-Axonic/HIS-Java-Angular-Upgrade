@@ -2999,6 +2999,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/opd-billing/opd-billing').then((m) => m.OpdBillingComponent),
       },
+      {
+        path: 'pendingOrders',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 8, title: 'Pending Orders' },
+        loadComponent: () =>
+          import('./features/pending-orders/pending-orders').then((m) => m.PendingOrdersComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
