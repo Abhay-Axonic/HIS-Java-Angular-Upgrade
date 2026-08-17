@@ -1,0 +1,53 @@
+<div class="walk-in">
+  <h2>Walk-in Appointment</h2>
+
+  <section class="wi-section">
+    <h3>Appointment</h3>
+    <div class="wi-grid">
+      <label>Speciality
+        <select [ngModel]="specialityId()" (ngModelChange)="onSpecialityChange($event)">
+          <option [ngValue]="null">-- Select --</option>
+          @for (s of specialityList(); track s.id) {
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Doctor
+        <select [ngModel]="doctorId()" (ngModelChange)="doctorId.set($event)" [disabled]="!doctorList().length">
+          <option [ngValue]="null">-- Select --</option>
+          @for (d of doctorList(); track d.id) {
+            <option [ngValue]="d.id">{{ d.name ?? d.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Appointment Date (DD/MM/YYYY)
+        <input type="text" placeholder="DD/MM/YYYY" [ngModel]="appointmentDate()" (ngModelChange)="appointmentDate.set($event)" />
+      </label>
+    </div>
+  </section>
+
+  <section class="wi-section">
+    <h3>Patient</h3>
+    <div class="wi-search">
+      <input type="text" placeholder="Search patient (UHID / name / mobile)" [ngModel]="searchKeyword()"
+        (ngModelChange)="searchKeyword.set($event)" (keyup.enter)="searchPatient()" />
+      <button type="button" (click)="searchPatient()">Search</button>
+      @if (searchOpen()) {
+        <div class="wi-results">
+          @for (p of patientResults(); track $index) {
+            <button type="button" (click)="pickPatient(p)">
+              {{ p.firstName }} {{ p.middleName }} {{ p.lastName }} — {{ p.uhidNumber }}
+            </button>
+          }
+          @if (!patientResults().length) {
+            <span>No patients found</span>
+          }
+        </div>
+      }
+    </div>
+    <div class="wi-selected">
+      Patient: <strong>{{ selectedPatient() ? ((selectedPatient()?.firstName ?? '') + ' ' + (selectedPatient()?.lastName ?? '')) : '—' }}</strong>
+    </div>
+    <button type="button" class="btn-primary" (click)="book()" [disabled]="saving()">Book Walk-in Appointment</button>
+  </section>
+</div>

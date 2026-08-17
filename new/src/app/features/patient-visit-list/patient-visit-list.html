@@ -1,0 +1,50 @@
+<div class="visit-list">
+  <h2>Patient Visit List</h2>
+
+  <section class="vl-section">
+    <h3>Filters</h3>
+    <div class="vl-filters">
+      <label>Doctor
+        <select [ngModel]="doctorId()" (ngModelChange)="doctorId.set($event)">
+          <option [ngValue]="null">-- All --</option>
+          @for (d of doctorList(); track d.id) {
+            <option [ngValue]="d.id">{{ d.name ?? d.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Visit Date (DD/MM/YYYY)
+        <input type="text" placeholder="DD/MM/YYYY" [ngModel]="appointmentDate()" (ngModelChange)="appointmentDate.set($event)" />
+      </label>
+      <button type="button" (click)="load()" [disabled]="loading()">{{ loading() ? 'Loading…' : 'Search' }}</button>
+    </div>
+  </section>
+
+  <section class="vl-section">
+    <h3>Queue</h3>
+    <table class="vl-table">
+      <thead>
+        <tr><th>Patient</th><th>UHID</th><th>Doctor</th><th>Department</th><th>Date</th><th>Time</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track $index) {
+          <tr>
+            <td>{{ r.patientName ?? r.patientId }}</td>
+            <td>{{ r.uhidNumber ?? '—' }}</td>
+            <td>{{ r.doctorName ?? r.doctorId }}</td>
+            <td>{{ r.specialityName ?? '—' }}</td>
+            <td>{{ r.appointmentDate ?? '—' }}</td>
+            <td>{{ r.fromTimeString ?? '—' }}</td>
+            <td>{{ r.status ?? '—' }}</td>
+            <td><button type="button" (click)="openVisit(r)">Open Encounter</button></td>
+          </tr>
+        }
+        @if (!rows().length && loaded()) {
+          <tr><td colspan="8" class="vl-empty">No visits for the filters.</td></tr>
+        }
+        @if (!rows().length && !loaded()) {
+          <tr><td colspan="8" class="vl-empty">Set the filters and press Search.</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>

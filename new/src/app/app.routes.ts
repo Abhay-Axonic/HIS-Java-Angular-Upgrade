@@ -3013,6 +3013,34 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/interconsultation/interconsultation').then((m) => m.InterconsultationComponent),
       },
+      {
+        path: 'walkinAppointment',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 4, title: 'Walk-in Appointment' },
+        loadComponent: () =>
+          import('./features/walk-in-appointment/walk-in-appointment').then((m) => m.WalkInAppointmentComponent),
+      },
+      {
+        path: 'cyclicAppointmentScheduling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 4, title: 'Cyclic Appointment Scheduling' },
+        loadComponent: () =>
+          import('./features/cyclic-appointment-scheduling/cyclic-appointment-scheduling').then((m) => m.CyclicAppointmentSchedulingComponent),
+      },
+      {
+        path: 'cyclicAppointments',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 4, title: 'Cyclic Appointments' },
+        loadComponent: () =>
+          import('./features/cyclic-appointments/cyclic-appointments').then((m) => m.CyclicAppointmentsComponent),
+      },
+      {
+        path: 'appointmentList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 4, title: 'Patient Visit List' },
+        loadComponent: () =>
+          import('./features/patient-visit-list/patient-visit-list').then((m) => m.PatientVisitListComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
