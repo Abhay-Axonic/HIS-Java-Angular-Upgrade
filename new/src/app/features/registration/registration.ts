@@ -31,6 +31,10 @@ export interface RegistrationForm {
   paymentEntitlementId: number | null;
 }
 
+/** The owner's core registration requireds (the legacy's manualValidate core;
+ * the field-config's set augments these when the corrected unit seeds it). */
+const CORE_REQUIRED = new Set<string>(['firstName', 'genderId', 'dob', 'mobileNumber']);
+
 const EMPTY_FORM: RegistrationForm = {
   prefixId: null,
   firstName: '',
@@ -101,6 +105,12 @@ export class RegistrationComponent {
     const v = this.form()[name];
     return v === null || v === undefined || v === '';
   };
+
+  /** The field's required-set membership: the owner's core registration
+   * requireds OR the field-config's required set (the config's empty on the
+   * corrected unit — the core list keeps the asterisks visible). */
+  readonly isRequired = (name: keyof RegistrationForm): boolean =>
+    CORE_REQUIRED.has(name as string) || this.configRequired().includes(name as string);
 
   constructor() {
     this.loadMasters();

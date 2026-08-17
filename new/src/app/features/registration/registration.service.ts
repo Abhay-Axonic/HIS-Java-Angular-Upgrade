@@ -54,9 +54,11 @@ export class RegistrationService {
   }
 
   getCountry(orgId: number, unitId: number): Observable<ApiResponse<never, IdNameRow>> {
-    // the CountryMasterDto has NO unitId field — a unitId in the body is an
-    // unknown property and 400s (verified against the corrected backend)
-    return this.post('/adt/getCountryById', { organizationId: orgId });
+    // the cascade root is the LIST endpoint — GET /adt/getActiveCountryList/{orgId}
+    // (the corrected CountryMasterController:92); getCountryById is the by-id
+    // detail, not the list. The CountryMasterDto has NO unitId field — the
+    // orgId rides the path, unitId is not sent.
+    return this.http.get<ApiResponse<never, IdNameRow>>(`${this.base}/adt/getActiveCountryList/${orgId}`);
   }
 
   getStatesByCountry(countryId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
