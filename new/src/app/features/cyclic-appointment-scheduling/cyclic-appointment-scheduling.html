@@ -1,0 +1,40 @@
+<div class="cyclic-sched">
+  <h2>Cyclic Appointment Scheduling</h2>
+
+  <section class="cs-section">
+    <h3>Recurring Appointment</h3>
+    <div class="cs-grid">
+      <label>Speciality
+        <select [ngModel]="specialityId()" (ngModelChange)="onSpecialityChange($event)">
+          <option [ngValue]="null">-- Select --</option>
+          @for (s of specialityList(); track s.id) {
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Doctor
+        <select [ngModel]="doctorId()" (ngModelChange)="doctorId.set($event)" [disabled]="!doctorList().length">
+          <option [ngValue]="null">-- Select --</option>
+          @for (d of doctorList(); track d.id) {
+            <option [ngValue]="d.id">{{ d.name ?? d.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Start Date (DD/MM/YYYY)
+        <input type="text" placeholder="DD/MM/YYYY" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)" />
+      </label>
+      <label>Time (HH:MM)
+        <input type="text" placeholder="HH:MM" [ngModel]="time()" (ngModelChange)="time.set($event)" />
+      </label>
+    </div>
+    <div class="cs-days">
+      <span class="cs-days-label">Repeat on:</span>
+      @for (name of dayNames; track $index) {
+        <button type="button" class="cs-day" [class.on]="days()[$index]" (click)="toggleDay($index)">
+          {{ name }}
+        </button>
+      }
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving()">Save Cyclic Appointments</button>
+  </section>
+</div>
