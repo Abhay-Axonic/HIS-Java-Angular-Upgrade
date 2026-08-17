@@ -115,7 +115,7 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { title: 'Periodicity Service' },
         loadComponent: () =>
-          import('./features/periodicity-service/periodicity-service').then((m) => m.PeriodicityService),
+          import('./features/periodicity-service/periodicity-service').then((m) => m.NursingComponent),
       },
       {
         path: 'assigningPickerDispenser',
@@ -1574,7 +1574,7 @@ export const routes: Routes = [
         canActivate: [moduleAccessGuard],
         data: { moduleId: 710, title: 'Surgical Calendar' },
         loadComponent: () =>
-          import('./features/surgical-calendar/surgical-calendar').then((m) => m.SurgicalCalendar),
+          import('./features/surgical-calendar/surgical-calendar').then((m) => m.NursingComponent),
       },
       {
         path: 'resourceChargesConfiguration',
@@ -2463,7 +2463,7 @@ export const routes: Routes = [
         data: { title: 'OT Manager Dashboard' },
         loadComponent: () =>
           import('./features/ot-manager-dashboard/ot-manager-dashboard').then(
-            (m) => m.OtManagerDashboardComponent
+            (m) => m.NursingComponent
           ),
       },
       // Report batch (2026-08-13): the T0-surviving read-only screens.
@@ -3265,6 +3265,245 @@ export const routes: Routes = [
         data: { moduleId: 17, title: 'Radiology Report Release Work List' },
         loadComponent: () =>
           import('./features/radiology-report-release-work-list/radiology-report-release-work-list').then((m) => m.LabWorklistComponent),
+      },
+
+      {
+        path: 'patientAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Patient Acceptance' },
+        loadComponent: () =>
+          import('./features/patient-acceptance/patient-acceptance').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'allergies',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Allergies' },
+        loadComponent: () =>
+          import('./features/allergies/allergies').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'bedManagement',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Map of Ward Bed' },
+        loadComponent: () =>
+          import('./features/bed-management/bed-management').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'transferToOT',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'OT Transfer/Move' },
+        loadComponent: () =>
+          import('./features/transfer-to-ot/transfer-to-ot').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'laborRoomTransferRequestAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Labor Room Transfer Request Acceptance' },
+        loadComponent: () =>
+          import('./features/labor-room-transfer-request-acceptance/labor-room-transfer-request-acceptance').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'patientForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Marked for Hospital Discharge' },
+        loadComponent: () =>
+          import('./features/patient-for-discharge/patient-for-discharge').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'dischargeMedicationReconciliation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Discharge Medication Reconciliation' },
+        loadComponent: () =>
+          import('./features/discharge-medication-reconciliation/discharge-medication-reconciliation').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'readyForBilling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Ready for Billing' },
+        loadComponent: () =>
+          import('./features/ready-for-billing/ready-for-billing').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'finalDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Final Hospital Discharge' },
+        loadComponent: () =>
+          import('./features/final-discharge/final-discharge').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'shortLeaveDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Request Short Leave' },
+        loadComponent: () =>
+          import('./features/short-leave-discharge/short-leave-discharge').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'serviceRendering',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Service Rendering' },
+        loadComponent: () =>
+          import('./features/service-rendering/service-rendering').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'periodicityService',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Periodicity Service' },
+        loadComponent: () =>
+          import('./features/periodicity-service/periodicity-service').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'administrationWorklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Administration Worklist' },
+        loadComponent: () =>
+          import('./features/administration-worklist/administration-worklist').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'patientDischargedList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Patient Discharged List' },
+        loadComponent: () =>
+          import('./features/patient-discharged-list/patient-discharged-list').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'dischargeMedicationHandover',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Discharge Medication Handover' },
+        loadComponent: () =>
+          import('./features/discharge-medication-handover/discharge-medication-handover').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'erDischargeMedicationHandover',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'ER Discharge Medication Handover' },
+        loadComponent: () =>
+          import('./features/er-discharge-medication-handover/er-discharge-medication-handover').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'nursingAllocationDashboard',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Nursing Allocation Dashboard' },
+        loadComponent: () =>
+          import('./features/nursing-allocation-dashboard/nursing-allocation-dashboard').then((m) => m.NursingAllocationDashboardComponent),
+      },
+      {
+        path: 'nursingShiftDashboard',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Nursing Shift Dashboard' },
+        loadComponent: () =>
+          import('./features/nursing-shift-dashboard/nursing-shift-dashboard').then((m) => m.NursingShiftDashboardComponent),
+      },
+      {
+        path: 'encounterQueueManagement',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Nursing Worklist' },
+        loadComponent: () =>
+          import('./features/encounter-queue-management/encounter-queue-management').then((m) => m.EncounterQueueManagement),
+      },
+      {
+        path: 'inputOutputCharts',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Intake Fluid Output Charts' },
+        loadComponent: () =>
+          import('./features/input-output-charts/input-output-charts').then((m) => m.InputOutputCharts),
+      },
+      {
+        path: 'drugAdministrator',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 33, title: 'Drug Administration' },
+        loadComponent: () =>
+          import('./features/drug-administration/drug-administration').then((m) => m.PharmacyComponent),
+      },
+      {
+        path: 'NewOTreservation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'OT Reservation' },
+        loadComponent: () =>
+          import('./features/ot-reservation/ot-reservation').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'OTManagerDashboard',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'OT Manager Dashboard' },
+        loadComponent: () =>
+          import('./features/ot-manager-dashboard/ot-manager-dashboard').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'surgicalCalendar',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Surgical Calendar' },
+        loadComponent: () =>
+          import('./features/surgical-calendar/surgical-calendar').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'preOperativeDetails',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Pre-Operative Details' },
+        loadComponent: () =>
+          import('./features/pre-operative-details/pre-operative-details').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'staffScheduling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Staff Scheduling' },
+        loadComponent: () =>
+          import('./features/staff-scheduling/staff-scheduling').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'equipmentScheduling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Equipment Scheduling' },
+        loadComponent: () =>
+          import('./features/equipment-scheduling/equipment-scheduling').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'otChecklist',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'OT Checklist' },
+        loadComponent: () =>
+          import('./features/ot-checklist/ot-checklist').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'otNotes',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'OT Notes' },
+        loadComponent: () =>
+          import('./features/ot-notes/ot-notes').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'procedureScheduling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Procedure Scheduling' },
+        loadComponent: () =>
+          import('./features/procedure-scheduling/procedure-scheduling').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'surgicalCalendarMaster',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Surgical Calendar Master' },
+        loadComponent: () =>
+          import('./features/surgical-calendar-master/surgical-calendar-master').then((m) => m.NursingComponent),
+      },
+      {
+        path: 'operationTheatreType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Operation Theatre Type' },
+        loadComponent: () =>
+          import('./features/operation-table-type/operation-table-type').then((m) => m.OperationTableType),
+      },
+      {
+        path: 'operationTable',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Operation Table' },
+        loadComponent: () =>
+          import('./features/operation-table/operation-table').then((m) => m.OperationTable),
+      },
+      {
+        path: 'operationTableType',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 16, title: 'Operation Table Type' },
+        loadComponent: () =>
+          import('./features/operation-table-type/operation-table-type').then((m) => m.OperationTableType),
       },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },

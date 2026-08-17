@@ -1,78 +1,31 @@
-export interface GenderOption {
-  id: number;
-  gender: string;
-}
-
-export interface PatientSearchResult {
-  patientId: number;
-  patientName: string;
-  uhIdNumber: string;
+/** Nursing/OT worklist row — the corrected backend's list rows (generic
+ * key/value; the display fields per screen are patient/admission/status).
+ * DATE CONVENTION: String dates (dd-M-yyyy HH:mm:ss via formatLegacyNow) —
+ * the registration/prescription convention, NOT the encounter's Long. */
+export interface NursingRow {
+  patientId?: number;
+  patientName?: string;
   admissionId?: number;
-}
-
-export interface AdmissionDetail {
-  admissionId: number;
-  isFinalBill: 'Y' | 'N';
-  bedNumber: string;
-  wardName: string;
-  admissionNumber: string;
+  admissionNumber?: string;
+  bedId?: number;
+  bedDesc?: string;
+  doctorId?: number;
+  doctorName?: string;
+  status?: string;
+  createdDate?: string;
   [key: string]: unknown;
 }
 
-export interface PeriodicityServiceSearchResult {
-  serviceId: number;
-  displayName: string;
-  periodicityServiceConfigId: number;
-  equipmentId?: number;
-  equipmentName?: string;
-  productCategoryId?: number;
-  assetCategoryId?: number;
-}
-
-export interface PeriodicityServOrderEntry {
-  serviceName: string;
-  serviceId?: number;
-  periodicityServiceConfigId?: number;
-  equipmentId?: number;
-  equipmentName?: string;
-  productCategoryId?: number;
-  assetCategoryId?: number;
-  perServConfig?: unknown;
-  fromDate: Date | null;
-  fromTime: string;
-  toDate: Date | null;
-  toTime: string;
-  visitTypeId: number | null;
-  patientId?: number;
-  uhidNumber?: string;
-  patientName?: string;
-  wardName?: string;
-  bedNumber?: string;
-  admissionNumber?: string;
-  admissionId?: number;
-  status?: 'A' | 'I';
-}
-
-export interface PeriodicityServOrderListRow {
-  orderNo: number;
-  orderDetailId: number;
-  periodicityServiceOrderId: number | null;
-  serviceId: number;
-  serviceName: string;
-  equipmentName: string;
-  fromDate: Date | null;
-  fromDateString: string;
-  fromTime: string;
-  toDate: Date | null;
-  toDateString: string;
-  toTime: string | null;
-  tatTimeName: string;
-  serviceRendered: number;
-  status: string;
-  equipmentId?: number;
-  productCategoryId?: number;
-  assetCategoryId?: number;
-  wardId?: number;
-  bedId?: number;
-  admissionId?: number;
+export interface SavePayload {
+  patientId?: number | null;
+  admissionId?: number | null;
+  remark?: string | null;
+  status?: string | null;
+  unitId?: number | null;
+  organizationId?: number | null;
+  createdBy?: number | null;
+  createdDate?: string | null;
+  updatedBy?: number | null;
+  updatedDate?: string | null;
+  [key: string]: unknown;
 }
