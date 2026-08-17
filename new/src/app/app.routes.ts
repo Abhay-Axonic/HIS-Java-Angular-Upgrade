@@ -3041,6 +3041,55 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/patient-visit-list/patient-visit-list').then((m) => m.PatientVisitListComponent),
       },
+      {
+        path: 'unknownPatientReg',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'ER-Encounter' },
+        loadComponent: () =>
+          import('./features/er-registration/er-registration').then((m) => m.ErRegistrationComponent),
+      },
+      {
+        path: 'bedTypeAllocation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'Triage Worklist' },
+        loadComponent: () =>
+          import('./features/bed-type-allocation/bed-type-allocation').then((m) => m.ErWorklistComponent),
+      },
+      {
+        path: 'erPatientList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'ER Patient List' },
+        loadComponent: () =>
+          import('./features/er-patient-list/er-patient-list').then((m) => m.ErWorklistComponent),
+      },
+      {
+        path: 'mapOfBedForER',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'Map of Ward Bed' },
+        loadComponent: () =>
+          import('./features/map-of-bed-er/map-of-bed-er').then((m) => m.ErWorklistComponent),
+      },
+      {
+        path: 'ERdueForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'Due for Hospital Discharge' },
+        loadComponent: () =>
+          import('./features/er-due-for-discharge/er-due-for-discharge').then((m) => m.ErWorklistComponent),
+      },
+      {
+        path: 'erMarkForDischarge',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'ER Mark for Hospital Discharge' },
+        loadComponent: () =>
+          import('./features/er-mark-for-discharge/er-mark-for-discharge').then((m) => m.ErWorklistComponent),
+      },
+      {
+        path: 'ERreadyForBilling',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 9, title: 'Ready for Billing' },
+        loadComponent: () =>
+          import('./features/er-ready-for-billing/er-ready-for-billing').then((m) => m.ErWorklistComponent),
+      },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
     ],
