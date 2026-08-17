@@ -1,37 +1,102 @@
-<div class="aps-page">
-  <header class="aps-header">
-    <h2>Appointment Scheduling</h2>
-    <p class="aps-sub">Screen 41 — module 4 (Opd, parent 2). Appointment scheduling.</p>
-  </header>
+<div class="appointment-scheduling">
+  <h2>Appointment Scheduling</h2>
 
-  <section class="aps-finding">
-    <h3>Masked error surfaced — the scheduled-list DAO discards the exception into a null-message envelope</h3>
-    <p>
-      scheduledAppointmentList's DAO catch logs + returns a null-message
-      ERROR envelope; the service rethrows it as a null-message
-      ApplicationException; the controller surfaces "Something went
-      wrong!!". The user sees an error, but the underlying cause is lost at
-      the first swallow.
-    </p>
-    <p class="aps-detail">
-      AppointmentSchedulingDaoImpl:872-875 — the HibernateException catch
-      logs then falls to <code>return new Response(ERROR, null, null, null,
-      null)</code>. The list path throws server-side (root cause owed — a
-      phantom column or missing join in GET_SCHEDULED_APPOINTMENTS_SLOTS_
-      LIST). Not fixed (Rule 10 — surfaced for the BR scoped-check).
-    </p>
+  <section class="as-section">
+    <h3>Department / Doctor</h3>
+    <div class="as-grid">
+      <label>Speciality
+        <select [ngModel]="specialityId()" (ngModelChange)="onSpecialityChange($event)">
+          <option [ngValue]="null">-- Select --</option>
+          @for (s of specialityList(); track s.id) {
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Sub-speciality
+        <select [ngModel]="subSpecialityId()" (ngModelChange)="subSpecialityId.set($event)" [disabled]="!subSpecialityList().length">
+          <option [ngValue]="null">-- Select --</option>
+          @for (s of subSpecialityList(); track s.id) {
+            <option [ngValue]="s.id">{{ s.name ?? s.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Doctor
+        <select [ngModel]="doctorId()" (ngModelChange)="doctorId.set($event)" [disabled]="!doctorList().length">
+          <option [ngValue]="null">-- Select --</option>
+          @for (d of doctorList(); track d.id) {
+            <option [ngValue]="d.id">{{ d.name ?? d.desc }}</option>
+          }
+        </select>
+      </label>
+      <label>Appointment Date (DD/MM/YYYY)
+        <input type="text" placeholder="DD/MM/YYYY" [ngModel]="appointmentDate()"
+          (ngModelChange)="appointmentDate.set($event)" />
+      </label>
+    </div>
+    <div class="as-actions">
+      <button type="button" (click)="loadSlots()" [disabled]="loadingSlots()">Show Slots</button>
+      <button type="button" (click)="loadList()">Show Appointments</button>
+    </div>
   </section>
 
-  <section class="aps-list card">
-    <h3>Scheduled appointments</h3>
-    @if (loading()) {
-      <p class="aps-note">Loading…</p>
-    } @else if (loadState() === 'error') {
-      <p class="aps-note">The backend returned its error envelope (501 "Something went wrong!!"). Honest state shown.</p>
-    } @else if (rows().length === 0) {
-      <p class="aps-note">No scheduled appointments found (dev data).</p>
-    } @else {
-      <p class="aps-note">{{ rows().length }} scheduled appointment(s).</p>
-    }
+  <section class="as-section">
+    <h3>Available Slots</h3>
+    <div class="as-slots">
+      @for (s of slots(); track $index) {
+        <button type="button" class="as-slot" [class.selected]="selectedSlot() === s" (click)="pickSlot(s)">
+          {{ s.fromTimeString ?? s.fromTime }} – {{ s.toTimeString ?? s.toTime }}
+        </button>
+      }
+      @if (!slots().length) {
+        <span class="as-empty">No slots loaded — pick a speciality, doctor and date, then Show Slots.</span>
+      }
+    </div>
+  </section>
+
+  <section class="as-section">
+    <h3>Book Appointment</h3>
+    <div class="as-search">
+      <input type="text" placeholder="Search patient (UHID / name / mobile)" [ngModel]="searchKeyword()"
+        (ngModelChange)="searchKeyword.set($event)" (keyup.enter)="searchPatient()" />
+      <button type="button" (click)="searchPatient()">Search</button>
+      @if (searchOpen()) {
+        <div class="as-results">
+          @for (p of patientResults(); track $index) {
+            <button type="button" (click)="pickPatient(p)">
+              {{ p.firstName }} {{ p.middleName }} {{ p.lastName }} — {{ p.uhidNumber }}
+            </button>
+          }
+          @if (!patientResults().length) {
+            <span>No patients found</span>
+          }
+        </div>
+      }
+    </div>
+    <div class="as-booking">
+      <span>Patient: <strong>{{ selectedPatient() ? (selectedPatient()?.firstName + ' ' + (selectedPatient()?.lastName ?? '')) : '—' }}</strong></span>
+      <span>Slot: <strong>{{ selectedSlot() ? ((selectedSlot()?.fromTimeString ?? selectedSlot()?.fromTime) + ' – ' + (selectedSlot()?.toTimeString ?? selectedSlot()?.toTime)) : '—' }}</strong></span>
+    </div>
+    <button type="button" class="btn-primary" (click)="book()" [disabled]="saving()">Book Appointment</button>
+  </section>
+
+  <section class="as-section">
+    <h3>Appointments</h3>
+    <table class="as-table">
+      <thead>
+        <tr><th>Time</th><th>Patient</th><th>Doctor</th></tr>
+      </thead>
+      <tbody>
+        @for (a of appointments(); track $index) {
+          <tr>
+            <td>{{ a.fromTimeString ?? a.fromTime }} – {{ a.toTimeString ?? a.toTime }}</td>
+            <td>{{ a.patientName ?? a.patientId }}</td>
+            <td>{{ a.doctorName ?? '—' }}</td>
+          </tr>
+        }
+        @if (!appointments().length) {
+          <tr><td colspan="3" class="as-empty">No appointments for the selection.</td></tr>
+        }
+      </tbody>
+    </table>
   </section>
 </div>
