@@ -2495,15 +2495,15 @@ export const routes: Routes = [
         data: { title: 'Radiology Report Validation' },
         loadComponent: () =>
           import('./features/radiology-report-validation/radiology-report-validation').then(
-            (m) => m.RadiologyReportValidationComponent
+            (m) => m.LabWorklistComponent
           ),
       },
       {
         path: 'radiologyReportReleaseWorkList',
         data: { title: 'Radiology Report Release Worklist' },
         loadComponent: () =>
-          import('./features/radiology-report-release-worklist/radiology-report-release-worklist').then(
-            (m) => m.RadiologyReportReleaseWorklistComponent
+          import('./features/radiology-report-release-work-list/radiology-report-release-work-list').then(
+            (m) => m.LabWorklistComponent
           ),
       },
       {
@@ -3131,6 +3131,140 @@ export const routes: Routes = [
         data: { moduleId: 12, title: 'Pending Issues' },
         loadComponent: () =>
           import('./features/pending-issues/pending-issues').then((m) => m.PharmacyComponent),
+      },
+
+      {
+        path: 'labHomeSampleCollection',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Lab Home Sample Collection' },
+        loadComponent: () =>
+          import('./features/lab-home-sample-collection/lab-home-sample-collection').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'sampleAcceptance',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Sample Acceptance' },
+        loadComponent: () =>
+          import('./features/sample-acceptance/sample-acceptance').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'centrifugationWorkList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Centrifugation Worklist' },
+        loadComponent: () =>
+          import('./features/centrifugation-work-list/centrifugation-work-list').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'sampleProcessingWorkList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Sample Processing Work List' },
+        loadComponent: () =>
+          import('./features/sample-processing-work-list/sample-processing-work-list').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'worklistForReportEntry',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Worklist for Report Entry' },
+        loadComponent: () =>
+          import('./features/worklist-for-report-entry/worklist-for-report-entry').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'consolidatedResultEntry',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Consolidated Result Entry' },
+        loadComponent: () =>
+          import('./features/consolidated-result-entry/consolidated-result-entry').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'consolidatedReportValidation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Consolidated Report Validation' },
+        loadComponent: () =>
+          import('./features/consolidated-report-validation/consolidated-report-validation').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'consolidatedReportRelease',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Consolidated Report Release' },
+        loadComponent: () =>
+          import('./features/consolidated-report-release/consolidated-report-release').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'sendToCR',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Send to CR' },
+        loadComponent: () =>
+          import('./features/send-to-cr/send-to-cr').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'sampleRecollection',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Sample Recollection' },
+        loadComponent: () =>
+          import('./features/sample-recollection/sample-recollection').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'configurationWorkList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Configuration Worklist' },
+        loadComponent: () =>
+          import('./features/configuration-work-list/configuration-work-list').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'microscopicExaminiationWorkList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Microscopic Examination Work List' },
+        loadComponent: () =>
+          import('./features/microscopic-examination-work-list/microscopic-examination-work-list').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'inPatient',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'In Patient' },
+        loadComponent: () =>
+          import('./features/in-patient/in-patient').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'outPatient',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 15, title: 'Out Patient' },
+        loadComponent: () =>
+          import('./features/out-patient/out-patient').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'radiologyWorkbench',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 17, title: 'Radiology Workbench' },
+        loadComponent: () =>
+          import('./features/radiology-workbench/radiology-workbench').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'radiologyResultEntry',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 17, title: 'Radiology Result Entry' },
+        loadComponent: () =>
+          import('./features/radiology-result-entry/radiology-result-entry').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'radiologyResultValidation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 17, title: 'Radiology Result Validation' },
+        loadComponent: () =>
+          import('./features/radiology-result-validation/radiology-result-validation').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'radiologyReportValidation',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 17, title: 'Radiology Report Validation' },
+        loadComponent: () =>
+          import('./features/radiology-report-validation/radiology-report-validation').then((m) => m.LabWorklistComponent),
+      },
+      {
+        path: 'radiologyReportReleaseWorkList',
+        canActivate: [moduleAccessGuard],
+        data: { moduleId: 17, title: 'Radiology Report Release Work List' },
+        loadComponent: () =>
+          import('./features/radiology-report-release-work-list/radiology-report-release-work-list').then((m) => m.LabWorklistComponent),
       },
 
       { path: '', redirectTo: 'billingGroupMaster', pathMatch: 'full' },
