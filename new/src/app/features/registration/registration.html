@@ -13,7 +13,7 @@
           }
         </select>
       </label>
-      <label>First Name
+      <label>First Name @if (isRequired('firstName')) { <span class="req">*</span> }
         <input type="text" [ngModel]="form().firstName" (ngModelChange)="updateField('firstName', $event)"
           [class.invalid]="isRequiredMissing('firstName')" />
       </label>
@@ -24,7 +24,7 @@
         <input type="text" [ngModel]="form().lastName" (ngModelChange)="updateField('lastName', $event)"
           [class.invalid]="isRequiredMissing('lastName')" />
       </label>
-      <label>Gender
+      <label>Gender @if (isRequired('genderId')) { <span class="req">*</span> }
         <select [ngModel]="form().genderId" (ngModelChange)="updateField('genderId', $event)"
           [class.invalid]="isRequiredMissing('genderId')">
           <option [ngValue]="null">-- Select --</option>
@@ -33,11 +33,11 @@
           }
         </select>
       </label>
-      <label>Date of Birth (DD/MM/YYYY)
+      <label>Date of Birth (DD/MM/YYYY) @if (isRequired('dob')) { <span class="req">*</span> }
         <input type="text" placeholder="DD/MM/YYYY" [ngModel]="form().dob"
           (ngModelChange)="updateField('dob', $event)" [class.invalid]="isRequiredMissing('dob')" />
       </label>
-      <label>Mobile
+      <label>Mobile @if (isRequired('mobileNumber')) { <span class="req">*</span> }
         <input type="text" maxlength="10" [ngModel]="form().mobileNumber"
           (ngModelChange)="updateField('mobileNumber', $event)" [class.invalid]="isRequiredMissing('mobileNumber')" />
       </label>
@@ -50,7 +50,7 @@
   <section class="reg-section">
     <h3>Identification</h3>
     <div class="reg-grid">
-      <label>Identification Type
+      <label>Identification Type @if (isRequired('identificationTypeId')) { <span class="req">*</span> }
         <select [ngModel]="form().identificationTypeId" (ngModelChange)="updateField('identificationTypeId', $event)"
           [class.invalid]="isRequiredMissing('identificationTypeId')">
           <option [ngValue]="null">-- Select --</option>
@@ -59,7 +59,7 @@
           }
         </select>
       </label>
-      <label>Identification Number
+      <label>Identification Number @if (isRequired('identificationNumber')) { <span class="req">*</span> }
         <input type="text" [ngModel]="form().identificationNumber"
           (ngModelChange)="updateField('identificationNumber', $event)"
           [class.invalid]="isRequiredMissing('identificationNumber')" />
@@ -74,11 +74,11 @@
   <section class="reg-section">
     <h3>Kin Details</h3>
     <div class="reg-grid">
-      <label>Kin Name
+      <label>Kin Name @if (isRequired('kinName')) { <span class="req">*</span> }
         <input type="text" [ngModel]="form().kinName" (ngModelChange)="updateField('kinName', $event)"
           [class.invalid]="isRequiredMissing('kinName')" />
       </label>
-      <label>Relation
+      <label>Relation @if (isRequired('relationId')) { <span class="req">*</span> }
         <select [ngModel]="form().relationId" (ngModelChange)="updateField('relationId', $event)"
           [class.invalid]="isRequiredMissing('relationId')">
           <option [ngValue]="null">-- Select --</option>
@@ -87,7 +87,7 @@
           }
         </select>
       </label>
-      <label>Kin Mobile
+      <label>Kin Mobile @if (isRequired('kinMobileNo')) { <span class="req">*</span> }
         <input type="text" maxlength="10" [ngModel]="form().kinMobileNo"
           (ngModelChange)="updateField('kinMobileNo', $event)" />
       </label>
