@@ -1,32 +1,38 @@
-/** Blood Bank worklist row — the corrected backend's list rows (generic
- * key/value; the display fields per screen are donor/patient/bag/status).
- * DATE CONVENTION: String dates (dd-M-yyyy HH:mm:ss via formatLegacyNow) —
- * the registration/prescription convention, NOT the encounter's Long. */
-export interface BloodRow {
+/** Donor Screening Worklist row — the legacy grid's columns (the view at
+ * views/master/bloodBankDonor/donor-screening-worklist.html:108-114): Donor
+ * Id, Donor Name, Blood Group, Gender, Deferral Status, Deferred Till, Action
+ * taken. The backend returns DonorScreeningDetailDto rows (the legacy binds
+ * donorNumber/donorName/bloodGroupDesc/genderDesc/deferralStatusDesc/
+ * deferredTillDate/screeningResultStatusId); the `??` chains keep the display
+ * safe across the field-naming variants. DATE CONVENTION: String dates
+ * (dd-M-yyyy HH:mm:ss via formatLegacyNow). */
+export interface DonorRow {
   donorId?: number;
+  donorNumber?: string;
   donorName?: string;
-  patientId?: number;
-  patientName?: string;
-  bagId?: number;
-  bagNumber?: string;
+  uhidNumber?: string;
+  mobileNumber?: string;
   bloodGroup?: string;
-  component?: string;
+  bloodGroupDesc?: string;
+  gender?: string;
+  genderDesc?: string;
+  deferralStatus?: string;
+  deferralStatusDesc?: string;
+  deferredTill?: string;
+  deferredTillDate?: string;
+  screeningResultStatusId?: number;
   status?: string;
   createdDate?: string;
   [key: string]: unknown;
 }
 
-export interface SavePayload {
-  donorId?: number | null;
-  patientId?: number | null;
-  bagId?: number | null;
-  remark?: string | null;
-  status?: string | null;
-  unitId?: number | null;
-  organizationId?: number | null;
-  createdBy?: number | null;
-  createdDate?: string | null;
-  updatedBy?: number | null;
-  updatedDate?: string | null;
+export interface DonorSearch {
+  donorNumber?: string;
+  donorName?: string;
+  uhidNumber?: string;
+  fromDate?: string;
+  toDate?: string;
+  unitId?: number;
+  organizationId?: number;
   [key: string]: unknown;
 }
