@@ -216,6 +216,8 @@ export class RegistrationComponent {
     }
     const now = formatLegacyNow();
     const payload: RegistrationPayload = {
+      patientId: 0,
+      registrationTypeId: 1,
       organizationId: this.orgId,
       unitId: this.unitId,
       prefixId: f.prefixId,
@@ -223,13 +225,13 @@ export class RegistrationComponent {
       middleName: f.middleName || null,
       lastName: f.lastName,
       genderId: f.genderId,
-      dob: f.dob || null,
+      dob: formatDob(f.dob),
       mobileNumber: f.mobileNumber || null,
       countryCallingCode: null,
       email: f.email || null,
       identificationTypeId: f.identificationTypeId,
       identificationNumber: f.identificationNumber || null,
-      identificationExpiryDate: f.identificationExpiryDate || null,
+      identificationExpiryDate: formatDob(f.identificationExpiryDate),
       address: f.address || null,
       countryId: f.countryId,
       stateId: f.stateId,
@@ -268,14 +270,21 @@ export class RegistrationComponent {
   }
 }
 
-/** The legacy audit-time format (dd-M-yyyy HH:mm:ss) — the same convention as
- * insurance-master / patient-type-master. */
+/** The legacy audit-time format (dd-M-yyyy HH:mm:ss — the dozer mapping's
+ * literal at OPD/dozer-bean-mappings.xml:16). M is the NUMERIC month — the
+ * month-name array ('Aug') failed the SimpleDateFormat parse with the dozer
+ * 500 'Unable to parse source object using specified date format'. */
 function formatLegacyNow(): string {
   const d = new Date();
   const pad = (n: number): string => String(n).padStart(2, '0');
-  const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
-  return `${pad(d.getDate())}-${months[d.getMonth()]}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+/** The dozer String-date convention: dd/MM/yyyy form input -> 'dd-MM-yyyy
+ * HH:mm:ss' with 00:00:00 appended (the parse REQUIRES the time component —
+ * the owner's curl proof: a date-only dob did not save). */
+function formatDob(value: string): string | null {
+  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec((value || '').trim());
+  if (!m) return value || null;
+  return `${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}-${m[3]} 00:00:00`;
 }
