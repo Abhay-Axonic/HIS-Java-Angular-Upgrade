@@ -18,7 +18,7 @@ export class BloodBankService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, BloodRow>> {
-    return this.post('/api/bloodbank/redCellGroupingWorklist', criteria);
+    return this.post('/api/bloodbank/redcell/getRedCellDetailsOnComponentSeparation', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {

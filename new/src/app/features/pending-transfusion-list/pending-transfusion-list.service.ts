@@ -18,7 +18,7 @@ export class BloodBankService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, BloodRow>> {
-    return this.post('/api/bloodbank/pendingTransfusionList', criteria);
+    return this.post('/api/bloodbank/issueAcceptance/getListOnPendingTransfusion', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
