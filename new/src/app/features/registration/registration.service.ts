@@ -178,6 +178,26 @@ export class RegistrationService {
       })),
     );
   }
+  getRegistrationTypes(): Observable<ApiResponse<never, IdNameRow>> {
+    // the master endpoint — GET /adt/getPatientRegistrationTypes
+    // (PendingRequestController.java:212; the DAO's SQL at
+    // PendingRequestDaoImpl.java:437-439 returns id AS registrationTypeId,
+    // reg_type AS registrationTypeName). Id 7 is the E2E test artifact —
+    // it stays in the master for existing rows but is filtered out of the
+    // dropdown (the owner's verified-master note).
+    return this.http
+      .get<ApiResponse<never, IdNameRow>>(`${this.base}/adt/getPatientRegistrationTypes`)
+      .pipe(
+        map((r) => ({
+          ...r,
+          listObject: (r.listObject ?? []).map((row) => ({
+            id: Number(row['registrationTypeId'] ?? row.id),
+            name: String(row['registrationTypeName'] ?? row.name ?? row.desc),
+          })),
+        })),
+      );
+  }
+
   getFieldConfig(orgId: number, unitId: number): Observable<ApiResponse<never, FieldConfig>> {
     // the legacy endpoint is a GET with orgId/unitId in the path
     return this.http.get<ApiResponse<never, FieldConfig>>(
