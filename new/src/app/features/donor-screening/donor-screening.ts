@@ -141,9 +141,18 @@ export class BloodBankComponent {
   }
 
   /** Build the mapper list from the answered questions (the legacy's
-   * save-assembly: each answered question -> one DonorScreeningMapper entry). */
+   * save-assembly, donorScreeningWorklistDetailsController.js:977-989: every
+   * answered question -> one entry carrying donorScreeningParameterId,
+   * parameterResultStatus 'Y'/'N', donorDeferralTillDate, status, createdBy/
+   * updatedBy, and the createdDate/updatedDate as dd-MM-yyyy HH:mm:ss STRINGS —
+   * the DAO parses them unconditionally (DonorScreeningDetailDaoImpl:85,88,96)
+   * and GlobalCommonDateUtils.getDate NPEs on null (:305). The legacy sends
+   * donorDeferralTillDate = null for no-date answers; the backend crashes on
+   * that null, so we send '' instead — the util's parse-fail returns null for
+   * '' too, i.e. the identical DB result without the crash. Never a fabricated
+   * date. */
   private buildMapperList(): DonorScreeningMapper[] {
-    const donorId = this.donorId();
+    const now = this.legacyNow();
     const mappers: DonorScreeningMapper[] = [];
     for (const q of [...this.temporaryQuestions(), ...this.permanentQuestions()]) {
       const ans = this.answers()[q.id ?? -1];
@@ -153,16 +162,31 @@ export class BloodBankComponent {
       mappers.push({
         donorScreeningParameterId: q.id ?? null,
         parameterResultStatus: ans.yes ? 'Y' : 'N',
-        donorDeferralTillDate: ans.yes ? ans.deferredTill || undefined : undefined,
-        donorId: donorId ?? undefined,
+        donorScreeningDetailMapperId: undefined,
+        donorDeferralTillDate: ans.yes && ans.deferredTill ? this.toLegacyDate(ans.deferredTill) : '',
+        organizationId: this.orgId,
+        unitId: this.unitId,
         status: 'A',
         createdBy: this.userId,
-        createdDate: new Date().toISOString(),
-        unitId: this.unitId,
-        organizationId: this.orgId,
+        updatedBy: this.userId,
+        createdDate: now,
+        updatedDate: now,
       });
     }
     return mappers;
+  }
+
+  /** dd-MM-yyyy HH:mm:ss with a numeric month (the dozer/date-util contract;
+   * the date-input's YYYY-MM-DD becomes dd-MM-yyyy 00:00:00). */
+  private toLegacyDate(date: string): string {
+    const [y, m, d] = date.split('-');
+    return y && m && d ? `${d}-${m}-${y} 00:00:00` : '';
+  }
+
+  private legacyNow(): string {
+    const n = new Date();
+    const p = (v: number) => String(v).padStart(2, '0');
+    return `${p(n.getDate())}-${p(n.getMonth() + 1)}-${n.getFullYear()} ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
   }
 
   save(): void {
