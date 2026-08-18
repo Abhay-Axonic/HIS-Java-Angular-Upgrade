@@ -18,7 +18,7 @@ export class IpdService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, IpdRow>> {
-    return this.post('/api/billing/debitNoteList', criteria);
+    return this.post('/api/billing/debitNote/filterList', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {

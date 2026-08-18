@@ -18,10 +18,10 @@ export class BloodBankService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, BloodRow>> {
-    return this.post('/api/bloodbank/bloodIssueAcceptanceWorklist', criteria);
+    return this.post('/global/bloodBank/getIssueBloodBagOnIssueAcceptanceScreen', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
-    return this.post('/api/bloodbank/save', payload);
+    return this.post('/api/bloodbank/issueAcceptance/saveTransfusionDetails', payload);
   }
 }

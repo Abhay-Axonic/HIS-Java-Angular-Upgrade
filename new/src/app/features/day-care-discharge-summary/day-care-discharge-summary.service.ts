@@ -18,7 +18,7 @@ export class IpdService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, IpdRow>> {
-    return this.post('/adt/dayCareDischargeSummary', criteria);
+    return this.post('/adt/discharge/getSavedDischargeSummaryByAdmissionId', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {

@@ -18,10 +18,10 @@ export class IpdService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, IpdRow>> {
-    return this.post('/api/billing/discountRequest', criteria);
+    return this.post('/api/billing/requestedDiscount/user', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
-    return this.post('/api/billing/save', payload);
+    return this.post('/api/billing/approveRequest', payload);
   }
 }

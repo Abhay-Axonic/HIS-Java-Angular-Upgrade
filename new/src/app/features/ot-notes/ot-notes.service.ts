@@ -22,6 +22,6 @@ export class NursingService {
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
-    return this.post('/api/otims/notes/save', payload);
+    return this.post('/global/otims/saveNotesMaster', payload);
   }
 }

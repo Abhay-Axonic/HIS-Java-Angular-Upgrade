@@ -22,6 +22,6 @@ export class BloodBankService {
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
-    return this.post('/api/bloodbank/save', payload);
+    return this.post('/api/bloodbank/stock/saveBloodBankStock', payload);
   }
 }
