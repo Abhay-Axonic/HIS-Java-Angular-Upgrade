@@ -18,7 +18,7 @@ export class LabWorklistService {
   }
 
   search(criteria: Record<string, unknown>): Observable<ApiResponse<never, LabRow>> {
-    return this.post('/LIS/centralReceiving/search', criteria);
+    return this.post('/LIS/centralReceiving/outPatientList/Search', criteria);
   }
 
   save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
