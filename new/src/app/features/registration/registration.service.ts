@@ -37,7 +37,19 @@ export class RegistrationService {
   }
 
   getGenderList(orgId: number, unitId: number): Observable<ApiResponse<never, IdNameRow>> {
-    return this.http.get<ApiResponse<never, IdNameRow>>(`${this.base}/adt/getActiveGenderList`);
+    // the corrected GenderMasterDto carries id + desc — mapped for the uniform
+    // IdNameRow shape (the template's desc fallback already rendered it).
+    return this.http
+      .get<ApiResponse<never, IdNameRow>>(`${this.base}/adt/getActiveGenderList`)
+      .pipe(
+        map((r) => ({
+          ...r,
+          listObject: (r.listObject ?? []).map((row) => ({
+            id: Number(row.id ?? row['genderId']),
+            name: String(row.desc ?? row.name ?? row.code),
+          })),
+        })),
+      );
   }
 
   getIdentificationList(orgId: number, unitId: number): Observable<ApiResponse<never, IdNameRow>> {
@@ -110,23 +122,62 @@ export class RegistrationService {
       );
   }
 
-  getStatesByCountry(countryId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    // the StateMasterDto has no org/unit fields — parent id only (the corrected DTO)
-    return this.post('/adt/getActiveStateListByCountryId', { countryId });
+  getStatesByCountry(parentId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
+    return this.post('/adt/getActiveStateListByCountryId', { countryId: parentId }).pipe(
+      map((r) => ({
+        ...r,
+        listObject: (r.listObject ?? []).map((row) => {
+          const rr = row as Record<string, unknown>;
+          return {
+            id: Number(rr['countryId'] ?? rr['id']),
+            name: String(rr['stateName'] ?? rr['name'] ?? rr['desc'] ?? rr['code']),
+          };
+        }),
+      })),
+    );
   }
-
-  getDistrictsByState(stateId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getActiveDistrictListByStateId', { stateId });
+  getDistrictsByState(parentId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
+    return this.post('/adt/getActiveDistrictListByStateId', { stateId: parentId }).pipe(
+      map((r) => ({
+        ...r,
+        listObject: (r.listObject ?? []).map((row) => {
+          const rr = row as Record<string, unknown>;
+          return {
+            id: Number(rr['stateId'] ?? rr['id']),
+            name: String(rr['districtName'] ?? rr['name'] ?? rr['desc'] ?? rr['code']),
+          };
+        }),
+      })),
+    );
   }
-
-  getCitiesByDistrict(districtId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getActiveCityListByDistrictId', { districtId });
+  getCitiesByDistrict(parentId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
+    return this.post('/adt/getActiveCityListByDistrictId', { districtId: parentId }).pipe(
+      map((r) => ({
+        ...r,
+        listObject: (r.listObject ?? []).map((row) => {
+          const rr = row as Record<string, unknown>;
+          return {
+            id: Number(rr['districtId'] ?? rr['id']),
+            name: String(rr['cityName'] ?? rr['name'] ?? rr['desc'] ?? rr['code']),
+          };
+        }),
+      })),
+    );
   }
-
-  getAreasByCity(cityId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
-    return this.post('/adt/getAreaByCityId', { cityId });
+  getAreasByCity(parentId: number, orgId: number, unitId: number): Observable<ApiResponse<never, GeoRow>> {
+    return this.post('/adt/getAreaByCityId', { cityId: parentId }).pipe(
+      map((r) => ({
+        ...r,
+        listObject: (r.listObject ?? []).map((row) => {
+          const rr = row as Record<string, unknown>;
+          return {
+            id: Number(rr['cityId'] ?? rr['id']),
+            name: String(rr['areaName'] ?? rr['name'] ?? rr['desc'] ?? rr['code']),
+          };
+        }),
+      })),
+    );
   }
-
   getFieldConfig(orgId: number, unitId: number): Observable<ApiResponse<never, FieldConfig>> {
     // the legacy endpoint is a GET with orgId/unitId in the path
     return this.http.get<ApiResponse<never, FieldConfig>>(
