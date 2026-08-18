@@ -32,7 +32,7 @@ export class DonorScreeningService {
     return this.post('/api/bloodbank/saveDonorScreeningDetail', payload);
   }
 
-  questionsByGender(genderId: number): Observable<ApiResponse<never, ScreeningQuestion>> {
-    return this.post('/global/bloodBank/getDonorScreeningListByGenderId', {genderId});
+  questionsByGender(genderId: number, organizationId: number, unitId: number): Observable<ApiResponse<never, ScreeningQuestion>> {
+    return this.post('/global/bloodBank/getDonorScreeningListByGenderId', {genderId, organizationId, unitId});
   }
 }

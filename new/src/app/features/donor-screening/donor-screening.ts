@@ -87,7 +87,7 @@ export class BloodBankComponent {
   }
 
   loadQuestions(genderId: number): void {
-    this.api.questionsByGender(genderId).subscribe({
+    this.api.questionsByGender(Number(genderId), this.orgId, this.unitId).subscribe({
       next: (qr) => {
         const list = (qr as {listObject?: ScreeningQuestion[]}).listObject ?? [];
         // The legacy split (donorScreeningWorklistDetailsController.js:133-158):
