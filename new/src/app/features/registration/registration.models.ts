@@ -53,6 +53,9 @@ export interface RegistrationPayload {
   updatedBy: number;
   createdDate: string;
   updatedDate: string;
+  /** the registration-type master's id — the backend NPEs unboxing a null
+   * (m_patient_registration_type_master; seeded IDs 1, 4, 7) — default 1 */
+  registrationTypeId: number;
 }
 
 export interface IdNameRow {
