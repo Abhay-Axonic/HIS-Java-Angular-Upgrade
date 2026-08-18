@@ -48,6 +48,19 @@
   </section>
 
   <section class="reg-section">
+    <section class="reg-section">
+      <h3>Registration Type</h3>
+      <div class="reg-grid">
+        <label>Registration Type
+          <select [ngModel]="form().registrationTypeId" (ngModelChange)="updateField('registrationTypeId', $event)">
+            @for (rt of registrationTypes(); track rt.id) {
+              <option [ngValue]="rt.id">{{ rt.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    </section>
+
     <h3>Identification</h3>
     <div class="reg-grid">
       <label>Identification Type @if (isRequired('identificationTypeId')) { <span class="req">*</span> }

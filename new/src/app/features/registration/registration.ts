@@ -29,6 +29,7 @@ export interface RegistrationForm {
   zipCode: string;
   address: string;
   paymentEntitlementId: number | null;
+  registrationTypeId: number | null;
 }
 
 /** The owner's core registration requireds (the legacy's manualValidate core;
@@ -58,6 +59,7 @@ const EMPTY_FORM: RegistrationForm = {
   zipCode: '',
   address: '',
   paymentEntitlementId: null,
+  registrationTypeId: null,
 };
 
 /** OPD Patient Registration — the legacy patientRegistration screen's core
@@ -84,6 +86,7 @@ export class RegistrationComponent {
   readonly genderList = signal<IdNameRow[]>([]);
   readonly identificationList = signal<IdNameRow[]>([]);
   readonly relationList = signal<IdNameRow[]>([]);
+  readonly registrationTypes = signal<IdNameRow[]>([]);
   readonly paymentEntitlementList = signal<IdNameRow[]>([]);
   // geography cascade
   readonly countryList = signal<GeoRow[]>([]);
@@ -129,6 +132,19 @@ export class RegistrationComponent {
     });
     this.api.getRelationList(this.orgId, this.unitId).subscribe((r) => {
       if (r.status === 'success') this.relationList.set(r.listObject ?? []);
+    });
+    // the registration-type master — the dropdown's ids 1 + 4 only (id 7 is
+    // the TEST-ARTIFACT the owner verified — never offered for selection).
+    // The NEW-registration default is the master's own id-1 row, sourced
+    // from the master, not a literal.
+    this.api.getRegistrationTypes().subscribe((r) => {
+      if (r.status === 'success') {
+        this.registrationTypes.set((r.listObject ?? []).filter((row) => row.id !== 7));
+        const def = (r.listObject ?? []).find((row) => row.id === 1);
+        if (def && this.form().registrationTypeId == null) {
+          this.form.update((f) => ({ ...f, registrationTypeId: def.id }));
+        }
+      }
     });
     this.api.getPaymentEntitlementList(this.orgId, this.unitId).subscribe((r) => {
       if (r.status === 'success') this.paymentEntitlementList.set(r.listObject ?? []);
@@ -217,7 +233,10 @@ export class RegistrationComponent {
     const now = formatLegacyNow();
     const payload: RegistrationPayload = {
       patientId: 0,
-      registrationTypeId: 1,
+      // the form's value — the master-sourced default on new; a loaded
+      // patient's own value passes back unchanged (the screen is new-only
+      // today — the load path, when added, flows through the same field).
+      registrationTypeId: f.registrationTypeId ?? 1,
       organizationId: this.orgId,
       unitId: this.unitId,
       prefixId: f.prefixId,
