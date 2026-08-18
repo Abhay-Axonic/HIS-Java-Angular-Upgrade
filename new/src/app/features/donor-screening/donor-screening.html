@@ -106,12 +106,60 @@
         <textarea [ngModel]="form().screeningRemarks" (ngModelChange)="form().screeningRemarks = $event" rows="2"></textarea>
       </label>
     </div>
-    @if (questions().length) {
-      <div class="bb-form">
-        @for (q of questions(); track $index) {
-          <label class="bb-q">{{ q.parameter }}</label>
-        }
-      </div>
+    @if (temporaryQuestions().length || permanentQuestions().length) {
+      <h3>Questionnaire</h3>
+      <!-- The legacy's temporary-deferral table (donor-screening.html:306-311). -->
+      @if (temporaryQuestions().length) {
+        <table class="bb-table">
+          <thead><tr><th>Parameter</th><th>Answer</th><th>Deferred Till</th></tr></thead>
+          <tbody>
+            @for (q of temporaryQuestions(); track q.id) {
+              <tr>
+                <td>{{ q.parameter }}</td>
+                <td>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === true" (change)="setAnswer(q, true)" /> Yes
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === false" (change)="setAnswer(q, false)" /> No
+                  </label>
+                </td>
+                <td>
+                  @if (answers()[q.id ?? -1]?.yes) {
+                    <input type="date" [ngModel]="answers()[q.id ?? -1]?.deferredTill" (ngModelChange)="setDeferredTill(q, $event)" />
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+      <!-- The legacy's permanent-deferral table (donor-screening.html:352-356). -->
+      @if (permanentQuestions().length) {
+        <table class="bb-table">
+          <thead><tr><th>Parameter</th><th>Answer</th><th>Deferred Till</th></tr></thead>
+          <tbody>
+            @for (q of permanentQuestions(); track q.id) {
+              <tr>
+                <td>{{ q.parameter }}</td>
+                <td>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === true" (change)="setAnswer(q, true)" /> Yes
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === false" (change)="setAnswer(q, false)" /> No
+                  </label>
+                </td>
+                <td>
+                  @if (answers()[q.id ?? -1]?.yes) {
+                    <input type="date" [ngModel]="answers()[q.id ?? -1]?.deferredTill" (ngModelChange)="setDeferredTill(q, $event)" />
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     }
   </section>
 

@@ -6,11 +6,13 @@ import type {ApiResponse} from '../../core/api-response';
 import type {DonorScreeningDetail, ScreeningQuestion} from './donor-screening.models';
 
 /** Donor Screening form — the legacy call-set (donorScreeningWorklistDetailsController.js):
- * getDonorScreeningDetailByDonorId/ (the donor's existing screening detail),
- * saveDonorScreeningDetail (the save), getDonorScreeningListByGenderId (the
- * screening-question master per gender). DATE CONVENTION: String dates via
- * formatLegacyNow — dd-M-yyyy HH:mm:ss numeric month (the global/ADT dozer
- * family; month names fail the parse). */
+ * getDonorScreeningDetailByDonorId/{donorId}/{organizationId}/{unitId} — GET with
+ * three path-vars (DonorScreeningDetailController.java:51) — the donor's
+ * existing screening detail; saveDonorScreeningDetail (POST, :29) — the save
+ * (payload requires donorScreeningMapperList — the questionnaire answers);
+ * getDonorScreeningListByGenderId (POST) — the question master per gender.
+ * DATE CONVENTION: String dates dd-M-yyyy HH:mm:ss (numeric month — the DAO's
+ * GlobalCommonDateUtils literal at DonorScreeningDetailDaoImpl.java:85). */
 @Injectable({providedIn: 'root'})
 export class DonorScreeningService {
   private http = inject(HttpClient);
@@ -20,8 +22,10 @@ export class DonorScreeningService {
     return this.http.post<ApiResponse<never, T>>(`${this.base}${url}`, body);
   }
 
-  getDetail(donorId: number): Observable<ApiResponse<never, DonorScreeningDetail>> {
-    return this.post(`/api/bloodbank/getDonorScreeningDetailByDonorId/${donorId}`, {});
+  getDetail(donorId: number, organizationId: number, unitId: number): Observable<ApiResponse<never, DonorScreeningDetail>> {
+    return this.http.get<ApiResponse<never, DonorScreeningDetail>>(
+      `${this.base}/api/bloodbank/getDonorScreeningDetailByDonorId/${donorId}/${organizationId}/${unitId}`,
+    );
   }
 
   save(payload: DonorScreeningDetail): Observable<ApiResponse<never, unknown>> {

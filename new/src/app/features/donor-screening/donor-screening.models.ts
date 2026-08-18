@@ -25,6 +25,9 @@ export interface DonorScreeningDetail {
   donorDeferralTillDate?: string | null;
   deferralDays?: number | null;
   screeningRemarks?: string | null;
+  /** The questionnaire answers — REQUIRED by the backend's save (the NPE at
+   * DonorScreeningDetailController.java:36 when null). Never send empty. */
+  donorScreeningMapperList?: DonorScreeningMapper[];
   unitId?: number | null;
   organizationId?: number | null;
   createdBy?: number | null;
@@ -34,8 +37,28 @@ export interface DonorScreeningDetail {
   [key: string]: unknown;
 }
 
+/** One questionnaire answer (DonorScreeningMapperDto — the DAO's consumption at
+ * DonorScreeningDetailDaoImpl.java:76-93): the question id, the answer status
+ * ('Y'/'N' Character), and the per-question deferred-till date. */
+export interface DonorScreeningMapper {
+  donorScreeningDetailMapperId?: number;
+  donorScreeningDetailId?: number;
+  donorId?: number;
+  donorScreeningParameterId?: number | null;
+  parameterResultStatus?: string | null;
+  donorDeferralTillDate?: string | null;
+  status?: string | null;
+  createdBy?: number | null;
+  createdDate?: string | null;
+  updatedBy?: number | null;
+  updatedDate?: string | null;
+  organizationId?: number | null;
+  unitId?: number | null;
+  [key: string]: unknown;
+}
+
 /** The screening-question master rows (DonorScreeningMasterDto):
- * parameter / deferredTypeId / deferredType / genderId / gender. */
+ * id / parameter / deferredTypeId / deferredType / genderId / gender. */
 export interface ScreeningQuestion {
   id?: number;
   parameter?: string;
