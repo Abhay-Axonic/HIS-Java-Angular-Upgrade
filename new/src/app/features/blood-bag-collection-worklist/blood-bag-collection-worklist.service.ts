@@ -3,11 +3,13 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {API_BASE_URL} from '../../core/api-config';
 import type {ApiResponse} from '../../core/api-response';
-import type {BloodRow, SavePayload} from './blood-bag-collection-worklist.models';
+import type {CollectionRow} from './blood-bag-collection-worklist.models';
 
-/** Blood Bag Collection Worklist — the corrected BloodBank module family. DATE CONVENTION: String
- * dates via formatLegacyNow — the registration/prescription convention, NOT
- * the encounter's Long. */
+/** Blood Bag Collection Worklist — the legacy call-set is a single grid/search
+ * endpoint (bloodBagCollectionWorklistController.js:85); the row action
+ * navigates to the bloodBagCollection form (the save's owner, :121). The
+ * worklist has NO save of its own. DATE CONVENTION: String dates via
+ * formatLegacyNow — the registration/prescription convention. */
 @Injectable({providedIn: 'root'})
 export class BloodBankService {
   private http = inject(HttpClient);
@@ -17,11 +19,7 @@ export class BloodBankService {
     return this.http.post<ApiResponse<never, T>>(`${this.base}${url}`, body);
   }
 
-  search(criteria: Record<string, unknown>): Observable<ApiResponse<never, BloodRow>> {
+  search(criteria: Record<string, unknown>): Observable<ApiResponse<never, CollectionRow>> {
     return this.post('/api/bloodbank/getDonorAndScreeningAndBagCollectionDetail', criteria);
-  }
-
-  save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
-    return this.post('/api/bloodbank/save', payload);
   }
 }

@@ -1,39 +1,113 @@
 <div class="bloodbank">
   <h2>Blood Bag Collection</h2>
 
+  <!-- The donor header (read-only, from the worklist navigation). -->
   <section class="bb-section">
-    <table class="bb-table">
-      <thead>
-        <tr><th>Donor / Patient</th><th>Bag</th><th>Blood Group</th><th>Component</th><th>Status</th><th></th></tr>
-      </thead>
-      <tbody>
-        @for (r of rows(); track $index) {
-          <tr>
-            <td>{{ r.donorName ?? r.patientName ?? r.donorId ?? r.patientId }}</td>
-            <td>{{ r.bagNumber ?? r.bagId ?? '—' }}</td>
-            <td>{{ r.bloodGroup ?? '—' }}</td>
-            <td>{{ r.component ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
-          </tr>
-        }
-        @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="bb-empty">No rows.</td></tr>
-        }
-        @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="bb-empty">Loading…</td></tr>
-        }
-      </tbody>
-    </table>
+    <div class="bb-form">
+      <label>Donor Id <span class="bb-ro">{{ form().donorNumber ?? donor()?.donorNumber ?? donor()?.donorId ?? '—' }}</span></label>
+      <label>Donor Name <span class="bb-ro">{{ form().donorName ?? donor()?.donorName ?? '—' }}</span></label>
+      <label>Blood Group <span class="bb-ro">{{ form().bloodGroup ?? donor()?.bloodGroup ?? '—' }}</span></label>
+      <label>Gender <span class="bb-ro">{{ form().gender ?? donor()?.gender ?? '—' }}</span></label>
+    </div>
+  </section>
+
+  <!-- The collection fields (the legacy's donorDetailsObj). -->
+  <section class="bb-section">
+    <h3>Collection</h3>
+    <div class="bb-form">
+      <label>Camp Name
+        <select [ngModel]="form().campId" (ngModelChange)="form().campId = $event">
+          <option [ngValue]="null">—</option>
+          @for (c of camps(); track c.id) { <option [ngValue]="c.id">{{ c.name }}</option> }
+        </select>
+      </label>
+      <label>Blood Bank Name
+        <select [ngModel]="form().bloodBankId" (ngModelChange)="form().bloodBankId = $event">
+          <option [ngValue]="null">—</option>
+          @for (b of banks(); track b.id) { <option [ngValue]="b.id">{{ b.name }}</option> }
+        </select>
+      </label>
+      <label>Collection Date
+        <input type="date" [ngModel]="form().collectionDate" (ngModelChange)="form().collectionDate = $event" />
+      </label>
+      <label>From Time
+        <input type="time" [ngModel]="form().fromTime" (ngModelChange)="form().fromTime = $event" />
+      </label>
+      <label>To Time
+        <input type="time" [ngModel]="form().toTime" (ngModelChange)="form().toTime = $event" />
+      </label>
+      <label>Collected From
+        <label class="radio-inline"><input type="radio" [checked]="form().collectedFrom === 'Blood Bank'" (change)="form().collectedFrom = 'Blood Bank'" /> Blood Bank</label>
+        <label class="radio-inline"><input type="radio" [checked]="form().collectedFrom === 'Camp'" (change)="form().collectedFrom = 'Camp'" /> Camp</label>
+      </label>
+      <label>Blood Unit No.
+        <input type="text" [ngModel]="form().bloodUnitNumber" (ngModelChange)="form().bloodUnitNumber = $event" />
+      </label>
+      <label>Segment No.
+        <input type="text" [ngModel]="form().segmentNumber" (ngModelChange)="form().segmentNumber = $event" />
+      </label>
+      <label>Barcode
+        <input type="text" [ngModel]="form().barCode" (ngModelChange)="form().barCode = $event" />
+      </label>
+      <label>Blood Bag Type
+        <input type="number" [ngModel]="form().bloodBagTypeId" (ngModelChange)="form().bloodBagTypeId = $event" />
+      </label>
+      <label>Bag Capacity (ml)
+        <select [ngModel]="form().bagCapacityId" (ngModelChange)="form().bagCapacityId = $event">
+          <option [ngValue]="null">—</option>
+          @for (cap of capacities(); track cap.id) { <option [ngValue]="cap.id">{{ cap.name }}</option> }
+        </select>
+      </label>
+      <label>Batch No.
+        <input type="text" [ngModel]="form().batchNo" (ngModelChange)="form().batchNo = $event" />
+      </label>
+    </div>
+  </section>
+
+  <!-- The termination + accept/discard (the legacy's status radios). -->
+  <section class="bb-section">
+    <h3>Result</h3>
+    <div class="bb-form">
+      <label>
+        <input type="radio" [checked]="form().bloodBagCollectionStatusId === 1" (change)="form().bloodBagCollectionStatusId = 1" /> Accept
+      </label>
+      <label>
+        <input type="radio" [checked]="form().bloodBagCollectionStatusId === 2" (change)="form().bloodBagCollectionStatusId = 2" /> Discard
+      </label>
+      <label>Termination Reason
+        <select [ngModel]="form().terminationReasonId" (ngModelChange)="form().terminationReasonId = $event">
+          <option [ngValue]="null">—</option>
+          @for (r of reasons(); track r.id) { <option [ngValue]="r.id">{{ r.name }}</option> }
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <!-- The examination child rows (the legacy's exam block). -->
+  <section class="bb-section">
+    <h3>Examinations</h3>
+    <button type="button" class="btn-primary" (click)="addExam()">Add Examination</button>
+    @for (e of exams(); track $index) {
+      <div class="bb-form">
+        <label>Examination Date
+          <input type="date" [ngModel]="e.examinationDate" (ngModelChange)="e.examinationDate = $event" />
+        </label>
+        <label>Pulse
+          <input type="number" [ngModel]="e.pulse" (ngModelChange)="e.pulse = $event" />
+        </label>
+        <label>BP Systolic
+          <input type="number" [ngModel]="e.bpSystolic" (ngModelChange)="e.bpSystolic = $event" />
+        </label>
+        <label>BP Diastolic
+          <input type="number" [ngModel]="e.bpDiastolic" (ngModelChange)="e.bpDiastolic = $event" />
+        </label>
+      </div>
+    }
   </section>
 
   <section class="bb-section">
-    <h3>Action</h3>
-    <div class="bb-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !loaded()">
+      {{ saving() ? 'Saving…' : 'Save' }}
+    </button>
   </section>
 </div>

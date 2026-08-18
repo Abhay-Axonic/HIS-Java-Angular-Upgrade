@@ -1,39 +1,47 @@
 <div class="bloodbank">
   <h2>Blood Bag Collection Worklist</h2>
 
+  <!-- The legacy search (blood-bag-collection-donor-worklist.html): from/to
+       dates + the search icon. -->
+  <section class="bb-section">
+    <h3>Search</h3>
+    <div class="bb-form">
+      <label>From Date
+        <input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+      </label>
+      <label>To Date
+        <input type="date" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+      </label>
+      <button type="button" class="btn-primary" (click)="search()" [disabled]="loading()">Search</button>
+    </div>
+  </section>
+
+  <!-- The legacy grid columns: Donor Id, Donor Name, Blood Group, Gender,
+       Screening Status, Bag Collection Status, Action taken. -->
   <section class="bb-section">
     <table class="bb-table">
       <thead>
-        <tr><th>Donor / Patient</th><th>Bag</th><th>Blood Group</th><th>Component</th><th>Status</th><th></th></tr>
+        <tr><th>Donor Id</th><th>Donor Name</th><th>Blood Group</th><th>Gender</th><th>Screening Status</th><th>Bag Collection Status</th><th></th></tr>
       </thead>
       <tbody>
         @for (r of rows(); track $index) {
           <tr>
-            <td>{{ r.donorName ?? r.patientName ?? r.donorId ?? r.patientId }}</td>
-            <td>{{ r.bagNumber ?? r.bagId ?? '—' }}</td>
-            <td>{{ r.bloodGroup ?? '—' }}</td>
-            <td>{{ r.component ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
+            <td>{{ r.donorNumber ?? r.donorId ?? '—' }}</td>
+            <td>{{ r.donorName ?? '—' }}</td>
+            <td>{{ r.bloodGroupDesc ?? r.bloodGroup ?? '—' }}</td>
+            <td>{{ r.genderDesc ?? r.gender ?? '—' }}</td>
+            <td>{{ r.screeningStatusDesc ?? r.screeningStatus ?? '—' }}</td>
+            <td>{{ r.bagCollectionStatusDesc ?? r.bagCollectionStatus ?? r.status ?? '—' }}</td>
+            <td><button type="button" (click)="openDetails(r)">Details</button></td>
           </tr>
         }
         @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="bb-empty">No rows.</td></tr>
+          <tr><td colspan="7" class="bb-empty">No rows.</td></tr>
         }
         @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="bb-empty">Loading…</td></tr>
+          <tr><td colspan="7" class="bb-empty">Loading…</td></tr>
         }
       </tbody>
     </table>
-  </section>
-
-  <section class="bb-section">
-    <h3>Action</h3>
-    <div class="bb-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
   </section>
 </div>
