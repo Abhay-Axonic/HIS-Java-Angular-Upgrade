@@ -3,13 +3,18 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {API_BASE_URL} from '../../core/api-config';
 import type {ApiResponse} from '../../core/api-response';
-import type {BloodRow, SavePayload} from './donor-screening.models';
+import type {DonorScreeningDetail, ScreeningQuestion} from './donor-screening.models';
 
-/** Donor Screening — the corrected BloodBank module family. DATE CONVENTION: String
- * dates via formatLegacyNow — the registration/prescription convention, NOT
- * the encounter's Long. */
+/** Donor Screening form — the legacy call-set (donorScreeningWorklistDetailsController.js):
+ * getDonorScreeningDetailByDonorId/{donorId}/{organizationId}/{unitId} — GET with
+ * three path-vars (DonorScreeningDetailController.java:51) — the donor's
+ * existing screening detail; saveDonorScreeningDetail (POST, :29) — the save
+ * (payload requires donorScreeningMapperList — the questionnaire answers);
+ * getDonorScreeningListByGenderId (POST) — the question master per gender.
+ * DATE CONVENTION: String dates dd-M-yyyy HH:mm:ss (numeric month — the DAO's
+ * GlobalCommonDateUtils literal at DonorScreeningDetailDaoImpl.java:85). */
 @Injectable({providedIn: 'root'})
-export class BloodBankService {
+export class DonorScreeningService {
   private http = inject(HttpClient);
   private base = inject(API_BASE_URL);
 
@@ -17,11 +22,17 @@ export class BloodBankService {
     return this.http.post<ApiResponse<never, T>>(`${this.base}${url}`, body);
   }
 
-  search(criteria: Record<string, unknown>): Observable<ApiResponse<never, BloodRow>> {
-    return this.post('/global/bloodBank/saveDonorScreenigMaster', criteria);
+  getDetail(donorId: number, organizationId: number, unitId: number): Observable<ApiResponse<never, DonorScreeningDetail>> {
+    return this.http.get<ApiResponse<never, DonorScreeningDetail>>(
+      `${this.base}/api/bloodbank/getDonorScreeningDetailByDonorId/${donorId}/${organizationId}/${unitId}`,
+    );
   }
 
-  save(payload: SavePayload): Observable<ApiResponse<never, unknown>> {
-    return this.post('/api/bloodbank/save', payload);
+  save(payload: DonorScreeningDetail): Observable<ApiResponse<never, unknown>> {
+    return this.post('/api/bloodbank/saveDonorScreeningDetail', payload);
+  }
+
+  questionsByGender(genderId: number, organizationId: number, unitId: number): Observable<ApiResponse<never, ScreeningQuestion>> {
+    return this.post('/global/bloodBank/getDonorScreeningListByGenderId', {genderId, organizationId, unitId});
   }
 }

@@ -1,39 +1,57 @@
 <div class="bloodbank">
   <h2>Donor Screening Worklist</h2>
 
+  <!-- The legacy search form (donor-screening-worklist.html:22-85): from/to
+       date, donor name, UHID, donor number + the search icon. -->
+  <section class="bb-section">
+    <h3>Search Donor</h3>
+    <div class="bb-form">
+      <label>Donor Number
+        <input type="text" [ngModel]="donorNumber()" (ngModelChange)="donorNumber.set($event)" (keyup.enter)="search()" />
+      </label>
+      <label>Donor Name
+        <input type="text" [ngModel]="donorName()" (ngModelChange)="donorName.set($event)" (keyup.enter)="search()" />
+      </label>
+      <label>UHID
+        <input type="text" [ngModel]="uhidNumber()" (ngModelChange)="uhidNumber.set($event)" (keyup.enter)="search()" />
+      </label>
+      <label>From Date
+        <input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+      </label>
+      <label>To Date
+        <input type="date" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+      </label>
+      <button type="button" class="btn-primary" (click)="search()" [disabled]="loading()">Search</button>
+    </div>
+  </section>
+
+  <!-- The legacy grid (donor-screening-worklist.html:108-114): Donor Id,
+       Donor Name, Blood Group, Gender, Deferral Status, Deferred Till,
+       Action taken. -->
   <section class="bb-section">
     <table class="bb-table">
       <thead>
-        <tr><th>Donor / Patient</th><th>Bag</th><th>Blood Group</th><th>Component</th><th>Status</th><th></th></tr>
+        <tr><th>Donor Id</th><th>Donor Name</th><th>Blood Group</th><th>Gender</th><th>Deferral Status</th><th>Deferred Till</th><th></th></tr>
       </thead>
       <tbody>
         @for (r of rows(); track $index) {
           <tr>
-            <td>{{ r.donorName ?? r.patientName ?? r.donorId ?? r.patientId }}</td>
-            <td>{{ r.bagNumber ?? r.bagId ?? '—' }}</td>
-            <td>{{ r.bloodGroup ?? '—' }}</td>
-            <td>{{ r.component ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
+            <td>{{ r.donorNumber ?? r.donorId ?? '—' }}</td>
+            <td>{{ r.donorName ?? '—' }}</td>
+            <td>{{ r.bloodGroupDesc ?? r.bloodGroup ?? '—' }}</td>
+            <td>{{ r.genderDesc ?? r.gender ?? '—' }}</td>
+            <td>{{ r.deferralStatusDesc ?? r.deferralStatus ?? r.status ?? '—' }}</td>
+            <td>{{ r.deferredTillDate ?? r.deferredTill ?? '—' }}</td>
+            <td><button type="button" (click)="openDetails(r)">Details</button></td>
           </tr>
         }
         @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="bb-empty">No rows.</td></tr>
+          <tr><td colspan="7" class="bb-empty">No rows.</td></tr>
         }
         @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="bb-empty">Loading…</td></tr>
+          <tr><td colspan="7" class="bb-empty">Loading…</td></tr>
         }
       </tbody>
     </table>
-  </section>
-
-  <section class="bb-section">
-    <h3>Action</h3>
-    <div class="bb-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
   </section>
 </div>

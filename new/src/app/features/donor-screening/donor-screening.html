@@ -1,39 +1,171 @@
 <div class="bloodbank">
   <h2>Donor Screening</h2>
 
+  <!-- The donor header (the legacy: {{common.donorNumber}} etc., read-only). -->
   <section class="bb-section">
-    <table class="bb-table">
-      <thead>
-        <tr><th>Donor / Patient</th><th>Bag</th><th>Blood Group</th><th>Component</th><th>Status</th><th></th></tr>
-      </thead>
-      <tbody>
-        @for (r of rows(); track $index) {
-          <tr>
-            <td>{{ r.donorName ?? r.patientName ?? r.donorId ?? r.patientId }}</td>
-            <td>{{ r.bagNumber ?? r.bagId ?? '—' }}</td>
-            <td>{{ r.bloodGroup ?? '—' }}</td>
-            <td>{{ r.component ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
-          </tr>
-        }
-        @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="bb-empty">No rows.</td></tr>
-        }
-        @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="bb-empty">Loading…</td></tr>
-        }
-      </tbody>
-    </table>
+    <div class="bb-form">
+      <label>Donor Number
+        <span class="bb-ro">{{ form().donorNumber ?? donor()?.donorNumber ?? '—' }}</span>
+      </label>
+      <label>Donor Name
+        <span class="bb-ro">{{ form().donorName ?? donor()?.donorName ?? '—' }}</span>
+      </label>
+      <label>Gender
+        <span class="bb-ro">{{ donor()?.gender ?? donor()?.genderDesc ?? '—' }}</span>
+      </label>
+      <label>Mobile
+        <span class="bb-ro">{{ donor()?.mobileNumber ?? '—' }}</span>
+      </label>
+      <label>DOB
+        <span class="bb-ro">{{ donor()?.dob ?? '—' }}</span>
+      </label>
+    </div>
+  </section>
+
+  <!-- The vitals block (the legacy's donorDetailsObj fields). -->
+  <section class="bb-section">
+    <h3>Vitals</h3>
+    <div class="bb-form">
+      <label>Age
+        <input type="number" [ngModel]="form().age" (ngModelChange)="form().age = $event" />
+      </label>
+      <label>Years</label>
+      <label>Temperature
+        <input type="number" [ngModel]="form().donorTemperature" (ngModelChange)="form().donorTemperature = $event" />
+      </label>
+      <label>Unit
+        <select [ngModel]="form().temperatureType" (ngModelChange)="form().temperatureType = $event">
+          <option value="C">&#8451;</option>
+          <option value="F">&#8457;</option>
+        </select>
+      </label>
+      <label>Pulse
+        <input type="number" [ngModel]="form().donorPulse" (ngModelChange)="form().donorPulse = $event" />
+      </label>
+      <label>bpm</label>
+      <label>BP SBP
+        <input type="number" [ngModel]="form().donorBPSystolic" (ngModelChange)="form().donorBPSystolic = $event" />
+      </label>
+      <label>mm/Hg</label>
+      <label>BP DBP
+        <input type="number" [ngModel]="form().donorBpDiastolic" (ngModelChange)="form().donorBpDiastolic = $event" />
+      </label>
+      <label>mm/Hg</label>
+      <label>Height
+        <input type="number" [ngModel]="form().heightInFt" (ngModelChange)="form().heightInFt = $event" /> ft
+        <input type="number" [ngModel]="form().heightInInches" (ngModelChange)="form().heightInInches = $event" /> in
+      </label>
+      <label>Weight
+        <input type="number" [ngModel]="form().donorWeight" (ngModelChange)="form().donorWeight = $event" />
+      </label>
+      <label>Unit
+        <select [ngModel]="form().weightType" (ngModelChange)="form().weightType = $event">
+          <option value="kg">kg</option>
+          <option value="lbs">lbs</option>
+        </select>
+      </label>
+      <label>HB
+        <input type="number" [ngModel]="form().donorHB" (ngModelChange)="form().donorHB = $event" />
+      </label>
+      <label>Unit
+        <select [ngModel]="form().hBType" (ngModelChange)="form().hBType = $event">
+          <option value="g/dl">g/dl</option>
+          <option value="g%">g%</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <!-- The screening result (the legacy's screeningResultStatusId radio +
+       deferral days + remarks). -->
+  <section class="bb-section">
+    <h3>Screening Result</h3>
+    <div class="bb-form">
+      <label>
+        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="form().screeningResultStatusId = $event" [value]="1" />
+        Fit to donate
+      </label>
+      <label>
+        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="form().screeningResultStatusId = $event" [value]="2" />
+        Deferred
+      </label>
+      <label>
+        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="form().screeningResultStatusId = $event" [value]="3" />
+        Rejected
+      </label>
+      <label>Deferral Days
+        <input type="number" [ngModel]="form().deferralDays" (ngModelChange)="form().deferralDays = $event" />
+      </label>
+      <label>Deferred Till
+        <input type="date" [ngModel]="form().donorDeferralTillDate" (ngModelChange)="form().donorDeferralTillDate = $event" />
+      </label>
+      <label>HB Done By Id
+        <input type="number" [ngModel]="form().hbDoneById" (ngModelChange)="form().hbDoneById = $event" />
+      </label>
+      <label>Remarks
+        <textarea [ngModel]="form().screeningRemarks" (ngModelChange)="form().screeningRemarks = $event" rows="2"></textarea>
+      </label>
+    </div>
+    @if (temporaryQuestions().length || permanentQuestions().length) {
+      <h3>Questionnaire</h3>
+      <!-- The legacy's temporary-deferral table (donor-screening.html:306-311). -->
+      @if (temporaryQuestions().length) {
+        <table class="bb-table">
+          <thead><tr><th>Parameter</th><th>Answer</th><th>Deferred Till</th></tr></thead>
+          <tbody>
+            @for (q of temporaryQuestions(); track q.id) {
+              <tr>
+                <td>{{ q.parameter }}</td>
+                <td>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === true" (change)="setAnswer(q, true)" /> Yes
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === false" (change)="setAnswer(q, false)" /> No
+                  </label>
+                </td>
+                <td>
+                  @if (answers()[q.id ?? -1]?.yes) {
+                    <input type="date" [ngModel]="answers()[q.id ?? -1]?.deferredTill" (ngModelChange)="setDeferredTill(q, $event)" />
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+      <!-- The legacy's permanent-deferral table (donor-screening.html:352-356). -->
+      @if (permanentQuestions().length) {
+        <table class="bb-table">
+          <thead><tr><th>Parameter</th><th>Answer</th><th>Deferred Till</th></tr></thead>
+          <tbody>
+            @for (q of permanentQuestions(); track q.id) {
+              <tr>
+                <td>{{ q.parameter }}</td>
+                <td>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === true" (change)="setAnswer(q, true)" /> Yes
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" [checked]="answers()[q.id ?? -1]?.yes === false" (change)="setAnswer(q, false)" /> No
+                  </label>
+                </td>
+                <td>
+                  @if (answers()[q.id ?? -1]?.yes) {
+                    <input type="date" [ngModel]="answers()[q.id ?? -1]?.deferredTill" (ngModelChange)="setDeferredTill(q, $event)" />
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
   </section>
 
   <section class="bb-section">
-    <h3>Action</h3>
-    <div class="bb-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !loaded() || !donorId()">
+      {{ saving() ? 'Saving…' : 'Save' }}
+    </button>
   </section>
 </div>
