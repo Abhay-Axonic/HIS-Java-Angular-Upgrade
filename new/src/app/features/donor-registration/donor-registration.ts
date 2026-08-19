@@ -99,7 +99,7 @@ export class DonorRegistration {
     this.service.getNationalities().subscribe({
       next: (res) => {
         if (res.status === 'success') {
-          this.nationalities.set(res.listObject ?? []);
+          this.nationalities.set(this.toIdName(res.listObject, 'nationalityId', 'nationalityName'));
         }
       },
       error: () =>
@@ -285,6 +285,16 @@ export class DonorRegistration {
   }
   /** Signal-aware field setter — rerouted from the in-place `form().x = v`
    * bindings (the signal never notified; the save read a stale object). */
+  /** Map the feed's rows to {id, desc} (the blood-bag-collection toIdName
+   * pattern) — the nationality feed returns {nationalityId, nationalityName,
+   * countryId} (NationalityMaster.java) but the template binds n.desc. */
+  private toIdName(rows: unknown[] | undefined, idKey: string, nameKey: string): {id: number; desc: string}[] {
+    return (rows ?? []).map((r) => {
+      const o = r as Record<string, unknown>;
+      return {id: Number(o[idKey] ?? 0), desc: String(o[nameKey] ?? '')};
+    });
+  }
+
   setField(key: string, value: unknown): void {
     this.form.update((f) => ({...f, [key]: value}));
   }
