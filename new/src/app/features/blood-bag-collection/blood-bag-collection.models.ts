@@ -15,8 +15,8 @@ export interface BagCollectionDetail {
   collectionDate?: string | null;
   fromTime?: string | null;
   toTime?: string | null;
-  collectedFrom?: string | null;
-  bloodUnitNumber?: string | null;
+  collectedFrom?: number | null;
+  bloodUnitNumber?: number | null;
   segmentNumber?: string | null;
   barCode?: string | null;
   bloodBagTypeId?: number | null;

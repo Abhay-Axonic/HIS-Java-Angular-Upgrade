@@ -118,6 +118,10 @@ export class BloodBankComponent {
     const now = this.legacyNow();
     const payload: BagCollectionDetail = {
       ...this.form(),
+      bloodUnitNumber:
+        this.form().bloodUnitNumber == null || this.form().bloodUnitNumber === 0
+          ? null
+          : Number(this.form().bloodUnitNumber),
       collectionDate: this.form().collectionDate ? this.toLegacyDate(this.form().collectionDate as string) : '',
       fromTime: this.form().fromTime || '',
       toTime: this.form().toTime || '',
