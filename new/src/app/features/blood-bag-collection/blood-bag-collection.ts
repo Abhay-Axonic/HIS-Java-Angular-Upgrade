@@ -54,11 +54,34 @@ export class BloodBankComponent {
     }
   }
 
+  /** Map the module-specific desc fields to {id, name} (the registration
+   * screen's mapping class — CampMasterDto.campName, BloodBankMasterDto
+   * .bloodBankDesc, BloodBagCapacityMasterDto.bloodBagCapacityDesc,
+   * ReasonMasterDto.reasonDesc; the template binds one shape). */
+  private toIdName(rows: unknown[] | undefined, idKey: string, nameKey: string): IdNameRow[] {
+    return (rows ?? []).map((r) => {
+      const o = r as Record<string, unknown>;
+      return {id: Number(o[idKey] ?? 0), name: String(o[nameKey] ?? '')};
+    });
+  }
+
   loadMasters(): void {
-    this.api.camps().subscribe({next: (r) => this.camps.set((r as {listObject?: IdNameRow[]}).listObject ?? []), error: () => this.camps.set([])});
-    this.api.bloodBanks().subscribe({next: (r) => this.banks.set((r as {listObject?: IdNameRow[]}).listObject ?? []), error: () => this.banks.set([])});
-    this.api.capacities().subscribe({next: (r) => this.capacities.set((r as {listObject?: IdNameRow[]}).listObject ?? []), error: () => this.capacities.set([])});
-    this.api.reasons().subscribe({next: (r) => this.reasons.set((r as {listObject?: IdNameRow[]}).listObject ?? []), error: () => this.reasons.set([])});
+    this.api.camps().subscribe({
+      next: (r) => this.camps.set(this.toIdName((r as {listObject?: unknown[]}).listObject, 'campId', 'campName')),
+      error: () => this.camps.set([]),
+    });
+    this.api.bloodBanks().subscribe({
+      next: (r) => this.banks.set(this.toIdName((r as {listObject?: unknown[]}).listObject, 'bloodBankId', 'bloodBankDesc')),
+      error: () => this.banks.set([]),
+    });
+    this.api.capacities().subscribe({
+      next: (r) => this.capacities.set(this.toIdName((r as {listObject?: unknown[]}).listObject, 'bloodBagCapacityId', 'bloodBagCapacityDesc')),
+      error: () => this.capacities.set([]),
+    });
+    this.api.reasons().subscribe({
+      next: (r) => this.reasons.set(this.toIdName((r as {listObject?: unknown[]}).listObject, 'reasonId', 'reasonDesc')),
+      error: () => this.reasons.set([]),
+    });
   }
 
   load(id: number): void {
@@ -122,7 +145,9 @@ export class BloodBankComponent {
         this.form().bloodUnitNumber == null || this.form().bloodUnitNumber === 0
           ? null
           : Number(this.form().bloodUnitNumber),
-      collectionDate: this.form().collectionDate ? this.toLegacyDate(this.form().collectionDate as string) : '',
+      collectionDate: this.form().collectionDate
+        ? this.toLegacyDate(this.form().collectionDate as string)
+        : this.legacyNow(),
       fromTime: this.form().fromTime || '',
       toTime: this.form().toTime || '',
       examinationDetailsList: this.exams().map((e) => ({

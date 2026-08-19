@@ -12,7 +12,13 @@ import type {BagCollectionDetail, Examination, IdNameRow} from './blood-bag-coll
  * capacity dropdown), GET_REASON_MASTER_LIST (:364, termination reason), and
  * saveBloodBagCollection (:311, the save). Every payload carries
  * organizationId + unitId. Dates: dd-M-yyyy HH:mm:ss strings via formatLegacyNow
- * — GlobalCommonDateUtils.getDate NPEs on null; send '' for absent dates. */
+ * — GlobalCommonDateUtils.getDate NPEs on null; absent dates send the legacy's
+ * default (the save-time now, bloodBagCollectionController.js:298).
+ *
+ * The dropdown feeds return module-specific desc names (campName,
+ * bloodBankDesc, bloodBagCapacityDesc, reasonDesc — the registration screen's
+ * mapping class); this service maps each row to {id, name} so the template
+ * binds one shape. */
 @Injectable({providedIn: 'root'})
 export class BloodBankService {
   private http = inject(HttpClient);
