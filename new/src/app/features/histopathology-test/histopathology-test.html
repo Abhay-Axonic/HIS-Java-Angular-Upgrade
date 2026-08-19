@@ -7,7 +7,7 @@
   <section class="ptm-form">
     <div class="ptm-field">
       <label for="ht-search">Search</label>
-      <input id="ht-search" type="text" [(ngModel)]="form().search" (keyup.enter)="search()" placeholder="Code / description / alias…" />
+      <input id="ht-search" type="text" [ngModel]="form().search" (ngModelChange)="setField('search', $event)" (keyup.enter)="search()" placeholder="Code / description / alias…" />
     </div>
     <div class="ptm-actions">
       <button class="ptm-btn ptm-btn-primary" (click)="search()" [disabled]="loading()">Search</button>

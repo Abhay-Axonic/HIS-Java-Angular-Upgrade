@@ -63,6 +63,12 @@ export class AllergyMaster {
   page = signal(1);
   saving = signal(false);
   editing = signal(false);
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
   togglingId = signal<number | null>(null);
 
   totalPages = computed(() => Math.max(1, Math.ceil(this.totalCount() / this.pageSize())));

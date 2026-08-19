@@ -19,7 +19,7 @@
     <label>
       Store
       <select
-        [(ngModel)]="form().storeId"
+        [ngModel]="form().storeId" (ngModelChange)="setField('storeId', $event)"
         (ngModelChange)="onStoreChange()"
         class="text-input"
       >
@@ -31,7 +31,7 @@
     </label>
     <label>
       Reason
-      <select [(ngModel)]="form().reasonId" class="text-input">
+      <select [ngModel]="form().reasonId" (ngModelChange)="setField('reasonId', $event)" class="text-input">
         <option [ngValue]="null" disabled>Select reason</option>
         @for (r of reasons(); track r.reasonId) {
           <option [ngValue]="r.reasonId">
@@ -45,7 +45,7 @@
       <input
         type="date"
         class="text-input"
-        [(ngModel)]="form().recallDate"
+        [ngModel]="form().recallDate" (ngModelChange)="setField('recallDate', $event)"
       />
     </label>
   </div>

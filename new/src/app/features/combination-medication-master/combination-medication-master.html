@@ -6,7 +6,7 @@
       <div class="form-field">
         <select
           class="text-input"
-          [(ngModel)]="form().combinationMedicineId"
+          [ngModel]="form().combinationMedicineId" (ngModelChange)="setField('combinationMedicineId', $event)"
           name="combinationMedicineId"
         >
           <option [ngValue]="null"></option>
@@ -20,7 +20,7 @@
       <div class="form-field">
         <select
           class="text-input"
-          [(ngModel)]="form().genericId"
+          [ngModel]="form().genericId" (ngModelChange)="setField('genericId', $event)"
           name="genericId"
         >
           <option [ngValue]="null"></option>
@@ -35,7 +35,7 @@
         <input
           type="number"
           class="text-input"
-          [(ngModel)]="form().strength"
+          [ngModel]="form().strength" (ngModelChange)="setField('strength', $event)"
           name="strength"
           placeholder="0"
         />
@@ -45,7 +45,7 @@
       <div class="form-field">
         <select
           class="text-input"
-          [(ngModel)]="form().strengthUnitId"
+          [ngModel]="form().strengthUnitId" (ngModelChange)="setField('strengthUnitId', $event)"
           name="strengthUnitId"
         >
           <option [ngValue]="null"></option>
@@ -61,7 +61,7 @@
           type="text"
           class="text-input"
           autocomplete="off"
-          [(ngModel)]="form().displayGenericName"
+          [ngModel]="form().displayGenericName" (ngModelChange)="setField('displayGenericName', $event)"
           name="displayGenericName"
         />
         <label for="displayGenericName">Display Generic Name <span class="star">*</span></label>

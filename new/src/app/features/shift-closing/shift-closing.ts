@@ -139,5 +139,13 @@ export class ShiftClosing {
           this.saveError.set(`Request failed: ${err?.status ?? 'unknown'} ${err?.message ?? ''}`);
         },
       });
+
+
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

@@ -34,6 +34,12 @@ export class PatientTypeMaster {
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly error = signal('');
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
   readonly form = signal<PatientTypeForm>(emptyPatientTypeForm());
   readonly editingId = signal<number | null>(null);
 

@@ -26,7 +26,7 @@
         </div>
         <div class="col-field">
           <div class="form-group">
-            <select name="subSpecialityId" class="text-input floating-label" [(ngModel)]="record().subSpecialityId" required>
+            <select name="subSpecialityId" class="text-input floating-label" [ngModel]="record().subSpecialityId" (ngModelChange)="setField('subSpecialityId', $event)" required>
               @for (info of subSpecialityMasterList(); track info.subSpecialityMasterId) {
                 <option [ngValue]="info.subSpecialityMasterId">{{ info.subSpecialityMasterName }}</option>
               }
@@ -39,7 +39,7 @@
         </div>
         <div class="col-field">
           <div class="form-group">
-            <input type="text" name="serviceCode" class="text-input floating-label" [(ngModel)]="record().serviceCode" required />
+            <input type="text" name="serviceCode" class="text-input floating-label" [ngModel]="record().serviceCode" (ngModelChange)="setField('serviceCode', $event)" required />
             <label>Service Code <span class="star">*</span></label>
             @if (submitted() && !record().serviceCode) {
               <p class="help-block">Service Code is required</p>
@@ -48,7 +48,7 @@
         </div>
         <div class="col-field">
           <div class="form-group">
-            <input type="text" name="serviceName" class="text-input floating-label" [(ngModel)]="record().serviceName" required />
+            <input type="text" name="serviceName" class="text-input floating-label" [ngModel]="record().serviceName" (ngModelChange)="setField('serviceName', $event)" required />
             <label>Service Name <span class="star">*</span></label>
             @if (submitted() && !record().serviceName) {
               <p class="help-block">Service Name is required</p>
@@ -61,7 +61,7 @@
               type="text"
               name="generalLedgerName"
               class="text-input floating-label"
-              [(ngModel)]="record().generalLedgerName"
+              [ngModel]="record().generalLedgerName" (ngModelChange)="setField('generalLedgerName', $event)"
               (ngModelChange)="onLedgerSearch($event)"
             />
             <label>General Ledger</label>

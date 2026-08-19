@@ -7,11 +7,11 @@
   <section class="ptm-form">
     <div class="ptm-field">
       <label for="ptm-code">Code *</label>
-      <input id="ptm-code" type="text" [(ngModel)]="form().code" />
+      <input id="ptm-code" type="text" [ngModel]="form().code" (ngModelChange)="setField('code', $event)" />
     </div>
     <div class="ptm-field">
       <label for="ptm-desc">Description *</label>
-      <input id="ptm-desc" type="text" [(ngModel)]="form().desc" />
+      <input id="ptm-desc" type="text" [ngModel]="form().desc" (ngModelChange)="setField('desc', $event)" />
     </div>
     <div class="ptm-actions">
       <button class="ptm-btn ptm-btn-primary" (click)="save()" [disabled]="saving()">

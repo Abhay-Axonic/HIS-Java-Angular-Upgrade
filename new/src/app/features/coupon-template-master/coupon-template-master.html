@@ -12,15 +12,15 @@
 
       <label>
         Coupon Template Name *
-        <input type="text" required [(ngModel)]="record().couponTemplateName" name="name" />
+        <input type="text" required [ngModel]="record().couponTemplateName" (ngModelChange)="setField('couponTemplateName', $event)" name="name" />
       </label>
       <label>
         Description
-        <input type="text" [(ngModel)]="record().couponTemplateDescription" name="desc" />
+        <input type="text" [ngModel]="record().couponTemplateDescription" (ngModelChange)="setField('couponTemplateDescription', $event)" name="desc" />
       </label>
       <label>
         Expire Days
-        <input type="number" min="0" [(ngModel)]="record().expireDays" name="expireDays" />
+        <input type="number" min="0" [ngModel]="record().expireDays" (ngModelChange)="setField('expireDays', $event)" name="expireDays" />
       </label>
 
       <h4>Discount Details (per service)</h4>

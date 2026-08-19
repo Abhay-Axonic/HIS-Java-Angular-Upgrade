@@ -36,6 +36,8 @@ export class OperationTheatreType {
     );
   });
 
+
+
   /** The form model — the full DTO contract (both dates) per the
    * false-success finding: an incomplete DTO (updatedDate omitted) makes the
    * DAO NPE and the service return a false SUCCESS while writing nothing
@@ -206,4 +208,10 @@ export class OperationTheatreType {
         },
       });
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

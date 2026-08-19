@@ -115,6 +115,12 @@ export class ServiceMaster {
   itemSearchTerm = signal('');
   itemObj = signal<{ itemId: number | null; itemName: string }>({ itemId: null, itemName: '' });
   qty = signal(0);
+  /** Signal-aware field setter — rerouted from the in-place `record().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.record.update((f) => ({...f, [key]: value}));
+  }
+
 
   constructor() {
     this.init();

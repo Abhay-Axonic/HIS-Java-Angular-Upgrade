@@ -97,6 +97,8 @@ export class AddNewDrugRecall {
       const bv = String(b[key] ?? '');
       return av.localeCompare(bv) * dir;
     });
+
+
   });
 
   onSort(key: 'itemCode' | 'itemName' | 'reason'): void {
@@ -293,4 +295,10 @@ export class AddNewDrugRecall {
         },
       });
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

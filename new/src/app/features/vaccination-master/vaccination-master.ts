@@ -52,6 +52,12 @@ export class VaccinationMaster {
   form = signal({ code: '', name: '' });
   searchTerm = signal('');
   loading = signal(false);
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 
   /** The grid filtered by the search box (client-side — divergence 4). */
   filteredRows = computed(() => {

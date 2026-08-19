@@ -7,7 +7,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().allergyTypeName"
+        [ngModel]="form().allergyTypeName" (ngModelChange)="setField('allergyTypeName', $event)"
         name="allergyTypeName"
       />
       <label for="allergyTypeName">Allergy Type Name <span class="star">*</span></label>
@@ -17,7 +17,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().allergyTypeDesc"
+        [ngModel]="form().allergyTypeDesc" (ngModelChange)="setField('allergyTypeDesc', $event)"
         name="allergyTypeDesc"
       />
       <label for="allergyTypeDesc">Description</label>
@@ -25,7 +25,7 @@
     <div class="form-field">
       <select
         class="text-input"
-        [(ngModel)]="form().isGeneric"
+        [ngModel]="form().isGeneric" (ngModelChange)="setField('isGeneric', $event)"
         name="isGeneric"
       >
         <option value="N">No</option>
