@@ -125,7 +125,7 @@ export class BloodBankComponent {
       collectionDate: this.form().collectionDate ? this.toLegacyDate(this.form().collectionDate as string) : '',
       fromTime: this.form().fromTime || '',
       toTime: this.form().toTime || '',
-      examinationList: this.exams().map((e) => ({
+      examinationDetailsList: this.exams().map((e) => ({
         ...e,
         examinationDate: e.examinationDate ? this.toLegacyDate(e.examinationDate) : '',
       })),

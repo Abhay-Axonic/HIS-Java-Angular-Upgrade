@@ -26,7 +26,7 @@ export interface BagCollectionDetail {
   terminationReasonId?: number | null;
   bloodBagCollectionStatusId?: number | null;
   bloodBagCollectionId?: number | null;
-  examinationList?: Examination[];
+  examinationDetailsList?: Examination[];
   unitId?: number | null;
   organizationId?: number | null;
   createdBy?: number | null;
