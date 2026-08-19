@@ -153,7 +153,16 @@ export class BloodBankComponent {
       toTime: this.form().toTime || '',
       examinationDetailsList: this.exams().map((e) => ({
         ...e,
-        examinationDate: e.examinationDate ? this.toLegacyDate(e.examinationDate) : '',
+        examinationDate: e.examinationDate
+          ? this.toLegacyDate(e.examinationDate)
+          : this.legacyNow(),
+        createdBy: this.userId,
+        createdDate: now,
+        status: 'A',
+        updatedBy: this.userId,
+        updatedDate: now,
+        organizationId: this.orgId,
+        unitId: this.unitId,
       })),
       unitId: this.unitId,
       organizationId: this.orgId,
