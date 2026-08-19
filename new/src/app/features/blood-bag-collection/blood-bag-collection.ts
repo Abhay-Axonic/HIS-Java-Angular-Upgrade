@@ -80,6 +80,20 @@ export class BloodBankComponent {
     });
   }
 
+  /** Signal-aware field setter — the template's bindings route through this
+   * so every user-entered field lands in the signal's object AND notifies
+   * change detection (the in-place mutation `form().x = v` silently lost
+   * fields before the save's spread — the browser-captured payload was empty
+   * of user entries). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
+  /** Same signal-aware pattern for the examination child rows. */
+  setExamField(idx: number, key: string, value: unknown): void {
+    this.exams.update((list) => list.map((e, i) => (i === idx ? {...e, [key]: value} : e)));
+  }
+
   addExam(): void {
     this.exams.set([...this.exams(), {examinationDate: '', pulse: null, bpSystolic: null, bpDiastolic: null}]);
   }

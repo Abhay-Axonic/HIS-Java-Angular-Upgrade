@@ -16,50 +16,50 @@
     <h3>Collection</h3>
     <div class="bb-form">
       <label>Camp Name
-        <select [ngModel]="form().campId" (ngModelChange)="form().campId = $event">
+        <select [ngModel]="form().campId" (ngModelChange)="setField('campId', $event)">
           <option [ngValue]="null">—</option>
           @for (c of camps(); track c.id) { <option [ngValue]="c.id">{{ c.name }}</option> }
         </select>
       </label>
       <label>Blood Bank Name
-        <select [ngModel]="form().bloodBankId" (ngModelChange)="form().bloodBankId = $event">
+        <select [ngModel]="form().bloodBankId" (ngModelChange)="setField('bloodBankId', $event)">
           <option [ngValue]="null">—</option>
           @for (b of banks(); track b.id) { <option [ngValue]="b.id">{{ b.name }}</option> }
         </select>
       </label>
       <label>Collection Date
-        <input type="date" [ngModel]="form().collectionDate" (ngModelChange)="form().collectionDate = $event" />
+        <input type="date" [ngModel]="form().collectionDate" (ngModelChange)="setField('collectionDate', $event)" />
       </label>
       <label>From Time
-        <input type="time" [ngModel]="form().fromTime" (ngModelChange)="form().fromTime = $event" />
+        <input type="time" [ngModel]="form().fromTime" (ngModelChange)="setField('fromTime', $event)" />
       </label>
       <label>To Time
-        <input type="time" [ngModel]="form().toTime" (ngModelChange)="form().toTime = $event" />
+        <input type="time" [ngModel]="form().toTime" (ngModelChange)="setField('toTime', $event)" />
       </label>
       <label>Collected From
-        <label class="radio-inline"><input type="radio" [checked]="form().collectedFrom === 'Blood Bank'" (change)="form().collectedFrom = 'Blood Bank'" /> Blood Bank</label>
-        <label class="radio-inline"><input type="radio" [checked]="form().collectedFrom === 'Camp'" (change)="form().collectedFrom = 'Camp'" /> Camp</label>
+        <label class="radio-inline"><input type="radio" [checked]="form().collectedFrom === 'Blood Bank'" (change)="setField('collectedFrom', 'Blood Bank')" /> Blood Bank</label>
+        <label class="radio-inline"><input type="radio" [checked]="form().collectedFrom === 'Camp'" (change)="setField('collectedFrom', 'Camp')" /> Camp</label>
       </label>
       <label>Blood Unit No.
-        <input type="text" [ngModel]="form().bloodUnitNumber" (ngModelChange)="form().bloodUnitNumber = $event" />
+        <input type="text" [ngModel]="form().bloodUnitNumber" (ngModelChange)="setField('bloodUnitNumber', $event)" />
       </label>
       <label>Segment No.
-        <input type="text" [ngModel]="form().segmentNumber" (ngModelChange)="form().segmentNumber = $event" />
+        <input type="text" [ngModel]="form().segmentNumber" (ngModelChange)="setField('segmentNumber', $event)" />
       </label>
       <label>Barcode
-        <input type="text" [ngModel]="form().barCode" (ngModelChange)="form().barCode = $event" />
+        <input type="text" [ngModel]="form().barCode" (ngModelChange)="setField('barCode', $event)" />
       </label>
       <label>Blood Bag Type
-        <input type="number" [ngModel]="form().bloodBagTypeId" (ngModelChange)="form().bloodBagTypeId = $event" />
+        <input type="number" [ngModel]="form().bloodBagTypeId" (ngModelChange)="setField('bloodBagTypeId', $event)" />
       </label>
       <label>Bag Capacity (ml)
-        <select [ngModel]="form().bagCapacityId" (ngModelChange)="form().bagCapacityId = $event">
+        <select [ngModel]="form().bagCapacityId" (ngModelChange)="setField('bagCapacityId', $event)">
           <option [ngValue]="null">—</option>
           @for (cap of capacities(); track cap.id) { <option [ngValue]="cap.id">{{ cap.name }}</option> }
         </select>
       </label>
       <label>Batch No.
-        <input type="text" [ngModel]="form().batchNo" (ngModelChange)="form().batchNo = $event" />
+        <input type="text" [ngModel]="form().batchNo" (ngModelChange)="setField('batchNo', $event)" />
       </label>
     </div>
   </section>
@@ -69,13 +69,13 @@
     <h3>Result</h3>
     <div class="bb-form">
       <label>
-        <input type="radio" [checked]="form().bloodBagCollectionStatusId === 1" (change)="form().bloodBagCollectionStatusId = 1" /> Accept
+        <input type="radio" [checked]="form().bloodBagCollectionStatusId === 1" (change)="setField('bloodBagCollectionStatusId', 1)" /> Accept
       </label>
       <label>
-        <input type="radio" [checked]="form().bloodBagCollectionStatusId === 2" (change)="form().bloodBagCollectionStatusId = 2" /> Discard
+        <input type="radio" [checked]="form().bloodBagCollectionStatusId === 2" (change)="setField('bloodBagCollectionStatusId', 2)" /> Discard
       </label>
       <label>Termination Reason
-        <select [ngModel]="form().terminationReasonId" (ngModelChange)="form().terminationReasonId = $event">
+        <select [ngModel]="form().terminationReasonId" (ngModelChange)="setField('terminationReasonId', $event)">
           <option [ngValue]="null">—</option>
           @for (r of reasons(); track r.id) { <option [ngValue]="r.id">{{ r.name }}</option> }
         </select>
@@ -90,16 +90,16 @@
     @for (e of exams(); track $index) {
       <div class="bb-form">
         <label>Examination Date
-          <input type="date" [ngModel]="e.examinationDate" (ngModelChange)="e.examinationDate = $event" />
+          <input type="date" [ngModel]="e.examinationDate" (ngModelChange)="setExamField($index, 'examinationDate', $event)" />
         </label>
         <label>Pulse
-          <input type="number" [ngModel]="e.pulse" (ngModelChange)="e.pulse = $event" />
+          <input type="number" [ngModel]="e.pulse" (ngModelChange)="setExamField($index, 'pulse', $event)" />
         </label>
         <label>BP Systolic
-          <input type="number" [ngModel]="e.bpSystolic" (ngModelChange)="e.bpSystolic = $event" />
+          <input type="number" [ngModel]="e.bpSystolic" (ngModelChange)="setExamField($index, 'bpSystolic', $event)" />
         </label>
         <label>BP Diastolic
-          <input type="number" [ngModel]="e.bpDiastolic" (ngModelChange)="e.bpDiastolic = $event" />
+          <input type="number" [ngModel]="e.bpDiastolic" (ngModelChange)="setExamField($index, 'bpDiastolic', $event)" />
         </label>
       </div>
     }

@@ -35,11 +35,15 @@ export class BloodBankService {
   }
 
   bloodBanks(): Observable<ApiResponse<never, IdNameRow>> {
-    return this.post(`/bloodBank/getActiveBloodBankMaster/${this.org()}/${this.unit()}`, {});
+    return this.http.get<ApiResponse<never, IdNameRow>>(
+      `${this.base}/bloodBank/getActiveBloodBankMaster/${this.org()}/${this.unit()}`,
+    );
   }
 
   capacities(): Observable<ApiResponse<never, IdNameRow>> {
-    return this.post(`/global/bloodBank/getActiveBloodBagCapacityMaster/${this.org()}/${this.unit()}`, {});
+    return this.http.get<ApiResponse<never, IdNameRow>>(
+      `${this.base}/global/bloodBank/getActiveBloodBagCapacityMaster/${this.org()}/${this.unit()}`,
+    );
   }
 
   reasons(): Observable<ApiResponse<never, IdNameRow>> {
