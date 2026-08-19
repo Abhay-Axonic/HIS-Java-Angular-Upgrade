@@ -56,6 +56,12 @@ export class TaxComponentMaster {
   // ---- form state ----
   record = signal<TaxComponentRecord>(emptyTaxComponentRecord());
   isEdit = signal(false);
+  /** Signal-aware field setter — rerouted from the in-place `record().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.record.update((f) => ({...f, [key]: value}));
+  }
+
 
   constructor() {
     this.loadList();

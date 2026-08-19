@@ -55,6 +55,12 @@ export class UomMaster {
   form = signal<UomMasterForm>({ ...emptyUomMasterForm });
   searchTerm = signal('');
   loading = signal(false);
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 
   filteredRows = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();

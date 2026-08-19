@@ -7,7 +7,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().allergyName"
+        [ngModel]="form().allergyName" (ngModelChange)="setField('allergyName', $event)"
         name="allergyName"
       />
       <label for="allergyName">Allergy Name <span class="star">*</span></label>
@@ -15,7 +15,7 @@
     <div class="form-field">
       <select
         class="text-input"
-        [(ngModel)]="form().allergyTypeId"
+        [ngModel]="form().allergyTypeId" (ngModelChange)="setField('allergyTypeId', $event)"
         name="allergyTypeId"
       >
         <option [ngValue]="null"></option>
@@ -30,7 +30,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().allergyDesc"
+        [ngModel]="form().allergyDesc" (ngModelChange)="setField('allergyDesc', $event)"
         name="allergyDesc"
       />
       <label for="allergyDesc">Description</label>
@@ -40,7 +40,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().cimsCode"
+        [ngModel]="form().cimsCode" (ngModelChange)="setField('cimsCode', $event)"
         name="cimsCode"
       />
       <label for="cimsCode">CIMMS Code</label>
@@ -50,7 +50,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().cimsType"
+        [ngModel]="form().cimsType" (ngModelChange)="setField('cimsType', $event)"
         name="cimsType"
       />
       <label for="cimsType">CIMMS Type</label>

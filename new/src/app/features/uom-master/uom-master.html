@@ -7,7 +7,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().code"
+        [ngModel]="form().code" (ngModelChange)="setField('code', $event)"
         name="code"
       />
       <label for="code">Code</label>
@@ -17,7 +17,7 @@
         type="text"
         class="text-input"
         autocomplete="off"
-        [(ngModel)]="form().units"
+        [ngModel]="form().units" (ngModelChange)="setField('units', $event)"
         name="units"
       />
       <label for="units">Unit Of Measurement</label>

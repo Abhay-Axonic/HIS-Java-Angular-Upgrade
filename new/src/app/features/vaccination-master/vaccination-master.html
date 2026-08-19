@@ -8,7 +8,7 @@
         class="text-input"
         autocomplete="off"
         name="code"
-        [(ngModel)]="form().code"
+        [ngModel]="form().code" (ngModelChange)="setField('code', $event)"
       />
       <label for="code">Vaccine Code *</label>
     </div>
@@ -18,7 +18,7 @@
         class="text-input"
         autocomplete="off"
         name="name"
-        [(ngModel)]="form().name"
+        [ngModel]="form().name" (ngModelChange)="setField('name', $event)"
       />
       <label for="name">Name of Vaccine *</label>
     </div>

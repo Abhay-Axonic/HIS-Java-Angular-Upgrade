@@ -6,7 +6,7 @@
       <div class="form-field">
         <select
           class="text-input"
-          [(ngModel)]="form().specialityId"
+          [ngModel]="form().specialityId" (ngModelChange)="setField('specialityId', $event)"
           name="specialityId"
           required
         >
@@ -22,7 +22,7 @@
           type="text"
           class="text-input"
           autocomplete="off"
-          [(ngModel)]="form().surgeryCode"
+          [ngModel]="form().surgeryCode" (ngModelChange)="setField('surgeryCode', $event)"
           name="surgeryCode"
           required
         />
@@ -33,7 +33,7 @@
           type="text"
           class="text-input"
           autocomplete="off"
-          [(ngModel)]="form().surgeryCodeCpt"
+          [ngModel]="form().surgeryCodeCpt" (ngModelChange)="setField('surgeryCodeCpt', $event)"
           name="surgeryCodeCpt"
           required
         />
@@ -44,7 +44,7 @@
           type="text"
           class="text-input"
           autocomplete="off"
-          [(ngModel)]="form().surgeryName"
+          [ngModel]="form().surgeryName" (ngModelChange)="setField('surgeryName', $event)"
           name="surgeryName"
           required
         />
@@ -53,7 +53,7 @@
       <div class="form-field">
         <select
           class="text-input"
-          [(ngModel)]="form().surgeryGradeId"
+          [ngModel]="form().surgeryGradeId" (ngModelChange)="setField('surgeryGradeId', $event)"
           name="surgeryGradeId"
           required
         >

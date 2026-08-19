@@ -21,15 +21,15 @@
         <h3>{{ isEdit() ? 'Edit Tax Component' : 'New Tax Component' }}</h3>
         <label>
           Code (max 10 chars)
-          <input type="text" maxlength="10" required [(ngModel)]="record().code" name="code" />
+          <input type="text" maxlength="10" required [ngModel]="record().code" (ngModelChange)="setField('code', $event)" name="code" />
         </label>
         <label>
           Component
-          <input type="text" required [(ngModel)]="record().component" name="component" />
+          <input type="text" required [ngModel]="record().component" (ngModelChange)="setField('component', $event)" name="component" />
         </label>
         <label>
           Status
-          <select [(ngModel)]="record().status" name="status">
+          <select [ngModel]="record().status" (ngModelChange)="setField('status', $event)" name="status">
             <option [ngValue]="true">Active</option>
             <option [ngValue]="false">Inactive</option>
           </select>

@@ -71,6 +71,12 @@ export class CombinationMedicationMaster {
   form = signal<CombinationMedicationForm>({ ...emptyCombinationMedicationForm });
   searchTerm = signal('');
   loading = signal(false);
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
   togglingId = signal<number | null>(null);
   selectedRowId = signal<number | null>(null);
 
