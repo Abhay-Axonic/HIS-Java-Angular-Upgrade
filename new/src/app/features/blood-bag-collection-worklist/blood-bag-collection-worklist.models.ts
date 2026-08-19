@@ -7,6 +7,7 @@ export interface CollectionRow {
   donorNumber?: string;
   donorName?: string;
   bloodGroup?: string;
+  bloodGroupId?: number;
   bloodGroupDesc?: string;
   gender?: string;
   genderDesc?: string;

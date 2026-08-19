@@ -9,6 +9,7 @@ export interface BagCollectionDetail {
   donorNumber?: string;
   donorName?: string;
   bloodGroup?: string;
+  bloodGroupId?: number | null;
   gender?: string;
   campId?: number | null;
   bloodBankId?: number | null;

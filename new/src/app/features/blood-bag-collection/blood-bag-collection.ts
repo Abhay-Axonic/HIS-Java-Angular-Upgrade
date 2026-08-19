@@ -141,6 +141,7 @@ export class BloodBankComponent {
     const now = this.legacyNow();
     const payload: BagCollectionDetail = {
       ...this.form(),
+      bloodGroupId: (this.form().bloodGroupId ?? this.donor()?.bloodGroupId) ?? null,
       bloodUnitNumber:
         this.form().bloodUnitNumber == null || this.form().bloodUnitNumber === 0
           ? null
