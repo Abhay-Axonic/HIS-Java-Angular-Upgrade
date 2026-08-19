@@ -3,7 +3,7 @@
 
   <form class="form-row">
     <div class="form-field">
-      <select class="text-input" name="ageUnit" [(ngModel)]="form().ageUnit">
+      <select class="text-input" name="ageUnit" [ngModel]="form().ageUnit" (ngModelChange)="setField('ageUnit', $event)">
         <option>Day</option>
         <option>Month</option>
         <option>Year</option>
@@ -16,12 +16,12 @@
         class="text-input"
         autocomplete="off"
         name="ageValue"
-        [(ngModel)]="form().ageValue"
+        [ngModel]="form().ageValue" (ngModelChange)="setField('ageValue', $event)"
       />
       <label for="ageValue">Age Value</label>
     </div>
     <div class="form-field">
-      <select class="text-input" name="vaccine" [(ngModel)]="form().vaccineId">
+      <select class="text-input" name="vaccine" [ngModel]="form().vaccineId" (ngModelChange)="setField('vaccineId', $event)">
         <option [ngValue]="null">Select Vaccine</option>
         @for (v of vaccines(); track v.vaccinationId) {
           <option [ngValue]="v.vaccinationId">
@@ -39,7 +39,7 @@
       }
     </div>
     <div class="form-field form-field-narrow">
-      <select class="text-input" name="sequence" [(ngModel)]="form().sequence">
+      <select class="text-input" name="sequence" [ngModel]="form().sequence" (ngModelChange)="setField('sequence', $event)">
         <option value="">Select Sequence</option>
       </select>
       <label for="sequence">Sequence *</label>

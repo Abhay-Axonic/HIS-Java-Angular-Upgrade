@@ -73,11 +73,11 @@
     </p>
     <label class="sc-field">
       <span>Difference (₹)</span>
-      <input type="number" [(ngModel)]="form().difference" name="difference" placeholder="0" />
+      <input type="number" [ngModel]="form().difference" (ngModelChange)="setField('difference', $event)" name="difference" placeholder="0" />
     </label>
     <label class="sc-field">
       <span>Refund amount (₹)</span>
-      <input type="number" [(ngModel)]="form().refundAmount" name="refundAmount" placeholder="0" />
+      <input type="number" [ngModel]="form().refundAmount" (ngModelChange)="setField('refundAmount', $event)" name="refundAmount" placeholder="0" />
     </label>
     <button class="sc-save" (click)="save()" [disabled]="saving()">
       {{ saving() ? 'Saving…' : 'Save shift closing' }}

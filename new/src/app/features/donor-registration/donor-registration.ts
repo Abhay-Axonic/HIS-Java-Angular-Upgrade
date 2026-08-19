@@ -86,6 +86,8 @@ export class DonorRegistration {
       },
       error: () => this.feedsError.set('The prefix feed could not be loaded.'),
     });
+
+
     this.service.getGenders().subscribe({
       next: (res) => {
         if (res.status === 'success') {
@@ -281,4 +283,10 @@ export class DonorRegistration {
     this.result.set(null);
     this.savedMessage.set('');
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

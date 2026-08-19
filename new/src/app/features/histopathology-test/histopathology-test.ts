@@ -34,6 +34,8 @@ export class HistopathologyTest {
   readonly error = signal('');
   readonly form = signal<{ search: string }>({ search: '' });
 
+
+
   private orgId(): number {
     return this.session.organizationId ?? 1;
   }
@@ -90,4 +92,10 @@ export class HistopathologyTest {
       String(row.urgentTime ?? '—'),
     ];
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

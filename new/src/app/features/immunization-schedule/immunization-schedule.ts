@@ -77,6 +77,8 @@ export class ImmunizationSchedule {
     sequence: '',
   });
 
+
+
   constructor() {
     this.loadVaccines();
   }
@@ -110,4 +112,10 @@ export class ImmunizationSchedule {
       'Disease list not available — no disease-list endpoint exists on this path (finding logged)',
     );
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

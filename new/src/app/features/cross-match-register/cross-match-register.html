@@ -21,19 +21,19 @@
     <div class="cmr-grid">
       <label>
         Patient ID
-        <input type="number" name="patientId" [(ngModel)]="form().patientId" />
+        <input type="number" name="patientId" [ngModel]="form().patientId" (ngModelChange)="setField('patientId', $event)" />
       </label>
       <label>
         Order / Requisition (demo context)
-        <input type="number" name="bloodComponentOrderId" [(ngModel)]="form().bloodComponentOrderId" />
+        <input type="number" name="bloodComponentOrderId" [ngModel]="form().bloodComponentOrderId" (ngModelChange)="setField('bloodComponentOrderId', $event)" />
       </label>
       <label>
         Requisition date
-        <input name="requisitionDate" [(ngModel)]="form().requisitionDate" />
+        <input name="requisitionDate" [ngModel]="form().requisitionDate" (ngModelChange)="setField('requisitionDate', $event)" />
       </label>
       <label>
         Required qty
-        <input type="number" name="requiredQty" [(ngModel)]="form().requiredQty" />
+        <input type="number" name="requiredQty" [ngModel]="form().requiredQty" (ngModelChange)="setField('requiredQty', $event)" />
       </label>
     </div>
 
@@ -42,19 +42,19 @@
       <div class="cmr-grid">
         <label>
           Component
-          <input type="number" name="componentId" [(ngModel)]="form().crossMatchRegisterDetails[0].componentId" />
+          <input type="number" name="componentId" [ngModel]="form().crossMatchRegisterDetails[0].componentId" (ngModelChange)="setDetailField(0, 'componentId', $event)" />
         </label>
         <label>
           Bag (bloodBankStockId)
-          <input type="number" name="bloodBankStockId" [(ngModel)]="form().crossMatchRegisterDetails[0].bloodBankStockId" />
+          <input type="number" name="bloodBankStockId" [ngModel]="form().crossMatchRegisterDetails[0].bloodBankStockId" (ngModelChange)="setDetailField(0, 'bloodBankStockId', $event)" />
         </label>
         <label>
           Segment
-          <input name="segmentNo" [(ngModel)]="form().crossMatchRegisterDetails[0].segmentNo" />
+          <input name="segmentNo" [ngModel]="form().crossMatchRegisterDetails[0].segmentNo" (ngModelChange)="setDetailField(0, 'segmentNo', $event)" />
         </label>
         <label>
           Result
-          <input name="crossMatchReportResult" [(ngModel)]="form().crossMatchRegisterDetails[0].crossMatchReportResult" />
+          <input name="crossMatchReportResult" [ngModel]="form().crossMatchRegisterDetails[0].crossMatchReportResult" (ngModelChange)="setDetailField(0, 'crossMatchReportResult', $event)" />
         </label>
       </div>
     </fieldset>

@@ -67,6 +67,8 @@ export class BloodComponent {
     );
   });
 
+
+
   constructor() {
     this.loadMasters();
   }
@@ -121,4 +123,10 @@ export class BloodComponent {
       'Status update not wired on this screen — the status endpoint exists but toggling live data here would be a no-seed write; the real Blood Component screen owns the status toggle (finding logged)',
     );
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }

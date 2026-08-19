@@ -17,6 +17,17 @@ export class CrossMatchRegisterComponent {
   readonly result = signal('');
   readonly error = signal('');
   readonly saving = signal(false);
+  /** Signal-aware setter for the child rows (the indexed
+   * crossMatchRegisterDetails[i].x bindings — same mutation class). */
+  setDetailField(idx: number, key: string, value: unknown): void {
+    this.form.update((f) => ({
+      ...f,
+      crossMatchRegisterDetails: (f.crossMatchRegisterDetails ?? []).map((r, i) =>
+        i === idx ? {...r, [key]: value} : r,
+      ),
+    }));
+  }
+
 
   // The order/requisition reference is REAL data a user must supply — the
   // golden trace ran against transient fixture rows (SMOKE-CM) that are torn
@@ -67,6 +78,8 @@ export class CrossMatchRegisterComponent {
     ],
   });
 
+
+
   save(): void {
     const userId = this.session.userId ?? 1;
     const f = this.form();
@@ -100,4 +113,10 @@ export class CrossMatchRegisterComponent {
       },
     });
   }
+  /** Signal-aware field setter — rerouted from the in-place `form().x = v`
+   * bindings (the signal never notified; the save read a stale object). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
 }
