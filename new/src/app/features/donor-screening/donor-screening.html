@@ -27,48 +27,48 @@
     <h3>Vitals</h3>
     <div class="bb-form">
       <label>Age
-        <input type="number" [ngModel]="form().age" (ngModelChange)="form().age = $event" />
+        <input type="number" [ngModel]="form().age" (ngModelChange)="setField('age', $event)" />
       </label>
       <label>Years</label>
       <label>Temperature
-        <input type="number" [ngModel]="form().donorTemperature" (ngModelChange)="form().donorTemperature = $event" />
+        <input type="number" [ngModel]="form().donorTemperature" (ngModelChange)="setField('donorTemperature', $event)" />
       </label>
       <label>Unit
-        <select [ngModel]="form().temperatureType" (ngModelChange)="form().temperatureType = $event">
+        <select [ngModel]="form().temperatureType" (ngModelChange)="setField('temperatureType', $event)">
           <option value="C">&#8451;</option>
           <option value="F">&#8457;</option>
         </select>
       </label>
       <label>Pulse
-        <input type="number" [ngModel]="form().donorPulse" (ngModelChange)="form().donorPulse = $event" />
+        <input type="number" [ngModel]="form().donorPulse" (ngModelChange)="setField('donorPulse', $event)" />
       </label>
       <label>bpm</label>
       <label>BP SBP
-        <input type="number" [ngModel]="form().donorBPSystolic" (ngModelChange)="form().donorBPSystolic = $event" />
+        <input type="number" [ngModel]="form().donorBPSystolic" (ngModelChange)="setField('donorBPSystolic', $event)" />
       </label>
       <label>mm/Hg</label>
       <label>BP DBP
-        <input type="number" [ngModel]="form().donorBpDiastolic" (ngModelChange)="form().donorBpDiastolic = $event" />
+        <input type="number" [ngModel]="form().donorBpDiastolic" (ngModelChange)="setField('donorBpDiastolic', $event)" />
       </label>
       <label>mm/Hg</label>
       <label>Height
-        <input type="number" [ngModel]="form().heightInFt" (ngModelChange)="form().heightInFt = $event" /> ft
-        <input type="number" [ngModel]="form().heightInInches" (ngModelChange)="form().heightInInches = $event" /> in
+        <input type="number" [ngModel]="form().heightInFt" (ngModelChange)="setField('heightInFt', $event)" /> ft
+        <input type="number" [ngModel]="form().heightInInches" (ngModelChange)="setField('heightInInches', $event)" /> in
       </label>
       <label>Weight
-        <input type="number" [ngModel]="form().donorWeight" (ngModelChange)="form().donorWeight = $event" />
+        <input type="number" [ngModel]="form().donorWeight" (ngModelChange)="setField('donorWeight', $event)" />
       </label>
       <label>Unit
-        <select [ngModel]="form().weightType" (ngModelChange)="form().weightType = $event">
+        <select [ngModel]="form().weightType" (ngModelChange)="setField('weightType', $event)">
           <option value="kg">kg</option>
           <option value="lbs">lbs</option>
         </select>
       </label>
       <label>HB
-        <input type="number" [ngModel]="form().donorHB" (ngModelChange)="form().donorHB = $event" />
+        <input type="number" [ngModel]="form().donorHB" (ngModelChange)="setField('donorHB', $event)" />
       </label>
       <label>Unit
-        <select [ngModel]="form().hBType" (ngModelChange)="form().hBType = $event">
+        <select [ngModel]="form().hBType" (ngModelChange)="setField('hBType', $event)">
           <option value="g/dl">g/dl</option>
           <option value="g%">g%</option>
         </select>
@@ -82,28 +82,28 @@
     <h3>Screening Result</h3>
     <div class="bb-form">
       <label>
-        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="form().screeningResultStatusId = $event" [value]="1" />
+        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="setField('screeningResultStatusId', $event)" [value]="1" />
         Fit to donate
       </label>
       <label>
-        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="form().screeningResultStatusId = $event" [value]="2" />
+        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="setField('screeningResultStatusId', $event)" [value]="2" />
         Deferred
       </label>
       <label>
-        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="form().screeningResultStatusId = $event" [value]="3" />
+        <input type="radio" [ngModel]="form().screeningResultStatusId" (ngModelChange)="setField('screeningResultStatusId', $event)" [value]="3" />
         Rejected
       </label>
       <label>Deferral Days
-        <input type="number" [ngModel]="form().deferralDays" (ngModelChange)="form().deferralDays = $event" />
+        <input type="number" [ngModel]="form().deferralDays" (ngModelChange)="setField('deferralDays', $event)" />
       </label>
       <label>Deferred Till
-        <input type="date" [ngModel]="form().donorDeferralTillDate" (ngModelChange)="form().donorDeferralTillDate = $event" />
+        <input type="date" [ngModel]="form().donorDeferralTillDate" (ngModelChange)="setField('donorDeferralTillDate', $event)" />
       </label>
       <label>HB Done By Id
-        <input type="number" [ngModel]="form().hbDoneById" (ngModelChange)="form().hbDoneById = $event" />
+        <input type="number" [ngModel]="form().hbDoneById" (ngModelChange)="setField('hbDoneById', $event)" />
       </label>
       <label>Remarks
-        <textarea [ngModel]="form().screeningRemarks" (ngModelChange)="form().screeningRemarks = $event" rows="2"></textarea>
+        <textarea [ngModel]="form().screeningRemarks" (ngModelChange)="setField('screeningRemarks', $event)" rows="2"></textarea>
       </label>
     </div>
     @if (temporaryQuestions().length || permanentQuestions().length) {

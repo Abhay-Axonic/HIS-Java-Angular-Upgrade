@@ -134,7 +134,16 @@ export class BloodBankComponent {
     this.form.set({...f});
   }
 
-  toggleHBUnit(): void {
+    /** Signal-aware field setter — the vitals bindings route through this so every
+   * user-entered field lands in the signal's object AND notifies change
+   * detection (the in-place mutation `form().x = v` silently dropped the
+   * vitals before the save's spread — the t_donor_screening_details row 7
+   * landed with NULL pulse/BP/height/weight/HB and the type fields). */
+  setField(key: string, value: unknown): void {
+    this.form.update((f) => ({...f, [key]: value}));
+  }
+
+toggleHBUnit(): void {
     const f = this.form();
     f.hBType = f.hBType === 'g/dl' ? 'g%' : 'g/dl';
     this.form.set({...f});
