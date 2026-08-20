@@ -1,39 +1,36 @@
-<div class="ipd">
-  <h2>Company Invoice Creation</h2>
-
-  <section class="ip-section">
-    <table class="ip-table">
-      <thead>
-        <tr><th>Patient</th><th>Admission</th><th>Bill</th><th>Amount</th><th>Status</th><th></th></tr>
-      </thead>
-      <tbody>
-        @for (r of rows(); track $index) {
-          <tr>
-            <td>{{ r.patientName ?? r.patientId }}</td>
-            <td>{{ r.admissionNumber ?? r.admissionId ?? '—' }}</td>
-            <td>{{ r.billNumber ?? r.billId ?? '—' }}</td>
-            <td>{{ r.amount ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
-          </tr>
-        }
-        @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="ip-empty">No rows.</td></tr>
-        }
-        @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="ip-empty">Loading…</td></tr>
-        }
-      </tbody>
-    </table>
-  </section>
-
-  <section class="ip-section">
-    <h3>Action</h3>
-    <div class="ip-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
-  </section>
+<div class="container-fluid">
+  <h4>Company Invoice Creation</h4>
+  <table class="table table-striped table-bordered">
+    <thead><tr>
+        <th>Bill No.</th>
+        <th>UHID</th>
+        <th>Patient Name</th>
+        <th>Visit Details</th>
+        <th>Visit Type</th>
+        <th>Bill Amount</th>
+        <th>Net Payable</th>
+        <th>Credit Payable</th>
+        <th>Credit Net Amount</th>
+    </tr></thead>
+    <tbody>
+      @for (info of rows(); track $index) {
+        <tr>
+          <td>{{ info.billNumber }}</td>
+          <td>{{ info.uhidNumber }}</td>
+          <td>{{ info.patientName }}</td>
+          <td title="UNRESOLVED — no backend quote">—</td>
+          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.totalBillAmount }}</td>
+          <td>{{ info.netAmount }}</td>
+          <td>{{ info.creditPayable }}</td>
+          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>
+            <button class="btn btn-xs btn-primary" (click)="searchCompanyInvoice()">searchCompanyInvoice</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="9" class="text-center">No records</td></tr>
+      }
+    </tbody>
+  </table>
 </div>
