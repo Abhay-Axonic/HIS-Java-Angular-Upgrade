@@ -502,3 +502,7 @@ one asserts the tree, this one asserts the bundle):**
      (RC=2, "lacks current-source marker", zero behavioural assertions)
      instead of reporting a behavioural result. Restore + recompile -> probe
      green again (RC=0).
+
+11. **`ng build` exit code is the compile gate** (established 2026-08-20, when a commit reported "tsc 0" and the real build failed on two template type errors): `tsc --noEmit` does NOT type-check Angular templates — it is silent about exactly the layer where this project's binding defects live (the `[checked]` string-vs-number comparison, the binding-loss class, the in-place-mutation bindings — all template-level, all invisible to tsc). tsc may be used as a cheap TS-only pre-check, never as the verdict. Claim "compiles" only on `ng build` exit 0.
+
+12. **The backend tree at Projects/legacy-modernization is shared with other agents/sessions** (established 2026-08-20, after an uncommitted edit there was silently reverted by another session's branch checkout — reflog: "checkout: moving from fix/patient-visibility to master"): any backend edit must be committed immediately or made on a branch — never left uncommitted between steps. An uncommitted backend change can vanish under another session's branch switch with no record and no error.
