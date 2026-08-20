@@ -17,13 +17,13 @@
         <tr>
           <td>{{ info.frDepositNo }}</td>
           <td>{{ info.unitName }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td title="HEADER-ONLY in the legacy view — no grid binding (identificationNo is never displayed)">—</td>
           <td>{{ info.depositAmount }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.consumedDeposit }}</td>
+          <td>{{ info.refundAmount }}</td>
+          <td>{{ info.availableDeposit }}</td>
+          <td>{{ info.createdBy }}</td>
+          <td title="NO GRID VALUE in the legacy view — the payment mode lives on the per-deposit Details rows, not the list row">—</td>
           <td>
             <button class="btn btn-xs btn-primary" (click)="showPaymentCollection()">showPaymentCollection</button>
             <button class="btn btn-xs btn-primary" (click)="searchDeposit()">searchDeposit</button>
