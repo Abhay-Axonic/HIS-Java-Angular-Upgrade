@@ -10,20 +10,20 @@
         <th>Payment Entitlement</th>
         <th>Company</th>
         <th>Total Bill Amount</th>
-        <th>Net Payable</th>
+        <th>Net Payable</th><th>Status</th><th>Action</th>
     </tr></thead>
     <tbody>
       @for (info of rows(); track $index) {
         <tr>
           <td>{{ info.patientName }}</td>
           <td>{{ info.doctorName }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ getVisitTypeById(info.visitTypeId) }}</td>
           <td>{{ info.visitDate }}</td>
           <td>{{ info.visitNo }}</td>
           <td title="UNRESOLVED — no backend quote">—</td>
           <td>{{ info.associateCompanyDesc }}</td>
           <td>{{ info.totalBillAmount }}</td>
-          <td>{{ info.netAmount }}</td>
+          <td>{{ info.netAmount }}</td><td>{{ getBillStatusById(info.billStatusId) }}</td>
           <td>
             <button class="btn btn-xs btn-primary" (click)="searchBills()">searchBills</button>
             <button class="btn btn-xs btn-primary" (click)="patientDocumnetInformation()">patientDocumnetInformation</button>

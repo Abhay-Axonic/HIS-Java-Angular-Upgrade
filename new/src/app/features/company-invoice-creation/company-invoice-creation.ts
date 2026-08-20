@@ -3,6 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {NotificationService} from '../../core/notification.service';
 import {SessionService} from '../../core/session.service';
 import {IpdService} from './company-invoice-creation.service';
+import {legacyGetVisitTypeById} from '../../shared/legacy-lookups';
 import type {IpdRow, SavePayload} from './company-invoice-creation.models';
 
 /** Company Invoice Creation — core scope per docs/SPEC_IPD_MODULE_2026-08-16.md: the read-only
@@ -17,6 +18,7 @@ import type {IpdRow, SavePayload} from './company-invoice-creation.models';
   styleUrl: './company-invoice-creation.scss',
 })
 export class IpdComponent {
+  readonly getVisitTypeById = legacyGetVisitTypeById;
   private api = inject(IpdService);
   private session = inject(SessionService);
   private notify = inject(NotificationService);

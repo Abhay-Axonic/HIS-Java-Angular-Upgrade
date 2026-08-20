@@ -3,6 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {NotificationService} from '../../core/notification.service';
 import {SessionService} from '../../core/session.service';
 import {IpdService} from './debit-note-list.service';
+import {legacyGetVisitTypeById, legacyGetBillStatusById} from '../../shared/legacy-lookups';
 import type {IpdRow, SavePayload} from './debit-note-list.models';
 
 /** Debit Note List — core scope per docs/SPEC_IPD_MODULE_2026-08-16.md: the read-only
@@ -17,6 +18,8 @@ import type {IpdRow, SavePayload} from './debit-note-list.models';
   styleUrl: './debit-note-list.scss',
 })
 export class IpdComponent {
+  readonly getVisitTypeById = legacyGetVisitTypeById;
+  readonly getBillStatusById = legacyGetBillStatusById;
   private api = inject(IpdService);
   private session = inject(SessionService);
   private notify = inject(NotificationService);

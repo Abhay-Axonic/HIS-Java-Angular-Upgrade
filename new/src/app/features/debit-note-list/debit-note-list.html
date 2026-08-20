@@ -9,7 +9,7 @@
         <th>Visit No.</th>
         <th>Against Bill No.</th>
         <th>Total DN Amt</th>
-        <th>Net Payable</th>
+        <th>Net Payable</th><th>Status</th><th>Action</th>
         <th>Amt Paid</th>
     </tr></thead>
     <tbody>
@@ -17,12 +17,12 @@
         <tr>
           <td>{{ info.uhidNumber }}</td>
           <td>{{ info.patientName }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ getVisitTypeById(info.visitTypeId) }}</td>
           <td>{{ info.visitDate }}</td>
           <td>{{ info.visitNo }}</td>
           <td>{{ info.againstbillNumber }}</td>
           <td>{{ info.totalBillAmount }}</td>
-          <td>{{ info.netAmount }}</td>
+          <td>{{ info.netAmount }}</td><td>{{ getBillStatusById(info.billStatusId) }}</td>
           <td>{{ info.amountPaid }}</td>
           <td>
             <button class="btn btn-xs btn-primary" (click)="searchBills()">searchBills</button>
