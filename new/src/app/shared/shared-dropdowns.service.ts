@@ -30,10 +30,20 @@ import type {IdNameRow} from '../features/blood-bag-collection/blood-bag-collect
  *   - admittedSearch: POST /adt/searchAdmittedPatientByNameAndUhid -> the BedManagementDto-family rows
  *                     (uhidNumber/patientName/patientId)
  *
- * EXCLUDED in Phase 1 (shape not quotable within budget — criteria-mapped, transformer target
- * unread; do not bind on assumption):
- *   - GET_PATIENT_DOCUMENT_ENCOUNTER (/api/opd/patientDoc/details)
- *   - GETDOCTORBYSPECIALITYID (/adt/getDoctorListAganistSpeciality)
+ *   - patientDocs:    GET /api/opd/patientDoc/details (EncounterController, class /patientDoc;
+ *                     @PathVariable encounterId + @RequestParam admissionId/patientId) ->
+ *                     PatientDocDto.class (EncounterMasterDaoImpl transformer target):
+ *                     {encounterDocId, docTypeId, documentTypeId, documentName, fileName,
+ *                     documentPath, uploadDoccumentDate, analyzedDocDate, remark, videolink,
+ *                     bucketFlag, incidentReportingMapperId, nabhReportingMapperId, createdDate}
+ *                     — a patient-document LOOKUP, exposed with its real shape, not forced
+ *                     into {id, desc}.
+ *   - doctorsBySpeciality: POST /adt/getDoctorListAganistSpeciality (AdmissionRequestController,
+ *                     @RequestBody DoctorSpecialityMapperDto) ->
+ *                     DoctorSpecialityMapperDto.class (AdmissionRequestDaoImpl transformer):
+ *                     {doctorId, doctorName, firstName, lastName, specialityId, specialityName,
+ *                     subSpecialityId, subSpecialityName, mobileNumber, userId, status...}
+ *                     mapped to {id: doctorId, desc: doctorName}.
  *
  * org/unit convention: every feed takes orgId/unitId as parameters and sends them in the
  * request body — the caller sources them from the session. Nothing is hardcoded (the two
@@ -106,8 +116,40 @@ export class SharedDropdownsService {
       .pipe(map((rows) => rows.map((r) => ({id: r.patientId, desc: `${r.patientName} (${r.uhidNumber})`}))));
   }
 
+  /** GET /api/opd/patientDoc/details — the patient-document lookup (real PatientDocDto shape) */
+  patientDocuments(encounterId: number, admissionId: number, patientId: number): Observable<PatientDocRow[]> {
+    return this.http.get<ApiResponse<PatientDocRow[]>>(API_BASE_URL + '/api/opd/patientDoc/details', {
+      params: {encounterId: String(encounterId), admissionId: String(admissionId), patientId: String(patientId)},
+    }).pipe(map((res) => (res?.listObject ?? []) as PatientDocRow[]));
+  }
+
+  /** POST /adt/getDoctorListAganistSpeciality -> {doctorId, doctorName, specialityName...} */
+  doctorsBySpeciality(specialityId: number, orgId: number, unitId: number): Observable<IdNameRow[]> {
+    return this.post<{doctorId: number; doctorName: string}>(
+      '/adt/getDoctorListAganistSpeciality', {specialityId, organizationId: orgId, unitId})
+      .pipe(map((rows) => rows.map((r) => ({id: r.doctorId, desc: r.doctorName}))));
+  }
+
   private post<T>(path: string, body: unknown): Observable<T[]> {
     return this.http.post<ApiResponse<T[]>>(API_BASE_URL + path, body)
       .pipe(map((res) => (res?.listObject ?? []) as T[]));
   }
+}
+
+/** The patient-document lookup's row (PatientDocDto.class — the transformer target). */
+export interface PatientDocRow {
+  encounterDocId: number;
+  docTypeId?: number;
+  documentTypeId?: number;
+  documentName?: string;
+  fileName?: string;
+  documentPath?: string;
+  uploadDoccumentDate?: string;
+  analyzedDocDate?: string;
+  remark?: string;
+  videolink?: string;
+  bucketFlag?: string;
+  incidentReportingMapperId?: number;
+  nabhReportingMapperId?: number;
+  createdDate?: string;
 }
