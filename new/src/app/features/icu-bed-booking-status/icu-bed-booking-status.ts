@@ -25,7 +25,7 @@ export class IpdComponent {
   readonly unitId = this.session.current?.unitId ?? 1;
   readonly userId = this.session.current?.userId ?? 1;
 
-  readonly rows = signal<IpdRow[]>([]);
+  readonly rows = signal<any[]>([]);
   readonly selected = signal<IpdRow | null>(null);
   readonly loading = signal(false);
   readonly loaded = signal(false);
