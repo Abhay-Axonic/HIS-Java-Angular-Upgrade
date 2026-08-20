@@ -15,14 +15,14 @@
     <tbody>
       @for (info of rows(); track $index) {
         <tr>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.fundrequestNumber }}</td>
+          <td>{{ info.fundrequestDate }}</td>
+          <td title="NEEDS MASTER LOOKUP: visitTypeName — the row carries visitTypeId only (BillingMasterDaoImpl)">—</td>
           <td>{{ info.uhidNumber }}</td>
           <td>{{ info.patientName }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td title="NOT SUPPLIED: encounterNumber — no encounter field on FundSanctionRequestDto">—</td>
+          <td title="RESOLVED BUT NOT ON APPLY-LIST: totalAmount → totalBillAmount (BillingMasterDaoImpl)">—</td>
+          <td title="NOT SUPPLIED: requestDiscAmt — the fund-sanction amount props are fundrequestAmount/fundrequestStatusId">—</td>
           <td>{{ info.approvedDiscAmt }}</td>
           <td>
             <button class="btn btn-xs btn-primary" (click)="searchFinancialList()">searchFinancialList</button>

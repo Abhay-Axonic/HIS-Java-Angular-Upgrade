@@ -15,15 +15,15 @@
     <tbody>
       @for (info of rows(); track $index) {
         <tr>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.companyDesc }}</td>
           <td>{{ info.paymentEntitlementDesc }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.contractName }}</td>
           <td>{{ info.patientName }}</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.insuranceDesc }}</td>
+          <td>{{ info.insuranceNumber }}</td>
+          <td>{{ info.authorizationStatusName }}</td>
+          <td title="NEEDS MASTER LOOKUP: visitTypeCode — not in the pre-auth row (IPreAuthorizationRequestDaoImpl)">—</td>
+          <td title="NEEDS MASTER LOOKUP: visitDate — the row carries authDate (IPreAuthorizationRequestDaoImpl)">—</td>
           <td>
             <button class="btn btn-xs btn-primary" (click)="searchPreAuthorizationRequest()">searchPreAuthorizationRequest</button>
             <button class="btn btn-xs btn-primary" (click)="editViewPreAuthorizationRequest()">editViewPreAuthorizationRequest</button>
