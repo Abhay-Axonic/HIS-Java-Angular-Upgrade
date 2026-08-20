@@ -66,4 +66,11 @@ export class NursingOrder {
       },
     });
   }
+  open4(): void {
+    // TODO: wire to the service — backend in use, stub only
+  }
+  openDatePicker(): void {
+    // TODO: date picker — backend in use, stub only
+  }
+
 }
