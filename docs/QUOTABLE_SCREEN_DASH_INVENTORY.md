@@ -41,13 +41,13 @@ backend quote is pending). The resolutions below are the union the first apply-p
 
 | screen | column | reason class | what would resolve it |
 |---|---|---|---|
-| new-born-registration | motherName | STILL_UNKNOWN — CONFIRMED NOT ON THE DTO (2026-08-20) | NewBornBabyDto.babyDetails is List<NewBornBabyDto> — RECURSIVE (the baby list itself, not a mother object); the DTO carries fatherName and NO mother field. The mother's name is the admitted-patient join — the read would be that join's alias in the new-born feed query |
+| new-born-registration | motherName | NOT_SUPPLIED as a grid column — RECLASSIFIED (2026-08-20) | the legacy view does NOT render the mother's name as a grid cell: the radio row calls setMothersName(info.patientId) (new-born-registration.html, quoted) and the field is populated CLIENT-SIDE from the selected admitted-patient row. The NewBornBabyDto carries fatherName only (babyDetails is a recursive List<NewBornBabyDto>). Not a grid column -> the template's motherName cell should be flagged accordingly, not awaited as a feed field |
 
 ## Consult / short-leave
 
 | screen | column | reason class | what would resolve it |
 |---|---|---|---|
-| pending-consult-order-request | note | STILL_UNKNOWN | the consult-request row query not located by name (ADT grep empty) |
+| pending-consult-order-request | note | STILL_UNKNOWN | the consult-request row query not located by name (ADT grep empty) — next hop: the IConsultOrderRequestDao family in ADT |
 | pending-short-leave | stringFromTime, stringToTime | NOT_SUPPLIED | AdmittedPatientListDaoImpl carries no such aliases — the legacy computes the time strings client-side from the date+time fields |
 
 ## Bound this pass (for the record — resolved-but-not-applied was the failure mode)
@@ -58,3 +58,17 @@ OrderDetailsByEncounterIdDto; refundAmount, remark, visitTypeName (refund family
 crDueAmount, selfPayable (refund-against-CR) — RefundCnResDto / RefundCreditNoteResDto; babyPrefix,
 weight, dob (timeOfBirth), gestationalAge, birthTerm (birthType) — NewBornBabyDto; visitDetails
 (client-computed visitDate+visitNo concat); refundAgainst (the exact legacy ternary).
+
+## CONVENTION-screen resolutions (2026-08-20, the six one-read-away screens)
+
+- pending-transfer-request + acceptance-of-transfer-of-care — RESOLVED: GET /adt/getTransferRequestList -> MapOfBedDaoImpl.getTransferRequestList, transformer target AdmissionDto.class (quoted). The transfer row shape: UHIDNumber, admittingDoctorName, admittingSpecialityName, adtReasonDesc/adtReasonId, doctorName, doctorReasonDesc, doctorRejectReason, bedCategoryDesc, bedCode, bedId, bedStatusId, admissionStatus, adtNote... The screens are buildable from these fields.
+- pass-issued — the handler is PassIssuedController (ADT module; the class mapping is /getVisitorTypeList): the grid feeds are /getAdmittedPatientListByMultipleCriteria + /getVisitorPassList (the franchise lesson applied — the endpoint's constant name did not match the handler's). Row shape: the AdmittedPatientListDaoImpl / BedManagementDto family quoted earlier.
+- deposit — NO_GRID / controller-less shell: no depositController.js exists in the webapp (only depositMatrixConfigController.js) and deposit.html has NO ng-controller. The index's controller name is a heuristic guess; the screen is unwired like the 12 MasterController shells.
+- discount-request-worklist, doctor-desk, update-payee-information — NO_GRID confirmed: their controllers assign dropdown lists only (reasonList, requestDiscUsersList, allEncounterList / dischargeTypeList, reasonList, encounterStatusList / sexMasterList, identificationTypeList, documentTypeList — quoted earlier), no grid feed. They are form/dropdown screens, not list screens.
+
+## The master-lookup feeds (item 3 — which feed supplies each desc; NOT wired)
+
+- visitTypeName / visitTypeCode -> GETVISITTYPEBYID = API+GLOBAL+"/getVisitTypeById" (config quoted); the active list feed GETACTIVEVISITTYPEMASTER = API+GLOBAL+"/visitTypeMaster". Row: the VisitTypeMaster (visitTypeId/visitTypeCode/visitTypeDesc).
+- paymentEntitlementDesc -> GETACTIVEPAYMENTENTITLEMENT = "/adt/getAvtivePaymentEntitlementList" (the legacy's own "Avtive" typo, quoted) + GETPAYMENTENTITLEMENTBYID = GLOBAL+"/getPaymententitlementById".
+- status (the billing family's bill-status desc) -> no GETBILLSTATUS constant matched the config grep — the next hop is the billing config's status-list constant (one grep).
+- pre-auth's visitDate — RECLASSIFIED: not a master lookup — the pre-auth row carries authDate (IPreAuthorizationRequestDaoImpl, quoted); the column maps to the row field.
