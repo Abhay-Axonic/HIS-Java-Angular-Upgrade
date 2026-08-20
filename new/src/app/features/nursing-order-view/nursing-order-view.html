@@ -1,39 +1,37 @@
-<div class="ipd">
-  <h2>Nursing Order View</h2>
-
-  <section class="ip-section">
-    <table class="ip-table">
-      <thead>
-        <tr><th>Patient</th><th>Admission</th><th>Bill</th><th>Amount</th><th>Status</th><th></th></tr>
-      </thead>
-      <tbody>
-        @for (r of rows(); track $index) {
-          <tr>
-            <td>{{ r.patientName ?? r.patientId }}</td>
-            <td>{{ r.admissionNumber ?? r.admissionId ?? '—' }}</td>
-            <td>{{ r.billNumber ?? r.billId ?? '—' }}</td>
-            <td>{{ r.amount ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
-          </tr>
-        }
-        @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="ip-empty">No rows.</td></tr>
-        }
-        @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="ip-empty">Loading…</td></tr>
-        }
-      </tbody>
-    </table>
-  </section>
-
-  <section class="ip-section">
-    <h3>Action</h3>
-    <div class="ip-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
-  </section>
+<div class="container-fluid">
+  <h4>Nursing Order</h4>
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>UHID</th><th>Patient</th><th>Room</th><th>Ward</th><th>Floor</th><th>Doctor</th>
+        <th>Nursing Order</th><th>Start Date</th><th>Stop Date</th><th>Frequency</th>
+        <th>Instruction</th><th>Remarks</th><th>Status</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (info of rows(); track info.nursingOrderMapperId) {
+        <tr>
+          <td>{{ info.uhidNumber }}</td>
+          <td>{{ info.patientName }}</td>
+          <td>{{ info.roomDesc }}</td>
+          <td>{{ info.wardName }}</td>
+          <td>{{ info.floorName }}</td>
+          <td>{{ info.doctorName }}</td>
+          <td>{{ info.nursingOrderDesc }}</td>
+          <td>{{ info.startDate }}</td>
+          <td>{{ info.stopDate }}</td>
+          <td>{{ info.frequency }}</td>
+          <td>{{ info.instruction }}</td>
+          <td>{{ info.remark }}</td>
+          <td>{{ info.status }}</td>
+          <td>
+            <button class="btn btn-xs btn-primary" (click)="showUpdateNursingOrderMapper(info.nursingOrderMapperId)">Update</button>
+            <button class="btn btn-xs btn-danger" (click)="stop(info, true)">Stop</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="14" class="text-center">No nursing orders</td></tr>
+      }
+    </tbody>
+  </table>
 </div>

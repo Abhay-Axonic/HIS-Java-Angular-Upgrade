@@ -25,7 +25,7 @@ export class IpdComponent {
   readonly unitId = this.session.current?.unitId ?? 1;
   readonly userId = this.session.current?.userId ?? 1;
 
-  readonly rows = signal<IpdRow[]>([]);
+  readonly rows = signal<any[]>([]);
   readonly selected = signal<IpdRow | null>(null);
   readonly loading = signal(false);
   readonly loaded = signal(false);
@@ -72,6 +72,14 @@ export class IpdComponent {
         else this.notify.warning(r.message ?? 'Save failed'); },
       error: () => { this.saving.set(false); this.notify.error('Save failed'); },
     });
+  }
+  /** Pending backend verification: the update/stop endpoints are not called while the
+   *  backend is in use by other work. Wire these to the service when it is free. */
+  showUpdateNursingOrderMapper(nursingOrderMapperId: number): void {
+    // TODO: open the update panel — backend-pending
+  }
+  stop(info: any, flag: boolean): void {
+    // TODO: POST the stop endpoint — backend-pending
   }
 }
 
