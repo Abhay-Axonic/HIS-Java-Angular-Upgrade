@@ -11,16 +11,18 @@ backend quote is pending). The resolutions below are the union the first apply-p
 
 | screen | column | reason class | what would resolve it |
 |---|---|---|---|
-| bill-list | visitTypeName | MASTER_LOOKUP | the row carries visitTypeId only (BillingMasterDaoImpl billlist query); a component master-lookup from visitTypeId |
-| bill-list | paymentEntitlementDesc | MASTER_LOOKUP | the row carries paymentEntitlementId only; same lookup pattern |
-| cancelled-bill-list | visitTypeName | MASTER_LOOKUP | same as bill-list |
-| credit-note | visitTypeName | MASTER_LOOKUP | same |
-| debit-note-list | visitTypeName | MASTER_LOOKUP | same |
-| company-invoice-creation | visitTypeName | MASTER_LOOKUP | same |
-| financial-request-approval | visitTypeName | MASTER_LOOKUP | same |
+| bill-list | visitTypeName | RESOLVED — CLIENT_CONSTANT (2026-08-20) | bound via shared/legacy-lookups.ts legacyGetVisitTypeById (the legacy rootScope helper, app.js:~1688: 1=OP 2=IP 3=Day Care 4=ER); the row carries visitTypeId (BillingMasterDaoImpl) |
+| bill-list | status | RESOLVED — CLIENT_CONSTANT (2026-08-20) | the column ADDED (the legacy renders it — bill-list.html:296 {{getBillStatusById(bill.billStatusId)}}); bound via legacyGetBillStatusById (app.js:1702: 1=Pending 2=OnHold 3=Settled) |
+| bill-list | paymentEntitlementDesc | MASTER_LOOKUP (genuine) | the row carries paymentEntitlementId only; the desc needs the real master fetch /adt/getAvtivePaymentEntitlementList — NOT in the client-constant set, stays dashed |
+| cancelled-bill-list | visitTypeName | RESOLVED — CLIENT_CONSTANT (2026-08-20) | legacyGetVisitTypeById(info.visitTypeId) |
+| credit-note | visitTypeName | RESOLVED — CLIENT_CONSTANT (2026-08-20) | legacyGetVisitTypeById(info.visitTypeId) |
+| debit-note-list | visitTypeName | RESOLVED — CLIENT_CONSTANT (2026-08-20) | legacyGetVisitTypeById(info.visitTypeId) |
+| debit-note-list | status | RESOLVED — CLIENT_CONSTANT (2026-08-20) | the column ADDED (the legacy debit-list.html renders getBillStatusById); bound via legacyGetBillStatusById(info.billStatusId) |
+| company-invoice-creation | visitTypeName | RESOLVED — CLIENT_CONSTANT (2026-08-20) | legacyGetVisitTypeById(info.visitTypeId) |
+| financial-request-approval | visitTypeName | STILL DASHED — no visitTypeId on the row | FundSanctionRequestDto carries no visit-type id; the column cannot use the lookup without an id in the row |
 | financial-request-approval | encounterNumber | NOT_SUPPLIED | no encounter field on FundSanctionRequestDto (the fund-sanction family carries patientId/uhidNumber only) |
 | financial-request-approval | requestDiscAmt | NOT_SUPPLIED | the fund-sanction amount props are fundrequestAmount/fundrequestStatusId; a discount-specific amount is not in the DTO |
-| pre-authorization-request | visitTypeCode | MASTER_LOOKUP | not in the pre-auth row (IPreAuthorizationRequestDaoImpl carries authDate/companyDesc/contractName/insuranceDesc/insuranceNumber) |
+| pre-authorization-request | visitTypeCode | STILL DASHED — no visitTypeId on the row | the pre-auth row (IPreAuthorizationRequestDaoImpl) carries no visit-type id; the legacy's helper needs an id. ALSO NOTED: the pre-auth template's bound fields are positionally shifted (companyDesc sits under the Visit Type header etc. — the apply-pass-1 bound positionally) — flagged for a realignment pass, not fixed here |
 | pre-authorization-request | visitDate | MASTER_LOOKUP | the row carries authDate (IPreAuthorizationRequestDaoImpl) |
 
 ## Refund family
