@@ -20,10 +20,10 @@
           <td>{{ info.uhidNumber }}</td>
           <td>{{ info.patientName }}</td>
           <td>{{ info.mobileNo }}</td>
-          <td title="CLIENT-SIDE DESC — needs a master lookup in the component (service-layer change)">—</td>
-          <td title="CLIENT-SIDE DESC — needs a master lookup in the component (service-layer change)">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
-          <td title="UNRESOLVED — no backend quote">—</td>
+          <td>{{ info.depositTypeId == 1 ? 'Regular' : info.depositTypeId == 2 ? 'Encounter' : '-' }}</td>
+          <td>{{ info.visitTypeName }}</td>
+          <td>{{ info.remark }}</td>
+          <td>{{ info.refundAmount }}</td>
           <td>
             <button class="btn btn-xs btn-primary" (click)="searchCNMaster()">searchCNMaster</button>
             <button class="btn btn-xs btn-primary" (click)="refundListSearch()">refundListSearch</button>
