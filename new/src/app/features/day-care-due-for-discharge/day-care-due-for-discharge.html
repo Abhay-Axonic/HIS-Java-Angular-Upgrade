@@ -1,39 +1,35 @@
-<div class="ipd">
-  <h2>Day Care Due for Discharge</h2>
-
-  <section class="ip-section">
-    <table class="ip-table">
-      <thead>
-        <tr><th>Patient</th><th>Admission</th><th>Bill</th><th>Amount</th><th>Status</th><th></th></tr>
-      </thead>
-      <tbody>
-        @for (r of rows(); track $index) {
-          <tr>
-            <td>{{ r.patientName ?? r.patientId }}</td>
-            <td>{{ r.admissionNumber ?? r.admissionId ?? '—' }}</td>
-            <td>{{ r.billNumber ?? r.billId ?? '—' }}</td>
-            <td>{{ r.amount ?? '—' }}</td>
-            <td>{{ r.status ?? '—' }}</td>
-            <td><button type="button" (click)="pick(r)">Select</button></td>
-          </tr>
-        }
-        @if (!rows().length && loaded()) {
-          <tr><td colspan="6" class="ip-empty">No rows.</td></tr>
-        }
-        @if (!rows().length && !loaded()) {
-          <tr><td colspan="6" class="ip-empty">Loading…</td></tr>
-        }
-      </tbody>
-    </table>
-  </section>
-
-  <section class="ip-section">
-    <h3>Action</h3>
-    <div class="ip-form">
-      <label>Remark
-        <input type="text" [ngModel]="remark()" (ngModelChange)="remark.set($event)" />
-      </label>
-    </div>
-    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving() || !selected()">Save</button>
-  </section>
+<div class="container-fluid">
+  <h4>Day Care Due For Discharge</h4>
+  <table class="table table-striped table-bordered">
+    <thead><tr>
+        <th>UHID</th>
+        <th>Patient Details</th>
+        <th>Admission Number</th>
+        <th>Bed No.</th>
+        <th>Ward</th>
+        <th>Planned Discharge Date</th>
+        <th>Discharge</th>
+        <th>Extend PDD</th>
+    </tr></thead>
+    <tbody>
+      @for (info of rows(); track $index) {
+        <tr>
+          <td>{{ info.uhidnumber }}</td>
+          <td>{{ info.patientFullName }}</td>
+          <td>{{ info.admissionNumber }}</td>
+          <td>{{ info.bedNumber }}</td>
+          <td>{{ info.wardName }}</td>
+          <td>{{ info.datepickerPdd }}</td>
+          <td>—</td>
+          <td>—</td>
+          <td>
+            <button class="btn btn-xs btn-primary" (click)="popupDischarge($index)">popupDischarge</button>
+            <button class="btn btn-xs btn-primary" (click)="dueForDischarge($index)">dueForDischarge</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="8" class="text-center">No records</td></tr>
+      }
+    </tbody>
+  </table>
 </div>
