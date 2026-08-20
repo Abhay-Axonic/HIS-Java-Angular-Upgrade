@@ -1,0 +1,2253 @@
+[
+ {
+  "screen": "er-initiate-bed-transfer",
+  "controller": "erInitiateBedTransferController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 131,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 143,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETINITIATETRANSFERREQUESTFORBM",
+    "path": "/adt/getTransferRequestListByAdmissoinId",
+    "legacy_line": 172,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETTRANSFERPATIENTLIST",
+    "path": "/adt/getTransferRequestList",
+    "legacy_line": 173,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETTRANSFERREQUESTLISTBYADMISSIONIDFORB2B",
+    "path": "/adt/getTransferRequestListByAdmissionIdForB2B",
+    "legacy_line": 223,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETINITIATETRANSFERREQUEST",
+    "path": "/adt/getInitiateTransferRequestList",
+    "legacy_line": 290,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETBEDLISTBYWARDIDFORBEDTOBED",
+    "path": "/adt/getBedListByWardIdForBedtoBedTransfer",
+    "legacy_line": 437,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDTRANSFERREQUEST",
+    "path": "/adt/saveTransferRequest",
+    "legacy_line": 544,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "ACCEPTFINALTRANSFERREQUEST",
+    "path": "/adt/acceptFinalTransferRequest",
+    "legacy_line": 652,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "REJECTTRANSFERREQUESTONREQUEST",
+    "path": "/adt/rejectTransferRequest",
+    "legacy_line": 711,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETADMITTEDPATIENTBYKEWWORD",
+    "path": "/adt/searchAdmittedPatientByNameAndUhid",
+    "legacy_line": 754,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "er-transfer-request-acceptance",
+  "controller": "erTransferRequestAcceptanceController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 65,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETTRANSFERREQUESTACCEPTANCELIST",
+    "path": "/adt/getPendingTransferRequestListForADT",
+    "legacy_line": 80,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEBEDLIST",
+    "path": "/adt/getActiveBedList",
+    "legacy_line": 362,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "ACCEPTTRANSFERREQUESTFORADT",
+    "path": "/adt/acceptTransferRequestForADT",
+    "legacy_line": 448,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "REJECTTRANSFERREQUESTFORADT",
+    "path": "/adt/rejectTransferRequestForADT",
+    "legacy_line": 545,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "nursing-worklist",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "nursing-progress-note",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "nursing-order-view",
+  "controller": "nursingOrderViewMasterController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 64,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 71,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "admission-rejection-list",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "admission-request",
+  "controller": "admissionRequestController",
+  "calls": [
+   {
+    "constant": "GETACTIVESPECIALITY",
+    "path": "/adt/getActiveSpecialityList",
+    "legacy_line": 293,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 308,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 339,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 354,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEPATIENTCATEGORY",
+    "path": "/adt/getAvtivePatientCategoryList",
+    "legacy_line": 370,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPREFIXLIST",
+    "path": "/adt/getActivePrefixList",
+    "legacy_line": 385,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 398,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEADMISSIONTYPELIST",
+    "path": "/adt/getActiveAdmissionTypeList",
+    "legacy_line": 411,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETPATIENTBYKEYWORD",
+    "path": "/adt/getPatientListLike",
+    "legacy_line": 438,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "PATIENTSERACHBYMULTIPLECRITERIAUNKNOWN",
+    "path": "/adt/patientSearchByMultipleCriteria",
+    "legacy_line": 688,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDOCTORBYSPECIALITYID",
+    "path": "/adt/getDoctorListAganistSpeciality",
+    "legacy_line": 820,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETPATIENTDETAILSBYPATIENTID",
+    "path": "/adt/getPatientVisitDetailsById",
+    "legacy_line": 896,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDADMISSIONREQUEST",
+    "path": "/adt/saveAdmissionRequest",
+    "legacy_line": 1149,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "cancel-discharge",
+  "controller": "cancelPatientDischargeController",
+  "calls": [
+   {
+    "constant": "GETACTIVEDISCHARGETYPELIST",
+    "path": "/adt/getActiveDischargeTypeList",
+    "legacy_line": 140,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 154,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDISCHARGEPATIENTLISTFORNURSING",
+    "path": "/adt/getDischargePatientListForNursing",
+    "legacy_line": 173,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETIPDPATIENTBYDOCTORIDCANCELDISCHARGE",
+    "path": "/adt/doctorDesk/ipPatientListByDocIdForCancelDischarge",
+    "legacy_line": 231,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "CANCELDISCHARGEINBILL",
+    "path": "/api/billing/cancelDischarge",
+    "legacy_line": 448,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 496,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "cancel-for-discharge",
+  "controller": "cancelForDischargeController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 86,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "UPDATEDISCHARGEPDD",
+    "path": "/adt/updateDischargePdd",
+    "legacy_line": 137,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "day-care-discharge-summary",
+  "controller": "dayCareDischargeSummaryController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 58,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 65,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "day-care-due-for-discharge",
+  "controller": "dueForDischargeController",
+  "calls": [
+   {
+    "constant": "GETACTIVEDISCHARGETYPELIST",
+    "path": "/adt/getActiveDischargeTypeList",
+    "legacy_line": 137,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 151,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDISCHARGEADMITTEDPATIENTLIST",
+    "path": "/adt/getDischagePatientList",
+    "legacy_line": 167,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDDISCHARGEREQUEST",
+    "path": "/adt/saveDischargeRequest",
+    "legacy_line": 400,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEDISCHARGEPDD",
+    "path": "/adt/updateDischargePdd",
+    "legacy_line": 499,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 557,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "day-care-final-discharge",
+  "controller": "dayCareFinalDischargeController",
+  "calls": [
+   {
+    "constant": "GETFINALDISCHARGEPATIENTLIST",
+    "path": "/adt/getPatientFinalDischargeList",
+    "legacy_line": 115,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "PATIENTFINALDISCHARGE",
+    "path": "/adt/vacateBed",
+    "legacy_line": 220,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "day-care-patient-for-discharge",
+  "controller": "dayCarePatientForDischargeController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 175,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEVISITORPASSTYPELIST",
+    "path": "/api/unit/visitor/getActivePassTypeMasterList",
+    "legacy_line": 188,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDISCHARGEPATIENTLISTFORNURSING",
+    "path": "/adt/getDischargePatientListForNursing",
+    "legacy_line": 202,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEFLOORLIST",
+    "path": "/adt/getActiveFloorList",
+    "legacy_line": 274,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETPASSISSUEDLIST",
+    "path": "/adt/getVisitorsList",
+    "legacy_line": 344,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETPATIENTPENDINGSERVICESLIST",
+    "path": "/api/billing/getPatientServiceOrderList",
+    "legacy_line": 383,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "LIS_UNIT",
+    "path": "/LIS/unit",
+    "legacy_line": 620,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "discharge-summary",
+  "controller": "masterDischargeSummaryController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 111,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 118,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 12645,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "discharged-patients",
+  "controller": "dischargedPatientsController",
+  "calls": [
+   {
+    "constant": "GETACTIVEADMISSIONTYPELIST",
+    "path": "/adt/getActiveAdmissionTypeList",
+    "legacy_line": 135,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEDISCHARGETYPELIST",
+    "path": "/adt/getActiveDischargeTypeList",
+    "legacy_line": 147,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 524,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "absconding-patient",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "admitted-patient-list",
+  "controller": "admittedPatientListController",
+  "calls": [
+   {
+    "constant": "GETACTIVEADMISSIONTYPELIST",
+    "path": "/adt/getActiveAdmissionTypeList",
+    "legacy_line": 159,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEVISITORPASSTYPELIST",
+    "path": "/api/unit/visitor/getActivePassTypeMasterList",
+    "legacy_line": 237,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETADMITTEDPATIENTLIST",
+    "path": "/adt/getAdmittedPatientList",
+    "legacy_line": 251,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEFLOORLIST",
+    "path": "/adt/getActiveFloorList",
+    "legacy_line": 302,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVESPECIALITY",
+    "path": "/adt/getActiveSpecialityList",
+    "legacy_line": 322,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 369,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEMEALPREFERENCELIST",
+    "path": "/adt/getMealPreference",
+    "legacy_line": 384,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREFERRALTYPELIST",
+    "path": "/adt/getActiveReferralTypeList",
+    "legacy_line": 398,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPREFIXLIST",
+    "path": "/adt/getActivePrefixList",
+    "legacy_line": 510,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVECOUNTRYLIST",
+    "path": "/adt/getActiveCountryList/",
+    "legacy_line": 538,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETSINGLECOUNTRY",
+    "path": "/adt/getCountryById",
+    "legacy_line": 550,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETSTATELISTBYCOUNTRYID",
+    "path": "/adt/getActiveStateListByCountryId",
+    "legacy_line": 601,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDISTRICTLISTBYSTATEID",
+    "path": "/adt/getActiveDistrictListByStateId",
+    "legacy_line": 661,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETCITYLISTBYDISTRICTID",
+    "path": "/adt/getActiveCityListByDistrictId",
+    "legacy_line": 718,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETAREALISTBYCITY",
+    "path": "/adt/getAreaByCityId",
+    "legacy_line": 770,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVERELATIONLIST",
+    "path": "/adt/getActiveRelationList",
+    "legacy_line": 817,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "PATIENT",
+    "path": "/patient",
+    "legacy_line": 840,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "SLASH",
+    "path": "/",
+    "legacy_line": 840,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "STATUS",
+    "path": "/status",
+    "legacy_line": 880,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETPASSISSUEDLIST",
+    "path": "/adt/getVisitorsList",
+    "legacy_line": 1096,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDOCTORBYSPECIALITYID",
+    "path": "/adt/getDoctorListAganistSpeciality",
+    "legacy_line": 1163,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETWARDLISTBYFLOORIDORGUNITID",
+    "path": "/adt/getActiveWardListByFloorId",
+    "legacy_line": 1292,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETADMITTEDPATIENTLISTBYFLOORWARD",
+    "path": "/adt/getAdmittedPatientByFloorWard",
+    "legacy_line": 1332,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 1459,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GET_ORDER_SET",
+    "path": "/api/orderset/details",
+    "legacy_line": 1609,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_ORDER_SET_ORDERS",
+    "path": "/api/orderset/orders",
+    "legacy_line": 1750,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "LIS_UNIT",
+    "path": "/LIS/unit",
+    "legacy_line": 2862,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_TEMPLATE",
+    "path": "/labTemplatesbydoctor",
+    "legacy_line": 2863,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDVISITORPASSISSUE",
+    "path": "/adt/saveVisitors",
+    "legacy_line": 3234,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEDOCUMENTTYPELIST",
+    "path": "/adt/getActiveDocumentTypeList",
+    "legacy_line": 4371,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 4399,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 6043,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "CANCELDISCHARGEINBILL",
+    "path": "/api/billing/cancelDischarge",
+    "legacy_line": 7308,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "bed-allocation",
+  "controller": "bedAllocationController",
+  "calls": [
+   {
+    "constant": "GETACTIVEBEDLIST",
+    "path": "/adt/getActiveBedList",
+    "legacy_line": 150,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEFLOORLIST",
+    "path": "/adt/getActiveFloorList",
+    "legacy_line": 163,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 177,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEMEALPREFERENCELIST",
+    "path": "/adt/getMealPreference",
+    "legacy_line": 190,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEBEDSTATUSLIST",
+    "path": "/adt/getBedStatusList",
+    "legacy_line": 205,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPAYMENTENTITLEMENT",
+    "path": "/adt/getAvtivePaymentEntitlementList",
+    "legacy_line": 219,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPREFIXLIST",
+    "path": "/adt/getActivePrefixList",
+    "legacy_line": 231,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVERELATIONLIST",
+    "path": "/adt/getActiveRelationList",
+    "legacy_line": 244,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 257,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVECOUNTRYLIST",
+    "path": "/adt/getActiveCountryList/",
+    "legacy_line": 270,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETSTATELISTBYCOUNTRYID",
+    "path": "/adt/getActiveStateListByCountryId",
+    "legacy_line": 301,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDISTRICTLISTBYSTATEID",
+    "path": "/adt/getActiveDistrictListByStateId",
+    "legacy_line": 323,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETCITYLISTBYDISTRICTID",
+    "path": "/adt/getActiveCityListByDistrictId",
+    "legacy_line": 346,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETAREALISTBYCITY",
+    "path": "/adt/getAreaByCityId",
+    "legacy_line": 368,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEWARDLISTBYFLOORID",
+    "path": "/adt/getActiveWardListByFloorIdByGender",
+    "legacy_line": 397,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVENURSINGSTATIONLISTBYWARDID",
+    "path": "/adt/getNursingStationListByWard",
+    "legacy_line": 417,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETBEDLISTBYMULTIPLECRITERIA",
+    "path": "/adt/getBedListByMultipleCriteria",
+    "legacy_line": 452,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEBILLINGBEDCATEGORYBYBEDCATEGORYID",
+    "path": "/adt/getBillingBedCategoryListByBedCategory",
+    "legacy_line": 496,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDBEDALLOCATION",
+    "path": "/adt/savePatientAdmission",
+    "legacy_line": 618,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "bed-availability",
+  "controller": "bedAvailabilityController",
+  "calls": [
+   {
+    "constant": "GETBEDAVAILABILTYLIST",
+    "path": "/adt/bedAvailiblityList",
+    "legacy_line": 86,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 104,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "bed-book",
+  "controller": "bedBookController",
+  "calls": [
+   {
+    "constant": "GETADMISSIONTYPELIST",
+    "path": "/adt/getAdmissionTypeMasterList",
+    "legacy_line": 52,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDADMISSIONTYPE",
+    "path": "/adt/saveAdmissionTypeMaster",
+    "legacy_line": 95,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETSINGLEADMISSIONTYPE",
+    "path": "/adt/getAdmissionTypeById",
+    "legacy_line": 138,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEADMISSIONTYPESTATUS",
+    "path": "/adt/updateStatusForAdmissionType",
+    "legacy_line": 173,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEADMISSIONTYPE",
+    "path": "/adt/updateAdmissionTypeMaster",
+    "legacy_line": 208,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "bed-reservation-list",
+  "controller": "bedReservationListController",
+  "calls": [
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 123,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETBEDRESERVEDLIST",
+    "path": "/adt/getBedReservationList",
+    "legacy_line": 138,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 186,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "COUNTBEDRESERVETIONLIST",
+    "path": "/adt/getBedReservationCount",
+    "legacy_line": 216,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "UNRESERVERESHEDULEPATIENT",
+    "path": "/adt/unreservePatientBooking",
+    "legacy_line": 872,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 1013,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "bed-under-maintenance",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "cleaned-bed-accept",
+  "controller": "cleanedBedAcceptController",
+  "calls": [
+   {
+    "constant": "GETLISTOFVACANTBEDSFORNURSING",
+    "path": "/adt/getListOfVacantBedsForNursing",
+    "legacy_line": 85,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 117,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEFLOORLIST",
+    "path": "/adt/getActiveFloorList",
+    "legacy_line": 130,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 144,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDISCHARGEPATIENTLISTFORNURSING",
+    "path": "/adt/getDischargePatientListForNursing",
+    "legacy_line": 165,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETWARDLISTBYFLOORIDORGUNITID",
+    "path": "/adt/getActiveWardListByFloorId",
+    "legacy_line": 410,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVENURSINGSTATIONLISTBYWARDID",
+    "path": "/adt/getNursingStationListByWard",
+    "legacy_line": 430,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "SEARCHBEDBYMULTIPLECRITERIAFORNURSING",
+    "path": "/adt/searchBedByMultipleCriteriaForNursing",
+    "legacy_line": 461,
+    "purpose": "FILTER",
+    "shared_layer": false
+   },
+   {
+    "constant": "HOUSEKEEPINGREJECTREQUESTFORNURSING",
+    "path": "/adt/rejectRequestForNursing",
+    "legacy_line": 543,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "HOUSEKEEPINGACCEPTREQUESTFORNURSING",
+    "path": "/adt/acceptRequestForNursing",
+    "legacy_line": 611,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "death-registration",
+  "controller": "deathRegistrationController",
+  "calls": [
+   {
+    "constant": "GETACTIVEPREFIXLIST",
+    "path": "/adt/getActivePrefixList",
+    "legacy_line": 177,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 190,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVERELATIONLIST",
+    "path": "/adt/getActiveRelationList",
+    "legacy_line": 217,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 230,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVECOUNTRYLIST",
+    "path": "/adt/getActiveCountryList/",
+    "legacy_line": 243,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEDOCUMENTTYPELIST",
+    "path": "/adt/getActiveDocumentTypeList",
+    "legacy_line": 260,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETSTATELISTBYCOUNTRYID",
+    "path": "/adt/getActiveStateListByCountryId",
+    "legacy_line": 347,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDISTRICTLISTBYSTATEID",
+    "path": "/adt/getActiveDistrictListByStateId",
+    "legacy_line": 371,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETCITYLISTBYDISTRICTID",
+    "path": "/adt/getActiveCityListByDistrictId",
+    "legacy_line": 396,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETAREALISTBYCITY",
+    "path": "/adt/getAreaByCityId",
+    "legacy_line": 420,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "SAVEDEATHREGISTATION",
+    "path": "/adt/saveDeathRegistation",
+    "legacy_line": 681,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "due-for-discharge",
+  "controller": "dueForDischargeController",
+  "calls": [
+   {
+    "constant": "GETACTIVEDISCHARGETYPELIST",
+    "path": "/adt/getActiveDischargeTypeList",
+    "legacy_line": 137,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 151,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDISCHARGEADMITTEDPATIENTLIST",
+    "path": "/adt/getDischagePatientList",
+    "legacy_line": 167,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDDISCHARGEREQUEST",
+    "path": "/adt/saveDischargeRequest",
+    "legacy_line": 400,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEDISCHARGEPDD",
+    "path": "/adt/updateDischargePdd",
+    "legacy_line": 499,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 557,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "add-new-vitals",
+  "controller": "VitalAddController",
+  "calls": [
+   {
+    "constant": "GLOBAL",
+    "path": "/global",
+    "legacy_line": 124,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_VITAL_LIST",
+    "path": "/vitals",
+    "legacy_line": 124,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "SAVE_VITALS",
+    "path": "/vital",
+    "legacy_line": 147,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "encounter-data",
+  "controller": "encounterDataController",
+  "calls": [
+   {
+    "constant": "OTHER_ENCOUNER_LIST",
+    "path": "/api/otherAppData/encounterList",
+    "legacy_line": 52,
+    "purpose": "GRID",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "icu-bed-booking-status",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "ipd-coversheet",
+  "controller": "IPDCoverSheetController",
+  "calls": [
+   {
+    "constant": "GET_GROWTH_CHART_TRANSACTION",
+    "path": "/api/global/growthChart/patient/details",
+    "legacy_line": 3387,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "SAVE_GROWTH_CHART_TRANSACTION",
+    "path": "/api/global/growthChart/patient",
+    "legacy_line": 3447,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVERELATIONLIST",
+    "path": "/adt/getActiveRelationList",
+    "legacy_line": 4050,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "PATIENT",
+    "path": "/patient",
+    "legacy_line": 8057,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVESPECIALITY",
+    "path": "/adt/getActiveSpecialityList",
+    "legacy_line": 11541,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETSPECIALITYLISTBYDOCTORID",
+    "path": "/adt/getSpecialityListByDoctorId",
+    "legacy_line": 11575,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETSUBSPECIALITYBYSPECIALITYARRAYFORTARIFF",
+    "path": "/adt/getSubSpecialityBySpecialityArrayForTariff",
+    "legacy_line": 11616,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "MASTER",
+    "path": "/master",
+    "legacy_line": 16576,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GLOBAL",
+    "path": "/global",
+    "legacy_line": 16576,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDOCTORBYSPECIALITYID",
+    "path": "/adt/getDoctorListAganistSpeciality",
+    "legacy_line": 17584,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "GET_ORDER_SET",
+    "path": "/api/orderset/details",
+    "legacy_line": 21164,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "TEMPLATE_LIST_BY_SPECILATIY",
+    "path": "/coversheet/templates",
+    "legacy_line": 24433,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "NEW_TEMPLATE_SAVE",
+    "path": "/global/formsEngineUrl",
+    "legacy_line": 24605,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "USER_LOGIN",
+    "path": "/adt/userLogin",
+    "legacy_line": 25452,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEUNITSPECIALITYLIST",
+    "path": "/adt/getActiveUnitSpecialityList",
+    "legacy_line": 25535,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "UNITLIST",
+    "path": "/adt/getUnitByOrganization",
+    "legacy_line": 25596,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_ORDER_SET_ORDERS",
+    "path": "/api/orderset/orders",
+    "legacy_line": 27408,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "IMPLANT_SEARCH_KIT",
+    "path": "/api/otims/searchImplantKit",
+    "legacy_line": 29101,
+    "purpose": "FILTER",
+    "shared_layer": false
+   },
+   {
+    "constant": "IMPLANT_SEARCH_ITEMS",
+    "path": "/api/otims/searchImplantItems",
+    "legacy_line": 29130,
+    "purpose": "FILTER",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_BLOOD_COMPONENT_MASTER_LIST",
+    "path": "/bloodBank/getBloodComponentMasterList",
+    "legacy_line": 29455,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "ADDADMISSIONREQUEST",
+    "path": "/adt/saveAdmissionRequest",
+    "legacy_line": 33242,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 33312,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 33361,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETOPDADMISSIONREQUESTDETAILS",
+    "path": "/adt/getOPDAdmissionRequestDetails",
+    "legacy_line": 33407,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 38593,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDOCTORFAVOURITEMEDICATIONFORCOVERSHEET",
+    "path": "/api/unit/clinical/getDoctorFavouriteMedicationForCoversheet",
+    "legacy_line": 45062,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "LIS_GLOBAL",
+    "path": "/LIS/global",
+    "legacy_line": 45377,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "DIAGNOSIS",
+    "path": "/diagnosis",
+    "legacy_line": 46266,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "pending-admission-discharge",
+  "controller": "pendingAdmissionDischargeController",
+  "calls": [
+   {
+    "constant": "GETPENDINGADMISSIONREQUEST",
+    "path": "/adt/getPendingAdmissionRequestDetails",
+    "legacy_line": 138,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPATIENTCATEGORY",
+    "path": "/adt/getAvtivePatientCategoryList",
+    "legacy_line": 189,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEDOCUMENTTYPELIST",
+    "path": "/adt/getActiveDocumentTypeList",
+    "legacy_line": 205,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPAYMENTENTITLEMENT",
+    "path": "/adt/getAvtivePaymentEntitlementList",
+    "legacy_line": 219,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 235,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "COUNTPENDINGADMISSIONLIST",
+    "path": "/adt/getPendingAdmissionCount",
+    "legacy_line": 294,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEPENDINGADMISSION",
+    "path": "/adt/updatePendingAdmissionRequestDetails",
+    "legacy_line": 659,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATERESERVATIONADMISSION",
+    "path": "/adt/updateReserveBedDetails",
+    "legacy_line": 1040,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPLOADPATIENTDOCUMENTS",
+    "path": "/adt/uploadAdmissionDocuments",
+    "legacy_line": 1224,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 1896,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 2364,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "pending-nursing-order",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "transfer-to-icu",
+  "controller": "transferToICUController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 64,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 77,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETICUTRANSFERPATIENTLIST",
+    "path": "/adt/getICUTransferRequestList",
+    "legacy_line": 207,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEUNITICUTYPELIST",
+    "path": "/adt/getActiveUnitICUTypeList",
+    "legacy_line": 294,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 309,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDOCTORFORICU",
+    "path": "/adt/getDoctorForICU",
+    "legacy_line": 354,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETADMITTEDPATIENTBYKEWWORD",
+    "path": "/adt/searchAdmittedPatientByNameAndUhid",
+    "legacy_line": 393,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "SAVEICUREQUEST",
+    "path": "/adt/generateTransferRequestForICUTransfer",
+    "legacy_line": 534,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "update-discharge-summary",
+  "controller": "updateDischargeSummaryController",
+  "calls": [
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 8581,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "vitals",
+  "controller": "vitalsController",
+  "calls": []
+ },
+ {
+  "screen": "nursing-order",
+  "controller": "MasterController",
+  "calls": []
+ },
+ {
+  "screen": "bill-list",
+  "controller": "billListController",
+  "calls": [
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 338,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 567,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 936,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GET_PATIENT_DOCUMENT_ENCOUNTER",
+    "path": "/api/opd/patientDoc/details",
+    "legacy_line": 4703,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "cancelled-bill-list",
+  "controller": "cancelledBillListController",
+  "calls": [
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 323,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 478,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 792,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "credit-note",
+  "controller": "creditNoteNewController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 187,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 376,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 383,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVESPECIALITY",
+    "path": "/adt/getActiveSpecialityList",
+    "legacy_line": 425,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "debit-note-list",
+  "controller": "debitNoteListController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 168,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 177,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 698,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "financial-request-approval",
+  "controller": "discountRequestApprovalController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 108,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETUSERSLIST",
+    "path": "/adt/getActiveUserList",
+    "legacy_line": 189,
+    "purpose": "GRID",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "pre-authorization-request",
+  "controller": "preAuthorizationRequestController",
+  "calls": []
+ },
+ {
+  "screen": "company-invoice-creation",
+  "controller": "companyInvoiceCreationController",
+  "calls": []
+ },
+ {
+  "screen": "cost-estimation",
+  "controller": "costEstimationController",
+  "calls": [
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 228,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEPAYMENTENTITLEMENT",
+    "path": "/adt/getAvtivePaymentEntitlementList",
+    "legacy_line": 319,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "SLASH",
+    "path": "/",
+    "legacy_line": 496,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEBILLINGBEDCATEGORYBYBEDCATEGORYID",
+    "path": "/adt/getBillingBedCategoryListByBedCategory",
+    "legacy_line": 2308,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPREFIXLIST",
+    "path": "/adt/getActivePrefixList",
+    "legacy_line": 2492,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "house-keeping",
+  "controller": "houseKeepingController",
+  "calls": [
+   {
+    "constant": "GETACTIVEFLOORLIST",
+    "path": "/adt/getActiveFloorList",
+    "legacy_line": 76,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEBEDCATEGORYLISTBYUNIT",
+    "path": "/adt/getBedCategoryListByOrgUnit",
+    "legacy_line": 94,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETBEDLISTFORHOUSEKEEPING",
+    "path": "/adt/getBedsForHousekeepingList",
+    "legacy_line": 114,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETWARDLISTBYFLOORIDORGUNITID",
+    "path": "/adt/getActiveWardListByFloorId",
+    "legacy_line": 224,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVENURSINGSTATIONLISTBYWARDID",
+    "path": "/adt/getNursingStationListByWard",
+    "legacy_line": 244,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "SEARCHBEDBYMULTIPLECRITERIAFORHOUSEKEEPING",
+    "path": "/adt/searchBedByMultipleCriteriaForHousekeeping",
+    "legacy_line": 282,
+    "purpose": "FILTER",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEFORMARKEDASCLEAR",
+    "path": "/adt/markAsCleaned",
+    "legacy_line": 357,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "UPDATEHOUSEKEEPING",
+    "path": "/adt/assignUserForCleaning",
+    "legacy_line": 444,
+    "purpose": "ACTION_SECONDARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "pending-short-leave",
+  "controller": "pendingShortLeaveController",
+  "calls": [
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 65,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETSHORTLEAVEREQUESTLISTFORDOCTOR",
+    "path": "/adt/getShortLeaveRequestListForDoctor",
+    "legacy_line": 95,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "ACCEPTSHOTLEAVEBYDOCTOR",
+    "path": "/adt/acceptShotLeaveByDoctor",
+    "legacy_line": 161,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   },
+   {
+    "constant": "REJECTSHOTLEAVEBYDOCTOR",
+    "path": "/adt/rejectShotLeaveByDoctor",
+    "legacy_line": 228,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "refund-against-cr",
+  "controller": "creditNoteRefundController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 120,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 127,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 1097,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "refund-against-deposit",
+  "controller": "refundController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 168,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 175,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 1470,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "refund-list",
+  "controller": "refundListController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 128,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 135,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 1159,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "franchise-deposit",
+  "controller": "franchiseDepositController",
+  "calls": []
+ },
+ {
+  "screen": "assign-loyalty-card",
+  "controller": "patientLoyaltiCardMapperController",
+  "calls": [
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 134,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 141,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "BILLING",
+    "path": "/billing",
+    "legacy_line": 185,
+    "purpose": "LOOKUP",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "debit-note",
+  "controller": "debitNoteController",
+  "calls": [
+   {
+    "constant": "GETACTIVESPECIALITY",
+    "path": "/adt/getActiveSpecialityList",
+    "legacy_line": 316,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 344,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEDOCTORLIST",
+    "path": "/api/global/doctor/active/plain",
+    "legacy_line": 358,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 379,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 388,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETSPECIALITYLISTBYDOCTORID",
+    "path": "/adt/getSpecialityListByDoctorId",
+    "legacy_line": 4469,
+    "purpose": "DROPDOWN",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDOCTORBYSPECIALITYID",
+    "path": "/adt/getDoctorListAganistSpeciality",
+    "legacy_line": 5766,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   }
+  ]
+ },
+ {
+  "screen": "intiate-transfer-care",
+  "controller": "intiateTransferCareController",
+  "calls": [
+   {
+    "constant": "GETTRANSFEROFCAREREQUESTLIST",
+    "path": "/adt/getTransferOfCareRequestList",
+    "legacy_line": 142,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVESPECIALITY",
+    "path": "/adt/getActiveSpecialityList",
+    "legacy_line": 294,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEREASONLIST",
+    "path": "/api/common/getActiveReasonMasterList",
+    "legacy_line": 308,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 328,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEIDENTIFICATION",
+    "path": "/adt/getActiveIdentificationList",
+    "legacy_line": 340,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETDOCTORBYSPECIALITYID",
+    "path": "/adt/getDoctorListAganistSpeciality",
+    "legacy_line": 359,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETADMITTEDPATIENTBYKEWWORD",
+    "path": "/adt/searchAdmittedPatientByNameAndUhid",
+    "legacy_line": 385,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "SAVETRANSFEROFCAREREQUEST",
+    "path": "/adt/saveTransferOfCareRequest",
+    "legacy_line": 572,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "new-born-registration",
+  "controller": "newBornBabyRegController",
+  "calls": [
+   {
+    "constant": "GETADMITTEDPATIENTLIST",
+    "path": "/adt/getAdmittedPatientList",
+    "legacy_line": 64,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETACTIVEPREFIXLIST",
+    "path": "/adt/getActivePrefixList",
+    "legacy_line": 82,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETACTIVEGENDERLIST",
+    "path": "/adt/getActiveGenderList",
+    "legacy_line": 92,
+    "purpose": "DROPDOWN",
+    "shared_layer": true
+   },
+   {
+    "constant": "ADDNEWBORNBABYREG",
+    "path": "/adt/saveNewBornBabyReg",
+    "legacy_line": 302,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ },
+ {
+  "screen": "pending-consult-order-request",
+  "controller": "pendingInterConsultRequestController",
+  "calls": [
+   {
+    "constant": "GETOTLISTAGAINTPATIENT",
+    "path": "/adt/getOTRequestListByAdmissionId",
+    "legacy_line": 65,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETOTTRANSFERLISTAGAINTPATIENT",
+    "path": "/adt/getOTTransferRequestList",
+    "legacy_line": 80,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETTRANSFEROFCAREREQUESTTODOCTORLIST",
+    "path": "/adt/getTransferOfCareRequestListForDoctor",
+    "legacy_line": 117,
+    "purpose": "GRID",
+    "shared_layer": false
+   },
+   {
+    "constant": "GETDOCTORBYSPECIALITYID",
+    "path": "/adt/getDoctorListAganistSpeciality",
+    "legacy_line": 144,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "GETADMITTEDPATIENTBYKEWWORD",
+    "path": "/adt/searchAdmittedPatientByNameAndUhid",
+    "legacy_line": 170,
+    "purpose": "LOOKUP",
+    "shared_layer": true
+   },
+   {
+    "constant": "SEARCHCONSULTORDERREQUESTBYADMISSIONID",
+    "path": "/adt/searchConsultOrderRequestByAdmissionId",
+    "legacy_line": 211,
+    "purpose": "FILTER",
+    "shared_layer": false
+   },
+   {
+    "constant": "ACCEPTCONSULTORDERREQUEST",
+    "path": "/adt/acceptConsultOrderRequest",
+    "legacy_line": 265,
+    "purpose": "ACTION_PRIMARY",
+    "shared_layer": false
+   }
+  ]
+ }
+]
