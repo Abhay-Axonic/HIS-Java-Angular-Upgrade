@@ -22,7 +22,7 @@ backend quote is pending). The resolutions below are the union the first apply-p
 | financial-request-approval | visitTypeName | STILL DASHED — no visitTypeId on the row | FundSanctionRequestDto carries no visit-type id; the column cannot use the lookup without an id in the row |
 | financial-request-approval | encounterNumber | NOT_SUPPLIED | no encounter field on FundSanctionRequestDto (the fund-sanction family carries patientId/uhidNumber only) |
 | financial-request-approval | requestDiscAmt | NOT_SUPPLIED | the fund-sanction amount props are fundrequestAmount/fundrequestStatusId; a discount-specific amount is not in the DTO |
-| pre-authorization-request | visitTypeCode | STILL DASHED — no visitTypeId on the row | the pre-auth row (IPreAuthorizationRequestDaoImpl) carries no visit-type id; the legacy's helper needs an id. ALSO NOTED: the pre-auth template's bound fields are positionally shifted (companyDesc sits under the Visit Type header etc. — the apply-pass-1 bound positionally) — flagged for a realignment pass, not fixed here |
+| pre-authorization-request | (realigned 2026-08-20) | RESOLVED — the positional shift fixed | the legacy's own row binds info.visitTypeCode for the Visit Type column (pre-authorization-request.html, quoted) — the query carries the CODE, so the column is real: bound visitTypeCode, and every cell realigned to its header (Visit Date|No. = visitDate + admissionNo; Insurance No. = the legacy's companyTypeId==2 ternary). The earlier "no visitTypeId" note was about the ID; the code is a different, present field |
 | pre-authorization-request | visitDate | MASTER_LOOKUP | the row carries authDate (IPreAuthorizationRequestDaoImpl) |
 
 ## Refund family
