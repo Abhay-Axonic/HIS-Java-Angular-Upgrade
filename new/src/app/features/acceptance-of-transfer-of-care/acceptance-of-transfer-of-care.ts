@@ -25,7 +25,7 @@ export class IpdComponent {
   readonly unitId = this.session.current?.unitId ?? 1;
   readonly userId = this.session.current?.userId ?? 1;
 
-  readonly rows = signal<IpdRow[]>([]);
+  readonly rows = signal<any[]>([]);
   readonly selected = signal<IpdRow | null>(null);
   readonly loading = signal(false);
   readonly loaded = signal(false);
@@ -73,6 +73,9 @@ export class IpdComponent {
       error: () => { this.saving.set(false); this.notify.error('Save failed'); },
     });
   }
+
+  acceptRequest(index: number): void {}
+  displayNote(index: number): void {}
 }
 
 /** The IPD DTOs' String-date format (dd-M-yyyy HH:mm:ss) — the
