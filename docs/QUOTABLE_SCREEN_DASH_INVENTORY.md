@@ -34,14 +34,14 @@ backend quote is pending). The resolutions below are the union the first apply-p
 
 | screen | column | reason class | what would resolve it |
 |---|---|---|---|
-| franchise-deposit | paymentMode, consumedAmount, refundAmt, totalBalanceAmount, collectedBy, panCardDetails | FEED_UNLOCATED | the searchDeposit feed's DAO was not found by the frDepositNo/franchise greps — one chain read (controller → service → DAO) |
+| franchise-deposit | paymentMode, consumedAmount, refundAmt, totalBalanceAmount, collectedBy, panCardDetails | FEED_UNLOCATED — ADVANCED (2026-08-20, second chain read) | the feed IS located to the URI level: POST /api/billing/unit/franchise/all with the depositSearch body (franchiseDepositMaster.js searchDeposit), plus /api/billing/transactiontypes/{org}/{unit}, /api/billing/unit/deposit/consumption/{depositMasterId}, /api/billing/unit/franchise/details/{frDepositId} (controller lines 494/509/464). The JAVA handler for franchise/all is NOT in the FranchiseShare* family (the only franchise Java found) — the blocker is exactly that one handler read; the row shape will quote which of the 8 it carries |
 | assign-loyalty-card | print, transactionType | FEED_UNLOCATED | same family |
 
 ## New-born
 
 | screen | column | reason class | what would resolve it |
 |---|---|---|---|
-| new-born-registration | motherName | STILL_UNKNOWN | NewBornBabyDto carries fatherName; the mother is the admitted-patient join, likely in the babyDetails sub-object — one read |
+| new-born-registration | motherName | STILL_UNKNOWN — CONFIRMED NOT ON THE DTO (2026-08-20) | NewBornBabyDto.babyDetails is List<NewBornBabyDto> — RECURSIVE (the baby list itself, not a mother object); the DTO carries fatherName and NO mother field. The mother's name is the admitted-patient join — the read would be that join's alias in the new-born feed query |
 
 ## Consult / short-leave
 
