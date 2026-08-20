@@ -34,7 +34,7 @@ backend quote is pending). The resolutions below are the union the first apply-p
 
 | screen | column | reason class | what would resolve it |
 |---|---|---|---|
-| franchise-deposit | paymentMode, consumedAmount, refundAmt, totalBalanceAmount, collectedBy, panCardDetails | FEED_UNLOCATED — ADVANCED (2026-08-20, second chain read) | the feed IS located to the URI level: POST /api/billing/unit/franchise/all with the depositSearch body (franchiseDepositMaster.js searchDeposit), plus /api/billing/transactiontypes/{org}/{unit}, /api/billing/unit/deposit/consumption/{depositMasterId}, /api/billing/unit/franchise/details/{frDepositId} (controller lines 494/509/464). The JAVA handler for franchise/all is NOT in the FranchiseShare* family (the only franchise Java found) — the blocker is exactly that one handler read; the row shape will quote which of the 8 it carries |
+| franchise-deposit | RESOLVED 2026-08-20 (4 bound) + 4 header-artifacts | the handler: Global/.../billing/controller/FranchiseDepositController.java — getFrenchiseDeposit (method /all; the endpoint splits class+method segments, which is why the literal grep failed). Row shape = the Master DTO names the legacy view actually binds (franchise-deposit.html): consumedDeposit, refundAmount, availableDeposit, createdBy — NOT the Details DTO's consumedAmount/balanceAmount (the task's caution was right). BOUND: consumedAmount→info.consumedDeposit, refundAmt→info.refundAmount, totalBalanceAmount→info.availableDeposit, collectedBy→info.createdBy. paymentMode + panCardDetails + print + transactionType have NO grid binding in the legacy view (header-only artifacts) — flagged in the template, not dashes |
 | assign-loyalty-card | print, transactionType | FEED_UNLOCATED | same family |
 
 ## New-born
