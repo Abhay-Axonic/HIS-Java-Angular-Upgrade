@@ -236,7 +236,7 @@ export class RegistrationComponent {
       // the form's value — the master-sourced default on new; a loaded
       // patient's own value passes back unchanged (the screen is new-only
       // today — the load path, when added, flows through the same field).
-      registrationTypeId: f.registrationTypeId ?? 1,
+      registrationTypeId: f.registrationTypeId ?? this.registrationTypes()[0]?.id,
       organizationId: this.orgId,
       unitId: this.unitId,
       prefixId: f.prefixId,

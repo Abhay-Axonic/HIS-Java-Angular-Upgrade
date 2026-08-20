@@ -5,7 +5,7 @@
       <tr>
         <th>UHID</th><th>Patient</th><th>Room</th><th>Ward</th><th>Floor</th><th>Doctor</th>
         <th>Nursing Order</th><th>Start Date</th><th>Stop Date</th><th>Frequency</th>
-        <th>Instruction</th><th>Remarks</th><th>Status</th><th>Action</th>
+        <th>Instruction</th><th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -22,15 +22,14 @@
           <td>{{ info.stopDate }}</td>
           <td>{{ info.frequency }}</td>
           <td>{{ info.instruction }}</td>
-          <td>{{ info.remark }}</td>
-          <td>{{ info.status }}</td>
+          
           <td>
             <button class="btn btn-xs btn-primary" (click)="showUpdateNursingOrderMapper(info.nursingOrderMapperId)">Update</button>
             <button class="btn btn-xs btn-danger" (click)="stop(info, true)">Stop</button>
           </td>
         </tr>
       } @empty {
-        <tr><td colspan="14" class="text-center">No nursing orders</td></tr>
+        <tr><td colspan="12" class="text-center">No nursing orders</td></tr>
       }
     </tbody>
   </table>
